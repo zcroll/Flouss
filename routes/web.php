@@ -25,5 +25,9 @@ Route::middleware([
 });
 Route::get('/activities', [ActivityProgressController::class, 'index']);
 
-Route::post('/activity', [ActivityProgressController::class, 'submit']);
-Route::post('/activity-progress/submit', [ActivityProgressController::class, 'submit']);
+//Route::post('/activity', [ActivityProgressController::class, 'submit']);
+Route::post('/activity/submit', [ActivityProgressController::class, 'submit']);
+
+
+
+Route::get('/results', [ActivityProgressController::class, 'results'])->name('results');

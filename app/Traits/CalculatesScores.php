@@ -33,7 +33,7 @@ trait CalculatesScores
     }
 
 
-    protected function convertResponseToScore($response)
+    protected function convertResponseToScore($response): int
     {
         return match ($response) {
             'Strongly Like' => 5,

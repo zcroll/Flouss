@@ -7,6 +7,7 @@ use App\Services\JobMatcherService;
 use App\Traits\CalculatesScores;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 
@@ -74,15 +75,23 @@ class ActivityProgressController extends Controller
         })->toArray();
     }
 
-    public function submit(Request $request, JobMatcherService $jobMatcherService): \Inertia\Response
+    public function submit(Request $request, JobMatcherService $jobMatcherService)
     {
         $responses = $request->input('responses',[]);
-        ds($responses);
         Log::info('Responses received: ', ['responses' => $responses]);
+        Session::put('responses', $responses);
+        return to_route('results');
+    }
+
+    public function results(JobMatcherService $jobMatcherService): \Inertia\Response
+    {
+        $responses = Session::get('responses',[]);
+//        if (empty($responses)) {
+//            return redirect()->route('activities');
+//        }
         $activities = Activity::all();
         $scores = $this->calculateScore($activities, $responses);
         $closestJobs = app(JobMatcherController::class)->matchJobsWithScores($scores, $jobMatcherService);
-        ds($closestJobs);
         return Inertia::render('Results', [
             'scores' => $scores,
             'closest_jobs' => $closestJobs,
