@@ -74,20 +74,18 @@ class ActivityProgressController extends Controller
         })->toArray();
     }
 
-    public function submit(Request $request, JobMatcherService $jobMatcherService): \Illuminate\Http\JsonResponse
+    public function submit(Request $request, JobMatcherService $jobMatcherService): \Inertia\Response
     {
         $responses = $request->input('responses',[]);
         ds($responses);
         Log::info('Responses received: ', ['responses' => $responses]);
         $activities = Activity::all();
         $scores = $this->calculateScore($activities, $responses);
-        ds($scores);
         $closestJobs = app(JobMatcherController::class)->matchJobsWithScores($scores, $jobMatcherService);
         ds($closestJobs);
-                return response()->json([
+        return Inertia::render('Results', [
             'scores' => $scores,
             'closest_jobs' => $closestJobs,
         ]);
-
     }
 }
