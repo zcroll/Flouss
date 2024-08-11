@@ -24,3 +24,5 @@ Route::middleware([
     })->name('dashboard');
 });
 Route::get('/activities', [ActivityProgressController::class, 'index']);
+
+Route::post('/activity', [ActivityProgressController::class, 'submit']);
