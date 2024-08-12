@@ -34,11 +34,7 @@ export default {
         closest_jobs: Array,
         top_3_jobs_in_zone: Array,
     },
-    mounted() {
-        sessionStorage.setItem('scores', JSON.stringify(this.scores));
-        sessionStorage.setItem('closest_jobs', JSON.stringify(this.closest_jobs));
-        sessionStorage.setItem('top_3_jobs_in_zone', JSON.stringify(this.top_3_jobs_in_zone));
-    }
+
 };
 </script>
 

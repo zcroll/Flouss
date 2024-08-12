@@ -25,7 +25,7 @@ trait CalculatesScores
 
                 $score = $this->convertResponseToScore($response);
 
-                $scores[$activity->category] += $score * $activity->scale / 2;
+                $scores[$activity->category] += $score * $activity->scale / 10;
             }
         }
 

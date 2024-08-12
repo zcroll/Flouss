@@ -51,8 +51,8 @@ class ActivityProgressController extends Controller
 
         foreach (['Realistic', 'Investigative', 'Artistic', 'Social', 'Enterprising', 'Conventional'] as $category) {
             if (isset($allActivities[$category])) {
-                $basicActivities = $allActivities[$category]->where('interest_type', 'Basic')->take(1);
-                $generalActivities = $allActivities[$category]->where('interest_type', 'General')->take(1);
+                $basicActivities = $allActivities[$category]->where('interest_type', 'Basic')->take(5);
+                $generalActivities = $allActivities[$category]->where('interest_type', 'General')->take(5);
                 $groupedActivities[$category] = $basicActivities->merge($generalActivities);
             } else {
                 $groupedActivities[$category] = collect();
@@ -85,11 +85,11 @@ class ActivityProgressController extends Controller
 
     public function results(JobMatcherService $jobMatcherService): \Inertia\Response
     {
+
+        #todo two request of the activities form the data base make it todo
         $responses = Session::get('responses',[]);
-//        if (empty($responses)) {
-//            return redirect()->route('activities');
-//        }
-        $activities = Activity::all();
+
+        $activities = Activity::select('id', 'activity', 'category', 'scale', 'interest_type')->get();
         $scores = $this->calculateScore($activities, $responses);
         $closestJobs = app(JobMatcherController::class)->matchJobsWithScores($scores, $jobMatcherService);
         return Inertia::render('Results', [
