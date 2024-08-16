@@ -15,7 +15,6 @@ export default {
             currentChunkIndex: Math.floor(this.initialIndex / 4), // Initial chunk index
             progress: (this.initialIndex / this.activities.length) * 100,
             error: null,
-            refHiddenInput: null,
         };
     },
     computed: {
@@ -30,10 +29,13 @@ export default {
     },
     methods: {
         changeChunk(index) {
-            if (index >= 0 && index < this.chunkedActivities.length) {
-                this.currentChunkIndex = index;
-                this.updateProgress();
-                this.clearErrors(); // Clear errors when changing chunk
+            if (this.validateResponses()) {
+                if (index >= 0 && index < this.chunkedActivities.length) {
+                    this.currentChunkIndex = index;
+                    this.updateProgress();
+                }
+            } else {
+                this.markEmptyResponses();
             }
         },
         validateResponses() {
@@ -53,15 +55,6 @@ export default {
             });
             this.$forceUpdate(); // Update the view to reflect changes
         },
-        clearErrors() {
-            this.chunkedActivities.forEach(chunk => {
-                chunk.forEach(activity => {
-                    if (activity.error) {
-                        delete activity.error;
-                    }
-                });
-            });
-        },
         submit() {
             if (this.validateResponses()) {
                 this.$page.props.loading = true; // Set loading state
@@ -79,16 +72,6 @@ export default {
         updateProgress() {
             this.progress = ((this.currentChunkIndex + 1) / this.chunkedActivities.length) * 100;
         },
-        nextChunk() {
-            if (this.validateResponses()) {
-                this.changeChunk(this.currentChunkIndex + 1);
-            } else {
-                this.markEmptyResponses();
-            }
-        },
-        prevChunk() {
-            this.changeChunk(this.currentChunkIndex - 1);
-        }
     },
 };
 </script>
@@ -128,13 +111,13 @@ export default {
 
             <!-- Navigation and submit buttons -->
             <div class="flex justify-between mt-6">
-                <button v-if="currentChunkIndex > 0" @click="prevChunk"
+                <button v-if="currentChunkIndex > 0" @click="changeChunk(currentChunkIndex - 1)"
                         class="bg-black  text-white font-semibold py-2 px-4 rounded-lg">
                     Previous
                 </button>
 
                 <button v-if="currentChunkIndex < chunkedActivities.length - 1"
-                        @click="nextChunk"
+                        @click="changeChunk(currentChunkIndex + 1)"
                         class="bg-sky-700 hover:bg-sky-900 text-white font-semibold py-2 px-4 rounded-lg">
                     Next
                 </button>
