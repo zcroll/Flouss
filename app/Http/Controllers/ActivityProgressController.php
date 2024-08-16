@@ -36,7 +36,6 @@ class ActivityProgressController extends Controller
 
     private function fetchAllActivitiesByCategoryAndType()
     {
-        ds('sd');
         return Activity::whereIn('category', ['Realistic', 'Investigative', 'Artistic', 'Social', 'Enterprising', 'Conventional'])
             ->whereIn('interest_type', ['Basic', 'General'])
             ->orderBy(DB::raw("FIELD(category, 'Realistic', 'Investigative', 'Artistic', 'Social', 'Enterprising', 'Conventional')"))
@@ -92,6 +91,8 @@ class ActivityProgressController extends Controller
         $activities = Activity::all();
         $scores = $this->calculateScore($activities, $responses);
         $closestJobs = app(JobMatcherController::class)->matchJobsWithScores($scores, $jobMatcherService);
+        Log::debug($closestJobs);
+        ds($closestJobs);
 
         return Inertia::render('Results', [
             'scores' => $scores,

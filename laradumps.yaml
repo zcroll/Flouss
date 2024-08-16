@@ -3,7 +3,7 @@ app:
     secondary_host: host.docker.internal
     port: 9191
     workdir: /var/www/html/
-    project_path: /home/zcroll/Desktop/nextmove/test/
+    project_path: /home/zcroll/Desktop/test/
     wsl_config: wsl+Ubuntu/
 config:
     sleep: 0
@@ -24,10 +24,10 @@ observers:
     cache: false
 logs:
     info: true
-    warning: false
+    warning: true
     emergency: false
     alert: false
-    debug: false
+    debug: true
     error: true
     critical: true
     notice: true

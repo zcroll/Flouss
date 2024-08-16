@@ -1,5 +1,5 @@
 <template>
-    <app-layout title="Results">
+    <app-layout title="Results" preserveScroll>
         <div class="relative max-w-7xl mx-auto mt-10">
             <div class="flex">
                 <!-- Main Content Section -->
@@ -37,7 +37,7 @@
                         <h2 class="text-2xl font-bold text-gray-800 mb-4">Closest Jobs</h2>
                         <ul role="list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                             <!-- Iterate over transformed closest_jobs -->
-                            <li v-for="job in jobs" :key="index" class="bg-white p-6 rounded-lg shadow-lg">
+                            <li v-for="(job, index) in jobs" :key="index" class="bg-white p-6 rounded-lg shadow-lg">
                                 <div class="w-full h-40 bg-gray-200 rounded-t-lg overflow-hidden">
                                     <img
                                         src="https://via.placeholder.com/160x160"
@@ -45,45 +45,36 @@
                                         class="h-full w-full object-cover"
                                     />
                                 </div>
-
-                                {{job}}
-
-                                <div class="flex flex-1 flex-col justify-between p-4">
-                                    <h3 class="text-lg font-semibold text-gray-800">{{ job.name }}</h3>
-                                    <p class="text-sm text-gray-600">{{ job.companyInfo }}</p>
-                                </div>
+                                <a @click="visitJob(job)" class="block mt-4 cursor-pointer">
+                                    {{ job }}
+                                </a>
                             </li>
                         </ul>
                     </div>
 
-                    <div class="hidden lg:block">
-                        <div class="fixed top-24 right-12 bg-white p-6 rounded-lg shadow-xl space-y-4">
-                            <h3 class="text-xl font-bold text-gray-800 mb-4">Quick Overview</h3>
-                            <div class="flex space-x-4">
-                                <!-- Mini Div 1 -->
-                                <div class="flex-1 bg-gradient-to-r from-purple-950 to-purple-900 rounded-lg h-24 flex flex-col items-center justify-center text-white font-bold px-4">
-                                    <p>Overview</p>
-                                </div>
-                                <!-- Mini Div 2 -->
-                                <div class="flex-1 bg-gradient-to-r from-teal-900 to-emerald-950 rounded-lg h-24 flex items-center justify-center text-white font-bold px-4">
-                                    <p>Compatibility</p>
-                                </div>
-                                <!-- Mini Div 3 -->
-                                <div class="flex-1 bg-gradient-to-r from-red-900 to-amber-900 rounded-lg h-24 flex items-center justify-center text-white font-bold px-4">
-                                    <p>University</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-
-
+                    <!--                    <div class="hidden lg:block">-->
+                    <!--                        <div class="fixed top-24 right-12 bg-white p-6 rounded-lg shadow-xl space-y-4">-->
+                    <!--                            <h3 class="text-xl font-bold text-gray-800 mb-4">Quick Overview</h3>-->
+                    <!--                            <div class="flex space-x-4">-->
+                    <!--                                &lt;!&ndash; Mini Div 1 &ndash;&gt;-->
+                    <!--                                <div class="flex-1 bg-gradient-to-r from-purple-950 to-purple-900 rounded-lg h-24 flex flex-col items-center justify-center text-white font-bold px-4">-->
+                    <!--                                    <p>Overview</p>-->
+                    <!--                                </div>-->
+                    <!--                                &lt;!&ndash; Mini Div 2 &ndash;&gt;-->
+                    <!--                                <div class="flex-1 bg-gradient-to-r from-teal-900 to-emerald-950 rounded-lg h-24 flex items-center justify-center text-white font-bold px-4">-->
+                    <!--                                    <p>Compatibility</p>-->
+                    <!--                                </div>-->
+                    <!--                                &lt;!&ndash; Mini Div 3 &ndash;&gt;-->
+                    <!--                                <div class="flex-1 bg-gradient-to-r from-red-900 to-amber-900 rounded-lg h-24 flex items-center justify-center text-white font-bold px-4">-->
+                    <!--                                    <p>University</p>-->
+                    <!--                                </div>-->
+                    <!--                            </div>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
 
                 </div>
 
                 <!-- Fixed Card Section -->
-
 
             </div>
         </div>
@@ -92,13 +83,13 @@
 
 <script>
 import {defineComponent} from "vue";
+import {router,Link} from '@inertiajs/vue3';
 import AppLayout from "@/Layouts/AppLayout.vue";
-
-
 
 export default defineComponent({
     components: {
         AppLayout,
+        Link,
     },
     props: {
         scores: {
@@ -123,6 +114,10 @@ export default defineComponent({
                 Conventional: "bg-gradient-to-r from-teal-700 to-emerald-600",
             };
             return colors[category] || "bg-gray-500";
+        },
+
+        visitJob(job) {
+            router.visit(`/career/${job}`, {preserveScroll: false});
         },
 
     }

@@ -7,14 +7,17 @@
     "require": {
         "php": "^8.2",
         "inertiajs/inertia-laravel": "^1.0",
+        "itsgoingd/clockwork": "^5.2",
         "laravel/framework": "^11.9",
         "laravel/jetstream": "^5.1",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
+        "phpoffice/phpspreadsheet": "^2.2",
         "tightenco/ziggy": "^2.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
+        "laradumps/laradumps": "^3.0",
         "laravel-shift/blueprint": "^2.10",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.26",

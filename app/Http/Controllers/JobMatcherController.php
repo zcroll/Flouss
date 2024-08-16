@@ -27,7 +27,7 @@ class JobMatcherController extends Controller
         $userChosenZone = 3;
         $top3JobsInZone = $jobMatcherService->filterJobsByZone($data, $closestJobs, $userChosenZone);
 
-        return $closestJobs;
+        return    $closestJobs;
 
     }
 }
