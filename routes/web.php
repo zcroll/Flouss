@@ -23,7 +23,7 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 });
-Route::get('/activities', [ActivityProgressController::class, 'index']);
+Route::get('/activities', [ActivityProgressController::class, 'index'])->name('activities');
 
 //Route::post('/activity', [ActivityProgressController::class, 'submit']);
 Route::post('/activity/submit', [ActivityProgressController::class, 'submit']);

@@ -92,9 +92,10 @@ class ActivityProgressController extends Controller
         $activities = Activity::all();
         $scores = $this->calculateScore($activities, $responses);
         $closestJobs = app(JobMatcherController::class)->matchJobsWithScores($scores, $jobMatcherService);
+
         return Inertia::render('Results', [
             'scores' => $scores,
-            'closest_jobs' => $closestJobs,
+            'jobs' => $closestJobs,
         ]);
     }
 }

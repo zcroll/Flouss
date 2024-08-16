@@ -7,6 +7,7 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
+import Header from "@/Components/Header.vue";
 
 defineProps({
     title: String,
@@ -33,11 +34,15 @@ const logout = () => {
 
         <Banner />
 
-        <div class="min-h-screen bg-gray-100">
-            <nav class="bg-white border-b border-gray-100">
+        <div class=" min-h-screen bg-gray-200">
+
+            <nav class="border-b border-gray-100">
+
+                <Header :title="title" class="header-background"/>
                 <!-- Primary Navigation Menu -->
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="flex justify-between h-16">
+                <div class="navbar max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+                    <div class=" flex justify-between h-16">
                         <div class="flex">
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
@@ -51,7 +56,18 @@ const logout = () => {
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
+
+                                <NavLink :href="route('results')" :active="route().current('results')">
+                                    Results
+                                </NavLink>
+
+                                <NavLink :href="route('activities')" :active="route().current('activities')">
+                                    Career Test
+                                </NavLink>
+
                             </div>
+
+
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ms-6">
@@ -188,6 +204,8 @@ const logout = () => {
                     </div>
                 </div>
 
+
+
                 <!-- Responsive Navigation Menu -->
                 <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}" class="sm:hidden">
                     <div class="pt-2 pb-3 space-y-1">
@@ -273,6 +291,8 @@ const logout = () => {
                 </div>
             </nav>
 
+
+
             <!-- Page Heading -->
             <header v-if="$slots.header" class="bg-white shadow">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -287,3 +307,25 @@ const logout = () => {
         </div>
     </div>
 </template>
+<style scoped>
+
+.header-background {
+    position: relative;
+ /* Ensures header is behind navbar */
+}
+
+.navbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1; /* Ensures navbar is above the header */
+    width: 100%;
+    padding: 1rem 0;
+    background-color: transparent; /* Semi-transparent or adjust as needed */
+
+
+}
+</style>
+

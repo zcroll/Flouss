@@ -15,10 +15,13 @@ defineProps({
 
 <template>
     <AppLayout title="Profile">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Profile
-            </h2>
+        <template #header >
+            <div class="mb-3">
+                <h2 class=" mt-20 font-semibold text-xl text-gray-800 leading-tight">
+                    Profile
+                </h2>
+            </div>
+
         </template>
 
         <div>

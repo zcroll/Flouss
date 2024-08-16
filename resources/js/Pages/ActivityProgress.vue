@@ -109,6 +109,7 @@ export default {
                              :class="{'bg-red-100': activity.error, 'bg-white': !activity.error}"
                              class="p-6 rounded-lg shadow-md">
                             <h2 class="text-xl font-bold mb-4">{{ activity.name }}</h2>
+
                             <div class="mb-4">
                                 <!-- Radio buttons -->
                                 <label
