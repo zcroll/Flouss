@@ -31,3 +31,5 @@ Route::post('/activity/submit', [ActivityProgressController::class, 'submit']);
 
 
 Route::get('/results', [ActivityProgressController::class, 'results'])->name('results');
+
+
