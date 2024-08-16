@@ -25,6 +25,8 @@ class CareerController extends Controller
         $abilitiesData = DB::table('abilities')
             ->join('content_model_reference', 'abilities.element_id', '=', 'content_model_reference.element_id')
             ->where('abilities.onetsoc_code', $onetsoc_code)
+            ->where('abilities.scale_id', 'LV')
+
             ->select('content_model_reference.element_id','content_model_reference.element_name', 'content_model_reference.description')
             ->get();
 //        ds($abilitiesData);
