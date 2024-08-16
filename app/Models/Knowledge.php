@@ -44,6 +44,6 @@ class Knowledge extends Model
 
     public function scale()
     {
-        return $this->belongsTo(ScaleReference::class, 'scale_id', 'scale_id');
+        return $this->belongsTo(ScalesReference::class, 'scale_id', 'scale_id');
     }
 }
