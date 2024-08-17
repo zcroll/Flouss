@@ -31,7 +31,7 @@ class CareerController extends Controller
 
             ->select('content_model_reference.element_id','content_model_reference.element_name', 'content_model_reference.description')
             ->get();
-//        ds($abilitiesData);
+//        ds($abilitiesData);df
 
         $technologyData = OccupationData::with('technologySkills')->where('title', $job)->first();
 
