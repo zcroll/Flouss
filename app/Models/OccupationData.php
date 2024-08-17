@@ -29,7 +29,8 @@ class OccupationData extends Model
         return  $this->hasMany(Ability::class);
     }
 
-    public function Technology(): HasMany{
-        return  $this->hasMany(TechnologySkill::class);
+    public function technologySkills()
+    {
+        return $this->hasMany(TechnologySkill::class, 'occupation_id', 'id');
     }
 }
