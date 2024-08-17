@@ -33,7 +33,7 @@ class CareerController extends Controller
             ->get();
 //        ds($abilitiesData);
 
-        $technologyData = OccupationData::with('Technology')->where('title',$job)->get();
+        $technologyData = OccupationData::with('Technology')->where('title', $job)->first()->Technology()->get();
 
 
        ds($technologyData);
