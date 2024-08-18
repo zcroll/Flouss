@@ -1,5 +1,4 @@
 <?php
-// File: app/Traits/CalculatesScores.php
 
 namespace App\Traits;
 
@@ -24,7 +23,6 @@ trait CalculatesScores
                 $score = $this->convertResponseToScore($response);
                 $weightedScore = $score * $activity->scale;
 
-                // Accumulate weighted scores and count them
                 $scores[$activity->category]['sum'] += $weightedScore;
                 $scores[$activity->category]['count'] += $activity->scale;
             }
@@ -45,10 +43,10 @@ trait CalculatesScores
     protected function convertResponseToScore($response): int
     {
         return match ($response) {
-            'Strongly Like' => 5,
-            'Like' => 4,
-            'Unsure' => 3,
-            'Dislike' => 2,
+            'Strongly Like' => 7,
+            'Like' => 5,
+            'Unsure' => 4,
+            'Dislike' => 3,
             'Strongly Dislike' => 1,
             default => 0,
         };

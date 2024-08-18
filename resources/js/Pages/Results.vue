@@ -86,6 +86,7 @@ import {defineComponent} from "vue";
 import {router,Link} from '@inertiajs/vue3';
 import AppLayout from "@/Layouts/AppLayout.vue";
 
+
 export default defineComponent({
     components: {
         AppLayout,

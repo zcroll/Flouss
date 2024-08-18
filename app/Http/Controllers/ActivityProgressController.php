@@ -61,7 +61,7 @@ class ActivityProgressController extends Controller
         return $groupedActivities;
     }
 
-    private function formatActivities($groupedActivities)
+    private function formatActivities($groupedActivities): array
     {
         return collect($groupedActivities)->flatMap(function ($activities, $category) {
             return array_map(function ($activity) use ($category) {
@@ -74,7 +74,7 @@ class ActivityProgressController extends Controller
         })->toArray();
     }
 
-    public function submit(Request $request, JobMatcherService $jobMatcherService)
+    public function submit(Request $request, JobMatcherService $jobMatcherService): \Illuminate\Http\RedirectResponse
     {
         $responses = $request->input('responses',[]);
         Log::info('Responses received: ', ['responses' => $responses]);
@@ -92,8 +92,7 @@ class ActivityProgressController extends Controller
         $scores = $this->calculateScore($activities, $responses);
         $closestJobs = app(JobMatcherController::class)->matchJobsWithScores($scores, $jobMatcherService);
         Log::debug($closestJobs);
-
-
+        ds($scores);
         return Inertia::render('Results', [
             'scores' => $scores,
             'jobs' => $closestJobs,
