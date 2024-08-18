@@ -33,15 +33,14 @@ class CareerController extends Controller
             ->get();
 //        ds($abilitiesData);df
 
-        $technologyData = OccupationData::with('technologySkills')->where('title', $job)->first();
 
-       ds($technologyData);
+
 
         return Inertia::render('career/OverView', [
             'occupation' => $occupation,
             'knowledge' => $knowledgeData,
             'activities' => $abilitiesData,
-            'technology' => $technologyData,
+
         ]);
     }
 }

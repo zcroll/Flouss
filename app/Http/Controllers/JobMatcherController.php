@@ -24,6 +24,8 @@ class JobMatcherController extends Controller
         $data = $jobMatcherService->loadData($filePath);
         $closestJobs = $jobMatcherService->findClosestJobs($data, $inputValues, 5);
 
+        ds($scores);
+
         $userChosenZone = 3;
         $top3JobsInZone = $jobMatcherService->filterJobsByZone($data, $closestJobs, $userChosenZone);
 

@@ -40,7 +40,7 @@ const logout = () => {
 
                 <Header :title="title" class="header-background"/>
                 <!-- Primary Navigation Menu -->
-                <div class="navbar max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="navbar max-w-7xl max-h-3 mx-auto px-4 sm:px-6 lg:px-8">
 
                     <div class=" flex justify-between h-16">
                         <div class="flex">
