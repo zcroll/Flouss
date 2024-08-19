@@ -23,6 +23,14 @@ class TechnologySkill extends Model
     // Disable timestamps if the table doesn't have created_at and updated_at columns
     public $timestamps = false;
 
+
+    public function getRouteKeyName(): string
+    {
+        return 'onetsoc_code';
+
+}
+
+
     // Define relationships
     public function occupation()
     {

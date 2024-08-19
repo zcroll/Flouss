@@ -18,13 +18,11 @@ class JobMatcherController extends Controller
     {
         $filePath = public_path('updated_interests_with_job_zone.xlsx');
 
-        // Assuming scores are now array values in order
         $inputValues = array_values($scores);
 
         $data = $jobMatcherService->loadData($filePath);
         $closestJobs = $jobMatcherService->findClosestJobs($data, $inputValues, 5);
 
-        ds($scores);
 
         $userChosenZone = 3;
         $top3JobsInZone = $jobMatcherService->filterJobsByZone($data, $closestJobs, $userChosenZone);
