@@ -13,26 +13,47 @@ class CareerController extends Controller
 {
     public function index($job): \Inertia\Response
     {
-
         $occupation = OccupationData::where('title', $job)->first();
         $onetsoc_code = $occupation->onetsoc_code;
 
-        $knowledgeData = DB::table('knowledge')
-            ->join('content_model_reference', 'knowledge.element_id', '=', 'content_model_reference.element_id')
-            ->where('knowledge.onetsoc_code', $onetsoc_code)
-            ->where('knowledge.scale_id', 'LV')
+
+        $knowledgeData = DB::table('content_model_reference')
+            ->joinSub(function ($query) use ($onetsoc_code) {
+                $query->select(DB::raw('DISTINCT SUBSTRING(knowledge.element_id, 1, 7) as element_id'), 'knowledge.data_value')
+                    ->from('knowledge')
+                    ->where('knowledge.onetsoc_code', $onetsoc_code)
+                    ->where('knowledge.scale_id', 'LV')
+                    ->orderBy('knowledge.data_value', 'desc')
+                    ->groupBy('knowledge.element_id', 'knowledge.data_value');
+            }, 'knowledge_distinct', 'knowledge_distinct.element_id', '=', 'content_model_reference.element_id')
             ->select('content_model_reference.element_name', 'content_model_reference.description')
+            ->orderBy('knowledge_distinct.data_value', 'desc')
+            ->limit(10)
             ->get();
 
-        $abilitiesData = DB::table('abilities')
-            ->join('content_model_reference', 'abilities.element_id', '=', 'content_model_reference.element_id',)
-            ->where('abilities.scale_id', '=', 'IM')
-            ->where('abilities.onetsoc_code', $onetsoc_code)
-            ->where('abilities.scale_id', 'LV')
+        ds($knowledgeData);
 
-            ->select('content_model_reference.element_id','content_model_reference.element_name', 'content_model_reference.description')
+        $abilitiesData = DB::table('content_model_reference')
+            ->joinSub(function ($query) use ($onetsoc_code) {
+                $query->select(DB::raw('DISTINCT SUBSTRING(abilities.element_id, 1, 7) as element_id'), 'abilities.data_value')
+                    ->from('abilities')
+                    ->where('abilities.onetsoc_code', $onetsoc_code)
+                    ->where('abilities.scale_id', 'LV')
+                    ->orderBy('abilities.data_value', 'desc')
+                    ->groupBy('abilities.element_id', 'abilities.data_value');
+            }, 'abilities_distinct', 'abilities_distinct.element_id', '=', 'content_model_reference.element_id')
+            ->select('content_model_reference.element_name')
+            ->orderBy('abilities_distinct.data_value', 'desc')
+            ->limit(4)
             ->get();
+
 //        ds($abilitiesData);df
+
+//        $technologySkillsData = DB::table('technology_skills')
+//            ->where('onetsoc_code', $onetsoc_code)
+//            ->where('hot_technology', 'Y')
+//            ->select('onetsoc_code', 'example', 'hot_technology')
+//            ->get();
 
 
         $technologySkillsData = DB::table('technology_skills')
