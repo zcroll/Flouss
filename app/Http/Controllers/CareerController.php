@@ -65,7 +65,10 @@ class CareerController extends Controller
 //            ->get();
 
         ds($technologySkillsData->toArray() , $onetsoc_code);
+//        ray($technologySkillsData);
 
+//        hamid khasoo ray asi reda debuger m9aaaaweed
+       ray()->showViews();
 
         return Inertia::render('career/OverView', [
             'occupation' => $occupation,
