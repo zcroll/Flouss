@@ -49,20 +49,20 @@ class CareerController extends Controller
 
 //        ds($abilitiesData);df
 
-//        $technologySkillsData = DB::table('technology_skills')
-//            ->where('onetsoc_code', $onetsoc_code)
-//            ->where('hot_technology', 'Y')
-//            ->select('onetsoc_code', 'example', 'hot_technology')
-//            ->get();
-
-
         $technologySkillsData = DB::table('technology_skills')
-            ->join('unspsc_reference', 'technology_skills.commodity_code', '=', 'unspsc_reference.commodity_code')
-            ->where('technology_skills.onetsoc_code', $onetsoc_code)
-            ->where('technology_skills.hot_technology', 'Y')
-            ->select('technology_skills.onetsoc_code', 'technology_skills.example', 'technology_skills.hot_technology', 'unspsc_reference.commodity_title')
-
+            ->where('onetsoc_code', $onetsoc_code)
+            ->where('hot_technology', 'Y')
+            ->select('onetsoc_code', 'example', 'hot_technology')
             ->get();
+
+
+//        $technologySkillsData = DB::table('technology_skills')
+//            ->join('unspsc_reference', 'technology_skills.commodity_code', '=', 'unspsc_reference.commodity_code')
+//            ->where('technology_skills.onetsoc_code', $onetsoc_code)
+//            ->where('technology_skills.hot_technology', 'Y')
+//            ->select('technology_skills.onetsoc_code', 'technology_skills.example', 'technology_skills.hot_technology', 'unspsc_reference.commodity_title')
+//
+//            ->get();
 
         ds($technologySkillsData->toArray() , $onetsoc_code);
 
