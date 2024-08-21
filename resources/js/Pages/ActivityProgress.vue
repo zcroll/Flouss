@@ -13,11 +13,10 @@ export default {
     setup(props) {
         const responses = reactive({...props.initialResponses});
         const currentChunkIndex = ref(Math.floor(props.initialIndex / 4));
-        const progress = ref((props.initialIndex / props.activities.length) * 100);
+        const progress = ref(0); // Initialize progress to 0 by default
         const error = ref(null);
         const refHiddenInput = ref(null);
         const loading = ref(false);
-
         const chunkedActivities = computed(() => {
             const chunkSize = 4;
             let result = [];
@@ -68,6 +67,8 @@ export default {
                 loading.value = true; // Set loading state
                 router.post('/activity/submit', {
                     responses: responses
+                }, {
+                    onFinish: () => loading.value = false
                 }).then(() => {
                     router.reload(); // Reload the page using Inertia
                     Object.keys(responses).forEach(key => {
@@ -75,8 +76,6 @@ export default {
                     });
                     currentChunkIndex.value = 0; // Reset chunk index
                     progress.value = 0; // Reset progress
-                }).finally(() => {
-                    loading.value = false; // Reset loading state
                 }).catch(error => {
                     console.error('Submission failed:', error);
                 });
@@ -105,6 +104,7 @@ export default {
             updateProgress();
         });
 
+
         return {
             responses,
             currentChunkIndex,
@@ -126,10 +126,27 @@ export default {
 
 <template>
     <app-layout title="Activity Progress">
-        <div class="max-w-3xl mx-auto mt-10 px-4 sm:px-0">
-            <!-- Progress bar outside the form -->
-            <div class="w-full bg-gray-300 rounded-full h-2 mb-6 overflow-hidden">
-                <div class="h-2 bg-emerald-700 transition-all duration-300" :style="{ width: progress + '%' }"></div>
+        <div class="max-w-3xl mx-auto mt-10 px-4 sm:px-0"><!-- Progress bar outside the form -->
+
+            <!-- Additional Progress bar with different style -->
+            <div class="relative pt-1 mb-6">
+                <div class="flex mb-2 items-center justify-between">
+                    <div>
+                        <span
+                            class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-emerald-600 bg-emerald-200">
+                            Task Progress
+                        </span>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs font-semibold inline-block text-emerald-600">
+                            {{ progress  - 12.5}}%
+                        </span>
+                    </div>
+                </div>
+                <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-emerald-200">
+                    <div :style="{ width: progress - 12.5  + '%' }"
+                         class="flex flex-col text-center whitespace-nowrap text-white justify-center bg-emerald-600"></div>
+                </div>
             </div>
 
             <!-- Activity Display -->
@@ -159,7 +176,7 @@ export default {
             <!-- Navigation and submit buttons -->
             <div class="flex justify-between mt-6">
                 <button v-if="currentChunkIndex > 0" @click="prevChunk"
-                        class="bg-black  text-white font-semibold py-2 px-4 rounded-lg">
+                        class="bg-black text-white font-semibold py-2 px-4 rounded-lg">
                     Previous
                 </button>
 
@@ -170,7 +187,9 @@ export default {
                 </button>
 
                 <button v-if="currentChunkIndex === chunkedActivities.length - 1" @click="submit"
-                        class="bg-emerald-800 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded-lg flex items-center justify-center">
+                        :disabled="loading"
+                        class="bg-emerald-800 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded-lg flex items-center justify-center"
+                        :class="{'cursor-not-allowed': loading}">
                     <span v-if="!loading">Submit</span>
                     <div v-if="loading" class="flex items-center">
                         <svg class="spinner h-5 w-5 text-white mr-2 animate-spin" xmlns="http://www.w3.org/2000/svg"
@@ -195,6 +214,7 @@ export default {
     100% {
         transform: rotate(360deg);
     }
+
 }
 
 .spinner {
