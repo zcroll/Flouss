@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ContentModelReference;
 use App\Models\TechnologySkill;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -55,6 +54,7 @@ class CareerController extends Controller
             ->select('onetsoc_code', 'example', 'hot_technology')
             ->get();
 
+  #todo
 
 //        $technologySkillsData = DB::table('technology_skills')
 //            ->join('unspsc_reference', 'technology_skills.commodity_code', '=', 'unspsc_reference.commodity_code')
@@ -67,7 +67,6 @@ class CareerController extends Controller
         ds($technologySkillsData->toArray() , $onetsoc_code);
 //        ray($technologySkillsData);
 
-//        hamid khasoo ray asi reda debuger m9aaaaweed
        ray()->showViews();
 
         return Inertia::render('career/OverView', [

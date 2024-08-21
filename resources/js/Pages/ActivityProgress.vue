@@ -67,6 +67,9 @@ export default {
                 this.$page.props.loading = true; // Set loading state
                 router.post('/activity/submit', {
                     responses: this.responses
+                }).then(() => {
+                    // Empty the responses array upon successful submission
+                    this.responses = {};
                 }).finally(() => {
                     this.$page.props.loading = false; // Reset loading state
                 }).catch(error => {

@@ -1,8 +1,8 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Activity;
+use App\Models\Score;
 use App\Services\JobMatcherService;
 use App\Traits\CalculatesScores;
 use Illuminate\Http\Request;
@@ -15,10 +15,12 @@ class ActivityProgressController extends Controller
 {
     use CalculatesScores;
 
+    private const CATEGORIES = ['Realistic', 'Investigative', 'Artistic', 'Social', 'Enterprising', 'Conventional'];
+    private const INTEREST_TYPES = ['Basic', 'General'];
+
     public function index(): \Inertia\Response
     {
         $activities = $this->initializeActivities();
-
         return Inertia::render('ActivityProgress', [
             'activities' => $activities,
             'initialResponses' => [],
@@ -28,74 +30,83 @@ class ActivityProgressController extends Controller
 
     private function initializeActivities(): array
     {
-        $allActivities = $this->fetchAllActivitiesByCategoryAndType();
-        $groupedActivities = $this->groupActivitiesByCategory($allActivities);
-
+        $allActivities = $this->fetchAllActivities();
+        $groupedActivities = $this->groupActivities($allActivities);
         return $this->formatActivities($groupedActivities);
     }
 
-    private function fetchAllActivitiesByCategoryAndType()
+    private function fetchAllActivities()
     {
-        return Activity::whereIn('category', ['Realistic', 'Investigative', 'Artistic', 'Social', 'Enterprising', 'Conventional'])
-            ->whereIn('interest_type', ['Basic', 'General'])
-            ->orderBy(DB::raw("FIELD(category, 'Realistic', 'Investigative', 'Artistic', 'Social', 'Enterprising', 'Conventional')"))
-            ->orderBy(DB::raw("FIELD(interest_type, 'Basic', 'General')"))
+        return Activity::whereIn('category', self::CATEGORIES)
+            ->whereIn('interest_type', self::INTEREST_TYPES)
+            ->orderBy(DB::raw("FIELD(category, '" . implode("', '", self::CATEGORIES) . "')"))
+            ->orderBy(DB::raw("FIELD(interest_type, '" . implode("', '", self::INTEREST_TYPES) . "')"))
             ->get()
             ->groupBy('category');
     }
 
-    private function groupActivitiesByCategory($allActivities): array
+    private function groupActivities($allActivities): array
     {
         $groupedActivities = [];
-
-        foreach (['Realistic', 'Investigative', 'Artistic', 'Social', 'Enterprising', 'Conventional'] as $category) {
-            if (isset($allActivities[$category])) {
-                $basicActivities = $allActivities[$category]->where('interest_type', 'Basic')->take(5);
-                $generalActivities = $allActivities[$category]->where('interest_type', 'General')->take(5);
-                $groupedActivities[$category] = $basicActivities->merge($generalActivities);
-            } else {
-                $groupedActivities[$category] = collect();
-            }
+        foreach (self::CATEGORIES as $category) {
+            $groupedActivities[$category] = isset($allActivities[$category])
+                ? $allActivities[$category]->whereIn('interest_type', self::INTEREST_TYPES)->take(5)
+                : collect();
         }
-
         return $groupedActivities;
     }
 
     private function formatActivities($groupedActivities): array
     {
         return collect($groupedActivities)->flatMap(function ($activities, $category) {
-            return array_map(function ($activity) use ($category) {
-                return [
-                    'category' => $category,
-                    'id' => $activity['id'],
-                    'name' => $activity['activity']
-                ];
-            }, $activities->toArray());
+            return array_map(fn ($activity) => [
+                'category' => $category,
+                'id' => $activity['id'],
+                'name' => $activity['activity']
+            ], $activities->toArray());
         })->toArray();
     }
 
     public function submit(Request $request, JobMatcherService $jobMatcherService): \Illuminate\Http\RedirectResponse
     {
-        $responses = $request->input('responses',[]);
+        $responses = $request->input('responses', []);
         Log::info('Responses received: ', ['responses' => $responses]);
-        Session::put('responses', $responses);
+
+        $activities = Activity::all();
+        $scores = $this->calculateScore($activities, $responses);
+        $userId = auth()->id();
+
+        $closestJobs = app(JobMatcherController::class)->matchJobsWithScores($scores, $jobMatcherService);
+
+        Score::create([
+            'user_id' => $userId,
+            'scores' => json_encode($scores),
+            'jobs' => json_encode($closestJobs)
+        ]);
+
         return to_route('results');
     }
 
-    public function results(JobMatcherService $jobMatcherService): \Inertia\Response
+    public function results(): \Inertia\Response
     {
-        $responses = Session::get('responses',[]);
-//        if (empty($responses)) {
-//            return redirect()->route('activities');
-//        }
-        $activities = Activity::all();
-        $scores = $this->calculateScore($activities, $responses);
-        $closestJobs = app(JobMatcherController::class)->matchJobsWithScores($scores, $jobMatcherService);
-        Log::debug($closestJobs);
-        ds($scores);
+        $userId = auth()->id();
+        $score = Score::where('user_id', $userId)->latest()->first();
+
+        if ($score) {
+            $scores = json_decode($score->scores, true);
+            $closestJobs = json_decode($score->jobs, true);
+
+            Log::debug($closestJobs);
+
+            return Inertia::render('Results', [
+                'scores' => $scores,
+                'jobs' => $closestJobs,
+            ]);
+        }
+
         return Inertia::render('Results', [
-            'scores' => $scores,
-            'jobs' => $closestJobs,
+            'scores' => [],
+            'jobs' => [],
         ]);
     }
 }
