@@ -1,4 +1,5 @@
 <script>
+import {ref, reactive, computed, onMounted} from 'vue';
 import AppLayout from "@/Layouts/AppLayout.vue";
 import {router, usePage} from "@inertiajs/vue3";
 
@@ -9,41 +10,40 @@ export default {
         initialResponses: Object,
         initialIndex: Number,
     },
-    data() {
-        return {
-            responses: this.initialResponses,
-            currentChunkIndex: Math.floor(this.initialIndex / 4), // Initial chunk index
-            progress: (this.initialIndex / this.activities.length) * 100,
-            error: null,
-            refHiddenInput: null,
-        };
-    },
-    computed: {
-        chunkedActivities() {
+    setup(props) {
+        const responses = reactive({...props.initialResponses});
+        const currentChunkIndex = ref(Math.floor(props.initialIndex / 4));
+        const progress = ref((props.initialIndex / props.activities.length) * 100);
+        const error = ref(null);
+        const refHiddenInput = ref(null);
+        const loading = ref(false);
+
+        const chunkedActivities = computed(() => {
             const chunkSize = 4;
             let result = [];
-            for (let i = 0; i < this.activities.length; i += chunkSize) {
-                result.push(this.activities.slice(i, i + chunkSize));
+            for (let i = 0; i < props.activities.length; i += chunkSize) {
+                result.push(props.activities.slice(i, i + chunkSize));
             }
             return result;
-        },
-    },
-    methods: {
-        changeChunk(index) {
-            if (index >= 0 && index < this.chunkedActivities.length) {
-                this.currentChunkIndex = index;
-                this.updateProgress();
-                this.clearErrors(); // Clear errors when changing chunk
+        });
+
+        const changeChunk = (index) => {
+            if (index >= 0 && index < chunkedActivities.value.length) {
+                currentChunkIndex.value = index;
+                updateProgress();
+                clearErrors(); // Clear errors when changing chunk
             }
-        },
-        validateResponses() {
-            const currentChunk = this.chunkedActivities[this.currentChunkIndex];
-            return currentChunk.every(activity => this.responses[activity.id]);
-        },
-        markEmptyResponses() {
-            const currentChunk = this.chunkedActivities[this.currentChunkIndex];
+        };
+
+        const validateResponses = () => {
+            const currentChunk = chunkedActivities.value[currentChunkIndex.value];
+            return currentChunk.every(activity => responses[activity.id]);
+        };
+
+        const markEmptyResponses = () => {
+            const currentChunk = chunkedActivities.value[currentChunkIndex.value];
             currentChunk.forEach(activity => {
-                if (!this.responses[activity.id]) {
+                if (!responses[activity.id]) {
                     activity.error = true;
                 } else {
                     if (activity.error) {
@@ -51,48 +51,76 @@ export default {
                     }
                 }
             });
-            this.$forceUpdate(); // Update the view to reflect changes
-        },
-        clearErrors() {
-            this.chunkedActivities.forEach(chunk => {
+        };
+
+        const clearErrors = () => {
+            chunkedActivities.value.forEach(chunk => {
                 chunk.forEach(activity => {
                     if (activity.error) {
                         delete activity.error;
                     }
                 });
             });
-        },
-        submit() {
-            if (this.validateResponses()) {
-                this.$page.props.loading = true; // Set loading state
+        };
+
+        const submit = () => {
+            if (validateResponses()) {
+                loading.value = true; // Set loading state
                 router.post('/activity/submit', {
-                    responses: this.responses
+                    responses: responses
                 }).then(() => {
-                    // Empty the responses array upon successful submission
-                    this.responses = {};
+                    router.reload(); // Reload the page using Inertia
+                    Object.keys(responses).forEach(key => {
+                        delete responses[key];
+                    });
+                    currentChunkIndex.value = 0; // Reset chunk index
+                    progress.value = 0; // Reset progress
                 }).finally(() => {
-                    this.$page.props.loading = false; // Reset loading state
+                    loading.value = false; // Reset loading state
                 }).catch(error => {
                     console.error('Submission failed:', error);
                 });
             } else {
-                this.markEmptyResponses();
+                markEmptyResponses();
             }
-        },
-        updateProgress() {
-            this.progress = ((this.currentChunkIndex + 1) / this.chunkedActivities.length) * 100;
-        },
-        nextChunk() {
-            if (this.validateResponses()) {
-                this.changeChunk(this.currentChunkIndex + 1);
+        };
+
+        const updateProgress = () => {
+            progress.value = ((currentChunkIndex.value + 1) / chunkedActivities.value.length) * 100;
+        };
+
+        const nextChunk = () => {
+            if (validateResponses()) {
+                changeChunk(currentChunkIndex.value + 1);
             } else {
-                this.markEmptyResponses();
+                markEmptyResponses();
             }
-        },
-        prevChunk() {
-            this.changeChunk(this.currentChunkIndex - 1);
-        }
-    },
+        };
+
+        const prevChunk = () => {
+            changeChunk(currentChunkIndex.value - 1);
+        };
+
+        onMounted(() => {
+            updateProgress();
+        });
+
+        return {
+            responses,
+            currentChunkIndex,
+            progress,
+            loading,
+            chunkedActivities,
+            changeChunk,
+            validateResponses,
+            markEmptyResponses,
+            clearErrors,
+            submit,
+            updateProgress,
+            nextChunk,
+            prevChunk,
+        };
+    }
 };
 </script>
 
@@ -143,8 +171,8 @@ export default {
 
                 <button v-if="currentChunkIndex === chunkedActivities.length - 1" @click="submit"
                         class="bg-emerald-800 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded-lg flex items-center justify-center">
-                    <span v-if="!$page.props.loading">Submit</span>
-                    <div v-if="$page.props.loading" class="flex items-center">
+                    <span v-if="!loading">Submit</span>
+                    <div v-if="loading" class="flex items-center">
                         <svg class="spinner h-5 w-5 text-white mr-2 animate-spin" xmlns="http://www.w3.org/2000/svg"
                              fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"

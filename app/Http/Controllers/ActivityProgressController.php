@@ -93,11 +93,11 @@ class ActivityProgressController extends Controller
         $score = Score::where('user_id', $userId)->latest()->first();
 
         if ($score) {
-            $scores = json_decode($score->scores, true);
+            $scores = json_decode($score->scores, true, 512, JSON_THROW_ON_ERROR);
             $closestJobs = json_decode($score->jobs, true);
 
             Log::debug($closestJobs);
-
+ds($scores);
             return Inertia::render('Results', [
                 'scores' => $scores,
                 'jobs' => $closestJobs,
