@@ -5,7 +5,9 @@ use App\Models\Activity;
 use App\Models\Score;
 use App\Services\JobMatcherService;
 use App\Traits\CalculatesScores;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
@@ -18,13 +20,31 @@ class ActivityProgressController extends Controller
     private const CATEGORIES = ['Realistic', 'Investigative', 'Artistic', 'Social', 'Enterprising', 'Conventional'];
     private const INTEREST_TYPES = ['Basic', 'General'];
 
-    public function index(): \Inertia\Response
+    public function index()
     {
+        $lastTest = Auth::user()->test()->latest('created_at')->first();
+
+        ds($lastTest);
+
+        $lastTestDate = $lastTest ? Carbon::parse($lastTest->created_at) : null;
+
+        ds($lastTestDate);
+
+        $isOver10Days = !$lastTestDate || $lastTestDate->lt(Carbon::now()->subDays(10));
+
+        ds($isOver10Days);
+
+        if (!$isOver10Days) {
+            return to_route('results');
+        }
+
         $activities = $this->initializeActivities();
+
         return Inertia::render('ActivityProgress', [
             'activities' => $activities,
             'initialResponses' => [],
             'initialIndex' => 0,
+//            'isOver10Days' => $isOver10Days,
         ]);
     }
 
@@ -86,6 +106,19 @@ class ActivityProgressController extends Controller
 
         return to_route('results');
     }
+
+
+//    public function getLastTestDate(Request $request)
+//    {
+//        $lastTest = Auth::user()->tests()->latest('created_at')->first();
+//        $lastTestDate = $lastTest ? Carbon::parse($lastTest->created_at) : null;
+//        $isOver10Days = $lastTestDate ? $lastTestDate->lt(Carbon::now()->subDays(10)) : true;
+//
+//        return Inertia::render('', [
+//            'isOver10Days' => $isOver10Days,
+//        ]);
+//    }
+
 
     public function results(): \Inertia\Response
     {

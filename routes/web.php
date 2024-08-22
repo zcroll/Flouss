@@ -24,12 +24,12 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 });
-Route::get('/activities', [ActivityProgressController::class, 'index'])->name('activities');
+Route::get('/activities', [ActivityProgressController::class, 'index'])->middleware('auth:sanctum')->name('activities');
 
-Route::post('/activity/submit', [ActivityProgressController::class, 'submit']);
+Route::post('/activity/submit', [ActivityProgressController::class, 'submit'])->middleware('auth:sanctum')->name('activity.submit');
 
 
 
-Route::get('/results', [ActivityProgressController::class, 'results'])->name('results');
+Route::get('/results', [ActivityProgressController::class, 'results'])->middleware('auth:sanctum')->name('results');
 
 Route::get('/career/{id}', [CareerController::class,'index'])->name('career');

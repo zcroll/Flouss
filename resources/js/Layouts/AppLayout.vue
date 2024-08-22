@@ -11,6 +11,8 @@ import Header from "@/Components/Header.vue";
 
 defineProps({
     title: String,
+    isOver10Days: Boolean, // New prop added here
+
 });
 
 const showingNavigationDropdown = ref(false);
@@ -22,6 +24,7 @@ const switchToTeam = (team) => {
         preserveState: false,
     });
 };
+
 
 const logout = () => {
     router.post(route('logout'));
@@ -60,10 +63,13 @@ const logout = () => {
                                 <NavLink :href="route('results')" :active="route().current('results')">
                                     Results
                                 </NavLink>
+                                <!-- This link will be displayed only on the dashboard or results pages if the user has not taken any tests yet. -->
 
-                                <NavLink :href="route('activities')" :active="route().current('activities')">
-                                    Career Test
-                                </NavLink>
+
+
+<!--                                <NavLink v-if="isOver10Days" :href="route('activities')" :active="route().current('activities')">-->
+<!--                                    Career Test-->
+<!--                                </NavLink>-->
 
                             </div>
 
