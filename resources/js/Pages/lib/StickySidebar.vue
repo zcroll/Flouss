@@ -127,7 +127,7 @@ export default {
         checkScreenSize() {
             this.isSmallScreen = window.innerWidth < 1024;
         }
-    }
+    },
 };
 </script>
 
