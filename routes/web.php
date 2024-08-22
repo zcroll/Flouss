@@ -23,13 +23,15 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+
+    Route::controller(ActivityProgressController::class)->group(function () {
+        Route::get('/activities', 'index')->name('activities');
+        Route::post('/activity/submit', 'submit')->name('activity.submit');
+        Route::get('/results', 'results')->name('results');
+    });
+
+    Route::controller(CareerController::class)->group(function () {
+        Route::get('/career/{id}', 'index')->name('career');
+        Route::get('/career/{job}/abilities', 'abilities')->name('career.abilities');
+    });
 });
-Route::get('/activities', [ActivityProgressController::class, 'index'])->middleware('auth:sanctum')->name('activities');
-
-Route::post('/activity/submit', [ActivityProgressController::class, 'submit'])->middleware('auth:sanctum')->name('activity.submit');
-
-
-
-Route::get('/results', [ActivityProgressController::class, 'results'])->middleware('auth:sanctum')->name('results');
-
-Route::get('/career/{id}', [CareerController::class,'index'])->name('career');
