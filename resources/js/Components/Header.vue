@@ -73,6 +73,27 @@
                     take your time and answer with ease !
                 </p>
             </div>
+            <div
+                :style="[backgroundStyles,backgroundImage2]"
+            />
+        </div>
+        <div
+            class="page-head page-head--first-time-dash"
+            :style="pageHeadStyles"
+            v-else-if="route().current('career')"
+        >
+            <div
+                class="grid-container"
+                :style="gridContainerStyles"
+            >
+                <h1
+                    class="DashboardPage__header__heading"
+                    :style="headingStyles"
+                >
+                    {{ route().params.id }}
+                </h1>
+
+            </div>
 
             <div
                 :style="[backgroundStyles,backgroundImage2]"
