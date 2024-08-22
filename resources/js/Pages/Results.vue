@@ -116,7 +116,8 @@ export default defineComponent({
             router.visit('/activities', {preserveScroll: true});
         },
         visitJob(job) {
-            router.visit(`/career/${job}`, {preserveScroll: false});
+            const formattedJob = job.replace(/ /g, '-');
+            router.visit(`/career/${formattedJob}`, {preserveScroll: false});
         },
     },
 });

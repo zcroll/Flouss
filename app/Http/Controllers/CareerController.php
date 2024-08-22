@@ -12,6 +12,9 @@ class CareerController extends Controller
 {
     public function index($job): \Inertia\Response
     {
+        $job = str_replace('-', ' ', $job);
+
+        ds($job);
         $occupation = OccupationData::where('title', $job)->first();
         $onetsoc_code = $occupation->onetsoc_code;
 
@@ -54,7 +57,7 @@ class CareerController extends Controller
             ->select('onetsoc_code', 'example', 'hot_technology')
             ->get();
 
-  #todo
+        #todo
 
 //        $technologySkillsData = DB::table('technology_skills')
 //            ->join('unspsc_reference', 'technology_skills.commodity_code', '=', 'unspsc_reference.commodity_code')
@@ -67,12 +70,12 @@ class CareerController extends Controller
 //        ds($technologySkillsData->toArray() , $onetsoc_code);
 //        ray($technologySkillsData);
 
-       ray()->showViews();
+        ray()->showViews();
 
         return Inertia::render('career/OverView', [
             'occupation' => $occupation,
             'knowledge' => $knowledgeData,
-            'abilities' => $abilitiesData,
+            'abilities`' => $abilitiesData,
 
         ]);
     }
