@@ -1,5 +1,6 @@
 <template>
     <app-layout title="Results" preserveScroll>
+
         <div class="relative max-w-7xl mx-auto mt-10">
             <div class="flex flex-col lg:flex-row">
                 <!-- Main Content Section -->
@@ -73,6 +74,7 @@
                 </div>
             </div>
         </div>
+
     </app-layout>
 </template>
 
@@ -80,9 +82,11 @@
 import {defineComponent} from "vue";
 import {router, Link} from '@inertiajs/vue3';
 import AppLayout from "@/Layouts/AppLayout.vue";
+import StickySidebar from "@/Pages/lib/StickySidebar.vue";
 
 export default defineComponent({
     components: {
+        StickySidebar,
         AppLayout,
         Link,
     },

@@ -1,6 +1,7 @@
 <script setup>
 import {computed} from 'vue';
 import {usePage} from '@inertiajs/vue3';
+import StickySidebar from "@/Pages/lib/StickySidebar.vue";
 
 const {props} = usePage();
 const occupation = computed(() => props.occupation);
@@ -11,6 +12,8 @@ const {description, title} = occupation.value;
 </script>
 
 <template>
+    <StickySidebar :title="title">
+
     <div class="p-6 max-w-4xl mx-auto">
         <h1 class="text-3xl font-bold mb-4">{{ title }}</h1>
         <p class="text-lg mb-6">{{ description }}</p>
@@ -33,6 +36,8 @@ const {description, title} = occupation.value;
 
         </div>
     </div>
+    </StickySidebar>
+
 </template>
 
 <style scoped>

@@ -30,7 +30,7 @@ class CareerController extends Controller
             ->limit(10)
             ->get();
 
-        ds($knowledgeData);
+//        ds($knowledgeData);
 
         $abilitiesData = DB::table('content_model_reference')
             ->joinSub(function ($query) use ($onetsoc_code) {
@@ -46,7 +46,7 @@ class CareerController extends Controller
             ->limit(4)
             ->get();
 
-//        ds($abilitiesData);df
+        ds($abilitiesData);
 
         $technologySkillsData = DB::table('technology_skills')
             ->where('onetsoc_code', $onetsoc_code)
@@ -64,7 +64,7 @@ class CareerController extends Controller
 //
 //            ->get();
 
-        ds($technologySkillsData->toArray() , $onetsoc_code);
+//        ds($technologySkillsData->toArray() , $onetsoc_code);
 //        ray($technologySkillsData);
 
        ray()->showViews();
@@ -72,7 +72,7 @@ class CareerController extends Controller
         return Inertia::render('career/OverView', [
             'occupation' => $occupation,
             'knowledge' => $knowledgeData,
-            'activities' => $abilitiesData,
+            'abilities' => $abilitiesData,
 
         ]);
     }
