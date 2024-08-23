@@ -2,14 +2,13 @@
     <div class="container mx-auto p-4 flex flex-col-reverse lg:flex-row">
         <!-- Main Content Section -->
         <div class="w-full lg:w-2/3">
-<!--            <slot/>-->
             <slot/>
-
         </div>
 
         <!-- Sticky Sidebar -->
         <div class="w-full lg:w-1/3 mb-8 lg:mb-0 lg:pl-8">
-            <div class="sticky top-4 bg-white shadow-xl rounded-lg p-6">
+            <div
+                class="sticky top-4 bg-white shadow-xl rounded-lg p-6 transform transition-all duration-300 hover:scale-105">
                 <h3 class="text-2xl font-bold mb-6 text-gray-800">{{ sidebarTitle }}</h3>
                 <p class="text-md text-gray-600 mb-4">{{ sidebarDescription }}</p>
 
@@ -24,68 +23,166 @@
                     <div class="grid grid-cols-3 gap-4 mb-6">
                         <div
                             class="bg-purple-500 text-white p-4 rounded-lg text-center hover:scale-105 transition-transform duration-300">
-                            <p class="text-sm">Avg Salary</p>
+                            <p class="text-sm">Avg knowledge</p>
                             <h4 class="text-xl font-bold">$67K</h4>
                         </div>
                         <div
                             class="bg-teal-600 text-white p-4 rounded-lg text-center hover:scale-105 transition-transform duration-300">
-                            <p class="text-sm">Growth</p>
+                            <p class="text-sm">technologies</p>
                             <h4 class="text-xl font-bold">N/A</h4>
                         </div>
                         <div
                             class="bg-gray-800 text-white p-4 rounded-lg text-center hover:scale-105 transition-transform duration-300">
-                            <p class="text-sm">Satisfaction</p>
+                            <p class="text-sm">tasks</p>
                             <h4 class="text-xl font-bold">Very Low</h4>
                         </div>
                     </div>
                     <ul class="space-y-2 text-gray-700">
-                        <li v-for="item in items" :key="item.text">
-                            <Link :href="`${baseUri}/${item.text.toLowerCase().replace(/\s+/g, '-')}`"
-                                  :class="{'hover:text-purple-600 cursor-pointer hover:animate-pulse': `${baseUri}/${item.text.toLowerCase().replace(/\s+/g, '-')}` !== baseUri, 'text-gray-500 cursor-not-allowed': `${baseUri}/${item.text.toLowerCase().replace(/\s+/g, '-')}` === baseUri}"
-                                  :aria-disabled="`${baseUri}/${item.text.toLowerCase().replace(/\s+/g, '-')}` === baseUri">
-                                {{ item.text }}
+                        <li>
+                            <Link
+                                :href="`${baseUrl}/abilities`"
+                                :class="{
+                  'active': $page.url === `${baseUrl}/abilities`,
+                  'disabled-link': $page.url === `${baseUrl}/abilities`
+                }"
+                                :aria-disabled="$page.url === `${baseUrl}/abilities`"
+                            >
+                                Abilities
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                :href="`${baseUrl}/work-activities`"
+                                :class="{
+                  'active': $page.url === `${baseUrl}/work-activities`,
+                  'disabled-link': $page.url === `${baseUrl}/work-activities`
+                }"
+                                :aria-disabled="$page.url === `${baseUrl}/work-activities`"
+                            >
+                                work-activities
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                :href="`${baseUrl}/knowledge`"
+                                :class="{
+                  'active': $page.url === `${baseUrl}/knowledge`,
+                  'disabled-link': $page.url === `${baseUrl}/knowledge`
+                }"
+                                :aria-disabled="$page.url === `${baseUrl}/knowledge`"
+                            >
+                                knowledge
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                :href="`${baseUrl}/technologies`"
+                                :class="{
+                  'active': $page.url === `${baseUrl}/technologies`,
+                  'disabled-link': $page.url === `${baseUrl}/technologies`
+                }"
+                                :aria-disabled="$page.url === `${baseUrl}/technologies`"
+                            >
+                                technologies
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                :href="`${baseUrl}/tasks`"
+                                :class="{
+                  'active': $page.url === `${baseUrl}/tasks`,
+                  'disabled-link': $page.url === `${baseUrl}/tasks`
+                }"
+                                :aria-disabled="$page.url === `${baseUrl}/tasks`"
+                            >
+                                tasks
                             </Link>
                         </li>
                     </ul>
-                </div>
-
-                <!-- Horizontal Scroller for Small Screens -->
+                </div><!-- Horizontal Scroller for Small Screens -->
                 <div v-else class="bg-gray-50 p-6 rounded-lg shadow-sm">
-                    <div class="flex items-center mb-6">
+                    <div class="flex items-center justify-center mb-6">
                         <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
                             <img src="/icon.png" alt="Icon" class="w-6 h-6">
                         </div>
-                        <h3 class="ml-4 text-lg font-semibold text-gray-700 animate-fade-in">Account Manager</h3>
+                        <h3 class="ml-4 text-lg font-semibold text-gray-700 animate-fade-in text-center">{{
+                                title
+                            }}</h3>
                     </div>
-                    <div class="grid grid-cols-3 gap-4 mb-6">
+                    <div class="grid grid-cols-3 gap-4 mb-6 text-center">
                         <div
-                            class="bg-purple-500 text-white p-4 rounded-lg text-center hover:scale-105 transition-transform duration-300">
-                            <p class="text-sm">Avg Salary</p>
+                            class="bg-purple-500 text-white p-4 rounded-lg hover:scale-105 transition-transform duration-300">
+                            <p class="text-sm">Avg knowledge</p>
                             <h4 class="text-xl font-bold">$67K</h4>
                         </div>
                         <div
-                            class="bg-teal-600 text-white p-4 rounded-lg text-center hover:scale-105 transition-transform duration-300">
-                            <p class="text-sm">Growth</p>
+                            class="bg-teal-600 text-white p-4 rounded-lg hover:scale-105 transition-transform duration-300">
+                            <p class="text-sm">technologies</p>
                             <h4 class="text-xl font-bold">N/A</h4>
                         </div>
-                        <div
-                            class="bg-gray-800 text-white p-4 rounded-lg text-center hover:scale-105 transition-transform duration-300">
-                            <p class="text-sm">Satisfaction</p>
-                            <h4 class="text-xl font-bold">Very Low</h4>
-                        </div>
                     </div>
-
-                    <!-- Turn List Items into Cards on Small Screens -->
-                    <div class="flex overflow-x-auto space-x-4">
-                        <div v-for="item in items" :key="item.text"
-                             class="flex-shrink-0 bg-white p-4 rounded-lg shadow-md text-center min-w-card hover:scale-105 transition-transform duration-300">
-                            <Link :href="`${baseUri}/${item.text.toLowerCase().replace(/\s+/g, '-')}`">
-                                <p :class="[item.text === 'Overview' ? 'font-bold text-black' : 'hover:text-purple-600 cursor-pointer hover:animate-pulse']">
-                                    {{ item.text }}
-                                </p>
+                    <ul class="flex overflow-x-auto space-x-4 text-gray-700 justify-center">
+                        <li>
+                            <Link
+                                :href="`${baseUrl}/abilities`"
+                                :class="{
+                  'active': $page.url === `${baseUrl}/abilities`,
+                  'disabled-link': $page.url === `${baseUrl}/abilities`
+                }"
+                                :aria-disabled="$page.url === `${baseUrl}/abilities`"
+                            >
+                                Abilities
                             </Link>
-                        </div>
-                    </div>
+                        </li>
+                        <li>
+                            <Link
+                                :href="`${baseUrl}/work-activities`"
+                                :class="{
+                  'active': $page.url === `${baseUrl}/work-activities`,
+                  'disabled-link': $page.url === `${baseUrl}/work-activities`
+                }"
+                                :aria-disabled="$page.url === `${baseUrl}/work-activities`"
+                            >
+                                work-activities
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                :href="`${baseUrl}/knowledge`"
+                                :class="{
+                  'active': $page.url === `${baseUrl}/knowledge`,
+                  'disabled-link': $page.url === `${baseUrl}/knowledge`
+                }"
+                                :aria-disabled="$page.url === `${baseUrl}/knowledge`"
+                            >
+                                knowledge
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                :href="`${baseUrl}/technologies`"
+                                :class="{
+                  'active': $page.url === `${baseUrl}/technologies`,
+                  'disabled-link': $page.url === `${baseUrl}/technologies`
+                }"
+                                :aria-disabled="$page.url === `${baseUrl}/technologies`"
+                            >
+                                technologies
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                :href="`${baseUrl}/tasks`"
+                                :class="{
+                  'active': $page.url === `${baseUrl}/tasks`,
+                  'disabled-link': $page.url === `${baseUrl}/tasks`
+                }"
+                                :aria-disabled="$page.url === `${baseUrl}/tasks`"
+                            >
+                                tasks
+                            </Link>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -93,58 +190,41 @@
 </template>
 
 <script>
-import {Link, usePage} from '@inertiajs/vue3';
-import {computed} from "vue";
-
-
-
-const page = usePage()
-
-const baseUri = computed(() => page.props.baseUri)
+import {Link} from '@inertiajs/vue3';
 
 export default {
     components: {
         Link
     },
     props: {
-        sidebarTitle: {
-            type: String,
-            required: true
+        sidebarTitle: String,
+        sidebarDescription: String,
+        title: String,
+    },
+    computed: {
+        isSmallScreen() {
+            return window.innerWidth < 1024;
         },
-        sidebarDescription: {
-            type: String,
-            required: true
-        },
-
-    },
-    data() {
-        return {
-            isSmallScreen: false,
-            items: [
-                {text: 'Your Compatibility'},
-                {text: 'Overview'},
-                {text: 'Abilities'},
-                {text: 'How to Become'},
-                {text: 'Knowledge'},
-                {text: 'Personality'},
-                {text: 'Technologies'},
-                {text: 'Work Environment'},
-
-            ],
-            baseUri: baseUri,
-        };
-    },
-    mounted() {
-        this.checkScreenSize();
-        window.addEventListener('resize', this.checkScreenSize);
-    },
-    beforeDestroy() {
-        window.removeEventListener('resize', this.checkScreenSize);
-    },
-    methods: {
-        checkScreenSize() {
-            this.isSmallScreen = window.innerWidth < 1024;
+        baseUrl() {
+            return `/career/${this.title.split(' ').join('-')}`;
         }
-    },
+    }
 };
 </script>
+
+<style scoped>
+.stickySidebar {
+    position: sticky;
+    top: 4rem;
+}
+
+.active {
+    color: #4A4A4A; /* Adjust the active color as needed */
+    font-weight: bold;
+}
+
+.disabled-link {
+    color: #D1D5DB; /* Tailwind's gray-300 color for less visibility */
+    cursor: not-allowed;
+}
+</style>

@@ -159,7 +159,8 @@ export default defineComponent({
             return descriptions[category] || "No description available.";
         },
         visitJob(job) {
-            router.visit(`/career/${job}`, {preserveScroll: false});
+            const formattedJob = job.replace(/ /g, '-');
+            router.visit(`/career/${formattedJob}`, {preserveScroll: false});
         },
     },
 });

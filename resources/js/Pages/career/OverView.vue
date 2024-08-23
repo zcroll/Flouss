@@ -1,20 +1,38 @@
-<script setup>
+<script setup lang="ts">
 import {computed} from 'vue';
 import {usePage} from '@inertiajs/vue3';
 import StickySidebar from "@/Pages/lib/StickySidebar.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 
-const {props} = usePage();
+interface Element {
+    element_name: string;
+    description: string;
+    element_id: string;
+}
+
+interface Occupation {
+    description: string;
+    title: string;
+}
+
+interface Props {
+    occupation: Occupation;
+    knowledge: Element[];
+    abilities: Element[];
+    activities: Element[];
+}
+
+const {props} = usePage<Props>();
 const occupation = computed(() => props.occupation);
 const knowledge = computed(() => props.knowledge);
 const abilities = computed(() => props.abilities);
 const technology = computed(() => props.activities);
-const {description, title} = occupation.value;
+const {description, title} = computed(() => props.occupation).value;
 </script>
 
 <template>
     <app-layout>
-    <StickySidebar :title="title">
+        <StickySidebar :title="title">
 
             <div class="w-full lg:w-4/4 space-y-1">
                 <div class="p-8 max-w-5xl mx-auto space-y-8">
@@ -23,7 +41,8 @@ const {description, title} = occupation.value;
 
                     <div>
                         <h2 class="text-2xl font-semibold text-gray-800 mb-4">Knowledge</h2>
-                        <div v-for="item in knowledge" :key="item.element_name" class="mb-4 p-6 bg-indigo-50 rounded-lg shadow-sm">
+                        <div v-for="item in knowledge" :key="item.element_name"
+                             class="mb-4 p-6 bg-indigo-50 rounded-lg shadow-sm">
                             <h3 class="text-xl font-medium text-indigo-900">{{ item.element_name }}</h3>
                             <p class="text-gray-700 mt-2">{{ item.description }}</p>
                         </div>
@@ -31,7 +50,8 @@ const {description, title} = occupation.value;
 
                     <div>
                         <h2 class="text-2xl font-semibold text-gray-800 mb-4">Abilities</h2>
-                        <div v-for="item in abilities" :key="item.element_id" class="mb-4 p-6 bg-green-50 rounded-lg shadow-sm">
+                        <div v-for="item in abilities" :key="item.element_id"
+                             class="mb-4 p-6 bg-green-50 rounded-lg shadow-sm">
                             <h3 class="text-xl font-medium text-green-900">{{ item.element_name }}</h3>
                             <p class="text-gray-700 mt-2">{{ item.description }}</p>
                         </div>
@@ -40,7 +60,7 @@ const {description, title} = occupation.value;
             </div>
 
 
-    </StickySidebar>
+        </StickySidebar>
     </app-layout>
 
 </template>
