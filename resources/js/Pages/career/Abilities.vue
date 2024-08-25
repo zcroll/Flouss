@@ -1,42 +1,48 @@
 <template>
+    <AppLayout>
+        <StickySidebar :title="occupation.title">
+            <!-- Other components -->
+            <JobLayout :items="abilities" />
+            <div class="text-2xl font- font-thin p-6 pt-9">Up Next</div>
+            <UpNext
+                :title="`Curious About What Will You Do As a ${occupation.title} ?` "
+                description=""
+                ctaText="Find out more about it "
+                backgroundColor="black"
 
-    <StickySidebar :title="occupation.title">
-
-        <div class="container mx-auto p-4">
-            <h1 class="text-2xl font-bold mb-4">{{ occupation.title }} - Abilities</h1>
-            <div v-if="abilities.length">
-                <ul class="space-y-2">
-                    <li v-for="ability in abilities" :key="ability.element_id">
-                        <p>{{ ability.element_name }}</p>
-                    </li>
-                </ul>
-            </div>
-            <div v-else>
-                <p>No abilities data available.</p>
-            </div>
-        </div>
-    </StickySidebar>
-
+            />
+        </StickySidebar>
+    </AppLayout>
 </template>
 
 <script setup>
-import {defineProps} from 'vue';
+import { defineProps } from 'vue';
 import StickySidebar from "@/Pages/lib/StickySidebar.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
+import UpNext from "@/Components/UpNext.vue";
+import JobLayout from "@/Components/JobLayout.vue";
 
+
+// Props
 const props = defineProps({
     occupation: {
         type: Object,
-        required: true
+        required: true,
     },
     abilities: {
         type: Array,
-        required: true
+        required: true,
     },
     baseUri: {
         type: String,
-        required: true
+        required: true,
     }
 });
+
+
+
+// Method to get background image
+
 </script>
 
 <style scoped>

@@ -8,36 +8,52 @@
         <!-- Sticky Sidebar -->
         <div class="w-full lg:w-1/3 mb-8 lg:mb-0 lg:pl-8">
             <div
-                class="sticky top-4 bg-white shadow-xl rounded-lg p-6 transform transition-all duration-300 hover:scale-105">
+                class="sticky top-9 bg-white shadow-2xl rounded-3xl p-6 transform transition-all duration-300 hover:scale-105">
                 <h3 class="text-2xl font-bold mb-6 text-gray-800">{{ sidebarTitle }}</h3>
                 <p class="text-md text-gray-600 mb-4">{{ sidebarDescription }}</p>
 
                 <!-- Main Content for Large Screens -->
-                <div v-if="!isSmallScreen" class="bg-gray-50 p-6 rounded-lg shadow-sm animate-slide-in">
-                    <div class="flex items-center mb-6">
-                        <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
-                            <img src="/icon.png" alt="Icon" class="w-6 h-6">
-                        </div>
-                        <h3 class="ml-4 text-lg font-semibold text-gray-700 animate-fade-in">{{ title }}</h3>
+                <div v-if="!isSmallScreen" class=" rounded-3xl animate-slide-in"><div class="grid grid-cols-3 gap-4 items-center mb-10">
+                    <div class="col-span-1 w-20 h-20 bg-gray-200 rounded-2xl flex items-center justify-center justify-self-center">
+                        <img src="/icon.png" alt="Icon" class="w-6 h-6">
                     </div>
+                    <h3 class="col-span-2 text-xl font-bold font-serif text-gray-700 animate-fade-in">
+                        {{ title }}
+                    </h3>
+                </div>
+
                     <div class="grid grid-cols-3 gap-4 mb-6">
                         <div
-                            class="bg-purple-500 text-white p-4 rounded-lg text-center hover:scale-105 transition-transform duration-300">
-                            <p class="text-sm">Avg knowledge</p>
-                            <h4 class="text-xl font-bold">$67K</h4>
+                            class="bg-purple-500 text-white h-3/4 rounded-lg text-center hover:scale-105 transition-transform duration-300 flex flex-col justify-center items-center p-4">
+                            <h4 class="text-l font-bold">Salary</h4>
+                            <p class="text-sm">$67K</p>
                         </div>
                         <div
-                            class="bg-teal-600 text-white p-4 rounded-lg text-center hover:scale-105 transition-transform duration-300">
-                            <p class="text-sm">technologies</p>
-                            <h4 class="text-xl font-bold">N/A</h4>
+                            class="bg-teal-600 text-white h-3/4 rounded-lg text-center hover:scale-105 transition-transform duration-300 flex flex-col justify-center items-center p-4">
+                            <h4 class="text-l font-bold">Technologies</h4>
+                            <p class="text-sm">N/A</p>
+
                         </div>
                         <div
-                            class="bg-gray-800 text-white p-4 rounded-lg text-center hover:scale-105 transition-transform duration-300">
-                            <p class="text-sm">tasks</p>
-                            <h4 class="text-xl font-bold">Very Low</h4>
+                            class="bg-gray-800 text-white h-3/4 rounded-lg text-center hover:scale-105 transition-transform duration-300 flex flex-col justify-center items-center p-4">
+                            <h4 class="text-l font-bold">Tasks</h4>
+                            <p class="text-sm">Very Low</p>
+
                         </div>
                     </div>
-                    <ul class="space-y-2 text-gray-700">
+                    <ul class="space-y-4 text-gray-700">
+                        <li>
+                            <Link
+                                :href="`${baseUrl}`"
+                                :class="{
+                  'active': $page.url === `${baseUrl}`,
+                  'disabled-link': $page.url === `${baseUrl}`
+                }"
+                                :aria-disabled="$page.url === `${baseUrl}`"
+                            >
+                                <span class="font-serif text-3xl hover:p-5 transition-all duration-300">Overview</span>
+                            </Link>
+                        </li>
                         <li>
                             <Link
                                 :href="`${baseUrl}/abilities`"
@@ -47,7 +63,7 @@
                 }"
                                 :aria-disabled="$page.url === `${baseUrl}/abilities`"
                             >
-                                Abilities
+                                <span class="font-serif text-3xl hover:p-5 transition-all duration-300">Abilities</span>
                             </Link>
                         </li>
                         <li>
@@ -59,7 +75,7 @@
                 }"
                                 :aria-disabled="$page.url === `${baseUrl}/work-activities`"
                             >
-                                work-activities
+                                <span class="font-serif text-3xl hover:p-5 transition-all duration-300">work-activities</span>
                             </Link>
                         </li>
                         <li>
@@ -71,7 +87,7 @@
                 }"
                                 :aria-disabled="$page.url === `${baseUrl}/knowledge`"
                             >
-                                knowledge
+                                <span class="font-serif text-3xl hover:p-5 transition-all duration-300">knowledge</span>
                             </Link>
                         </li>
                         <li>
@@ -83,7 +99,8 @@
                 }"
                                 :aria-disabled="$page.url === `${baseUrl}/technologies`"
                             >
-                                technologies
+                                <span class="font-serif text-3xl hover:p-5 transition-all duration-300 ">Technologies</span>
+
                             </Link>
                         </li>
                         <li>
@@ -95,7 +112,7 @@
                 }"
                                 :aria-disabled="$page.url === `${baseUrl}/tasks`"
                             >
-                                tasks
+                                <span class="font-serif text-3xl hover:p-5 transition-all duration-300">tasks</span>
                             </Link>
                         </li>
                     </ul>

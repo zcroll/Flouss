@@ -1,5 +1,5 @@
 <template>
-    <div id="up-next-container" style="box-sizing: border-box;">
+    <div id="up-next-container" style="box-sizing: border-box;" class="transform transition-all duration-300 hover:scale-90 ">
         <div
             class="UpNextCard UpNextCard--overview"
             :style="{ ...cardStyle, backgroundColor: backgroundColor }"
@@ -67,8 +67,8 @@ const props = defineProps({
     },
     imageSrc: {
         type: String,
-        required: true,
-        default: 'https://www.careerexplorer.com/static/compiled/images/up-next-blobs/1-vert.svg'
+
+        default: 'https://www.careerexplorer.com/static/compiled/images/up-next-blobs/4-vert.svg'
     },
     backgroundColor: {
         type: String,
@@ -79,9 +79,9 @@ const props = defineProps({
 const cardStyle = {
     boxSizing: "border-box",
     overflow: "hidden",
-    transition: "transform 0.5s, box-shadow 0.5s",
+    transition: "transform 0.5s, scale 2",
     margin: "1em 0px 3em",
-    maxHeight: "300px",
+    maxHeight: "400px",
     maxWidth: "100%",
     borderRadius: "24px",
     position: "relative",
@@ -110,24 +110,28 @@ const titleStyle = {
     fontWeight: 300,
     color: "rgb(255, 255, 255)",
     paddingTop: "0px",
-    margin: "0px 0px 40px",
+    margin: "20px 0px 10px",
     fontSize: "36px",
     lineHeight: "41px",
+    fontFamily: "Helvetica"
 };
 
 const descriptionStyle = {
+        overflow: "hidden",
+    webkitLineClamp: 2,
+webkitBoxOrient: "vertical",
+  paddingBottom: "5px",
     boxSizing: "border-box",
     marginBlock: "1.5em",
     letterSpacing: "-0.3px",
     color: "rgb(255, 255, 255)",
+    textOverflow: "ellipsis",
     marginBottom: "16px",
     display: "-webkit-box",
-    WebkitLineClamp: "2",
     WebkitBoxOrient: "vertical",
-    overflow: "hidden",
     fontSize: "16px",
     lineHeight: "32px",
-    maxHeight: "63px",
+    maxHeight: "auto",
     fontFamily:
         'aktiv-grotesk, "Helvetica Neue", Helvetica, Arial, sans-serif',
 };

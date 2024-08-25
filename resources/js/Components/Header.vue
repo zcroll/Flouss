@@ -99,10 +99,141 @@
                 :style="[backgroundStyles,backgroundImage2]"
             />
         </div>
+        <div
+            class="page-head page-head--first-time-dash"
+            :style="pageHeadStyles"
+            v-else-if="route().current('career.knowledge')"
+        >
+            <div
+                class="grid-container"
+                :style="gridContainerStyles"
+            >
+                <h1
+                    class="DashboardPage__header__heading"
+                    :style="headingStyles"
+                >
+                    {{ route().params.job }}
+                </h1>
+
+            </div>
+
+            <div
+                :style="[backgroundStyles,backgroundImage2]"
+            />
+        </div>
+        <div
+            class="page-head page-head--first-time-dash"
+            :style="pageHeadStyles"
+            v-else-if="route().current('career.abilities')"
+        >
+            <div
+                class="grid-container"
+                :style="gridContainerStyles"
+            >
+                <h1
+                    class="DashboardPage__header__heading"
+                    :style="headingStyles"
+                >
+                    {{ route().params.job }}
+                </h1>
+
+            </div>
+
+            <div
+                :style="[backgroundStyles,backgroundImage2]"
+            />
+        </div>
+        <div
+            class="page-head page-head--first-time-dash"
+            :style="pageHeadStyles"
+            v-else-if="route().current('career.work-activities')"
+        >
+            <div
+                class="grid-container"
+                :style="gridContainerStyles"
+            >
+                <h1
+                    class="DashboardPage__header__heading"
+                    :style="headingStyles"
+                >
+                    {{ route().params.job }}
+
+                </h1>
+
+            </div>
+
+            <div
+                :style="[backgroundStyles,backgroundImage2]"
+            />
+        </div>
+        <div
+            class="page-head page-head--first-time-dash"
+            :style="pageHeadStyles"
+            v-else-if="route().current('career.technologies')"
+        >
+            <div
+                class="grid-container"
+                :style="gridContainerStyles"
+            >
+                <h1
+                    class="DashboardPage__header__heading"
+                    :style="headingStyles"
+                >
+                    {{ route().params.job }}
+                </h1>
+
+            </div>
+
+            <div
+                :style="[backgroundStyles,backgroundImage2]"
+            />
+        </div>
+        <div
+            class="page-head page-head--first-time-dash"
+            :style="pageHeadStyles"
+            v-else-if="route().current('career.tasks')"
+        >
+            <div
+                class="grid-container"
+                :style="gridContainerStyles"
+            >
+                <h1
+                    class="DashboardPage__header__heading"
+                    :style="headingStyles"
+                >
+                    {{ route().params.job }}
+                </h1>
+
+            </div>
+
+            <div
+                :style="[backgroundStyles,backgroundImage4]"
+            />
+        </div>
+
     </header>
 </template>
 
 <script>
+import {defineProps} from "vue";
+
+
+const props = defineProps({
+    sidebarTitle: String,
+    sidebarDescription: String,
+    title: String,
+    occupation: {
+        type: Object,
+        required: true
+    },
+
+    baseUri: {
+        type: String,
+        required: true
+    }
+});
+
+
 export default {
     data() {
         return {
@@ -184,6 +315,9 @@ export default {
             },
             backgroundImage3:{
                 backgroundImage: 'url("https://res.cloudinary.com/hnpb47ejt/image/upload/v1591305342/k5k3lhmaqvajchyaiqfr")'
+            },
+            backgroundImage4:{
+                backgroundImage: 'url("https://res.cloudinary.com/hnpb47ejt/image/upload/v1591306183/oprf47y63apjude5ety2")'
             }
 
         };
@@ -207,8 +341,8 @@ body {
     box-sizing: border-box;
     height: 100%;
     background: rgb(242, 242, 242);
-    margin: 0px;
-    padding: 0px;
+   /* margin: 0px;*/
+    /*padding: 0px;*/
     color: rgb(121, 121, 115);
     cursor: auto;
     font-style: normal;
@@ -217,7 +351,7 @@ body {
     position: relative;
     overflow-x: hidden;
     font-size: 100%;
-    background-color: rgb(248, 248, 241);
+/*    background-color: rgb(248, 248, 241);*/
     font-family: aktiv-grotesk, "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 </style>
