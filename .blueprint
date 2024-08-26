@@ -1,0 +1,50 @@
+created:
+    - database/factories/JobNameFactory.php
+    - database/factories/WorkEnvironmentFactory.php
+    - database/factories/JobDetailFactory.php
+    - database/factories/ResponsibilityFactory.php
+    - database/factories/JobTypeFactory.php
+    - database/factories/WorkplaceFactory.php
+    - database/factories/BigFiveTraitFactory.php
+    - database/factories/HollandCodeTraitFactory.php
+    - database/migrations/2024_08_26_181324_create_job_names_table.php
+    - database/migrations/2024_08_26_181325_create_work_environments_table.php
+    - database/migrations/2024_08_26_181326_create_job_details_table.php
+    - database/migrations/2024_08_26_181327_create_responsibilities_table.php
+    - database/migrations/2024_08_26_181328_create_job_types_table.php
+    - database/migrations/2024_08_26_181329_create_workplaces_table.php
+    - database/migrations/2024_08_26_181330_create_big_five_traits_table.php
+    - database/migrations/2024_08_26_181331_create_holland_code_traits_table.php
+    - app/Models/JobName.php
+    - app/Models/WorkEnvironment.php
+    - app/Models/JobDetail.php
+    - app/Models/Responsibility.php
+    - app/Models/JobType.php
+    - app/Models/Workplace.php
+    - app/Models/BigFiveTrait.php
+    - app/Models/HollandCodeTrait.php
+models:
+    Ability: { onetsoc_code: 'char:10', element_id: 'string:20', scale_id: 'string:3', data_value: 'decimal:5,2', 'n': 'decimal:4,0 nullable', standard_error: 'decimal:7,4 nullable', lower_ci_bound: 'decimal:7,4 nullable', upper_ci_bound: 'decimal:7,4 nullable', recommend_suppress: 'char:1 nullable', not_relevant: 'char:1 nullable', date_updated: date, domain_source: 'string:30' }
+    Activity: { activity: longtext, category: text, scale: 'decimal:8,2', interest_type: text }
+    ContentModelReference: { element_id: 'string:20', element_name: 'string:150', description: 'string:1500' }
+    JobInfo: { id: 'string:20', title: 'string:150', description: 'string:1000' }
+    JobPosition: {  }
+    Knowledge: { onetsoc_code: 'char:10', element_id: 'string:20', scale_id: 'string:3', data_value: 'decimal:5,2', 'n': 'decimal:4,0 nullable', standard_error: 'decimal:7,4 nullable', lower_ci_bound: 'decimal:7,4 nullable', upper_ci_bound: 'decimal:7,4 nullable', recommend_suppress: 'char:1 nullable', not_relevant: 'char:1 nullable', date_updated: date, domain_source: 'string:30' }
+    OccupationData: { onetsoc_code: 'char:10', title: 'string:150', description: 'string:1000' }
+    ScalesReference: {  }
+    Score: { user_id: 'biginteger unsigned nullable', scores: 'json nullable', jobs: 'json nullable' }
+    Skill: { onetsoc_code: 'char:10', element_id: 'string:20', scale_id: 'string:3', data_value: 'decimal:5,2', 'n': 'decimal:4,0 nullable', standard_error: 'decimal:7,4 nullable', lower_ci_bound: 'decimal:7,4 nullable', upper_ci_bound: 'decimal:7,4 nullable', recommend_suppress: 'char:1 nullable', not_relevant: 'char:1 nullable', date_updated: date, domain_source: 'string:30' }
+    TaskStatement: { onetsoc_code: 'char:10', task_id: 'decimal:8,0', task: 'string:1000', task_type: 'string:12 nullable', incumbents_responding: 'decimal:4,0 nullable', date_updated: date, domain_source: 'string:30' }
+    TechnologySkill: { onetsoc_code: 'char:10', example: 'string:150', commodity_code: 'decimal:8,0', hot_technology: 'char:1', in_demand: 'char:1' }
+    ToolsUsed: { onetsoc_code: 'char:10', example: 'string:150', commodity_code: 'decimal:8,0' }
+    UnspscReference: { commodity_code: 'decimal:8,0', commodity_title: 'string:150', class_code: 'decimal:8,0', class_title: 'string:150', family_code: 'decimal:8,0', family_title: 'string:150', segment_code: 'decimal:8,0', segment_title: 'string:150' }
+    User: { name: string, email: string, email_verified_at: 'timestamp nullable', password: string, two_factor_secret: 'text nullable', two_factor_recovery_codes: 'text nullable', two_factor_confirmed_at: 'timestamp nullable', remember_token: 'string:100 nullable', current_team_id: 'biginteger unsigned nullable', profile_photo_path: 'string:2048 nullable' }
+    WorkActivity: { onetsoc_code: 'string:10', element_id: 'string:20', scale_id: 'string:3', data_value: 'decimal:5,2', 'n': 'decimal:4,0 nullable', standard_error: 'decimal:7,4 nullable', lower_ci_bound: 'decimal:7,4 nullable', upper_ci_bound: 'decimal:7,4 nullable', recommend_suppress: 'char:1 nullable', not_relevant: 'char:1 nullable', date_updated: date, domain_source: 'string:30' }
+    JobName: { name: string, slug: string, education_level: 'string nullable', lang: 'enum:fr,en', image: 'string nullable' }
+    WorkEnvironment: { name: 'enum:how-much-ability,how-talented,how-easy', description: 'longtext nullable', score: 'integer nullable', lang: 'enum:fr,en', relationships: { BelongsTo: JobName } }
+    JobDetail: { role_description_main: 'text nullable', role_description_secondary: 'text nullable', average_salary: 'decimal:8,2 nullable', career_growth: 'string nullable', job_satisfaction: 'string nullable', lang: 'enum:fr,en', relationships: { belongsTo: JobName } }
+    Responsibility: { intro: 'string nullable', body: 'longtext nullable', lang: 'enum:fr,en', relationships: { BelongsTo: JobName } }
+    JobType: { intro: 'string nullable', body: 'string nullable', lang: 'enum:fr,en', relationships: { BelongsTo: JobName } }
+    Workplace: { body: 'longtext nullable', lang: 'enum:fr,en', relationships: { BelongsTo: JobName } }
+    BigFiveTrait: { description: 'longtext nullable', openness: 'decimal:5,2 nullable', conscientiousness: 'decimal:5,2 nullable', extraversion: 'decimal:5,2 nullable', agreeableness: 'decimal:5,2 nullable', neuroticism: 'decimal:5,2 nullable', lang: 'enum:fr,en', relationships: { BelongsTo: JobName } }
+    HollandCodeTrait: { description: 'longtext nullable', realistic: 'decimal:5,2 nullable', investigative: 'decimal:5,2 nullable', artistic: 'decimal:5,2 nullable', social: 'decimal:5,2 nullable', enterprising: 'decimal:5,2 nullable', conventional: 'decimal:5,2 nullable', lang: 'enum:fr,en', relationships: { BelongsTo: JobName } }

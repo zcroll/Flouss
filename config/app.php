@@ -1,5 +1,8 @@
 <?php
 
+
+use LaravelLang\LocaleList\Locale;
+
 return [
 
     /*
@@ -12,6 +15,8 @@ return [
     | other UI elements where an application name needs to be displayed.
     |
     */
+
+
 
     'name' => env('APP_NAME', 'Laravel'),
 
@@ -78,9 +83,13 @@ return [
     |
     */
 
-    'locale' => env('APP_LOCALE', 'en'),
-
-    'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
+    'locale' => Locale::French->value,
+    'available_locales' => [
+        'en',
+        'de',
+        'fr'
+    ],
+    'fallback_locale' => Locale::English->value,
 
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 

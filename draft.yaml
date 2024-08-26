@@ -1,0 +1,68 @@
+models:
+  JobName:
+    name: string
+    slug: string
+    education_level: string nullable
+    lang: enum:fr,en
+    image: string nullable
+
+  WorkEnvironment:
+    name: enum:how-much-ability,how-talented,how-easy
+    description: longtext nullable
+    score: integer nullable
+    lang: enum:fr,en
+    relationships:
+      BelongsTo: JobName
+
+  JobDetail:
+    role_description_main: text nullable
+    role_description_secondary: text nullable
+    average_salary: decimal:8,2 nullable
+    career_growth: string nullable
+    job_satisfaction: string nullable
+    lang: enum:fr,en
+    relationships:
+      belongsTo: JobName
+
+  Responsibility:
+    intro: string nullable
+    body: longtext nullable
+    lang: enum:fr,en
+    relationships:
+      BelongsTo: JobName
+
+  JobType:
+    intro: string nullable
+    body: string nullable
+    lang: enum:fr,en
+    relationships:
+      BelongsTo: JobName
+
+  Workplace:
+    body: longtext nullable
+    lang: enum:fr,en
+    relationships:
+      BelongsTo: JobName
+
+  BigFiveTrait:
+    description: longtext nullable
+    openness: decimal:5,2 nullable
+    conscientiousness: decimal:5,2 nullable
+    extraversion: decimal:5,2 nullable
+    agreeableness: decimal:5,2 nullable
+    neuroticism: decimal:5,2 nullable
+    lang: enum:fr,en
+    relationships:
+      BelongsTo: JobName
+
+  HollandCodeTrait:
+    description: longtext nullable
+    realistic: decimal:5,2 nullable
+    investigative: decimal:5,2 nullable
+    artistic: decimal:5,2 nullable
+    social: decimal:5,2 nullable
+    enterprising: decimal:5,2 nullable
+    conventional: decimal:5,2 nullable
+    lang: enum:fr,en
+    relationships:
+      BelongsTo: JobName

@@ -1,0 +1,34 @@
+<?php
+
+namespace Database\Factories;
+
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
+use App\Models\JobDetail;
+use App\Models\JobName;
+
+class JobDetailFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = JobDetail::class;
+
+    /**
+     * Define the model's default state.
+     */
+    public function definition(): array
+    {
+        return [
+            'role_description_main' => $this->faker->text(),
+            'role_description_secondary' => $this->faker->text(),
+            'average_salary' => $this->faker->randomFloat(2, 0, 999999.99),
+            'career_growth' => $this->faker->word(),
+            'job_satisfaction' => $this->faker->word(),
+            'lang' => $this->faker->randomElement(["fr","en"]),
+            'job_name_id' => JobName::factory(),
+        ];
+    }
+}
