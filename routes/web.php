@@ -35,15 +35,10 @@ use Inertia\Inertia;
 
             Route::controller(CareerController::class)->group(function () {
                 Route::get('/career/{id}', 'index')->name('career');
-                Route::get('/career/{job}/abilities', 'abilities')->name('career.abilities');
+                Route::get('/career/{id}/abilities', 'abilities')->name('career.abilities');
                 Route::get('/career/{job}/knowledge', 'knowledge')->name('career.knowledge');
                 Route::get('/career/{job}/technologies', 'technologies')->name('career.technologies');
                 Route::get('/career/{job}/tasks', 'tasks')->name('career.tasks');
                 Route::get('/career/{job}/work-activities', 'workActivities')->name('career.work-activities');
             });
-        });
-
-        Route::get('/', static function () {
-            Log::info(app()->getLocale());
-            return redirect(app()->getLocale());
         });

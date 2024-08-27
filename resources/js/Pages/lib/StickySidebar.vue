@@ -9,14 +9,13 @@
         <div class="w-full lg:w-1/3 mb-8 lg:mb-0 lg:pl-8">
             <div
                 class="sticky top-9 bg-white shadow-2xl rounded-3xl p-6 transform transition-all duration-300 hover:scale-105">
-                <h3 class="text-2xl font-bold mb-6 text-gray-800">{{ sidebarTitle }}</h3>
-                <p class="text-md text-gray-600 mb-4">{{ sidebarDescription }}</p>
+<!--                <h3 class="text-2xl font-bold mb-6 text-gray-800">{{ sidebarTitle }}</h3>-->
+<!--                <p class="text-md text-gray-600 mb-4">{{ sidebarDescription }}</p>-->
 
                 <!-- Main Content for Large Screens -->
                 <div v-if="!isSmallScreen" class=" rounded-3xl animate-slide-in"><div class="grid grid-cols-3 gap-4 items-center mb-10">
                     <div class="col-span-1 w-20 h-20 bg-gray-200 rounded-2xl flex items-center justify-center justify-self-center">
-                        <img src="/icon.png" alt="Icon" class="w-6 h-6">
-                    </div>
+                        <img :src="image" :alt="title" ></div>
                     <h3 class="col-span-2 text-xl font-bold font-serif text-gray-700 animate-fade-in">
                         {{ title }}
                     </h3>
@@ -120,7 +119,7 @@
                 <div v-else class="bg-gray-50 p-6 rounded-lg shadow-sm">
                     <div class="flex items-center justify-center mb-6">
                         <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
-                            <img src="/icon.png" alt="Icon" class="w-6 h-6">
+                            <img src="{{image}}" alt="Icon" class="w-6 h-6">
                         </div>
                         <h3 class="ml-4 text-lg font-semibold text-gray-700 animate-fade-in text-center">{{
                                 title
@@ -214,16 +213,18 @@ export default {
         Link
     },
     props: {
-        sidebarTitle: String,
-        sidebarDescription: String,
+        // sidebarTitle: String,
+        // sidebarDescription: String,
         title: String,
+        slug: String,
+        image: String
     },
     computed: {
         isSmallScreen() {
             return window.innerWidth < 1024;
         },
         baseUrl() {
-            return `/career/${this.title.split(' ').join('-')}`;
+            return `/career/${this.slug}`;
         }
     }
 };

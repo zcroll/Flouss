@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\JobName;
 use App\Models\TechnologySkill;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -18,48 +19,50 @@ class CareerController extends Controller
         $job = str_replace('-', ' ', $job);
 
         ds($job);
-        $occupation = OccupationData::where('title', $job)->first();
-        $onetsoc_code = $occupation->onetsoc_code;
+        $occupation = JobName::where('name', $job)->first();
+        ds($occupation);
 
-        $knowledgeData = DB::table('content_model_reference')
-            ->joinSub(function ($query) use ($onetsoc_code) {
-                $query->select(DB::raw('DISTINCT SUBSTRING(knowledge.element_id, 1, 7) as element_id'), 'knowledge.data_value')
-                    ->from('knowledge')
-                    ->where('knowledge.onetsoc_code', $onetsoc_code)
-                    ->where('knowledge.scale_id', 'LV')
-                    ->orderBy('knowledge.data_value', 'desc')
-                    ->groupBy('knowledge.element_id', 'knowledge.data_value');
-            }, 'knowledge_distinct', 'knowledge_distinct.element_id', '=', 'content_model_reference.element_id')
-            ->select('content_model_reference.element_name', 'content_model_reference.description')
-            ->orderBy('knowledge_distinct.data_value', 'desc')
-            ->limit(10)
-            ->get();
-
-//        ds($knowledgeData);
-
-        $abilitiesData = DB::table('content_model_reference')
-            ->joinSub(function ($query) use ($onetsoc_code) {
-                $query->select(DB::raw('DISTINCT SUBSTRING(abilities.element_id, 1, 7) as element_id'), 'abilities.data_value')
-                    ->from('abilities')
-                    ->where('abilities.onetsoc_code', $onetsoc_code)
-                    ->where('abilities.scale_id', 'LV')
-                    ->orderBy('abilities.data_value', 'desc')
-                    ->groupBy('abilities.element_id', 'abilities.data_value');
-            }, 'abilities_distinct', 'abilities_distinct.element_id', '=', 'content_model_reference.element_id')
-            ->select('content_model_reference.element_name')
-            ->orderBy('abilities_distinct.data_value', 'desc')
-            ->limit(4)
-            ->get();
-
-        ds($abilitiesData);
-
-        $technologySkillsData = DB::table('technology_skills')
-            ->where('onetsoc_code', $onetsoc_code)
-            ->where('hot_technology', 'Y')
-            ->select('onetsoc_code', 'example', 'hot_technology')
-            ->get();
-
-        #todo
+//        $onetsoc_code = $occupation->onetsoc_code;
+//
+//        $knowledgeData = DB::table('content_model_reference')
+//            ->joinSub(function ($query) use ($onetsoc_code) {
+//                $query->select(DB::raw('DISTINCT SUBSTRING(knowledge.element_id, 1, 7) as element_id'), 'knowledge.data_value')
+//                    ->from('knowledge')
+//                    ->where('knowledge.onetsoc_code', $onetsoc_code)
+//                    ->where('knowledge.scale_id', 'LV')
+//                    ->orderBy('knowledge.data_value', 'desc')
+//                    ->groupBy('knowledge.element_id', 'knowledge.data_value');
+//            }, 'knowledge_distinct', 'knowledge_distinct.element_id', '=', 'content_model_reference.element_id')
+//            ->select('content_model_reference.element_name', 'content_model_reference.description')
+//            ->orderBy('knowledge_distinct.data_value', 'desc')
+//            ->limit(10)
+//            ->get();
+//
+////        ds($knowledgeData);
+//
+//        $abilitiesData = DB::table('content_model_reference')
+//            ->joinSub(function ($query) use ($onetsoc_code) {
+//                $query->select(DB::raw('DISTINCT SUBSTRING(abilities.element_id, 1, 7) as element_id'), 'abilities.data_value')
+//                    ->from('abilities')
+//                    ->where('abilities.onetsoc_code', $onetsoc_code)
+//                    ->where('abilities.scale_id', 'LV')
+//                    ->orderBy('abilities.data_value', 'desc')
+//                    ->groupBy('abilities.element_id', 'abilities.data_value');
+//            }, 'abilities_distinct', 'abilities_distinct.element_id', '=', 'content_model_reference.element_id')
+//            ->select('content_model_reference.element_name')
+//            ->orderBy('abilities_distinct.data_value', 'desc')
+//            ->limit(4)
+//            ->get();
+//
+//        ds($abilitiesData);
+//
+//        $technologySkillsData = DB::table('technology_skills')
+//            ->where('onetsoc_code', $onetsoc_code)
+//            ->where('hot_technology', 'Y')
+//            ->select('onetsoc_code', 'example', 'hot_technology')
+//            ->get();
+//
+//        #todo
 
 //        $technologySkillsData = DB::table('technology_skills')
 //            ->join('unspsc_reference', 'technology_skills.commodity_code', '=', 'unspsc_reference.commodity_code')
@@ -77,9 +80,9 @@ class CareerController extends Controller
 
         return Inertia::render('career/OverView', [
             'occupation' => $occupation,
-            'knowledge' => $knowledgeData,
-            'abilities' => $abilitiesData,
-            'baseUri' => url()->current(), // Ensure this is set correctly
+//            'knowledge' => $knowledgeData,
+//            'abilities' => $abilitiesData,
+//            'baseUri' => url()->current(), // Ensure this is set correctly
         ]);
     }
 
@@ -88,7 +91,7 @@ class CareerController extends Controller
         $job = str_replace('-', ' ', $job);
 
         // Continue using the original $job for database queries
-        $occupation = OccupationData::where('title', $job)->first();
+        $occupation = JobName::where('name', $job)->first();
 
         if (! $occupation) {
             abort(404, 'Occupation not found');
