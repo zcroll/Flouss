@@ -9,7 +9,7 @@ use Filament\Support\Contracts\HasLabel;
 enum LangEnum: string implements HasColor, HasIcon, HasLabel
 {
     case FRENCH = 'fr';
-    case ARABIC = 'ar';
+    case ARABIC = 'en';
 
     public function getLabel(): string
     {

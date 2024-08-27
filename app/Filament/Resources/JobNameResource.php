@@ -8,15 +8,18 @@ use App\Filament\Resources\JobNameResource\RelationManagers;
 use App\Models\JobName;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Resources\Pages\Page;
 
 class JobNameResource extends Resource
 {
     protected static ?string $model = JobName::class;
+    protected static SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Start;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -81,13 +84,32 @@ class JobNameResource extends Resource
             //
         ];
     }
+    public static function getRecordSubNavigation(Page $page): array
+    {
+        return $page->generateNavigationItems([
 
-    public static function getPages(): array
+            JobNameResource\Pages\ManageJobTypes::class,
+            JobNameResource\Pages\ManageJobDetails::class,
+            JobNameResource\Pages\ManageJobResonsibilities::class,
+            JobNameResource\Pages\ManageHollandCodeTraits::class,
+            JobNameResource\Pages\ManageBigFiveTraits::class,
+            JobNameResource\Pages\ManageWorkEnvironments::class,
+            JobNameResource\Pages\ManageWorkplaces::class,
+
+        ]);}
+
+        public static function getPages(): array
     {
         return [
             'index' => Pages\ListJobNames::route('/'),
-            'create' => Pages\CreateJobName::route('/create'),
             'edit' => Pages\EditJobName::route('/{record}/edit'),
+            'types'=> Pages\ManageJobTypes::route('/{record}/types'),
+            'details'=> Pages\ManageJobDetails::route('/{record}/details'),
+            'responsibilities'=> Pages\ManageJobResonsibilities::route('/{record}/responsibilities'),
+            'hollandCodeTraits'=> Pages\ManageHollandCodeTraits::route('/{record}/hollandCodeTraits'),
+            'bigFiveTraits'=> Pages\ManageBigFiveTraits::route('/{record}/bigFiveTraits'),
+            'workEnvironments'=> Pages\ManageWorkEnvironments::route('/{record}/workEnvironments'),
+            'workplaces'=> Pages\ManageWorkplaces::route('/{record}/workplaces'),
         ];
     }
 }

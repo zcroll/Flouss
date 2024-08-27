@@ -10,6 +10,9 @@ use Illuminate\Http\Request;
 
 class CareerController extends Controller
 {
+
+
+
     public function index($job): \Inertia\Response
     {
         $job = str_replace('-', ' ', $job);
