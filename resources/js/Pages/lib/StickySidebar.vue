@@ -1,5 +1,5 @@
 <template>
-    <div class="container mx-auto p-4 flex flex-col-reverse lg:flex-row">
+    <div class="container mx-auto p-4   flex flex-col-reverse lg:flex-row">
         <!-- Main Content Section -->
         <div class="w-full lg:w-2/3">
             <slot/>
@@ -8,35 +8,38 @@
         <!-- Sticky Sidebar -->
         <div class="w-full lg:w-1/3 mb-8 lg:mb-0 lg:pl-8">
             <div
-                class="sticky top-9 bg-white shadow-2xl rounded-3xl p-6 transform transition-all duration-300 hover:scale-105">
-<!--                <h3 class="text-2xl font-bold mb-6 text-gray-800">{{ sidebarTitle }}</h3>-->
-<!--                <p class="text-md text-gray-600 mb-4">{{ sidebarDescription }}</p>-->
+                class="sticky top-4 bg-white shadow-2xl rounded-3xl p-6 pt-[-30px]">
+                <h3 class="text-xl font-light mb-6 text-gray-800 fancy-font">{{ sidebarTitle }}</h3>
+                <p class="text-sm text-gray-600 mb-4 fancy-font">{{ sidebarDescription }}</p>
 
                 <!-- Main Content for Large Screens -->
-                <div v-if="!isSmallScreen" class=" rounded-3xl animate-slide-in"><div class="grid grid-cols-3 gap-4 items-center mb-10">
-                    <div class="col-span-1 w-20 h-20 bg-gray-200 rounded-2xl flex items-center justify-center justify-self-center">
-                        <img :src="image" :alt="title" ></div>
-                    <h3 class="col-span-2 text-xl font-bold font-serif text-gray-700 animate-fade-in">
-                        {{ title }}
-                    </h3>
-                </div>
+                <div v-if="!isSmallScreen" class="rounded-3xl">
+                    <div class="grid grid-cols-3 gap-4 items-center mb-10">
+                        <div
+                            class="col-span-1 w-20 h-20 bg-gray-200 rounded-2xl flex items-center justify-center justify-self-center">
+                            <img src="/icon.png" alt="Icon" class="w-6 h-6">
+                        </div>
+                        <h3 class="col-span-2 text-lg font-light font-serif text-gray-700 fancy-font">
+                            {{ title }}
+                        </h3>
+                    </div>
 
                     <div class="grid grid-cols-3 gap-4 mb-6">
                         <div
-                            class="bg-purple-500 text-white h-3/4 rounded-lg text-center hover:scale-105 transition-transform duration-300 flex flex-col justify-center items-center p-4">
-                            <h4 class="text-l font-bold">Salary</h4>
-                            <p class="text-sm">$67K</p>
+                            class="bg-purple-500 text-white h-3/4 rounded-lg text-center flex flex-col justify-center items-center p-4">
+                            <h4 class="text-l font-bold fancy-font">Salary</h4>
+                            <p class="text-sm fancy-font">$67K</p>
                         </div>
                         <div
-                            class="bg-teal-600 text-white h-3/4 rounded-lg text-center hover:scale-105 transition-transform duration-300 flex flex-col justify-center items-center p-4">
-                            <h4 class="text-l font-bold">Technologies</h4>
-                            <p class="text-sm">N/A</p>
+                            class="bg-teal-600 text-white h-3/4 rounded-lg text-center flex flex-col justify-center items-center p-4">
+                            <h4 class="text-l font-bold fancy-font">Technologies</h4>
+                            <p class="text-sm fancy-font">N/A</p>
 
                         </div>
                         <div
-                            class="bg-gray-800 text-white h-3/4 rounded-lg text-center hover:scale-105 transition-transform duration-300 flex flex-col justify-center items-center p-4">
-                            <h4 class="text-l font-bold">Tasks</h4>
-                            <p class="text-sm">Very Low</p>
+                            class="bg-gray-800 text-white h-3/4 rounded-lg text-center flex flex-col justify-center items-center p-4">
+                            <h4 class="text-l font-bold fancy-font">Tasks</h4>
+                            <p class="text-sm fancy-font">Very Low</p>
 
                         </div>
                     </div>
@@ -50,7 +53,7 @@
                 }"
                                 :aria-disabled="$page.url === `${baseUrl}`"
                             >
-                                <span class="font-serif text-3xl hover:p-5 transition-all duration-300">Overview</span>
+                                <span class="font-serif text-2xl">Overview</span>
                             </Link>
                         </li>
                         <li>
@@ -62,7 +65,7 @@
                 }"
                                 :aria-disabled="$page.url === `${baseUrl}/abilities`"
                             >
-                                <span class="font-serif text-3xl hover:p-5 transition-all duration-300">Abilities</span>
+                                <span class="font-serif text-2xl">Abilities</span>
                             </Link>
                         </li>
                         <li>
@@ -74,7 +77,8 @@
                 }"
                                 :aria-disabled="$page.url === `${baseUrl}/work-activities`"
                             >
-                                <span class="font-serif text-3xl hover:p-5 transition-all duration-300">work-activities</span>
+                                <span
+                                    class="font-serif text-2xl">work-activities</span>
                             </Link>
                         </li>
                         <li>
@@ -86,7 +90,7 @@
                 }"
                                 :aria-disabled="$page.url === `${baseUrl}/knowledge`"
                             >
-                                <span class="font-serif text-3xl hover:p-5 transition-all duration-300">knowledge</span>
+                                <span class="font-serif text-2xl">knowledge</span>
                             </Link>
                         </li>
                         <li>
@@ -98,7 +102,8 @@
                 }"
                                 :aria-disabled="$page.url === `${baseUrl}/technologies`"
                             >
-                                <span class="font-serif text-3xl hover:p-5 transition-all duration-300 ">Technologies</span>
+                                <span
+                                    class="font-serif text-2xl">Technologies</span>
 
                             </Link>
                         </li>
@@ -111,7 +116,7 @@
                 }"
                                 :aria-disabled="$page.url === `${baseUrl}/tasks`"
                             >
-                                <span class="font-serif text-3xl hover:p-5 transition-all duration-300">tasks</span>
+                                <span class="font-serif text-2xl">tasks</span>
                             </Link>
                         </li>
                     </ul>
@@ -119,22 +124,22 @@
                 <div v-else class="bg-gray-50 p-6 rounded-lg shadow-sm">
                     <div class="flex items-center justify-center mb-6">
                         <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
-                            <img src="{{image}}" alt="Icon" class="w-6 h-6">
+                            <img src="/icon.png" alt="Icon" class="w-6 h-6">
                         </div>
-                        <h3 class="ml-4 text-lg font-semibold text-gray-700 animate-fade-in text-center">{{
+                        <h3 class="ml-4 text-base font-light text-gray-700 text-center fancy-font">{{
                                 title
                             }}</h3>
                     </div>
                     <div class="grid grid-cols-3 gap-4 mb-6 text-center">
                         <div
-                            class="bg-purple-500 text-white p-4 rounded-lg hover:scale-105 transition-transform duration-300">
-                            <p class="text-sm">Avg knowledge</p>
-                            <h4 class="text-xl font-bold">$67K</h4>
+                            class="bg-purple-500 text-white p-4 rounded-lg">
+                            <p class="text-sm fancy-font">Avg knowledge</p>
+                            <h4 class="text-base font-bold fancy-font">$67K</h4>
                         </div>
                         <div
-                            class="bg-teal-600 text-white p-4 rounded-lg hover:scale-105 transition-transform duration-300">
-                            <p class="text-sm">technologies</p>
-                            <h4 class="text-xl font-bold">N/A</h4>
+                            class="bg-teal-600 text-white p-4 rounded-lg">
+                            <p class="text-sm fancy-font">technologies</p>
+                            <h4 class="text-base font-bold fancy-font">N/A</h4>
                         </div>
                     </div>
                     <ul class="flex overflow-x-auto space-x-4 text-gray-700 justify-center">
@@ -213,27 +218,29 @@ export default {
         Link
     },
     props: {
-        // sidebarTitle: String,
-        // sidebarDescription: String,
+        sidebarTitle: String,
+        sidebarDescription: String,
         title: String,
-        slug: String,
-        image: String
     },
     computed: {
         isSmallScreen() {
             return window.innerWidth < 1024;
         },
         baseUrl() {
-            return `/career/${this.slug}`;
+            return `/career/${this.title.split(' ').join('-')}`;
         }
     }
 };
 </script>
 
 <style scoped>
+.fancy-font {
+    font-family: 'Great Vibes', cursive; /* Example of a fancy font */
+}
+
 .stickySidebar {
     position: sticky;
-    top: 4rem;
+    top: -44rem;
 }
 
 .active {
