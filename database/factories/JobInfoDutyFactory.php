@@ -4,16 +4,17 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use App\Models\JobName;
+use App\Models\JobInfo;
+use App\Models\JobInfoDuty;
 
-class JobNameFactory extends Factory
+class JobInfoDutyFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = JobName::class;
+    protected $model = JobInfoDuty::class;
 
     /**
      * Define the model's default state.
@@ -21,11 +22,9 @@ class JobNameFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name(),
-            'slug' => $this->faker->slug(),
-            'education_level' => $this->faker->word(),
-            'lang' => $this->faker->randomElement(["fr","en"]),
-            'image' => $this->faker->word(),
+            'duty_category' => $this->faker->text(),
+            'duty_description' => $this->faker->text(),
+            'job_info_id' => JobInfo::factory(),
         ];
     }
 }

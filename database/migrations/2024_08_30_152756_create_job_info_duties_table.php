@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('scales_reference', function (Blueprint $table) {
-            $table->string('scale_id', 3)->primary();
-            $table->string('scale_name', 50);
-            $table->decimal('minimum', 1, 0);
-            $table->decimal('maximum', 3, 0);            $table->timestamps();
+        Schema::create('job_info_duties', function (Blueprint $table) {
+            $table->id();
+            $table->longText('duty_category')->nullable();
+            $table->longText('duty_description')->nullable();
+            $table->foreignId('job_info_id');
+            $table->timestamps();
         });
     }
 
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('scales_reference');
+        Schema::dropIfExists('job_info_duties');
     }
 };

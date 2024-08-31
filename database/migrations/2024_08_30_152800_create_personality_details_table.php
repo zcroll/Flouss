@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('job_names', function (Blueprint $table) {
+        Schema::create('personality_details', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('slug');
-            $table->string('education_level')->nullable();
-            $table->enum('lang', ["fr","en"]);
-            $table->string('image')->nullable();
+            $table->string('career_name')->nullable();
+            $table->longText('description')->nullable();
+            $table->string('trait_score')->nullable();
+            $table->string('trait_type')->nullable();
+            $table->foreignId('job_info_id');
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('job_names');
+        Schema::dropIfExists('personality_details');
     }
 };

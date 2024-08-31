@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class JobType extends Model
+class JobInfoType extends Model
 {
     use HasFactory;
 
@@ -16,10 +16,9 @@ class JobType extends Model
      * @var array
      */
     protected $fillable = [
-        'intro',
-        'body',
-        'lang',
-        'job_name_id',
+        'type_name',
+        'type_description',
+        'job_info_id',
     ];
 
     /**
@@ -29,11 +28,11 @@ class JobType extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'job_name_id' => 'integer',
+        'job_info_id' => 'integer',
     ];
 
-    public function jobName(): BelongsTo
+    public function jobInfo(): BelongsTo
     {
-        return $this->belongsTo(JobName::class);
+        return $this->belongsTo(JobInfo::class);
     }
 }

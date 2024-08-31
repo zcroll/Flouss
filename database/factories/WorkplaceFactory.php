@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use App\Models\JobName;
+use App\Models\JobInfo;
 use App\Models\Workplace;
 
 class WorkplaceFactory extends Factory
@@ -22,9 +22,8 @@ class WorkplaceFactory extends Factory
     public function definition(): array
     {
         return [
-            'body' => $this->faker->text(),
-            'lang' => $this->faker->randomElement(["fr","en"]),
-            'job_name_id' => JobName::factory(),
+            'content' => $this->faker->paragraphs(3, true),
+            'job_info_id' => JobInfo::factory(),
         ];
     }
 }

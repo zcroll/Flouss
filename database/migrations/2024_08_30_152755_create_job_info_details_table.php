@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('work_environments', function (Blueprint $table) {
+        Schema::create('job_info_details', function (Blueprint $table) {
             $table->id();
-            $table->enum('name', ["how-much-ability","how-talented","how-easy"]);
-            $table->longText('description')->nullable();
-            $table->integer('score')->nullable();
-            $table->enum('lang', ["fr","en"]);
-            $table->foreignId('job_name_id');
+            $table->text('role_description_main')->nullable();
+            $table->text('role_description_secondary')->nullable();
+            $table->foreignId('job_info_id');
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('work_environments');
+        Schema::dropIfExists('job_info_details');
     }
 };

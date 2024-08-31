@@ -4,17 +4,17 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use App\Models\JobName;
-use App\Models\Responsibility;
+use App\Models\JobInfo;
+use App\Models\PersonalityTrait;
 
-class ResponsibilityFactory extends Factory
+class PersonalityTraitFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Responsibility::class;
+    protected $model = PersonalityTrait::class;
 
     /**
      * Define the model's default state.
@@ -22,10 +22,10 @@ class ResponsibilityFactory extends Factory
     public function definition(): array
     {
         return [
-            'intro' => $this->faker->word(),
-            'body' => $this->faker->text(),
-            'lang' => $this->faker->randomElement(["fr","en"]),
-            'job_name_id' => JobName::factory(),
+            'trait_name' => $this->faker->word(),
+            'trait_score' => $this->faker->word(),
+            'trait_type' => $this->faker->word(),
+            'job_info_id' => JobInfo::factory(),
         ];
     }
 }

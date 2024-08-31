@@ -5,16 +5,16 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use App\Models\JobInfo;
-use App\Models\WorkEnvironment;
+use App\Models\PersonalityDetails;
 
-class WorkEnvironmentFactory extends Factory
+class PersonalityDetailsFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = WorkEnvironment::class;
+    protected $model = PersonalityDetails::class;
 
     /**
      * Define the model's default state.
@@ -22,10 +22,10 @@ class WorkEnvironmentFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name(),
+            'career_name' => $this->faker->word(),
             'description' => $this->faker->text(),
-            'score' => $this->faker->numberBetween(-10000, 10000),
-            'category' => $this->faker->word(),
+            'trait_score' => $this->faker->word(),
+            'trait_type' => $this->faker->word(),
             'job_info_id' => JobInfo::factory(),
         ];
     }

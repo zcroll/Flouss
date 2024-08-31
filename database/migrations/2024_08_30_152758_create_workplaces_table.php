@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('personality_archetype_questions', function (Blueprint $table) {
+        Schema::create('workplaces', function (Blueprint $table) {
             $table->id();
-            $table->text('question');
-            $table->string('type', 50);
+            $table->longText('content')->nullable();
+            $table->foreignId('job_info_id');
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('personality_archetype_questions');
+        Schema::dropIfExists('workplaces');
     }
 };

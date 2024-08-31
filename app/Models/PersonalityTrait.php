@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class JobDetail extends Model
+class PersonalityTrait extends Model
 {
     use HasFactory;
 
@@ -16,13 +16,10 @@ class JobDetail extends Model
      * @var array
      */
     protected $fillable = [
-        'role_description_main',
-        'role_description_secondary',
-        'average_salary',
-        'career_growth',
-        'job_satisfaction',
-        'lang',
-        'job_name_id',
+        'trait_name',
+        'trait_score',
+        'trait_type',
+        'job_info_id',
     ];
 
     /**
@@ -32,12 +29,11 @@ class JobDetail extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'average_salary' => 'decimal:2',
-        'job_name_id' => 'integer',
+        'job_info_id' => 'integer',
     ];
 
-    public function jobName(): BelongsTo
+    public function jobInfo(): BelongsTo
     {
-        return $this->belongsTo(JobName::class);
+        return $this->belongsTo(JobInfo::class);
     }
 }

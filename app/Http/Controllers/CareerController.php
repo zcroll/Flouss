@@ -75,6 +75,7 @@ class CareerController extends Controller
 //        ds($technologySkillsData->toArray() , $onetsoc_code);
 //        ray($technologySkillsData);
 
+
 //        ray()->showViews();
         ds(url()->current());
 
@@ -226,7 +227,7 @@ class CareerController extends Controller
             ->get();
       ds($workActivitiesData);
         return Inertia::render('career/WorkActivities', [
-            'occupation' => $occupation,
+            'occupation' => $occupation,sakldfjs
             'workActivities' => $workActivitiesData,
         ]);
     }

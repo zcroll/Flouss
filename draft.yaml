@@ -1,68 +1,57 @@
 models:
-  JobName:
-    name: string
-    slug: string
+  JobInfo:
+    name: string nullable
+    slug: string nullable
+    eucation_level: string nullable
+    score: string nullable
     education_level: string nullable
-    lang: enum:fr,en
+    salary: string nullable
+    satisfaction: string nullable
+    satisfaction_Raw: string nullable
     image: string nullable
 
   WorkEnvironment:
-    name: enum:how-much-ability,how-talented,how-easy
+    name: string nullable
     description: longtext nullable
     score: integer nullable
-    lang: enum:fr,en
+    category: string nullable
     relationships:
-      BelongsTo: JobName
+      BelongsTo: JobInfo
 
-  JobDetail:
+  JobInfoDetail:
     role_description_main: text nullable
     role_description_secondary: text nullable
-    average_salary: decimal:8,2 nullable
-    career_growth: string nullable
-    job_satisfaction: string nullable
-    lang: enum:fr,en
     relationships:
-      belongsTo: JobName
+      belongsTo: JobInfo
 
-  Responsibility:
-    intro: string nullable
-    body: longtext nullable
-    lang: enum:fr,en
+  JobInfoDuty:
+    duty_category: longtext nullable
+    duty_description: longtext nullable
     relationships:
-      BelongsTo: JobName
+      BelongsTo: JobInfo
 
-  JobType:
-    intro: string nullable
-    body: string nullable
-    lang: enum:fr,en
+  JobInfoType:
+    type_name: longtext nullable
+    type_description: longtext nullable
     relationships:
-      BelongsTo: JobName
+      BelongsTo: JobInfo
 
   Workplace:
-    body: longtext nullable
-    lang: enum:fr,en
+    content: longtext nullable
     relationships:
-      BelongsTo: JobName
+      BelongsTo: JobInfo
 
-  BigFiveTrait:
-    description: longtext nullable
-    openness: decimal:5,2 nullable
-    conscientiousness: decimal:5,2 nullable
-    extraversion: decimal:5,2 nullable
-    agreeableness: decimal:5,2 nullable
-    neuroticism: decimal:5,2 nullable
-    lang: enum:fr,en
+  PersonalityTrait:
+    trait_name: string nullable
+    trait_score: string nullable
+    trait_type: string nullable
     relationships:
-      BelongsTo: JobName
+      BelongsTo: JobInfo
 
-  HollandCodeTrait:
+  PersonalityDetails:
+    career_name: string nullable
     description: longtext nullable
-    realistic: decimal:5,2 nullable
-    investigative: decimal:5,2 nullable
-    artistic: decimal:5,2 nullable
-    social: decimal:5,2 nullable
-    enterprising: decimal:5,2 nullable
-    conventional: decimal:5,2 nullable
-    lang: enum:fr,en
+    trait_score: string nullable
+    trait_type: string nullable
     relationships:
-      BelongsTo: JobName
+      BelongsTo: JobInfo

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Workplace extends Model
+class JobInfoDetail extends Model
 {
     use HasFactory;
 
@@ -16,7 +16,8 @@ class Workplace extends Model
      * @var array
      */
     protected $fillable = [
-        'content',
+        'role_description_main',
+        'role_description_secondary',
         'job_info_id',
     ];
 

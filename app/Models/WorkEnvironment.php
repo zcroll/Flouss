@@ -19,8 +19,8 @@ class WorkEnvironment extends Model
         'name',
         'description',
         'score',
-        'lang',
-        'job_name_id',
+        'category',
+        'job_info_id',
     ];
 
     /**
@@ -30,11 +30,11 @@ class WorkEnvironment extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'job_name_id' => 'integer',
+        'job_info_id' => 'integer',
     ];
 
-    public function jobName(): BelongsTo
+    public function jobInfo(): BelongsTo
     {
-        return $this->belongsTo(JobName::class);
+        return $this->belongsTo(JobInfo::class);
     }
 }

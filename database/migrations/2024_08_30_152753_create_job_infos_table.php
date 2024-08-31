@@ -12,10 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('job_infos', function (Blueprint $table) {
-            $table->string('id', 20)->primary();
-            $table->string('title', 150);
-            $table->string('description', 1000);
-
+            $table->id();
+            $table->string('name')->nullable();
+            $table->string('slug')->nullable();
+            $table->string('eucation_level')->nullable();
+            $table->string('score')->nullable();
+            $table->string('education_level')->nullable();
+            $table->string('salary')->nullable();
+            $table->string('satisfaction')->nullable();
+            $table->string('satisfaction_Raw')->nullable();
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }
