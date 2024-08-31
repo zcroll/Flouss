@@ -1,33 +1,28 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Services\JobMatcherService;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
+use Illuminate\Http\Request;
 
 class JobMatcherController extends Controller
 {
-    protected JobMatcherService $jobMatcherService;
-
-    public function __construct(JobMatcherService $jobMatcherService)
+    public function matchJobs()
     {
-        $this->jobMatcherService = $jobMatcherService;
-    }
+        $scriptPath = app_path('/python/test.py');
 
+        $process = new Process(['python3', $scriptPath]);
+        $process->run();
 
-    public function matchJobsWithScores(array $scores, JobMatcherService $jobMatcherService): array
-    {
-        $filePath = public_path('updated_interests_with_job_zone.xlsx');
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
 
-        $inputValues = array_values($scores);
-
-        $data = $jobMatcherService->loadData($filePath);
-        $closestJobs = $jobMatcherService->findClosestJobs($data, $inputValues, 9);
-
-
-        $userChosenZone = 3;
-        $top3JobsInZone = $jobMatcherService->filterJobsByZone($data, $closestJobs, $userChosenZone);
-
-        return    $closestJobs;
-
+        $output = $process->getOutput();
+            ds($output);
+        return response()->json([
+            'success' => true,
+            'output' => $output,
+        ]);
     }
 }

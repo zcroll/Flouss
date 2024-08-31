@@ -2,119 +2,119 @@
 
 namespace App\Services;
 
-use PhpOffice\PhpSpreadsheet\IOFactory;
+use Illuminate\Support\Facades\DB;
 
 class JobMatcherService
 {
-    public function loadData($filePath)
+    // Define the target job's Holland codes and Big Five traits
+    private $targetHolland = [
+        'Realistic' => 0.20,
+        'Investigative' => 0.43,
+        'Artistic' => 0.57,
+        'Social' => 0.23,
+        'Enterprising' => 0.47,
+        'Conventional' => 0.33,
+    ];
+
+    private $targetBigFive = [
+        'Openness' => 0.22,
+        'Conscientiousness' => 0.83,
+        'Extraversion' => 0.35,
+        'Agreeableness' => 0.41,
+        'Social Responsibility' => 0.64,
+    ];
+
+    public function matchJobs()
     {
-        try {
-            $spreadsheet = IOFactory::load($filePath);
-            $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
-        } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e) {
-            throw new \Exception('Error loading file: ' . $e->getMessage());
+        // Retrieve all jobs and their traits from the database
+        $hollandRows = DB::table('personality_traits')
+            ->where('trait_type', 'holland_codes')
+            ->get();
+
+        $bigFiveRows = DB::table('personality_traits')
+            ->where('trait_type', 'big_five')
+            ->get();
+
+        // Organize Holland data by job_id
+        $hollandJobs = [];
+        foreach ($hollandRows as $row) {
+            $jobId = $row->job_info_id;
+            if (!isset($hollandJobs[$jobId])) {
+                $hollandJobs[$jobId] = [];
+            }
+            $hollandJobs[$jobId][$row->trait_name] = (float)$row->trait_score;
         }
 
-        $headers = array_shift($sheetData);
-        return [$headers, $sheetData];
-    }
-
-    public function findClosestJobs($data, $inputValues, $topN = 5)
-    {
-        list($headers, $data) = $data;
-
-        $scaleNameIndex = array_search('Scale Name', $headers);
-        $elementNameIndex = array_search('Element Name', $headers);
-        $titleIndex = array_search('Title', $headers);
-        $dataValueIndex = array_search('Data Value', $headers);
-
-        $scales = [];
-        foreach ($data as $row) {
-            if (isset($row[$scaleNameIndex]) && $row[$scaleNameIndex] === 'Occupational Interests') {
-                $scales[] = $row[$elementNameIndex];
+        // Organize Big Five data by job_id
+        $bigFiveJobs = [];
+        foreach ($bigFiveRows as $row) {
+            $jobId = $row->job_info_id;
+            if (!isset($bigFiveJobs[$jobId])) {
+                $bigFiveJobs[$jobId] = [];
             }
-        }
-        $scales = array_unique($scales);
-
-        $filteredData = [];
-        foreach ($data as $row) {
-            if (in_array($row[$elementNameIndex], $scales)) {
-                $filteredData[] = $row;
-            }
+            $bigFiveJobs[$jobId][$row->trait_name] = (float)$row->trait_score;
         }
 
-        $uniqueTitles = [];
-        foreach ($filteredData as $row) {
-            if (isset($row[$titleIndex])) {
-                $uniqueTitles[] = $row[$titleIndex];
+        // Function to calculate Euclidean distance across traits
+        function euclideanDistance($target, $candidate)
+        {
+            $distance = 0;
+            foreach ($target as $trait => $value) {
+                $distance += pow($value - ($candidate[$trait] ?? 0), 2);
             }
-        }
-        $uniqueTitles = array_unique($uniqueTitles);
-
-        $elements = [];
-        foreach ($uniqueTitles as $title) {
-            $element = [];
-            foreach ($filteredData as $row) {
-                if (isset($row[$titleIndex]) && $row[$titleIndex] === $title && $row[$scaleNameIndex] === 'Occupational Interests') {
-                    $element[$row[$elementNameIndex]] = $row[$dataValueIndex];
-                }
-            }
-            $elementValues = [];
-            foreach ($scales as $scale) {
-                $elementValues[] = $element[$scale] ?? 0; // Use 0 if value is missing
-            }
-            $elements[$title] = $elementValues;
+            return sqrt($distance);
         }
 
-        $distances = [];
-        foreach ($elements as $title => $elementValues) {
-            if (count($elementValues) == count($inputValues)) {
-                $distance = $this->euclideanDistance($inputValues, $elementValues);
-                $distances[$title] = $distance;
-            } else {
-                $distances[$title] = PHP_INT_MAX;
-            }
+        // Calculate Holland and Big Five distances separately
+        $hollandDistances = [];
+        $bigFiveDistances = [];
+
+        foreach ($hollandJobs as $jobId => $traits) {
+            $distance = euclideanDistance($this->targetHolland, $traits);
+            $hollandDistances[] = [$jobId, $distance];
         }
 
-        asort($distances);
-        $closestJobs = array_keys(array_slice($distances, 0, $topN, true));
-
-        return $closestJobs;
-    }
-
-    public function filterJobsByZone($data, $closestJobs, $jobZone)
-    {
-        list($headers, $data) = $data;
-
-        $titleIndex = array_search('Title', $headers);
-        $jobZoneIndex = array_search('Job Zone', $headers);
-
-        $filteredJobs = [];
-        foreach ($closestJobs as $jobTitle) {
-            foreach ($data as $row) {
-                if (
-                    isset($row[$titleIndex]) &&
-                    isset($row[$jobZoneIndex]) &&
-                    $row[$titleIndex] == $jobTitle &&
-                    $row[$jobZoneIndex] == $jobZone
-                ) {
-                    $filteredJobs[] = $jobTitle;
-                    break;
-                }
-            }
-            if (count($filteredJobs) >= 3) {
-                break;
-            }
+        foreach ($bigFiveJobs as $jobId => $traits) {
+            $distance = euclideanDistance($this->targetBigFive, $traits);
+            $bigFiveDistances[] = [$jobId, $distance];
         }
-        return $filteredJobs;
-    }
 
-    private function euclideanDistance($inputValues, $elementValues)
-    {
-        $sum = 0;
-        foreach ($inputValues as $key => $value) {
-            $sum += ($value - $elementValues[$key]) ** 2;
+        // Normalize the distances using MinMaxScaler (manual implementation)
+        $hollandDistances = array_map(function($d) { return $d[1]; }, $hollandDistances);
+        $bigFiveDistances = array_map(function($d) { return $d[1]; }, $bigFiveDistances);
+
+        $minMaxNormalize = function($distances) {
+            $min = min($distances);
+            $max = max($distances);
+            return array_map(function($d) use ($min, $max) {
+                return ($d - $min) / ($max - $min);
+            }, $distances);
+        };
+
+        $normalizedHollandDistances = $minMaxNormalize($hollandDistances);
+        $normalizedBigFiveDistances = $minMaxNormalize($bigFiveDistances);
+
+        // Combine the normalized distances with the respective weights
+        $combinedDistances = [];
+
+        foreach ($hollandJobs as $jobId => $traits) {
+            $i = array_search($jobId, array_column($hollandDistances, 0));
+            $hollandDistance = $normalizedHollandDistances[$i];
+            $bigFiveDistance = $normalizedBigFiveDistances[$i] ?? 0;
+            $combinedDistance = 0.6 * $hollandDistance + 0.4 * $bigFiveDistance;
+            $combinedDistances[$jobId] = $combinedDistance;
         }
-        return sqrt($sum);
+
+        // Sort and get the top 10 closest jobs based on the combined score
+        asort($combinedDistances);
+        $closestJobs = array_slice($combinedDistances, 0, 10, true);
+
+        // Output the closest jobs
+        $results = "Top 10 closest jobs based on 60% Holland and 40% Big Five (normalized):\n";
+        foreach ($closestJobs as $jobId => $distance) {
+            $results .= "Job ID: " . $jobId . ", Combined Distance: " . $distance . "\n";
+        }
+
+        return $results;
     }
 }

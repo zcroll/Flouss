@@ -227,7 +227,7 @@ class CareerController extends Controller
             ->get();
       ds($workActivitiesData);
         return Inertia::render('career/WorkActivities', [
-            'occupation' => $occupation,sakldfjs
+            'occupation' => $occupation,
             'workActivities' => $workActivitiesData,
         ]);
     }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ActivityProgressController;
 use App\Http\Controllers\CareerController;
+use App\Http\Controllers\JobMatcherController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -42,3 +43,5 @@ use Inertia\Inertia;
                 Route::get('/career/{job}/work-activities', 'workActivities')->name('career.work-activities');
             });
         });
+
+Route::get('/find-closest-job', [JobMatcherController::class, 'matchJobs']);
