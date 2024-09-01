@@ -85,7 +85,7 @@ export default {
         };
 
         const updateProgress = () => {
-            progress.value = ((currentChunkIndex.value + 1) / chunkedActivities.value.length) * 100;
+            progress.value = ((currentChunkIndex.value ) / chunkedActivities.value.length) * 100;
         };
 
         const nextChunk = () => {
@@ -119,6 +119,13 @@ export default {
             updateProgress,
             nextChunk,
             prevChunk,
+            optionsWithImages: [
+                { value: 'Strongly Like', src: '/images_options/strongly_like.webp' },
+                { value: 'Like', src: '/images_options/like.webp' },
+                { value: 'Unsure', src: '/images_options/unsure.webp' },
+                { value: 'Dislike', src: '/images_options/dislike.webp' },
+                { value: 'Strongly Dislike', src: '/images_options/strongly_dislike.webp' },
+            ],
         };
     }
 };
@@ -139,12 +146,12 @@ export default {
                     </div>
                     <div class="text-right">
                         <span class="text-xs font-semibold inline-block text-emerald-600">
-                            {{ progress  - 12.5}}%
+                            {{ progress  }}%
                         </span>
                     </div>
                 </div>
                 <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-emerald-200">
-                    <div :style="{ width: progress - 12.5  + '%' }"
+                    <div :style="{ width: progress   + '%' }"
                          class="flex flex-col text-center whitespace-nowrap text-white justify-center bg-emerald-600"></div>
                 </div>
             </div>
@@ -158,20 +165,19 @@ export default {
                              class="p-6 rounded-lg shadow-md">
                             <h2 class="text-xl font-bold mb-4">{{ activity.name }}</h2>
                             <div class="mb-4">
-                                <!-- Radio buttons -->
-                                <label
-                                    v-for="option in ['Strongly Dislike', 'Dislike', 'Unsure', 'Like', 'Strongly Like']"
-                                    :key="option" class="block mb-2">
-                                    <input type="radio" :name="'response[' + activity.id + ']'" :value="option"
+                                <!-- Radio buttons with larger images -->
+                                <label v-for="option in optionsWithImages" :key="option.value" class="block mb-2">
+                                    <input type="radio" :name="'response[' + activity.id + ']'" :value="option.value"
                                            v-model="responses[activity.id]"
                                            class="mr-2 form-radio h-4 w-4 text-emerald-800 transition duration-150 ease-in-out">
-                                    {{ option }}
+                                    <img :src="option.src" :alt="option.value" class="inline-block h-15 w-12"> <!-- Larger size -->
                                 </label>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
 
             <!-- Navigation and submit buttons -->
             <div class="flex justify-between mt-6">
