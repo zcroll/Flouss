@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\Activity;
+use App\Models\Question;
 use App\Models\Score;
 use App\Services\JobMatcherService;
 use App\Traits\CalculatesScores;
@@ -9,7 +9,6 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 
@@ -17,22 +16,14 @@ class ActivityProgressController extends Controller
 {
     use CalculatesScores;
 
-    private const CATEGORIES = ['Realistic', 'Investigative', 'Artistic', 'Social', 'Enterprising', 'Conventional'];
-    private const INTEREST_TYPES = ['Basic', 'General'];
+    private const BIG_FIVE_CATEGORIES = ['Extraversion', 'Agreeableness', 'Conscientiousness', 'Neuroticism', 'Openness'];
+    private const HOLLAND_CODE_CATEGORIES = ['Realistic', 'Investigative', 'Artistic', 'Social', 'Enterprising', 'Conventional'];
 
     public function index()
     {
         $lastTest = Auth::user()->test()->latest('created_at')->first();
-
-        ds($lastTest);
-
         $lastTestDate = $lastTest ? Carbon::parse($lastTest->created_at) : null;
-
-        ds($lastTestDate);
-
         $isOver10Days = !$lastTestDate || $lastTestDate->lt(Carbon::now()->subDays(10));
-
-        ds($isOver10Days);
 
         if (!$isOver10Days) {
             return to_route('results');
@@ -44,56 +35,73 @@ class ActivityProgressController extends Controller
             'activities' => $activities,
             'initialResponses' => [],
             'initialIndex' => 0,
-//            'isOver10Days' => $isOver10Days,
         ]);
     }
 
     private function initializeActivities(): array
     {
-        $allActivities = $this->fetchAllActivities();
-        $groupedActivities = $this->groupActivities($allActivities);
-        return $this->formatActivities($groupedActivities);
+        $bigFiveActivities = $this->fetchActivitiesByType('big_five', self::BIG_FIVE_CATEGORIES);
+        $hollandCodeActivities = $this->fetchActivitiesByType('holland_codes', self::HOLLAND_CODE_CATEGORIES);
+
+        return array_merge($bigFiveActivities, $hollandCodeActivities);
     }
 
-    private function fetchAllActivities()
+    private function fetchActivitiesByType(string $type, array $categories): array
     {
-        return Activity::whereIn('category', self::CATEGORIES)
-            ->whereIn('interest_type', self::INTEREST_TYPES)
-            ->orderBy(DB::raw("FIELD(category, '" . implode("', '", self::CATEGORIES) . "')"))
-            ->orderBy(DB::raw("FIELD(interest_type, '" . implode("', '", self::INTEREST_TYPES) . "')"))
+        $allActivities = Question::whereIn('trait_category', $categories)
+            ->where('type', $type)
+            ->orderBy(DB::raw("FIELD(trait_category, '" . implode("', '", $categories) . "')"))
             ->get()
-            ->groupBy('category');
+            ->groupBy('trait_category');
+ds( $this->formatActivities($allActivities, $categories));
+        return $this->formatActivities($allActivities, $categories);
     }
 
-    private function groupActivities($allActivities): array
+    private function formatActivities($groupedActivities, $categories): array
     {
-        $groupedActivities = [];
-        foreach (self::CATEGORIES as $category) {
-            $groupedActivities[$category] = isset($allActivities[$category])
-                ? $allActivities[$category]->whereIn('interest_type', self::INTEREST_TYPES)->take(5)
-                : collect();
+        $formattedActivities = [];
+
+        foreach ($categories as $category) {
+            if (isset($groupedActivities[$category])) {
+                $formattedActivities[] = array_map(fn($activity) => [
+                    'category' => $category,
+                    'id' => $activity['id'],
+                    'type' => $activity['type'],
+                    'name' => $activity['question_text']
+                ], $groupedActivities[$category]->toArray());
+            }
         }
-        return $groupedActivities;
-    }
 
-    private function formatActivities($groupedActivities): array
-    {
-        return collect($groupedActivities)->flatMap(function ($activities, $category) {
-            return array_map(fn ($activity) => [
-                'category' => $category,
-                'id' => $activity['id'],
-                'name' => $activity['activity']
-            ], $activities->toArray());
-        })->toArray();
+        return array_merge(...$formattedActivities);
     }
 
     public function submit(Request $request, JobMatcherService $jobMatcherService): \Illuminate\Http\RedirectResponse
     {
         $responses = $request->input('responses', []);
-        Log::info('Responses received: ', ['responses' => $responses]);
+        $formattedResponses = [
+            'big_five' => [],
+            'holland_codes' => []
+        ];
+        foreach ($responses as $activityId => $response) {
+            $activity = Question::find($activityId);
+            if ($activity) {
+                if ($activity->type === 'big_five') {
+                    $category = $activity->trait_category;
+                    if (!in_array($category, self::BIG_FIVE_CATEGORIES)) continue;
+                    $formattedResponses['big_five'][$category][] = $response;
+                } elseif ($activity->type === 'holland_codes') {
+                    $category = $activity->trait_category;
+                    if (!in_array($category, self::HOLLAND_CODE_CATEGORIES)) continue;
+                    $formattedResponses['holland_codes'][$category][] = $response;
+                }
+            }
+        }
 
-        $activities = Activity::all();
-        $scores = $this->calculateScore($activities, $responses);
+        // Log formatted responses
+        Log::info('Formatted Responses: ', ['formatted_responses' => $formattedResponses]);
+
+        $allActivities = $this->initializeActivities();
+        $scores = $this->calculateScore($allActivities, $responses);
         $userId = auth()->id();
 
         $closestJobs = app(JobMatcherController::class)->matchJobsWithScores($scores, $jobMatcherService);
@@ -107,19 +115,6 @@ class ActivityProgressController extends Controller
         return to_route('results');
     }
 
-
-//    public function getLastTestDate(Request $request)
-//    {
-//        $lastTest = Auth::user()->tests()->latest('created_at')->first();
-//        $lastTestDate = $lastTest ? Carbon::parse($lastTest->created_at) : null;
-//        $isOver10Days = $lastTestDate ? $lastTestDate->lt(Carbon::now()->subDays(10)) : true;
-//
-//        return Inertia::render('', [
-//            'isOver10Days' => $isOver10Days,
-//        ]);
-//    }
-
-
     public function results(): \Inertia\Response
     {
         $userId = auth()->id();
@@ -130,7 +125,7 @@ class ActivityProgressController extends Controller
             $closestJobs = json_decode($score->jobs, true);
 
             Log::debug($closestJobs);
-ds($scores);
+
             return Inertia::render('Results', [
                 'scores' => $scores,
                 'jobs' => $closestJobs,

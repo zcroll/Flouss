@@ -1,21 +1,20 @@
 <script>
-import {ref, reactive, computed, onMounted} from 'vue';
+import { ref, reactive, computed, onMounted } from 'vue';
 import AppLayout from "@/Layouts/AppLayout.vue";
-import {router, usePage} from "@inertiajs/vue3";
+import { router } from "@inertiajs/vue3";
 
 export default {
-    components: {AppLayout},
+    components: { AppLayout },
     props: {
         activities: Array,
         initialResponses: Object,
         initialIndex: Number,
     },
     setup(props) {
-        const responses = reactive({...props.initialResponses});
+        const responses = reactive({ ...props.initialResponses });
         const currentChunkIndex = ref(Math.floor(props.initialIndex / 4));
-        const progress = ref(0); // Initialize progress to 0 by default
-        const error = ref(null);
-        const refHiddenInput = ref(null);
+        const progressFra = ref({ current: 1, total: 1 });
+        const progressBar = ref(0);
         const loading = ref(false);
         const chunkedActivities = computed(() => {
             const chunkSize = 4;
@@ -30,7 +29,8 @@ export default {
             if (index >= 0 && index < chunkedActivities.value.length) {
                 currentChunkIndex.value = index;
                 updateProgress();
-                clearErrors(); // Clear errors when changing chunk
+                fractionProgress();
+                clearErrors();
             }
         };
 
@@ -64,18 +64,19 @@ export default {
 
         const submit = () => {
             if (validateResponses()) {
-                loading.value = true; // Set loading state
+                loading.value = true;
                 router.post('/activity/submit', {
                     responses: responses
                 }, {
                     onFinish: () => loading.value = false
                 }).then(() => {
-                    router.reload(); // Reload the page using Inertia
+                    router.reload();
                     Object.keys(responses).forEach(key => {
                         delete responses[key];
                     });
-                    currentChunkIndex.value = 0; // Reset chunk index
-                    progress.value = 0; // Reset progress
+                    currentChunkIndex.value = 0;
+                    progressBar.value = 0;
+                    progressFra.value = { current: 1, total: 1 };
                 }).catch(error => {
                     console.error('Submission failed:', error);
                 });
@@ -84,8 +85,15 @@ export default {
             }
         };
 
+        const fractionProgress = () => {
+            progressFra.value = {
+                current: currentChunkIndex.value + 1,
+                total: chunkedActivities.value.length
+            };
+        };
+
         const updateProgress = () => {
-            progress.value = ((currentChunkIndex.value ) / chunkedActivities.value.length) * 100;
+            progressBar.value = ((currentChunkIndex.value + 1) / chunkedActivities.value.length) * 100;
         };
 
         const nextChunk = () => {
@@ -102,13 +110,14 @@ export default {
 
         onMounted(() => {
             updateProgress();
+            fractionProgress();
         });
-
 
         return {
             responses,
             currentChunkIndex,
-            progress,
+            progressFra,
+            progressBar,
             loading,
             chunkedActivities,
             changeChunk,
@@ -117,6 +126,7 @@ export default {
             clearErrors,
             submit,
             updateProgress,
+            fractionProgress,
             nextChunk,
             prevChunk,
             optionsWithImages: [
@@ -131,27 +141,27 @@ export default {
 };
 </script>
 
+
+
 <template>
     <app-layout title="Activity Progress">
-        <div class="max-w-3xl mx-auto mt-10 px-4 sm:px-0"><!-- Progress bar outside the form -->
-
-            <!-- Additional Progress bar with different style -->
+        <div class="max-w-3xl mx-auto mt-10 px-4 sm:px-0">
+            <!-- Progress bar outside the form -->
             <div class="relative pt-1 mb-6">
                 <div class="flex mb-2 items-center justify-between">
                     <div>
-                        <span
-                            class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-emerald-600 bg-emerald-200">
+                        <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-emerald-600 bg-emerald-200">
                             Task Progress
                         </span>
                     </div>
                     <div class="text-right">
                         <span class="text-xs font-semibold inline-block text-emerald-600">
-                            {{ progress  }}%
+                            {{ progressFra.current }} / {{ progressFra.total }}
                         </span>
                     </div>
                 </div>
                 <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-emerald-200">
-                    <div :style="{ width: progress   + '%' }"
+                    <div :style="{ width: progressBar + '%' }"
                          class="flex flex-col text-center whitespace-nowrap text-white justify-center bg-emerald-600"></div>
                 </div>
             </div>
@@ -170,14 +180,13 @@ export default {
                                     <input type="radio" :name="'response[' + activity.id + ']'" :value="option.value"
                                            v-model="responses[activity.id]"
                                            class="mr-2 form-radio h-4 w-4 text-emerald-800 transition duration-150 ease-in-out">
-                                    <img :src="option.src" :alt="option.value" class="inline-block h-15 w-12"> <!-- Larger size -->
+                                    <img :src="option.src" :alt="option.value" class="inline-block h-15 w-12">
                                 </label>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
 
             <!-- Navigation and submit buttons -->
             <div class="flex justify-between mt-6">
@@ -211,6 +220,8 @@ export default {
         </div>
     </app-layout>
 </template>
+
+
 
 <style scoped>
 @keyframes spin {
