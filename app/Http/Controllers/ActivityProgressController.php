@@ -104,7 +104,7 @@ ds( $this->formatActivities($allActivities, $categories));
         $scores = $this->calculateScore($allActivities, $responses);
         $userId = auth()->id();
 
-        $closestJobs = app(JobMatcherController::class)->matchJobsWithScores($scores, $jobMatcherService);
+        $closestJobs = app(JobMatcherController::class)->matchJobs($scores, $jobMatcherService);
 
         Score::create([
             'user_id' => $userId,
