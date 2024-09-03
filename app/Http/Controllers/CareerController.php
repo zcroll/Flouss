@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\JobInfo;
 use App\Models\JobName;
 use App\Models\TechnologySkill;
 use Illuminate\Support\Facades\DB;
@@ -16,10 +17,10 @@ class CareerController extends Controller
 
     public function index($job): \Inertia\Response
     {
-        $job = str_replace('-', ' ', $job);
+//        $job = str_replace('-', ' ', $job);
 
         ds($job);
-        $occupation = JobName::where('name', $job)->first();
+        $occupation = JobInfo::where('slug', $job)->first();
         ds($occupation);
 
 //        $onetsoc_code = $occupation->onetsoc_code;

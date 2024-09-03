@@ -1,6 +1,8 @@
 <template>
     <app-layout title="Results" preserveScroll>
         <div class="relative max-w-7xl mx-auto mt-10">
+
+
             <div class="flex flex-col lg:flex-row">
                 <!-- Main Content Section -->
                 <div class="w-full lg:w-4/4 space-y-20">
@@ -76,15 +78,15 @@
                             <div class="flex-shrink-0">
                                 <img
                                     class="h-12 w-12 rounded-full"
-                                    :src="job.imageUrl || 'https://via.placeholder.com/160x160'"
+                                    :src="job.image || 'https://via.placeholder.com/160x160'"
                                     alt="Job Image"
                                 />
                             </div>
                             <div class="min-w-0 flex-1">
-                                <a @click="visitJob(job)" class="block focus:outline-none">
+                                <Link :href="`/career/${job.slug}`" class="block focus:outline-none">
                                     <span class="absolute inset-0" aria-hidden="true"></span>
-                                    <p class="text-base font-medium text-gray-900">{{ job }}</p>
-                                </a>
+                                    <p class="text-base font-medium text-gray-900">{{ job.name }}</p>
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -107,7 +109,7 @@
 
 <script>
 import {defineComponent} from "vue";
-import {router, Link} from '@inertiajs/vue3';
+import {router, Link ,} from '@inertiajs/vue3';
 import AppLayout from "@/Layouts/AppLayout.vue";
 import UpNext from "@/Components/UpNext.vue";
 
@@ -116,6 +118,7 @@ export default defineComponent({
         UpNext,
         AppLayout,
         Link,
+
     },
     props: {
         scores: {

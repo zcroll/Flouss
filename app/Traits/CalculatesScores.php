@@ -1,5 +1,4 @@
 <?php
-// File: app/Traits/CalculatesScores.php
 
 namespace App\Traits;
 
@@ -7,36 +6,31 @@ use App\Models\Activity;
 
 trait CalculatesScores
 {
-    protected function calculateScore($activities, array $responses): array
+
+    private const MAX_SCORE = 5;
+
+    public function calculateScores(array $formattedResponses): array
     {
-        $scores = [
-            'Realistic' => ['sum' => 0, 'count' => 0],
-            'Investigative' => ['sum' => 0, 'count' => 0],
-            'Artistic' => ['sum' => 0, 'count' => 0],
-            'Social' => ['sum' => 0, 'count' => 0],
-            'Enterprising' => ['sum' => 0, 'count' => 0],
-            'Conventional' => ['sum' => 0, 'count' => 0]
-        ];
+        $scores = [];
 
-        foreach ($activities as $activity) {
-            if ($activity instanceof Activity) {
-                $response = $responses[$activity->id] ?? null;
-                $score = $this->convertResponseToScore($response);
-                $weightedScore = $score * $activity->scale;
+        foreach ($formattedResponses as $category => $traits) {
+            foreach ($traits as $trait => $responses) {
+                $totalScore = 0;
+                $responseCount = count($responses);
 
-                // Accumulate weighted scores and count them
-                $scores[$activity->category]['sum'] += $weightedScore;
-                $scores[$activity->category]['count'] += $activity->scale;
+                if ($responseCount === 0) {
+                    continue; // Skip traits with no responses to avoid division by zero
+                }
+
+                foreach ($responses as $response) {
+                    $totalScore += $this->convertResponseToScore($response);
+                }
+
+                $averageScore = $totalScore / $responseCount;
+                $normalizedScore = $averageScore / self::MAX_SCORE;
+
+                $scores[$trait] = round($normalizedScore, 2);
             }
-        }
-
-        // Calculate final scores based on the normalization equation
-        foreach ($scores as $category => $data) {
-            $S = $data['sum'];
-            $normalizedScore = ($S - 7.5) / 30 * 9 + 1;
-
-            // Ensure the score is within bounds
-            $scores[$category] = max(min($normalizedScore, 10), 1);
         }
 
         return $scores;
@@ -45,11 +39,11 @@ trait CalculatesScores
     protected function convertResponseToScore($response): int
     {
         return match ($response) {
-            'Strongly Like' => 7,
+            'Strongly Like' => 5,
             'Like' => 4,
             'Unsure' => 3,
             'Dislike' => 2,
-            'Strongly Dislike' => 0,
+            'Strongly Dislike' => 1,
             default => 0,
         };
     }
