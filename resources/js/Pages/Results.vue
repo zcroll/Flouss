@@ -2,64 +2,60 @@
     <app-layout title="Results" preserveScroll>
         <div class="relative max-w-7xl mx-auto mt-10">
 
-
             <div class="flex flex-col lg:flex-row">
-                <!-- Main Content Section -->
                 <div class="w-full lg:w-4/4 space-y-20">
-                    <!-- Title Section -->
                     <div v-if="Object.keys(jobs).length > 0 " class="text-left mt-10">
                         <h1 class="ml-1 text-4xl font-serif text-gray-800 mt-10 ">Your Compatibility Results</h1>
                         <p class="ml-3 mt-2 text-lg text-gray-600">Below are your scores and best-fit career matches.</p>
                     </div>
 
-                    <!-- Scores Section -->
-                    <div v-if="Object.keys(scores).length > 0">
-                        <div
-                            v-for="(score, category) in scores"
-                            :key="category"
-                            class="relative bg-white p-4 rounded-lg shadow-sm border border-gray-200 m-5"
-                        >
-                            <div class="flex items-center justify-between">
-                                <span class="text-base font-semibold text-gray-800">{{ category }}</span>
-                                <button
-                                    @click="toggleCollapse(category)"
-                                    class="relative flex items-center text-xs font-semibold text-left transition-all ease-in cursor-pointer text-gray-700 group"
-                                >
-                                    <i
-                                        class="ml-auto transition-transform duration-300 transform"
-                                        :class="{ 'rotate-180': isCollapsed[category] }"
-                                    >
-                                        &#9660; <!-- Simple down arrow icon -->
-                                    </i>
-                                </button>
-                            </div>
-                            <div class="w-full bg-gray-300 rounded-full h-5 mt-2">
-                                <div
-                                    :class="getCategoryColor(category)"
-                                    class="h-5 rounded-full"
-                                    :style="{ width: score * 10 + '%' }"
-                                ></div>
-                            </div>
-                            <div v-if="isCollapsed[category]" class="transition-all duration-300 ease-in-out mt-3">
-                                <div class="text-sm text-gray-600 leading-relaxed">
-                                    {{ getCategoryDescription(category) }}
+                    <div class="dashboard-page-reports grid grid-cols-2 gap-8 text-center mb-2 text-white">
+                        <!-- Report 1 -->
+                        <div class="dashboard-page-report bg-white p-10 mt-6 border border-gray-300 rounded-lg shadow-lg transition-shadow duration-300">
+                            <div class="dashboard-page-report-book mx-auto max-w-sm transition-transform duration-300">
+                                <div class="report-book report-book--trait overflow-hidden rounded-lg relative bg-gray-800 shadow-lg pb-[116.195%] transition-all duration-300">
+                                    <div class="report-book-content absolute inset-0 flex flex-col justify-center text-center p-6">
+                                        <h1 class="report-book-title text-sm font-medium uppercase mb-2">Trait Report</h1>
+                                        <h2 class="report-book-heading text-2xl font-light mb-2">You're Social</h2>
+                                        <p class="report-book-copy text-base mb-2">In fact, you're more social than 85% of the population.</p>
+                                        <div class="report-book-footer mt-auto"></div>
+                                    </div>
                                 </div>
                             </div>
+                            <p class="dashboard-page-report-copy text-gray-800 font-light my-8 mx-auto max-w-xs text-base">
+                                Learn what makes you unique and how you compare to the rest of the world.
+                            </p>
+                        </div>
+                        <!-- Report 2 -->
+                        <div class="dashboard-page-report bg-white p-10 mt-6 border border-gray-300 rounded-lg shadow-lg transition-shadow duration-300">
+                            <div class="dashboard-page-report-book mx-auto max-w-sm transition-transform duration-300">
+                                <div class="report-book report-book--personality overflow-hidden rounded-lg relative bg-gray-800 shadow-lg pb-[116.195%] transition-all duration-300">
+                                    <div class="report-book-content absolute inset-0 flex flex-col justify-center text-center p-6">
+                                        <h1 class="report-book-title text-sm font-medium uppercase mb-2">Personality Report</h1>
+                                        <h2 class="report-book-heading text-2xl font-light mb-2">You're an Advocate</h2>
+                                        <p class="report-book-copy text-base mb-2">You're a unique blend of social and investigative types.</p>
+                                        <div class="report-book-footer mt-auto"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="dashboard-page-report-copy text-gray-800 font-light my-8 mx-auto max-w-xs text-base">
+                                Read about what you naturally gravitate towards, working styles, and more.
+                            </p>
                         </div>
                     </div>
 
                     <!-- No Scores Available -->
-                    <div v-else class="flex flex-col items-center justify-center">
-                        <UpNext
-                            title="No Scores Available"
-                            description="It seems like you haven't taken the compatibility test yet. Take
-                            a moment to complete the test and discover your best-fit career matches."
-                            ctaText="Take the Test"
-                            ctaLink="/activities"
-                            image-src="https://www.careerexplorer.com/static/compiled/images/up-next-blobs/11-vert.svg"
-                            backgroundColor="#C27A36"
-                        />
-                    </div>
+<!--                    <div v-else class="flex flex-col items-center justify-center">-->
+<!--                        <UpNext-->
+<!--                            title="No Scores Available"-->
+<!--                            description="It seems like you haven't taken the compatibility test yet. Take-->
+<!--                            a moment to complete the test and discover your best-fit career matches."-->
+<!--                            ctaText="Take the Test"-->
+<!--                            ctaLink="/activities"-->
+<!--                            image-src="https://www.careerexplorer.com/static/compiled/images/up-next-blobs/11-vert.svg"-->
+<!--                            backgroundColor="#C27A36"-->
+<!--                        />-->
+<!--                    </div>-->
 
                     <!-- Closest Jobs Section -->
                     <div v-if="Object.keys(jobs).length > 0 " class="text-left ">

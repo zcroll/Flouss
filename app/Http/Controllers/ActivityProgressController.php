@@ -24,13 +24,13 @@ class ActivityProgressController extends Controller
 
     public function index()
     {
-//        $lastTest = Auth::user()->test()->latest('created_at')->first();
-//        $lastTestDate = $lastTest ? Carbon::parse($lastTest->created_at) : null;
-//        $isOver10Days = !$lastTestDate || $lastTestDate->lt(Carbon::now()->subDays(10));
-//
-//        if (!$isOver10Days) {
-//            return to_route('results');
-//        }
+        $lastTest = Auth::user()->test()->latest('created_at')->first();
+        $lastTestDate = $lastTest ? Carbon::parse($lastTest->created_at) : null;
+        $isOver10Days = !$lastTestDate || $lastTestDate->lt(Carbon::now()->subDays(10));
+
+        if (!$isOver10Days) {
+            return to_route('results');
+        }
 
         $activities = $this->initializeActivities();
         ds($activities);
