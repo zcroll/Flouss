@@ -16,7 +16,7 @@
                                 <div class="report-book report-book--trait overflow-hidden rounded-lg relative bg-gray-800 shadow-lg pb-[116.195%] transition-all duration-300">
                                     <div class="report-book-content absolute inset-0 flex flex-col justify-center text-center p-6">
                                         <h1 class="report-book-title text-sm font-medium uppercase mb-2">Trait Report</h1>
-                                        <h2 class="report-book-heading text-2xl font-light mb-2">You're Social</h2>
+                                        <h2 class="report-book-heading text-2xl font-light mb-2">You're {{Archetype}}</h2>
                                         <p class="report-book-copy text-base mb-2">In fact, you're more social than 85% of the population.</p>
                                         <div class="report-book-footer mt-auto"></div>
                                     </div>
@@ -122,6 +122,14 @@ export default defineComponent({
             required: true,
         },
         jobs: {
+            type: Object,
+            required: true,
+        },
+        Archetype: {
+            type: Object,
+            required: true,
+        },
+        highestTwoScores: {
             type: Object,
             required: true,
         },

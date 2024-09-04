@@ -3,8 +3,10 @@ namespace App\Http\Controllers;
 
 use App\Models\JobInfo;
 use App\Models\Question;
+use App\Models\Result;
 use App\Models\Score;
 use App\Services\JobMatcherService;
+use App\Traits\ArchetypeFinder;
 use App\Traits\CalculatesScores;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -17,7 +19,7 @@ use Symfony\Component\Process\Process;
 
 class ActivityProgressController extends Controller
 {
-    use CalculatesScores;
+    use CalculatesScores,ArchetypeFinder;
 
     private const BIG_FIVE_CATEGORIES = ['Extraversion', 'Agreeableness', 'Conscientiousness', 'Neuroticism', 'Openness'];
     private const HOLLAND_CODE_CATEGORIES = ['Realistic', 'Investigative', 'Artistic', 'Social', 'Enterprising', 'Conventional'];
@@ -123,7 +125,10 @@ class ActivityProgressController extends Controller
             'Agreeableness' => $scores['Agreeableness'] ?? 0,
             'Neuroticism' => $scores['Neuroticism'] ?? 0,
         ];
-
+        $theArchetype = $this->getArchetypeAndTopScores($targetHolland);
+        $archetypes = $theArchetype['archetypes'];
+        $topTraits = $theArchetype['topTraits'];
+//        ds($theArchetype->archetypes);
         // Match jobs
         $scriptPath = app_path('/python/test.py');
         $process = new Process(['python3', $scriptPath, json_encode($targetHolland), json_encode($targetBigFive)]);
@@ -136,8 +141,7 @@ class ActivityProgressController extends Controller
 
         $output = $process->getOutput();
 
-        // Log the raw output from the Python script
-//        Log::info('Python script output:', ['output' => $output]);
+
 
         try {
             ds($scores);
@@ -152,47 +156,57 @@ class ActivityProgressController extends Controller
 
         $userId = auth()->id();
 
-        // Save scores and matched jobs
         try {
-            Score::create([
+            Result::create([
                 'user_id' => $userId,
                 'scores' => json_encode($scores, JSON_THROW_ON_ERROR),
-                'jobs' => json_encode($closestJobs, JSON_THROW_ON_ERROR)
+                'jobs' => json_encode($closestJobs, JSON_THROW_ON_ERROR),
+                'highestTwoScores' =>$topTraits,
+                'Archetype' => $archetypes,
             ]);
         } catch (\JsonException $e) {
             Log::error('Failed to encode scores or jobs for database storage', ['error' => $e->getMessage()]);
             throw new \RuntimeException('Failed to save assessment results');
         }
 
-        // You can pass the closest jobs to the results page if needed
         return to_route('results')->with('closestJobs', $closestJobs);
     }
 
     public function results(): \Inertia\Response
     {
         $userId = auth()->id();
-        $score = Score::where('user_id', $userId)->latest()->first();
+        $score = Result::where('user_id', $userId)->latest()->first();
 
         if ($score) {
-            $scores = json_decode($score->scores, true, 512, JSON_THROW_ON_ERROR);
-            $closestJobs = json_decode($score->jobs, true);
-            $jobIds = array_map(static function($job) {
-                return $job['job_info_id'];
-            }, $closestJobs);
+            // Decode JSON fields only if they are strings
+            $scores = is_string($score->scores) ? json_decode($score->scores, true, 512, JSON_THROW_ON_ERROR) : $score->scores;
+            $topTraits = is_string($score->highestTwoScores) ? json_decode($score->highestTwoScores, true, 512, JSON_THROW_ON_ERROR) : $score->highestTwoScores;
+            $archetypes = is_string($score->Archetype) ? json_decode($score->Archetype, true, 512, JSON_THROW_ON_ERROR) : $score->Archetype;
+            $closestJobs = is_string($score->jobs) ? json_decode($score->jobs, true) : $score->jobs;
 
+            // Extract job IDs
+            $jobIds = array_map(fn($job) => $job['job_info_id'], $closestJobs);
+
+            // Fetch job details
             $jobs = JobInfo::whereIn('id', $jobIds)
                 ->select('id', 'name', 'slug', 'image')
                 ->get();
-            ds($jobs->toArray());
+            $archetype = is_array($archetypes) ? $archetypes[0] : $archetypes;
+            // Pass data to the Inertia view
             return Inertia::render('Results', [
                 'scores' => $scores,
-                'jobs' => $jobs,
+                'jobs' => $jobs->toArray(),
+                'highestTwoScores' => $topTraits,
+                'Archetype' => $archetypes,
             ]);
         }
 
+        // Return default values if no score is found
         return Inertia::render('Results', [
             'scores' => [],
             'jobs' => [],
+            'highestTwoScores' => [],
+            'Archetype' => [],
         ]);
     }
 }
