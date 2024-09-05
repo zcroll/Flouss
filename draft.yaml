@@ -55,3 +55,51 @@ models:
     trait_type: string nullable
     relationships:
       BelongsTo: JobInfo
+
+
+Persona:
+  name: string nullable
+  name_plural: string nullable
+  a_an: string nullable
+  primary_trait: string nullable
+  secondary_trait: string nullable
+  description: text nullable
+  adjectives: text nullable
+  strengths: text nullable
+  strengths_short: text nullable
+  weaknesses: text nullable
+  personality_paragraph: text nullable
+  created_at: timestamp nullable
+  updated_at: timestamp nullable
+
+InsightCategories:
+  insight_category: string nullable
+  insight_category_slug: string nullable
+  created_at: timestamp nullable
+  updated_at: timestamp nullable
+
+Insights:
+  persona_id: foreign_key nullable
+  insight_category_slug: string nullable
+  insight: text nullable
+  created_at: timestamp nullable
+  updated_at: timestamp nullable
+
+PersonaScales:
+  persona_id: foreign_key nullable
+  scale_id: foreign_key nullable
+  value: decimal nullable
+  percentile: decimal nullable
+  created_at: timestamp nullable
+  updated_at: timestamp nullable
+
+Scales:
+  scale_group: string nullable
+  scale_group_slug: string nullable
+  name: string nullable
+  short_name: string nullable
+  scale_id: string nullable
+  definition: text nullable
+  short_definition: text nullable
+  created_at: timestamp nullable
+  updated_at: timestamp nullable

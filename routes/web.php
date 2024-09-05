@@ -3,6 +3,7 @@
 use App\Http\Controllers\ActivityProgressController;
 use App\Http\Controllers\CareerController;
 use App\Http\Controllers\JobMatcherController;
+use App\Http\Controllers\Result\ResultController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -31,7 +32,6 @@ use Inertia\Inertia;
             Route::controller(ActivityProgressController::class)->group(function () {
                 Route::get('/activities', 'index')->name('activities');
                 Route::post('/activity/submit', 'submit')->name('activity.submit');
-                Route::get('/results', 'results')->name('results');
             });
 
             Route::controller(CareerController::class)->group(function () {
@@ -43,5 +43,7 @@ use Inertia\Inertia;
                 Route::get('/career/{job}/work-activities', 'workActivities')->name('career.work-activities');
             });
         });
-
+    Route::controller(ResultController::class)->group(function () {
+        Route::get('/results', 'results')->name('results');
+    });
 Route::get('/find-closest-job', [JobMatcherController::class, 'matchJobs']);
