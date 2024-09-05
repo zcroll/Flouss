@@ -8,12 +8,18 @@
                         <h1 class="ml-1 text-4xl font-serif text-gray-800 mt-10 ">Your Compatibility Results</h1>
                         <p class="ml-3 mt-2 text-lg text-gray-600">Below are your scores and best-fit career matches.</p>
                     </div>
+                    <div class="w-full grid grid-cols-2 gap-4">
+                        <Archetype :first_trait="highestTwoScores.first_trait" :second_trait="highestTwoScores.second_trait" :archetype="Archetype" :score1="first_score" :score2="second_score" />
+                        <Archetype />
+                    </div>
 
-                    <div class="dashboard-page-reports grid grid-cols-2 gap-8 text-center mb-2 text-white">
-                        <!-- Report 1 -->
+
+<!--
+                    <div v-if="Object.keys(jobs).length > 0" class="dashboard-page-reports grid grid-cols-2 gap-8 text-center mb-2 text-white">
+                        &lt;!&ndash; Report 1 &ndash;&gt;
                         <div class="dashboard-page-report bg-white p-10 mt-6 border border-gray-300 rounded-lg shadow-lg transition-shadow duration-300">
                             <div class="dashboard-page-report-book mx-auto max-w-sm transition-transform duration-300">
-                                <div class="report-book report-book--trait overflow-hidden rounded-lg relative bg-gray-800 shadow-lg pb-[116.195%] transition-all duration-300">
+                                <div class="report-book report-book&#45;&#45;trait overflow-hidden rounded-lg relative bg-gray-800 shadow-lg pb-[116.195%] transition-all duration-300">
                                     <div class="report-book-content absolute inset-0 flex flex-col justify-center text-center p-6">
                                         <h1 class="report-book-title text-sm font-medium uppercase mb-2">Trait Report</h1>
                                         <h2 class="report-book-heading text-2xl font-light mb-2">You're {{Archetype[0]}}</h2>
@@ -26,10 +32,10 @@
                                 Learn what makes you unique and how you compare to the rest of the world.
                             </p>
                         </div>
-                        <!-- Report 2 -->
+                        &lt;!&ndash; Report 2 &ndash;&gt;
                         <div class="dashboard-page-report bg-white p-10 mt-6 border border-gray-300 rounded-lg shadow-lg transition-shadow duration-300">
                             <div class="dashboard-page-report-book mx-auto max-w-sm transition-transform duration-300">
-                                <div class="report-book report-book--personality overflow-hidden rounded-lg relative bg-gray-800 shadow-lg pb-[116.195%] transition-all duration-300">
+                                <div class="report-book report-book&#45;&#45;personality overflow-hidden rounded-lg relative bg-gray-800 shadow-lg pb-[116.195%] transition-all duration-300">
                                     <div class="report-book-content absolute inset-0 flex flex-col justify-center text-center p-6">
                                         <h1 class="report-book-title text-sm font-medium uppercase mb-2">Personality Report</h1>
                                         <h2 class="report-book-heading text-2xl font-light mb-2">You're an Advocate</h2>
@@ -43,33 +49,35 @@
                             </p>
                         </div>
                     </div>
+-->
+
+
 
                     <!-- No Scores Available -->
-<!--                    <div v-else class="flex flex-col items-center justify-center">-->
-<!--                        <UpNext-->
-<!--                            title="No Scores Available"-->
-<!--                            description="It seems like you haven't taken the compatibility test yet. Take-->
-<!--                            a moment to complete the test and discover your best-fit career matches."-->
-<!--                            ctaText="Take the Test"-->
-<!--                            ctaLink="/activities"-->
-<!--                            image-src="https://www.careerexplorer.com/static/compiled/images/up-next-blobs/11-vert.svg"-->
-<!--                            backgroundColor="#C27A36"-->
-<!--                        />-->
-<!--                    </div>-->
+<!--                    <div v-else class="flex flex-col items-center justify-center">
+                        <UpNext
+                            title="No Scores Available"
+                            description="It seems like you haven't taken the compatibility test yet. Take
+                            a moment to complete the test and discover your best-fit career matches."
+                            ctaText="Take the Test"
+                            ctaLink="/activities"
+                            image-src="https://www.careerexplorer.com/static/compiled/images/up-next-blobs/11-vert.svg"
+                            backgroundColor="#C27A36"
+                        />
+                    </div>-->
 
                     <!-- Closest Jobs Section -->
                     <div v-if="Object.keys(jobs).length > 0 " class="text-left ">
-                        <h1 class="ml-1 text-4xl font-serif text-gray-800  ">Your best-fit career matches.</h1>
+                        <h1 class="ml-1 text-4xl font-serif text-gray-800  ">Your Best Fit Career Matches.</h1>
                         <p class="ml-3 mt-2 text-lg text-gray-600">
                             Based on your responses, here are some jobs that you can excel in more than everyone else.
                         </p>
                     </div>
-                    <div v-if="Object.keys(jobs).length > 0" class="grid grid-cols-1 sm:grid-cols-2 gap-6 p-6 bg-transparent rounded-lg shadow-sm">
-
+                    <div v-if="Object.keys(jobs).length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-6 bg-transparent rounded-lg shadow-sm">
                         <div
                             v-for="(job, index) in jobs"
                             :key="index"
-                            class="relative flex items-center space-x-4 rounded-lg border border-gray-300 bg-white p-5 shadow-sm hover:border-indigo-500 transition duration-200"
+                            class="relative flex items-center space-x-4 rounded-2xl border border-gray-300 bg-white p-5 shadow-sm hover:border-indigo-500 transition duration-200"
                         >
                             <div class="flex-shrink-0">
                                 <img
@@ -87,16 +95,7 @@
                         </div>
                     </div>
 
-                    <!-- No Jobs Available -->
-                    <div v-else class="flex flex-col items-center justify-center">
-                        <UpNext
-                            title="No Jobs Found"
-                            description="We couldn't find any job matches for you yet. Please try again
-                            later or take the test to improve your results."
-                            image-src="https://www.careerexplorer.com/static/compiled/images/up-next-blobs/1-vert.svg"
-                            backgroundColor="#005C46"
-                        />
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -108,9 +107,11 @@ import {defineComponent} from "vue";
 import {router, Link ,} from '@inertiajs/vue3';
 import AppLayout from "@/Layouts/AppLayout.vue";
 import UpNext from "@/Components/UpNext.vue";
+import Archetype from "@/Components/Archetype.vue";
 
 export default defineComponent({
     components: {
+        Archetype,
         UpNext,
         AppLayout,
         Link,
@@ -126,21 +127,24 @@ export default defineComponent({
             required: true,
         },
         Archetype: {
-            type: Array,
+            type: String,
             required: true,
         },
         highestTwoScores: {
-            type: Array,
+            type: Object,
             required: true,
         },
     },
     data() {
         return {
             isCollapsed: {}, // Tracks which categories are collapsed
+            first_score: Math.round(this.scores[this.highestTwoScores.first_trait] * 100),
+            second_score: Math.round(this.scores[this.highestTwoScores.second_trait] * 100)
+
         };
     },
     methods: {
-        getCategoryColor(category) {
+/*        getCategoryColor(category) {
             const colors = {
                 Realistic: "bg-gradient-to-r from-teal-600 to-emerald-800",
                 Investigative: "bg-gradient-to-r from-teal-600 to-emerald-800",
@@ -150,11 +154,12 @@ export default defineComponent({
                 Conventional: "bg-gradient-to-r from-teal-700 to-emerald-600",
             };
             return colors[category] || "bg-gray-500";
-        },
+        },*/
+
         toggleCollapse(category) {
             this.isCollapsed[category] = !this.isCollapsed[category];
         },
-        getCategoryDescription(category) {
+/*        getCategoryDescription(category) {
             const descriptions = {
                 Realistic: "A realistic person is someone who is very body-oriented. This individual enjoys using their hands and eyes to solve practical problems. They like doing outdoor, mechanical, and physical activities. It’s very natural for a realistic person to relate to the physical world—this type of person usually does not deal with problems concerning ideas, data, or people, but rather, they like to concentrate on problems they can solve with their hands.",
                 Investigative: "An investigative person is someone who lives in the mind. To solve problems, they prefer reading and studying, books and text, rather than their using their hands. They tend to analyze situations before making decisions. Investigative people are independent thinkers that are both curious and insightful.",
@@ -164,7 +169,7 @@ export default defineComponent({
                 Conventional: "A conventional person is someone who is careful, quiet, and pays close attention to detail. Following a set of rules appeals to these people as they like to feel secure and certain. They prefer to carry out tasks assigned by others rather than take on a leadership role. They are typically neat, tidy, and enjoy working with data in structured settings.",
             };
             return descriptions[category] || "No description available.";
-        },
+        },*/
         visitJob(job) {
             const formattedJob = job.replace(/ /g, '-');
             router.visit(`/career/${formattedJob}`, {preserveScroll: false});
@@ -185,4 +190,5 @@ h1, h2, h3 {
 p {
     font-family: "Inter", sans-serif;
 }
+
 </style>
