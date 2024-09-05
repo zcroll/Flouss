@@ -29,7 +29,7 @@ class ResultController extends Controller
             $jobs = JobInfo::whereIn('id', $jobIds)
                 ->select('id', 'name', 'slug', 'image')
                 ->get();
-            $Archetype = DB::table('persona')->where('name', '=', "Mentor")->first();
+            $Archetype = DB::table('persona')->where('name', '=', "t")->first();
             ds([' the archetype details' => $Archetype,]);
 
             return Inertia::render('Results', [

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class JobInfo extends Model
 {
@@ -34,4 +35,45 @@ class JobInfo extends Model
     protected $casts = [
         'id' => 'integer',
     ];
+
+
+    public function jobInfoDuties(): HasMany
+    {
+        return $this->hasMany(JobInfoDuty::class);
+    }
+
+
+    public function workEnvironments(): HasMany
+    {
+        return $this->hasMany(WorkEnvironment::class);
+    }
+
+       public function jobInfoDetail(): HasMany
+    {
+        return $this->hasMany(JobInfoDetail::class);
+    }
+
+
+
+
+
+    public function jobInfoTypes(): HasMany
+    {
+        return $this->hasMany(JobInfoType::class);
+    }
+
+    public function workplaces(): HasMany
+    {
+        return $this->hasMany(Workplace::class);
+    }
+
+    public function personalityTraits(): HasMany
+    {
+        return $this->hasMany(PersonalityTrait::class);
+    }
+
+    public function personalityDetails(): HasMany
+    {
+        return $this->hasMany(PersonalityDetails::class);
+    }
 }
