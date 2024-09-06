@@ -77,8 +77,8 @@
                 :style="[backgroundStyles,backgroundImage2]"
             />
         </div>
-        <div
-            class="page-head page-head--first-time-dash"
+<!--        <div
+            class="page-head page-head&#45;&#45;first-time-dash"
             :style="pageHeadStyles"
             v-else-if="route().current('career')"
         >
@@ -98,9 +98,9 @@
             <div
                 :style="[backgroundStyles,backgroundImage2]"
             />
-        </div>
-        <div
-            class="page-head page-head--first-time-dash"
+        </div>-->
+<!--        <div
+            class="page-head page-head&#45;&#45;first-time-dash"
             :style="pageHeadStyles"
             v-else-if="route().current('career.knowledge')"
         >
@@ -120,9 +120,9 @@
             <div
                 :style="[backgroundStyles,backgroundImage2]"
             />
-        </div>
-        <div
-            class="page-head page-head--first-time-dash"
+        </div>-->
+<!--        <div
+            class="page-head page-head&#45;&#45;first-time-dash"
             :style="pageHeadStyles"
             v-else-if="route().current('career.abilities')"
         >
@@ -142,34 +142,11 @@
             <div
                 :style="[backgroundStyles,backgroundImage2]"
             />
-        </div>
+        </div>-->
         <div
             class="page-head page-head--first-time-dash"
             :style="pageHeadStyles"
-            v-else-if="route().current('career.work-activities')"
-        >
-            <div
-                class="grid-container"
-                :style="gridContainerStyles"
-            >
-                <h1
-                    class="DashboardPage__header__heading"
-                    :style="headingStyles"
-                >
-                    {{ route().params.job }}
-
-                </h1>
-
-            </div>
-
-            <div
-                :style="[backgroundStyles,backgroundImage2]"
-            />
-        </div>
-        <div
-            class="page-head page-head--first-time-dash"
-            :style="pageHeadStyles"
-            v-else-if="route().current('career.technologies')"
+            v-else-if="route().current('career.workEnvironments')"
         >
             <div
                 class="grid-container"
@@ -191,7 +168,7 @@
         <div
             class="page-head page-head--first-time-dash"
             :style="pageHeadStyles"
-            v-else-if="route().current('career.tasks')"
+            v-else-if="route().current('career.personality')"
         >
             <div
                 class="grid-container"
@@ -202,6 +179,28 @@
                     :style="headingStyles"
                 >
                     {{ route().params.job }}
+                </h1>
+
+            </div>
+
+            <div
+                :style="[backgroundStyles,backgroundImage2]"
+            />
+        </div>
+        <div
+            class="page-head page-head--first-time-dash"
+            :style="pageHeadStyles"
+            v-else-if="route().current('career')"
+        >
+            <div
+                class="grid-container"
+                :style="gridContainerStyles"
+            >
+                <h1
+                    class="DashboardPage__header__heading"
+                    :style="headingStyles"
+                >
+                    {{occupation}}
                 </h1>
 
             </div>
@@ -230,7 +229,7 @@ const props = defineProps({
     baseUri: {
         type: String,
         required: true
-    }
+    },
 });
 
 
