@@ -12,12 +12,12 @@ export default {
     },
     setup(props) {
         const responses = reactive({ ...props.initialResponses });
-        const currentChunkIndex = ref(Math.floor(props.initialIndex / 4));
+        const currentChunkIndex = ref(Math.floor(props.initialIndex / 2));
         const progressFra = ref({ current: 1, total: 1 });
         const progressBar = ref(0);
         const loading = ref(false);
         const chunkedActivities = computed(() => {
-            const chunkSize = 4;
+            const chunkSize = 2;
             let result = [];
             for (let i = 0; i < props.activities.length; i += chunkSize) {
                 result.push(props.activities.slice(i, i + chunkSize));

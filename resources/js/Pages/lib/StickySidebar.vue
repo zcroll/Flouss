@@ -17,9 +17,9 @@
                     <div class="grid grid-cols-3 gap-4 items-center mb-10">
                         <div
                             class="col-span-1 w-20 h-20 bg-gray-200 rounded-2xl flex items-center justify-center justify-self-center">
-                            <img src="{{image}}" alt="Icon" class="w-6 h-6">
+                            <img :src="image" alt="Icon" class="w-20 h-20 rounded-2xl">
                         </div>
-                        <h3 class="col-span-2 text-lg font-light font-serif text-gray-700 fancy-font">
+                        <h3 class="col-span-2 text-lg font-light font-serif text-gray-700 ">
                             {{ title }}
                         </h3>
                     </div>
@@ -27,19 +27,19 @@
                     <div class="grid grid-cols-3 gap-4 mb-6">
                         <div
                             class="bg-purple-500 text-white h-3/4 rounded-lg text-center flex flex-col justify-center items-center p-4">
-                            <h4 class="text-l font-bold fancy-font">Salary</h4>
-                            <p class="text-sm fancy-font">$67K</p>
+                            <h4 class="text-l font-bold antialiased ">Salary</h4>
+                            <p class="text-sm ">N/A</p>
                         </div>
                         <div
                             class="bg-teal-600 text-white h-3/4 rounded-lg text-center flex flex-col justify-center items-center p-4">
-                            <h4 class="text-l font-bold fancy-font">personality</h4>
-                            <p class="text-sm fancy-font">N/A</p>
+                            <h4 class="text-l font-bold antialiased">Personality</h4>
+                            <p class="text-sm ">N/A</p>
 
                         </div>
                         <div
                             class="bg-gray-800 text-white h-3/4 rounded-lg text-center flex flex-col justify-center items-center p-4">
-                            <h4 class="text-l font-bold fancy-font">Tasks</h4>
-                            <p class="text-sm fancy-font">Very Low</p>
+                            <h4 class="text-l font-bold antialiased">Satisfaction</h4>
+                            <p class="text-sm ">Very Low</p>
 
                         </div>
                     </div>
@@ -65,7 +65,7 @@
                 }"
                                 :aria-disabled="$page.url === `${baseUrl}/workEnvironments`"
                             >
-                                <span class="font-serif text-2xl">workEnvironments</span>
+                                <span class="font-serif text-2xl">Work Environments</span>
                             </Link>
                         </li>
 
@@ -79,7 +79,7 @@
                                 :aria-disabled="$page.url === `${baseUrl}/personality`"
                             >
                                 <span
-                                    class="font-serif text-2xl">personality</span>
+                                    class="font-serif text-2xl">Personality</span>
 
                             </Link>
                         </li>
@@ -164,6 +164,7 @@ export default {
         sidebarTitle: String,
         sidebarDescription: String,
         title: String,
+        image: String,
     },
     computed: {
         isSmallScreen() {

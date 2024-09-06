@@ -7,11 +7,13 @@
                     <div v-if="Object.keys(jobs).length > 0 " class="text-left mt-10">
                         <h1 class="ml-1 text-4xl font-serif text-gray-800 mt-10 ">Your Compatibility Results</h1>
                         <p class="ml-3 mt-2 text-lg text-gray-600">Below are your scores and best-fit career matches.</p>
+
+                        <div class="w-full grid grid-cols-2 gap-4">
+                            <Archetype :first_trait="highestTwoScores.first_trait" :second_trait="highestTwoScores.second_trait" :archetype="Archetype" :score1="first_score" :score2="second_score" />
+
+                        </div>
                     </div>
-                    <div class="w-full grid grid-cols-2 gap-4">
-                        <Archetype :first_trait="highestTwoScores.first_trait" :second_trait="highestTwoScores.second_trait" :archetype="Archetype" :score1="first_score" :score2="second_score" />
-                        <Archetype />
-                    </div>
+
 
 
 <!--
@@ -54,7 +56,7 @@
 
 
                     <!-- No Scores Available -->
-<!--                    <div v-else class="flex flex-col items-center justify-center">
+                    <div v-else class="flex flex-col items-center justify-center">
                         <UpNext
                             title="No Scores Available"
                             description="It seems like you haven't taken the compatibility test yet. Take
@@ -64,7 +66,7 @@
                             image-src="https://www.careerexplorer.com/static/compiled/images/up-next-blobs/11-vert.svg"
                             backgroundColor="#C27A36"
                         />
-                    </div>-->
+                    </div>
 
                     <!-- Closest Jobs Section -->
                     <div v-if="Object.keys(jobs).length > 0 " class="text-left ">

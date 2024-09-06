@@ -47,7 +47,7 @@
             </span>
 
             <!-- Title -->
-            <h1 class="text-4xl font-light my-4 text-shadow-md">You are a {{archetype.toString()}}</h1>
+            <h1 class="text-4xl font-light my-4 text-shadow-md">You are a {{archetype}}</h1>
 
             <!-- Description -->
             <p class="text-lg text-shadow-sm">Practical, Constructive, Persistent</p>
@@ -127,44 +127,42 @@
 </template>
 
 <script setup>
-import {defineProps, ref} from 'vue';
+import { ref, computed } from 'vue';
 
+// Props
 const props = defineProps({
-    archetype: {
-        type: String,
-        required: true,
-        default: 'Default Title'
-    },
     first_trait: {
         type: String,
-        required: true,
         default: 'Default Title'
     },
     second_trait: {
         type: String,
-        required: true,
         default: 'Default Title'
     },
     score1: {
         type: Array,
-        required: true,
-        default: 'Default Title'
+        default: () => []
     },
     score2: {
         type: Array,
-        required: true,
-        default: 'Default Title'
+        default: () => []
+    },
+    archetype: {
+        type: Array,
+        default: () => ['Archetype']
     }
+});
 
-
-})
-
+// Reactive state for toggling "Read More"
 const showReadMore = ref(false);
 
+// Function to toggle the "Read More" state
 const toggleReadMore = () => {
     showReadMore.value = !showReadMore.value;
-
 };
+
+// Computed property for archetype
+const archetype = computed(() => JSON.stringify(props.archetype));
 </script>
 
 <style scoped>
