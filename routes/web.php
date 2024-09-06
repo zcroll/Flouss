@@ -42,5 +42,6 @@ use Inertia\Inertia;
         });
     Route::controller(ResultController::class)->group(function () {
         Route::get('/results', 'results')->name('results');
+        Route::get('/results/{id}/personality', 'personality')->name('personality');
     });
 Route::get('/find-closest-job', [JobMatcherController::class, 'matchJobs']);

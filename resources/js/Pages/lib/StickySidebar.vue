@@ -1,6 +1,5 @@
 <template>
     <div class="container mx-auto p-4   flex flex-col-reverse lg:flex-row">
-        <!-- Main Content Section -->
         <div class="w-full lg:w-2/3">
             <slot/>
         </div>

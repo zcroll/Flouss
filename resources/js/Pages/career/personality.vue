@@ -25,6 +25,7 @@
 import { ref } from 'vue';
 import { defineProps } from 'vue';
 import StickySidebar from "@/Pages/lib/StickySidebar.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 
 defineProps({
   occupation: {

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -15,6 +16,7 @@ class User extends Authenticatable
 {
     use HasApiTokens;
     use HasFactory;
+    use HasUuid  ;
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
@@ -64,10 +66,17 @@ class User extends Authenticatable
         ];
     }
 
-    public function test():HasMany
+
+    public function getRouteKeyName(): string
+    {
+        return 'uuid';
+    }
+
+
+    public function results():HasMany
     {
 
-        return $this->hasMany(Score::class);
+        return $this->hasMany(Result::class);
 
     }
 }

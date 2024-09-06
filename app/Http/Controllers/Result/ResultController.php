@@ -3,48 +3,70 @@
 namespace App\Http\Controllers\Result;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ResultResource;
+use App\Http\Resources\UserResource;
 use App\Models\JobInfo;
 use App\Models\Result;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class ResultController extends Controller
 {
-    public function results(): \Inertia\Response
+public function results(): \Inertia\Response
+{
+    $userId = auth()->id();
+    $scores = ResultResource::collection(Result::with('user')->where('user_id', $userId)->get());
+    //Now you have a collection, you can manipulate it
+    $firstScore = $scores->first();
+    ds(       $firstScore->user->uuid);
+//    ds($firstScore->scores);
+
+    $topTraits = $firstScore->highestTwoScores;
+    ds($topTraits);
+    $Archetype = $firstScore->Archetype;
+    $closestJobs = collect($firstScore->jobs);
+
+    $jobIds = $closestJobs->pluck('job_info_id');$jobs = JobInfo::whereIn('id', $jobIds)
+        ->select('id', 'name', 'slug', 'image')
+        ->get();
+    $Archetype = DB::table('persona')->where('name', '=', "Mentor")->first();
+
+    return Inertia::render('Result/Results', [
+        'userId' => $firstScore->user->uuid,
+        'scores' => $firstScore->scores,
+        'jobs' => $jobs,
+        'highestTwoScores' => $topTraits,
+        'Archetype' => $Archetype,
+    ]);
+}
+    public  function personality($id): \Inertia\Response
     {
         $userId = auth()->id();
-        $score = Result::where('user_id', $userId)->latest()->first();
 
-        if ($score) {
-            // Decode JSON fields only if they are strings
-            $scores = is_string($score->scores) ? json_decode($score->scores, true, 512, JSON_THROW_ON_ERROR) : $score->scores;
-            $topTraits = is_string($score->highestTwoScores) ? json_decode($score->highestTwoScores, true, 512, JSON_THROW_ON_ERROR) : $score->highestTwoScores;
-            $archetypes = is_string($score->Archetype) ? json_decode($score->Archetype, true, 512, JSON_THROW_ON_ERROR) : $score->Archetype;
-            $closestJobs = is_string($score->jobs) ? json_decode($score->jobs, true) : $score->jobs;
 
-            // Extract job IDs
-            $jobIds = array_map(fn($job) => $job['job_info_id'], $closestJobs);
+        $scores = ResultResource::collection(Result::with('user')->where('user_id', $userId)->get());
 
-            // Fetch job details
-            $jobs = JobInfo::whereIn('id', $jobIds)
-                ->select('id', 'name', 'slug', 'image')
-                ->get();
-            $Archetype = DB::table('persona')->where('name', '=', "t")->first();
-            ds([' the archetype details' => $Archetype,]);
+        $firstScore = $scores->first();
+        $Archetype = $firstScore->Archetype;
+        $ArchetypeData = DB::table('persona')->where('name', '=', "Mentor")->first();
+        $insights = DB::table('insights')
+            ->join('insight_categories', 'insights.insight_category_slug', '=', 'insight_categories.insight_category_slug')
+            ->where('insights.persona_id', '=', $ArchetypeData->id)
+            ->select('insights.*', 'insight_categories.insight_category')
+            ->get();
 
-            return Inertia::render('Results', [
-                'scores' => $scores,
-                'jobs' => $jobs->toArray(),
-                'highestTwoScores' => $topTraits,
-                'Archetype' => $Archetype,
-            ]);
-        }
+        ds($insights);
 
-        return Inertia::render('Results', [
-            'scores' => [],
-            'jobs' => [],
-            'highestTwoScores' => [],
-            'Archetype' => [],
-        ]);
+      return  Inertia::render('Result/Personality', [
+          "ArchetypeData"=>$ArchetypeData
+      ]);
+
+
+
+
+
+
+
     }
 }
