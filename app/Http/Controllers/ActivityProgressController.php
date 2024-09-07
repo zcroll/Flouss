@@ -21,156 +21,178 @@ class ActivityProgressController extends Controller
 {
     use CalculatesScores,ArchetypeFinder;
 
-    private const BIG_FIVE_CATEGORIES = ['Extraversion', 'Agreeableness', 'Conscientiousness', 'Neuroticism', 'Openness'];
-    private const HOLLAND_CODE_CATEGORIES = ['Realistic', 'Investigative', 'Artistic', 'Social', 'Enterprising', 'Conventional'];
+ private const BIG_FIVE_CATEGORIES = ['Extraversion', 'Agreeableness', 'Conscientiousness', 'Neuroticism', 'Openness'];
+private const HOLLAND_CODE_CATEGORIES = ['Realistic', 'Investigative', 'Artistic', 'Social', 'Enterprising', 'Conventional'];
 
-    public function index()
-    {
-        $lastTest = Auth::user()->test()->latest('created_at')->first();
-        $lastTestDate = $lastTest ? Carbon::parse($lastTest->created_at) : null;
-        $isOver10Days = !$lastTestDate || $lastTestDate->lt(Carbon::now()->subDays(10));
+public function index()
+{
+//    $lastTest = Auth::user()->results()->latest('created_at')->first();
+//    $lastTestDate = $lastTest ? Carbon::parse($lastTest->created_at) : null;
+//    $isOver10Days = !$lastTestDate || $lastTestDate->lt(Carbon::now()->subDays(10));
+//
+//    if (!$isOver10Days) {
+//        return to_route('results');
+//    }
 
-        if (!$isOver10Days) {
-            return to_route('results');
+    $activities = $this->initializeActivities();
+    ds($activities);
+    return Inertia::render('ActivityProgress', [
+        'activities' => $activities,
+        'initialResponses' => [],
+        'initialIndex' => 0,
+    ]);
+}
+
+private function initializeActivities(): array
+{
+    $bigFiveActivities = $this->fetchActivitiesByType('big_five', self::BIG_FIVE_CATEGORIES);
+    $hollandCodeActivities = $this->fetchActivitiesByType('holland_codes', self::HOLLAND_CODE_CATEGORIES);
+
+    return array_merge($bigFiveActivities, $hollandCodeActivities);
+}
+
+private function fetchActivitiesByType(string $type, array $categories): array
+{
+    $activities = Question::whereIn('trait_category', $categories)
+        ->where('type', $type)
+        ->orderBy(DB::raw("FIELD(trait_category, '" . implode("', '", $categories) . "')"))
+        ->limit(12)
+        ->get();
+
+    return $activities->map(function ($activity) {
+        return [
+            'category' => $activity->trait_category,
+            'id' => $activity->id,
+            'type' => $activity->type,
+            'name' => $activity->question_text
+        ];
+    })->toArray();
+}
+ public function submit(Request $request, JobMatcherService $jobMatcherService): \Illuminate\Http\RedirectResponse
+{
+    $responses = $request->input('responses', []);
+
+    if (empty($responses)) {
+        // Handle empty responses
+        return to_route('results');
+    }
+
+    $activities = $this->getActivities($responses);
+    if ($activities->isEmpty()) {
+        // Handle empty activities
+        return to_route('results');
+    }
+
+    $formattedResponses = $this->formatResponses($activities, $responses);
+    $scores = $this->calculateScores($formattedResponses);
+
+    $this->logResponses($scores, $formattedResponses);
+
+    $targetHolland = $this->formatHollandScores($scores);
+    $targetBigFive = $this->formatBigFiveScores($scores);
+    $archetype = $this->getArchetypeAndTopScores($targetHolland);
+
+    $closestJobs = $this->matchJobs($targetHolland, $targetBigFive);
+      ds($closestJobs);
+      ds($archetype);
+    $result = $this->saveResult($closestJobs, $scores, $archetype);
+
+    return to_route('results')->with('closestJobs', $closestJobs);
+}
+
+private function getActivities($responses)
+{
+    $activityIds = array_keys($responses);
+    return Question::whereIn('id', $activityIds)->get();
+}
+
+private function formatResponses($activities, $responses)
+{
+    $formattedResponses = [
+        'big_five' => [],
+        'holland_codes' => []
+    ];
+
+    $activities->each(function ($activity) use ($responses, &$formattedResponses) {
+        if ($activity->type === 'big_five') {
+            $category = $activity->trait_category;
+            if (in_array($category, self::BIG_FIVE_CATEGORIES)) {
+                $formattedResponses['big_five'][$category][] = $responses[$activity->id];
+            }
+        } elseif ($activity->type === 'holland_codes') {
+            $category = $activity->trait_category;
+            if (in_array($category, self::HOLLAND_CODE_CATEGORIES)) {
+                $formattedResponses['holland_codes'][$category][] = $responses[$activity->id];
+            }
         }
+    });
 
-        $activities = $this->initializeActivities();
-        ds($activities);
-        return Inertia::render('ActivityProgress', [
-            'activities' => $activities,
-            'initialResponses' => [],
-            'initialIndex' => 0,
+    return $formattedResponses;
+}
+
+private function formatHollandScores($scores)
+{
+    return [
+        'Realistic' => $scores['Realistic'] ?? 0,
+        'Investigative' => $scores['Investigative'] ?? 0,
+        'Artistic' => $scores['Artistic'] ?? 0,
+        'Social' => $scores['Social'] ?? 0,
+        'Enterprising' => $scores['Enterprising'] ?? 0,
+        'Conventional' => $scores['Conventional'] ?? 0,
+    ];
+}
+
+private function formatBigFiveScores($scores)
+{
+    return [
+        'Openness' => $scores['Openness'] ?? 0,
+        'Conscientiousness' => $scores['Conscientiousness'] ?? 0,
+        'Extraversion' => $scores['Extraversion'] ?? 0,
+        'Agreeableness' => $scores['Agreeableness'] ?? 0,
+        'Neuroticism' => $scores['Neuroticism'] ?? 0,
+    ];
+}
+
+private function logResponses($scores, $formattedResponses)
+{
+    Log::info('Formatted Responses: ', ['formatted_responses' => $formattedResponses]);
+}
+
+private function matchJobs($targetHolland, $targetBigFive)
+{
+    $scriptPath = app_path('/python/test.py');
+    $process = new Process(['python3', $scriptPath, json_encode($targetHolland), json_encode($targetBigFive)]);
+    $process->run();
+
+    if (!$process->isSuccessful()) {
+        Log::error('Python script execution failed', ['error' => $process->getErrorOutput()]);
+        throw new ProcessFailedException($process);
+    }
+
+    $output = $process->getOutput();
+    try {
+        return json_decode($output, true, 512, JSON_THROW_ON_ERROR);
+    } catch (\JsonException $e) {
+        Log::error('Failed to decode JSON from Python script', ['error' => $e->getMessage(), 'output' => $output]);
+        throw new \RuntimeException('Failed to process job matching results');
+    }
+}
+
+private function saveResult($closestJobs, $scores, $archetype)
+{
+    try {
+        return Result::create([
+            'user_id' => auth()->id(),
+            'scores' => json_encode($scores, JSON_THROW_ON_ERROR),
+            'jobs' => json_encode($closestJobs, JSON_THROW_ON_ERROR),
+            'highestTwoScores' =>$archetype['topTraits'],
+            'Archetype' => $archetype['archetypes'],
         ]);
+    } catch (\JsonException $e) {
+        Log::error('Failed to encode scores or jobs for database storage', ['error' => $e->getMessage()]);
+        throw new \RuntimeException('Failed to save assessment results');
     }
-
-    private function initializeActivities(): array
-    {
-        $bigFiveActivities = $this->fetchActivitiesByType('big_five', self::BIG_FIVE_CATEGORIES);
-        $hollandCodeActivities = $this->fetchActivitiesByType('holland_codes', self::HOLLAND_CODE_CATEGORIES);
-
-        return array_merge($bigFiveActivities, $hollandCodeActivities);
-    }
-
-    private function fetchActivitiesByType(string $type, array $categories): array
-    {
-        $allActivities = Question::whereIn('trait_category', $categories)
-            ->where('type', $type)
-            ->orderBy(DB::raw("FIELD(trait_category, '" . implode("', '", $categories) . "')"))
-            ->get()
-            ->groupBy('trait_category');
-//ds( $this->formatActivities($allActivities, $categories));
-        return $this->formatActivities($allActivities, $categories);
-    }
-
-    private function formatActivities($groupedActivities, $categories): array
-    {
-        $formattedActivities = [];
-
-        foreach ($categories as $category) {
-            if (isset($groupedActivities[$category])) {
-                $formattedActivities[] = array_map(fn($activity) => [
-                    'category' => $category,
-                    'id' => $activity['id'],
-                    'type' => $activity['type'],
-                    'name' => $activity['question_text']
-                ], $groupedActivities[$category]->toArray());
-            }
-        }
-
-        return array_merge(...$formattedActivities);
-    }
-
-    public function submit(Request $request, JobMatcherService $jobMatcherService): \Illuminate\Http\RedirectResponse
-    {
-        $responses = $request->input('responses', []);
-        $formattedResponses = [
-            'big_five' => [],
-            'holland_codes' => []
-        ];
-        foreach ($responses as $activityId => $response) {
-            $activity = Question::find($activityId);
-            if ($activity) {
-                if ($activity->type === 'big_five') {
-                    $category = $activity->trait_category;
-                    if (!in_array($category, self::BIG_FIVE_CATEGORIES)) continue;
-                    $formattedResponses['big_five'][$category][] = $response;
-                } elseif ($activity->type === 'holland_codes') {
-                    $category = $activity->trait_category;
-                    if (!in_array($category, self::HOLLAND_CODE_CATEGORIES)) continue;
-                    $formattedResponses['holland_codes'][$category][] = $response;
-                }
-            }
-        }
-
-        // Log formatted responses
-        Log::info('Formatted Responses: ', ['formatted_responses' => $formattedResponses]);
-
-        // Calculate scores
-        $scores = $this->calculateScores($formattedResponses);
-
-        // Separate scores into $targetHolland and $targetBigFive
-        $targetHolland = [
-            'Realistic' => $scores['Realistic'] ?? 0,
-            'Investigative' => $scores['Investigative'] ?? 0,
-            'Artistic' => $scores['Artistic'] ?? 0,
-            'Social' => $scores['Social'] ?? 0,
-            'Enterprising' => $scores['Enterprising'] ?? 0,
-            'Conventional' => $scores['Conventional'] ?? 0,
-        ];
-
-        $targetBigFive = [
-            'Openness' => $scores['Openness'] ?? 0,
-            'Conscientiousness' => $scores['Conscientiousness'] ?? 0,
-            'Extraversion' => $scores['Extraversion'] ?? 0,
-            'Agreeableness' => $scores['Agreeableness'] ?? 0,
-            'Neuroticism' => $scores['Neuroticism'] ?? 0,
-        ];
-        $theArchetype = $this->getArchetypeAndTopScores($targetHolland);
-        $archetypes = $theArchetype['archetypes'];
-        $topTraits = $theArchetype['topTraits'];
-//        ds($theArchetype->archetypes);
-        // Match jobs
-        $scriptPath = app_path('/python/test.py');
-        $process = new Process(['python3', $scriptPath, json_encode($targetHolland), json_encode($targetBigFive)]);
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            Log::error('Python script execution failed', ['error' => $process->getErrorOutput()]);
-            throw new ProcessFailedException($process);
-        }
-
-        $output = $process->getOutput();
-
-
-
-        try {
-            ds($scores);
-            $closestJobs = json_decode($output, true, 512, JSON_THROW_ON_ERROR);
-
-            // Log the decoded closest jobs
-            Log::info('Closest matching jobs:', ['jobs' => $closestJobs]);
-        } catch (\JsonException $e) {
-            Log::error('Failed to decode JSON from Python script', ['error' => $e->getMessage(), 'output' => $output]);
-            throw new \RuntimeException('Failed to process job matching results');
-        }
-
-        $userId = auth()->id();
-
-        try {
-            Result::create([
-                'user_id' => $userId,
-                'scores' => json_encode($scores, JSON_THROW_ON_ERROR),
-                'jobs' => json_encode($closestJobs, JSON_THROW_ON_ERROR),
-                'highestTwoScores' =>$topTraits,
-                'Archetype' => $archetypes,
-            ]);
-        } catch (\JsonException $e) {
-            Log::error('Failed to encode scores or jobs for database storage', ['error' => $e->getMessage()]);
-            throw new \RuntimeException('Failed to save assessment results');
-        }
-
-        return to_route('results')->with('closestJobs', $closestJobs);
-    }
+}
 
 
 }

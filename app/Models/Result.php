@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Result extends Model
 {
-  use HasUuid ;
     protected $table = 'result';
 
     protected $fillable = [
@@ -35,8 +34,5 @@ class Result extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function getRouteKeyName(): string
-    {
-        return 'uuid';
-    }
+
 }

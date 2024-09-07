@@ -1,34 +1,50 @@
 <template>
-    <Radar :data="data" :options="options" />
+  <div>
+    <Radar :data="chartData" :options="chartOptions" />
+  </div>
 </template>
 
 <script lang="ts">
-import {
-    Chart as ChartJS,
-    RadialLinearScale,
-    PointElement,
-    LineElement,
-    Tooltip,
-    Legend
-} from 'chart.js'
 import { Radar } from 'vue-chartjs'
-import * as chartConfig from './chartConfig'
+import {
+  Chart as ChartJS,
+  RadialLinearScale,
+  PointElement,
+  LineElement,
+  Tooltip,
+  Legend
+} from 'chart.js'
 
 ChartJS.register(
-    RadialLinearScale,
-    PointElement,
-    LineElement,
-    Tooltip,
-    Legend
+  RadialLinearScale,
+  PointElement,
+  LineElement,
+  Tooltip,
+  Legend
 )
 
 export default {
-    name: 'App',
-    components: {
-        Radar
+  name: 'RadarChart',
+  components: {
+    Radar
+  },
+  props: {
+    data: {
+      type: Object,
+      required: true
     },
-    data() {
-        return chartConfig
+    options: {
+      type: Object,
+      required: true
     }
+  },
+  computed: {
+    chartData() {
+      return this.data
+    },
+    chartOptions() {
+      return this.options
+    }
+  }
 }
 </script>

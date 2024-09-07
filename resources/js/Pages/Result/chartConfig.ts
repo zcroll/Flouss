@@ -2,15 +2,14 @@ export const data = {
     labels:['Realistic', 'Investigative', 'Artistic', 'Social', 'Enterprising', 'Conventional'],
     datasets: [
         {
-            label: 'My First dataset',
+            label: 'holland',
             backgroundColor: 'rgba(179,181,198,0.2)',
-            borderColor: 'rgba(179,181,198,1)',
+            borderColor: '#2030b8',
             pointBackgroundColor: 'rgba(179,181,198,1)',
             pointBorderColor: '#fff',
             pointHoverBackgroundColor: '#fff',
             pointHoverBorderColor: 'rgba(179,181,198,1)',
-            data: [65, 59, 90, 81, 56, 55, 40]
-        },
+            data: [4, 3, 5, 2, 4, 5]       },
 
     ]
 }

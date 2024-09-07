@@ -16,17 +16,17 @@ observers:
   slow_queries: false
   mail: false
   logs: true
-  http: false
+  http: true
   jobs: false
   commands: false
-  scheduled_commands: false
+  scheduled_commands: true
   gate: false
   cache: false
 logs:
   info: true
   warning: true
-  emergency: false
-  alert: false
+  emergency: true
+  alert: true
   debug: true
   error: true
   critical: true

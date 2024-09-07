@@ -16,7 +16,7 @@ class User extends Authenticatable
 {
     use HasApiTokens;
     use HasFactory;
-    use HasUuid  ;
+    use HasUuid ;
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
@@ -67,10 +67,10 @@ class User extends Authenticatable
     }
 
 
-    public function getRouteKeyName(): string
-    {
-        return 'uuid';
-    }
+//    public function getRouteKeyName(): string
+//    {
+//        return 'uuid';
+//    }
 
 
     public function results():HasMany

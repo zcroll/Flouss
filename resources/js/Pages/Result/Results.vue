@@ -12,7 +12,7 @@
                      <Link :href="`results/${userId}/personality`">
 
 
-                         <Archetype   :first_trait="highestTwoScores.first_trait" :second_trait="highestTwoScores.second_trait" :archetype="Archetype" :score1="first_score" :score2="second_score" />
+                         <Archetype   :first_trait="Archetype.secondary_trait" :second_trait="Archetype.secondary_trait" :archetype="Archetype" :score1="first_score" :score2="second_score" />
                          <Archetype />
                      </Link>
                     </div>
@@ -134,10 +134,7 @@ export default defineComponent({
             type: String,
             required: true,
         },
-        highestTwoScores: {
-            type: Object,
-            required: true,
-        },
+
         userId: {
             type: Number,
             required: true,
@@ -146,8 +143,8 @@ export default defineComponent({
     data() {
         return {
             isCollapsed: {}, // Tracks which categories are collapsed
-            first_score: Math.round(this.scores[this.highestTwoScores.first_trait] * 100),
-            second_score: Math.round(this.scores[this.highestTwoScores.second_trait] * 100)
+            first_score: Math.round(this.scores[this.Archetype.primary_trait] * 100),
+            second_score: Math.round(this.scores[this.Archetype.secondary_trait] * 100)
 
         };
     },
