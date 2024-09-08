@@ -16,29 +16,32 @@ class ResultController extends Controller
     /**
      * @throws \JsonException
      */
-    public function results(): \Inertia\Response
-    {
-        $userId = auth()->id();
-        $scores = ResultResource::collection(Result::with('user')->where('user_id', $userId)->get());
-        $firstScore = $scores->first();
+public function results(): \Inertia\Response|\Illuminate\Http\RedirectResponse
+{
+    $userId = auth()->id();
+    $scores = ResultResource::collection(Result::with('user')->where('user_id', $userId)->latest()->get());
 
-        $Archetype = $firstScore->Archetype;
-        $closestJobs = collect($firstScore->jobs);
-        $decodedJobs = json_decode($closestJobs[0], true, 512, JSON_THROW_ON_ERROR);
+    if ($scores->isEmpty()) {
+        return redirect()->toRoute('dashboard');
+    }
 
-        $jobsCollection = collect($decodedJobs);
+    $firstScore = $scores->first();
 
-        $jobIds = $jobsCollection->pluck('job_info_id');
-        ds($jobIds);
-        $jobIdsArray = $jobIds->toArray();
-        ds(['jobIdsArray' => $jobIdsArray,]);
-        ds(['jobIds' => $jobIds]);
-        $jobs = JobInfo::whereIn('id', $jobIds)
-            ->select('id', 'name', 'slug', 'image')
-            ->get();
-        ds(['jobs' => $jobs]);
-        $Archetype = DB::table('persona')->where('name', '=', "Mentor")->first();
+    $Archetype = $firstScore->Archetype;
+    $closestJobs = collect($firstScore->jobs);
+    $decodedJobs = json_decode($closestJobs[0], true, 512, JSON_THROW_ON_ERROR);
 
+    $jobsCollection = collect($decodedJobs);
+
+    $jobIds = $jobsCollection->pluck('job_info_id');
+    $jobIdsArray = $jobIds->toArray();
+    $jobs = JobInfo::whereIn('id', $jobIds)
+        ->select('id', 'name', 'slug', 'image')
+        ->get();
+
+    $Archetype = DB::table('persona')->where('name', '=', "Mentor")->first();
+
+    if ($firstScore->user) {
         return Inertia::render('Result/Results', [
             'userId' => $firstScore->user->uuid,
             'scores' => $firstScore->scores,
@@ -46,6 +49,9 @@ class ResultController extends Controller
             'Archetype' => $Archetype,
         ]);
     }
+
+    return  to_route('dashboard');
+}
     public  function personality($id): \Inertia\Response
     {
         $userId = auth()->id();
@@ -56,7 +62,7 @@ class ResultController extends Controller
         $firstScore = $scores->first();
         ds($firstScore->scores);
         $Archetype = $firstScore->Archetype;
-        $ArchetypeData = DB::table('persona')->where('name', '=', "Philosopher")->first();
+        $ArchetypeData = DB::table('persona')->where('name', '=', "Mentor")->first();
         $insights = DB::table('insights')
             ->join('insight_categories', 'insights.insight_category_slug', '=', 'insight_categories.insight_category_slug')
             ->where('insights.persona_id', '=', $ArchetypeData->id)

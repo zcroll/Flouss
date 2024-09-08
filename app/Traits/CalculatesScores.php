@@ -31,6 +31,7 @@ trait CalculatesScores
 
                 $scores[$trait] = round($normalizedScore, 2);
             }
+
         }
 
         return $scores;

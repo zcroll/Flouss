@@ -34,21 +34,13 @@ def weighted_euclidean_distance(target, candidate, weights):
         distance += weight * (target.get(trait, 0) - candidate.get(trait, 0)) ** 2
     return np.sqrt(distance)
 
-# Get the top 80% of Holland traits
+# Get the top two Holland traits
 sorted_holland = sorted(target_holland.items(), key=lambda x: x[1], reverse=True)
-total_score = sum(score for _, score in sorted_holland)
-cumulative_score = 0
-top_traits = {}
+top_two_traits = dict(sorted_holland[:2])
 
-for trait, score in sorted_holland:
-    top_traits[trait] = score
-    cumulative_score += score
-    if cumulative_score / total_score >= 0.8:
-        break
-
-# Normalize the weights of the top traits
-weight_sum = sum(top_traits.values())
-weights = {trait: score / weight_sum for trait, score in top_traits.items()}
+# Normalize the weights of the top two traits to 100%
+total_score = sum(top_two_traits.values())
+weights = {trait: score / total_score for trait, score in top_two_traits.items()}
 
 # Calculate Holland distances
 holland_distances = []

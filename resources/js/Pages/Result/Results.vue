@@ -1,6 +1,5 @@
 <template>
-    <AppLayout title="Results" :head-sub-title="headSubTitle" :head-title="headTitle" preserveScroll>
-
+    <app-layout title="Results" preserveScroll>
         <div class="relative max-w-7xl mx-auto mt-10">
 
             <div class="flex flex-col lg:flex-row">
@@ -101,7 +100,7 @@
                 </div>
             </div>
         </div>
-    </AppLayout>
+    </app-layout>
 </template>
 
 <script>
@@ -110,11 +109,9 @@ import {router, Link ,} from '@inertiajs/vue3';
 import AppLayout from "@/Layouts/AppLayout.vue";
 import UpNext from "@/Components/UpNext.vue";
 import Archetype from "@/Components/Archetype.vue";
-import Header from "@/Components/Header.vue";
 
 export default defineComponent({
     components: {
-        Header,
         Archetype,
         UpNext,
         AppLayout,
@@ -144,10 +141,7 @@ export default defineComponent({
         return {
             isCollapsed: {}, // Tracks which categories are collapsed
             first_score: Math.round(this.scores[this.Archetype.primary_trait] * 100),
-            second_score: Math.round(this.scores[this.Archetype.secondary_trait] * 100),
-            headSubTitle:'You’ve completed all the assessments. Take a look at your results below.',
-            headTitle:'Your results'
-
+            second_score: Math.round(this.scores[this.Archetype.secondary_trait] * 100)
 
         };
     },
