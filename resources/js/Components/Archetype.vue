@@ -47,7 +47,7 @@
             </span>
 
             <!-- Title -->
-            <h1 class="text-4xl font-light my-4 text-shadow-md">You are a {{archetype.toString()}}</h1>
+            <h1 class="text-4xl font-light my-4 text-shadow-md">You are a {{archetype.name}}</h1>
 
             <!-- Description -->
             <p class="text-lg text-shadow-sm">Practical, Constructive, Persistent</p>
@@ -118,16 +118,27 @@
 
                                 </div>
                             </div>
+                            <PrimaryButton class="block text-center mt-5">
+                                <Link :href="`results/${userId}/personality`" class="block w-full">
+                                    read more
+                                </Link>
+                            </PrimaryButton>
+
                         </div>
                     </div>
                 </div>
             </div>
         </transition>
+
     </div>
 </template>
 
 <script setup>
 import {defineProps, ref} from 'vue';
+import {Link} from "@inertiajs/vue3";
+import DangerButton from "@/Components/DangerButton.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import ActionMessage from "@/Components/ActionMessage.vue";
 
 const props = defineProps({
     archetype: {

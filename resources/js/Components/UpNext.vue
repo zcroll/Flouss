@@ -1,7 +1,7 @@
 <template>
-    <div id="up-next-container" style="box-sizing: border-box;" class="transform transition-all duration-300 hover:scale-90 ">
+    <div id="up-next-container" style="box-sizing: border-box;">
         <div
-            class="UpNextCard UpNextCard--overview"
+            class="UpNextCard UpNextCard--overview transform transition-all duration-300 hover:shadow-2xl"
             :style="{ ...cardStyle, backgroundColor: backgroundColor }"
         >
             <div

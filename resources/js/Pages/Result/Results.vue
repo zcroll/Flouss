@@ -9,12 +9,9 @@
                         <p class="ml-3 mt-2 text-lg text-gray-600">Below are your scores and best-fit career matches.</p>
                     </div>
                     <div class="w-full grid grid-cols-2 gap-4">
-                     <Link :href="`results/${userId}/personality`">
-
 
                          <Archetype   :first_trait="Archetype.secondary_trait" :second_trait="Archetype.secondary_trait" :archetype="Archetype" :score1="first_score" :score2="second_score" />
-                         <Archetype />
-                     </Link>
+
                     </div>
 
 
