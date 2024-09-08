@@ -3,7 +3,7 @@
         <StickySidebar :slug="occupation.slug" :title="occupation.name" :image="occupation.image">
             <div class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white rounded-3xl shadow-2xl">
 
-               <p class="custom-heading">What personality traits do doctors have?</p>
+                <p class="custom-heading">What personality traits do doctors have?</p>
 
                 <aside id="table-of-contents-container" class="block">
                     <div
@@ -17,15 +17,16 @@
                             In this article:
                         </p>
                         <ol class="list-none m-0 p-0 text-base leading-6 font-light tracking-tight">
-                            <li class="relative mb-0 text-xl leading-10 hover:underline">
-                                <a
+                            <li class="relative mb-0 text-xl leading-10 hover:underline sm:text-base md:text-lg lg:text-xl">
+
+                            <a
                                     href="#holland-codes"
                                     class="trait-type"
                                 >
                                     Primary interests (Holland Codes)
                                 </a>
                             </li>
-                            <li class="relative mb-0 text-xl leading-10 hover:underline">
+                            <li class="relative mb-0 text-xl leading-10 hover:underline sm:text-base md:text-lg lg:text-xl">
                                 <a
                                     href="#big-five"
                                     class="trait-type"
@@ -184,7 +185,7 @@
                         </div>
                     </div>
                     <div v-for="(trait, index) in bigFiveTraits" :key="trait.id" class="Box block py-4 bg-transparent border-b border-white/18">
-                        <div class="grid grid-cols-[minmax(0,1fr)_2fr] items-center gap-x-4">
+                        <div class="grid grid-cols-[minmax(0,2fr)_2fr] items-center gap-x-4">
                             <div class="text-gray-700 cursor-context-menu font-light leading-[17px] min-w-[170px] pr-5">
                                 {{ trait.trait_name }}
                             </div>
@@ -285,3 +286,4 @@ const toggleDialogHolands = () => {
 
 
 </style>
+add some small screen standers

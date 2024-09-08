@@ -8,8 +8,8 @@
         <div class="w-full lg:w-1/3 mb-8 lg:mb-0 lg:pl-8">
             <div
                 class="sticky top-4 bg-white shadow-2xl rounded-3xl p-6 pt-[-30px]">
-<!--                <h3 class="text-xl font-light mb-6 text-gray-800 fancy-font">{{ sidebarTitle }}</h3>-->
-<!--                <p class="text-sm text-gray-600 mb-4 fancy-font">{{ sidebarDescription }}</p>-->
+                <!--                <h3 class="text-xl font-light mb-6 text-gray-800 fancy-font">{{ sidebarTitle }}</h3>-->
+                <!--                <p class="text-sm text-gray-600 mb-4 fancy-font">{{ sidebarDescription }}</p>-->
 
                 <!-- Main Content for Large Screens -->
                 <div v-if="!isSmallScreen" class="rounded-3xl">
@@ -85,67 +85,73 @@
 
                     </ul>
                 </div><!-- Horizontal Scroller for Small Screens -->
-                <div v-else class="bg-gray-50 p-6 rounded-lg shadow-sm">
-                    <div class="flex items-center justify-center mb-6">
+                <div v-else class="bg-gray-50 p-3 rounded-lg shadow-sm">
+                    <!-- Container for Header and Icon -->
+                    <div class="flex items-center mb-4">
                         <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
-                            <img src="/icon.png" alt="Icon" class="w-6 h-6">
+                            <img :src="image" alt="Icon" class="w-12 h-12">
                         </div>
-                        <h3 class="ml-4 text-base font-light text-gray-700 text-center fancy-font">{{
-                                title
-                            }}</h3>
+                        <h3 class="ml-3 text-s font-light text-gray-700 ">{{ title }}</h3>
                     </div>
-                    <div class="grid grid-cols-3 gap-4 mb-6 text-center">
-                        <div
-                            class="bg-purple-500 text-white p-4 rounded-lg">
-                            <p class="text-sm fancy-font">Avg knowledge</p>
-                            <h4 class="text-base font-bold fancy-font">$67K</h4>
+                    <!-- Grid for Stats -->
+                    <div class="grid grid-cols-2 gap-2 mb-4 text-center">
+                        <div class="bg-purple-500 text-white p-2 rounded-lg">
+                            <p class="text-s font-serif">Avg Knowledge</p>
+                            <h4 class="text-xs font-bold">{{ salary }}</h4>
                         </div>
-                        <div
-                            class="bg-teal-600 text-white p-4 rounded-lg">
-                            <p class="text-sm fancy-font">personality</p>
-                            <h4 class="text-base font-bold fancy-font">N/A</h4>
+                        <div class="bg-teal-600 text-white p-2 rounded-lg">
+                            <p class="text-s font-serif">Personality</p>
+                            <h4 class="text-xs font-bold">{{ personality }}</h4>
+                        </div>
+                        <div class="bg-gray-800 text-white p-2 rounded-lg col-span-2">
+                            <p class="text-s font-serif">Satisfaction</p>
+                            <h4 class="text-xs font-bold">{{ satisfaction }}</h4>
                         </div>
                     </div>
-                    <ul class="flex overflow-x-auto space-x-4 text-gray-700 justify-center">
-                        <li>
-                            <Link
-                                :href="`${baseUrl}/workEnvironments`"
-                                :class="{
-                  'active': $page.url === `${baseUrl}/workEnvironments`,
-                  'disabled-link': $page.url === `${baseUrl}/workEnvironments`
-                }"
-                                :aria-disabled="$page.url === `${baseUrl}/workEnvironments`"
-                            >
-                                workEnvironments
-                            </Link>
-                        </li>
-                        <li>
-                            <Link
-                                :href="`${baseUrl}/work-activities`"
-                                :class="{
-                  'active': $page.url === `${baseUrl}/work-activities`,
-                  'disabled-link': $page.url === `${baseUrl}/work-activities`
-                }"
-                                :aria-disabled="$page.url === `${baseUrl}/work-activities`"
-                            >
-                                work-activities
-                            </Link>
-                        </li>
-
+                    <!-- Horizontal Scrolling Links -->
+                    <div class="overflow-x-auto mb-4">
+                        <ul class="flex space-x-2 text-gray-700 whitespace-nowrap">
                             <li>
-                            <Link
-                                :href="`${baseUrl}/personality`"
-                                :class="{
-                  'active': $page.url === `${baseUrl}/personality`,
-                  'disabled-link': $page.url === `${baseUrl}/personality`
-                }"
-                                :aria-disabled="$page.url === `${baseUrl}/personality`"
-                            >
-                                personality
-                            </Link>
-                        </li>
-
-                    </ul>
+                                <Link
+                                    :href="`${baseUrl}`"
+                                    :class="{
+                        'active': $page.url === `${baseUrl}`,
+                        'disabled-link': $page.url === `${baseUrl}`
+                    }"
+                                    :aria-disabled="$page.url === `${baseUrl}`"
+                                    class="px-3 py-1 text-s bg-gray-200 font-serif rounded-lg hover:bg-gray-300 transition-colors"
+                                >
+                                    Overview
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    :href="`${baseUrl}/workEnvironments`"
+                                    :class="{
+                        'active': $page.url === `${baseUrl}/workEnvironments`,
+                        'disabled-link': $page.url === `${baseUrl}/workEnvironments`
+                    }"
+                                    :aria-disabled="$page.url === `${baseUrl}/workEnvironments`"
+                                    class="px-3 py-1 text-s font-serif bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors"
+                                >
+                                    Work Environments
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    :href="`${baseUrl}/personality`"
+                                    :class="{
+                        'active': $page.url === `${baseUrl}/personality`,
+                        'disabled-link': $page.url === `${baseUrl}/personality`
+                    }"
+                                    :aria-disabled="$page.url === `${baseUrl}/personality`"
+                                    class="px-3 py-1 text-s bg-gray-200 font-serif rounded-lg hover:bg-gray-300 transition-colors"
+                                >
+                                    Personality
+                                </Link>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

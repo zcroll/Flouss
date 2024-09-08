@@ -27,7 +27,7 @@
 
                             <!-- Collapsible Content -->
                             <transition name="slide">
-                                <ol v-show="openSections[index]" class="list-none m-0 p-0 text-base leading-6 font-light tracking-tight">
+                                <ol v-show="openSections[index]" class="list-disc m-0 p-0 text-base leading-6 font-light tracking-tight">
                                     <li
                                         v-for="item in items"
                                         :key="item.id"

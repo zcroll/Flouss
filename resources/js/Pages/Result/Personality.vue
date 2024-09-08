@@ -1,4 +1,5 @@
 <template>
+  <AppLayout>
     <div class=" p-1 w-full max-w-4xl mx-auto mt-4">
         <h1 class="text-3xl font-bold mb-4">You are a <span class="text-purple-600">{{ ArchetypeData.name }}</span></h1>
         <p class="mb-4">
@@ -30,10 +31,12 @@
             </ul>
         </div>
     </div>
+  </AppLayout>
 </template>
 
 <script>
 import LineChart from "@/Pages/Result/LineChart.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
 export default {
     props: {
         ArchetypeData: Object,
@@ -41,6 +44,7 @@ export default {
         firstScore:Object
     },
     components: {
+      AppLayout,
         LineChart
     },
     computed: {
@@ -81,38 +85,38 @@ export default {
     data() {
         return {
             data: {
-                labels: ['Strength', 'Agility', 'Intelligence', 'Stamina', 'Emotional Intelligence', 'Creativity'],
+                labels: ['Realistic', 'Investigative', 'Artistic', 'Social', 'Enterprising', 'Conventional'],
        datasets: [
                     {
                         label: 'Your Score',
                         data: [0.5, 0.8, 0.7, 0.9, 0.6, 0.4],
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 2,
+                        backgroundColor: 'rgba(168 85 247)',
+                        borderColor: 'rgba(168 85 247)',
+                        borderWidth: 3,
                         borderCapStyle: 'round',
-                        borderDash: [22, 5],
+                        borderDash: [],
                         borderDashOffset: 0.0,
-                        borderJoinStyle: 'miter',
-                        pointBackgroundColor: 'rgba(54, 162, 235, 1)',
-                        pointBorderColor: 'rgba(54, 162, 235, 1)',
+                        borderJoinStyle: 'bevel',
+                        pointBackgroundColor: 'rgba(168 85 247)',
+                        pointBorderColor: 'rgba(168 85 247)',
                         pointBorderWidth: 2,
                         pointHitRadius: 2,
-                        pointHoverBackgroundColor: 'rgba(54, 162, 235, 0.8)',
-                        pointHoverBorderColor: 'rgba(54, 162, 235, 0.8)',
+                        pointHoverBackgroundColor: 'rgba(168 85 247)',
+                        pointHoverBorderColor: 'rgba(168 85 247)',
                         pointHoverBorderWidth: 2,
                         pointHoverRadius: 22,
                         pointRadius: 5,
                         pointRotation: 0,
-                        pointStyle: 'circle',
+                        pointStyle: 'rectRounded',
                         spanGaps: true,
-                        hoverBackgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        hoverBackgroundColor: 'rgba(168 85 247)',
                         hoverBorderCapStyle: 'round',
-                        hoverBorderColor: 'rgba(54, 162, 235, 1)',
+                        hoverBorderColor: 'rgba(168 85 247)',
                         hoverBorderDash: [5, 5],
                         hoverBorderDashOffset: 0.0,
                         hoverBorderJoinStyle: 'miter',
                         hoverBorderWidth: 1,
-                        clip: 3,
+                        clip: 6,
                         fill: true,
                         order: 0,
                         tension: 0
@@ -133,11 +137,9 @@ export default {
     }
 }
 </script>
-<style scoped>
-@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
-</style>
 
 <style>
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
     @import url('https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css');
     @import url('https://d5lqosquewn6c.cloudfront.net/static/reports/compiled/styles/reports.8134c7b6e83b.css');
     @import url('https://d5lqosquewn6c.cloudfront.net/static/reports/compiled/styles/reports-print.a854292a4ad3.css');

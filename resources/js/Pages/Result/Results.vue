@@ -1,5 +1,5 @@
 <template>
-    <app-layout title="Results" preserveScroll>
+    <AppLayout title="Results" preserveScroll>
         <div class="relative max-w-7xl mx-auto mt-10">
 
             <div class="flex flex-col lg:flex-row">
@@ -100,7 +100,7 @@
                 </div>
             </div>
         </div>
-    </app-layout>
+    </AppLayout>
 </template>
 
 <script>
