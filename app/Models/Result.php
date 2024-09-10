@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Result extends Model
 {
     protected $table = 'result';
-
+     use HasUuid;
     protected $fillable = [
         'user_id',
         'scores',
