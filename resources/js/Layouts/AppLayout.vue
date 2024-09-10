@@ -13,11 +13,10 @@ defineProps({
     isOver10Days: Boolean, // New prop added here
     headTitle: {
         type: String,
-        required: true
+
     },
     headSubTitle: {
         type: String,
-        required: true
     },
 
     data(){
@@ -51,7 +50,7 @@ const logout = () => {
 };
 
 import { defineComponent, h } from 'vue'
-import BannerFix from "@/Components/BannerFix.vue";
+
 
 const navigation = {
     main: [
@@ -398,7 +397,7 @@ const navigation = {
                         </div>
                     </nav>
                 </template>
-                <BannerFix />
+
             </Header>
 
             <!-- Page Content -->
@@ -546,10 +545,6 @@ const navigation = {
 </template>-->
 <style scoped>
 
-.header-background {
-    position: relative;
- /* Ensures header is behind navbar */
-}
 
 .navbar {
     position: absolute;
