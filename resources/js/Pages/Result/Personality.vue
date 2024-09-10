@@ -1,149 +1,426 @@
 <template>
-    <div class=" p-1 w-full max-w-4xl mx-auto mt-4">
-        <h1 class="text-3xl font-bold mb-4">You are a <span class="text-purple-600">{{ ArchetypeData.name }}</span></h1>
-        <p class="mb-4">
-            Your strongest trait is <strong>{{ ArchetypeData.primary_trait }}</strong>, and your second strongest is <strong>{{ ArchetypeData.secondary_trait }}</strong>, which makes you a Philosopher.
-        </p>
-        <p class="mb-6">
-            {{ ArchetypeData.description }}
-        </p>
-        <div class="relative w-150 h-150 mb-8">
-            <LineChart :data="data" :options="options"/>
-        </div>
-        <h2 class="text-2xl font-bold mb-4 flex items-center">Skills You Can Focus On</h2>
-        <p>{{ArchetypeData.strengths}}}.</p>
-        <h2 class="text-2xl font-bold mb-4 flex items-center">Tendencies To Be Careful Of</h2>
-        <p>{{ ArchetypeData.weaknesses }}</p>
-        <h2 class="text-2xl font-bold mb-4 flex items-center">Your Working Style</h2>
-        <p>{{ ArchetypeData.personality_paragraph }}</p>
-
-
-        <div v-for="(category, index) in groupedInsights" :key="index" class="mb-8">
-            <h2 class="text-2xl font-bold mb-4 flex items-center">
-                <i :class="getIcon(category.category)" class="mr-3 text-gray-600"></i>
-                {{ category.category }}
-            </h2>
-            <ul class="list-disc pl-8 space-y-4">
-                <li v-for="(insight, insightIndex) in category.insights" :key="insightIndex" class="text-lg">
+    <AppLayout preserveScroll>
+      <div class="personality-report">
+        <div class="content-wrapper">
+          <header class="report-header">
+            <h1 class="report-title">{{ ArchetypeData.name }}'s Personality Report</h1>
+            <div class="header-buttons">
+              <button class="header-button">
+                <i class="fas fa-print mr-2"></i> Print
+              </button>
+              <button class="header-button">
+                <i class="fas fa-share-alt mr-2"></i> Share
+              </button>
+            </div>
+          </header>
+          
+          <div class="card-container">
+            <div v-for="(card, index) in cards" :key="index" class="card">
+              <p>{{ card.content }}</p>
+              <button class="card-button">{{ card.buttonText }}</button>
+            </div>
+          </div>
+  
+          <div class="chart-container">
+            <h2>Your Personality Traits</h2>
+            <div class="relative w-full h-[400px]">
+              <LineChart :data="data" :options="options"/>
+            </div>
+          </div>
+  
+          <div class="insights-container">
+            <div v-for="(category, index) in groupedInsights" :key="index" class="insight-item">
+              <div class="insight-header" @click="toggleInsight(index)">
+                <div class="icon-wrapper">
+                  <i :class="getIcon(category.category)" class="insight-icon"></i>
+                </div>
+                <h3 class="insight-category">{{ category.category }}</h3>
+                <i :class="['fas', 'toggle-icon', category.isOpen ? 'fa-chevron-up' : 'fa-chevron-down']"></i>
+              </div>
+              <div :class="['insight-content', {'collapsed': !category.isOpen}]">
+                <ul class="insight-list">
+                  <li v-for="(insight, insightIndex) in category.insights" :key="insightIndex">
                     {{ insight }}
-                </li>
-            </ul>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
-    </div>
-</template>
-
-<script>
-import LineChart from "@/Pages/Result/LineChart.vue";
-export default {
+      </div>
+    </AppLayout>
+  </template>
+  
+  <script>
+  import LineChart from "@/Pages/Result/LineChart.vue";
+  import AppLayout from "@/Layouts/AppLayout.vue";
+  
+  export default {
     props: {
-        ArchetypeData: Object,
-        Insights: Array,
-        firstScore:Object
+      ArchetypeData: Object,
+      Insights: Array,
+      userId: Number,
+      firstScore: Object
     },
     components: {
-        LineChart
+      AppLayout,
+      LineChart
     },
     computed: {
-        groupedInsights() {
-            const grouped = {};
-            this.Insights.forEach((insight) => {
-                if (!grouped[insight.insight_category]) {
-                    grouped[insight.insight_category] = {
-                        category: insight.insight_category,
-                        insights: []
-                    };
-                }
-                grouped[insight.insight_category].insights.push(insight.insight);
-            });
-            return Object.values(grouped);
-        }
-    },
-    methods: {
-        getIcon(category) {
-            switch (category.toLowerCase()) {
-                case 'strengths':
-                    return 'fas fa-award';
-                case 'watch out for':
-                    return 'fas fa-exclamation-triangle';
-                case 'team interaction':
-                    return 'fas fa-users';
-                case 'personal style':
-                    return 'fas fa-user';
-                case 'ideal work environment':
-                    return 'fas fa-briefcase';
-                case 'values':
-                    return 'fas fa-heart';
-                default:
-                    return 'fas fa-question';
-            }
-        }
+      groupedInsights() {
+        const grouped = {};
+        this.Insights.forEach((insight) => {
+          if (!grouped[insight.insight_category]) {
+            grouped[insight.insight_category] = {
+              category: insight.insight_category,
+              insights: []
+            };
+          }
+          grouped[insight.insight_category].insights.push(insight.insight);
+        });
+        return Object.values(grouped);
+      }
     },
     data() {
-        return {
-            data: {
-                labels: ['Strength', 'Agility', 'Intelligence', 'Stamina', 'Emotional Intelligence', 'Creativity'],
-       datasets: [
-                    {
-                        label: 'Your Score',
-                        data: [0.5, 0.8, 0.7, 0.9, 0.6, 0.4],
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 2,
-                        borderCapStyle: 'round',
-                        borderDash: [22, 5],
-                        borderDashOffset: 0.0,
-                        borderJoinStyle: 'miter',
-                        pointBackgroundColor: 'rgba(54, 162, 235, 1)',
-                        pointBorderColor: 'rgba(54, 162, 235, 1)',
-                        pointBorderWidth: 2,
-                        pointHitRadius: 2,
-                        pointHoverBackgroundColor: 'rgba(54, 162, 235, 0.8)',
-                        pointHoverBorderColor: 'rgba(54, 162, 235, 0.8)',
-                        pointHoverBorderWidth: 2,
-                        pointHoverRadius: 22,
-                        pointRadius: 5,
-                        pointRotation: 0,
-                        pointStyle: 'circle',
-                        spanGaps: true,
-                        hoverBackgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        hoverBorderCapStyle: 'round',
-                        hoverBorderColor: 'rgba(54, 162, 235, 1)',
-                        hoverBorderDash: [5, 5],
-                        hoverBorderDashOffset: 0.0,
-                        hoverBorderJoinStyle: 'miter',
-                        hoverBorderWidth: 1,
-                        clip: 3,
-                        fill: true,
-                        order: 0,
-                        tension: 0
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scale: {
-                    type: 'bar',
-                    pointLabels: {
-                        display: true
-                    }
-                }
+      return {
+        cards: [
+          {
+            content: `You are a ${this.ArchetypeData.name}. Your strongest trait is ${this.ArchetypeData.primary_trait}, and second strongest trait is ${this.ArchetypeData.secondary_trait}.`,
+            buttonText: `LEARN ABOUT ${this.ArchetypeData.name.toUpperCase()}S`
+          },
+          {
+            content: this.ArchetypeData.description,
+            buttonText: "LEARN ABOUT YOUR SKILLS"
+          },
+          {
+            content: "You likely have a general proclivity for self reflection, which makes you particularly receptive to your environment and your place in it.",
+            buttonText: "LEARN ABOUT YOUR STRENGTHS"
+          }
+        ],
+        data: {
+          labels: ['Realistic', 'Investigative', 'Artistic', 'Social', 'Enterprising', 'Conventional'],
+          datasets: [
+            {
+              label: 'Your Score',
+              data: [0.5, 0.8, 0.7, 0.9, 0.6, 0.4],
+              backgroundColor: 'rgba(168, 85, 247, 0.2)',
+              borderColor: 'rgba(168, 85, 247, 1)',
+              borderWidth: 2,
+              pointBackgroundColor: 'rgba(168, 85, 247, 1)',
+              pointBorderColor: '#fff',
+              pointHoverBackgroundColor: '#fff',
+              pointHoverBorderColor: 'rgba(168, 85, 247, 1)'
             }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            r: {
+              angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
+              grid: { color: 'rgba(0, 0, 0, 0.1)' },
+              pointLabels: { font: { size: 14, family: 'SF Pro Display, Helvetica, Arial, sans-serif' }, color: '#333' },
+              ticks: { display: false }
+            }
+          },
+          plugins: { legend: { display: false } }
+        },
+        groupedInsights: [],
+        isMobileView: false
+      }
+    },
+    created() {
+      this.groupInsights();
+      this.checkMobileView();
+      window.addEventListener('resize', this.checkMobileView);
+    },
+    beforeUnmount() {
+      window.removeEventListener('resize', this.checkMobileView);
+    },
+    methods: {
+      getIcon(category) {
+        switch (category.toLowerCase()) {
+          case 'strengths': return 'fas fa-award';
+          case 'watch out for': return 'fas fa-exclamation-triangle';
+          case 'team interaction': return 'fas fa-users';
+          case 'personal style': return 'fas fa-user';
+          case 'ideal work environment': return 'fas fa-briefcase';
+          default: return 'fas fa-question';
         }
+      },
+      groupInsights() {
+        const grouped = {};
+        this.Insights.forEach((insight) => {
+          if (!grouped[insight.insight_category]) {
+            grouped[insight.insight_category] = {
+              category: insight.insight_category,
+              insights: [],
+              isOpen: true
+            };
+          }
+          grouped[insight.insight_category].insights.push(insight.insight);
+        });
+        this.groupedInsights = Object.values(grouped);
+      },
+      toggleInsight(index) {
+        if (this.isMobileView) {
+          this.groupedInsights[index].isOpen = !this.groupedInsights[index].isOpen;
+        }
+      },
+      checkMobileView() {
+        this.isMobileView = window.innerWidth <= 768;
+        if (!this.isMobileView) {
+          this.groupedInsights.forEach(category => category.isOpen = false);
+        }
+      }
     }
-}
-</script>
-<style scoped>
-@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
-</style>
+  }
+  </script>
+  
+  <style scoped>
+  @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;600;700&display=swap');
+  @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
+  
+  .personality-report {
+    min-height: 100vh;
+    background-color: #f5f5f7;
+    padding: 60px 30px;
+    font-family: 'SF Pro Display', Helvetica, Arial, sans-serif;
+  }
+  
+  .content-wrapper {
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+  }
+  
+  .report-title {
+    color: #1d1d1f;
+    font-size: 32px;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .header-button {
+    background-color: #0071e3;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 14px;
+  }
+  
+  .header-button:hover {
+    background-color: #0077ed;
+  }
+  
+  .card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+  
+  .card {
+    cursor: pointer;
+    background-color: #ffffff;
+    border-radius: 12px;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    padding: 24px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  .card p {
+    margin-top: 0;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #1d1d1f;
+    margin-bottom: 20px;
+    flex-grow: 1;
+  }
+  
+  .card-button {
+    background-color: transparent;
+    border: none;
+    color: #0071e3;
+    padding: 12px 0;
+    text-align: left;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: color 0.3s ease;
+  }
+  
+  .card-button:hover {
+    color: #0077ed;
+  }
+  
+  .chart-container {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 40px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .chart-container h2 {
+    color: #1d1d1f;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .insights-container {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .insight-item {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 20px 0;
+  }
+  
+  .insight-item:last-child {
+    border-bottom: none;
+  }
+  
+  .insight-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .icon-wrapper {
+    background-color: #f2f2f7;
+    border-radius: 50%;
+    padding: 10px;
+    margin-right: 15px;
+  }
+  
+  .insight-icon {
+    font-size: 20px;
+    color: #0071e3;
+  }
+  
+  .insight-category {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1d1d1f;
+    margin: 0;
+  }
+  
+  .insight-list {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  
+  .insight-list li {
+    color: #1d1d1f;
+    margin-bottom: 10px;
+    line-height: 1.5;
+    position: relative;
+    padding-left: 20px;
+  }
+  
+  .insight-list li::before {
+    content: "•";
+    color: #0071e3;
+    position: absolute;
+    left: 0;
+  }
+  
+  .insight-list li:last-child {
+    margin-bottom: 0;
+  }
+  
+  .toggle-icon {
+    display: none;
+    margin-left: auto;
+    font-size: 18px;
+    color: #0071e3;
+    transition: transform 0.3s ease;
+  }
+  
+  .insight-content {
+    transition: max-height 0.3s ease;
+    overflow: hidden;
+    max-height: 1000px;
+  }
+  
+  @media (max-width: 768px) {
+    .personality-report {
+      padding: 30px 20px;
+    }
 
-<style>
-<<<<<<< HEAD
+    .content-wrapper {
+      padding: 24px;
+      border-radius: 16px;
+    }
 
-=======
-    @import url('https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css');
-    @import url('https://d5lqosquewn6c.cloudfront.net/static/reports/compiled/styles/reports.8134c7b6e83b.css');
-    @import url('https://d5lqosquewn6c.cloudfront.net/static/reports/compiled/styles/reports-print.a854292a4ad3.css');
-    @import url('https://use.typekit.net/wpm5wyy.css');
->>>>>>> a5e08fbe41f3ca4ec6dd2d797c3115a68ed7bcf8
-</style>
+    .report-title {
+      font-size: 28px;
+    }
+
+    .report-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
+    }
+
+    .card-container {
+      grid-template-columns: 1fr;
+    }
+
+    .card {
+      padding: 20px;
+    }
+
+    .card p {
+      font-size: 16px;
+    }
+
+    .card-button {
+      font-size: 14px;
+    }
+
+    .insight-header {
+      cursor: pointer;
+    }
+
+    .toggle-icon {
+      display: block;
+    }
+
+    .insight-content.collapsed {
+      max-height: 0;
+    }
+
+    .insight-item[data-open="true"] .toggle-icon {
+      transform: rotate(180deg);
+    }
+  }
+  </style>

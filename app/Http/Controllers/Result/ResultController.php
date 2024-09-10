@@ -16,48 +16,52 @@ class ResultController extends Controller
     /**
      * @throws \JsonException
      */
-public function results(): \Inertia\Response|\Illuminate\Http\RedirectResponse
-{
-    $userId = auth()->id();
-    $scores = ResultResource::collection(Result::with('user')->where('user_id', $userId)->latest()->get());
+    public function results() : \Inertia\Response|\Illuminate\Http\RedirectResponse
+    {
+        $userId = auth()->id();
+        $scores = ResultResource::collection(Result::with('user')->where('user_id', $userId)->latest()->get());
 
-    if ($scores->isEmpty()) {
-        return redirect()->toRoute('dashboard');
+        if ($scores->isEmpty()) {
+            return to_route('dashboard');
+        }
+
+        $firstScore = $scores->first();
+
+        $Archetype = $firstScore->Archetype;
+        $closestJobs = collect($firstScore->jobs);
+        $decodedJobs = json_decode($closestJobs[0], true, 512, JSON_THROW_ON_ERROR);
+
+        $jobsCollection = collect($decodedJobs);
+
+        $jobIds = $jobsCollection->pluck('job_info_id');
+        $jobIdsArray = $jobIds->toArray();
+        $jobs = JobInfo::whereIn('id', $jobIds)
+            ->select('id', 'name', 'slug', 'image')
+            ->get();
+
+        $Archetype = DB::table('persona')->where('name', '=', "Mentor")->first();
+
+        if ($firstScore->user) {
+            return Inertia::render('Result/Results', [
+                'userId' => $firstScore->user->uuid,
+                'scores' => $firstScore->scores,
+                'jobs' => $jobs,
+                'Archetype' => $Archetype,
+            ]);
+        }
+
+        return to_route('dashboard');
     }
 
-    $firstScore = $scores->first();
-
-    $Archetype = $firstScore->Archetype;
-    $closestJobs = collect($firstScore->jobs);
-    $decodedJobs = json_decode($closestJobs[0], true, 512, JSON_THROW_ON_ERROR);
-
-    $jobsCollection = collect($decodedJobs);
-
-    $jobIds = $jobsCollection->pluck('job_info_id');
-    $jobIdsArray = $jobIds->toArray();
-    $jobs = JobInfo::whereIn('id', $jobIds)
-        ->select('id', 'name', 'slug', 'image')
-        ->get();
-
-    $Archetype = DB::table('persona')->where('name', '=', "Mentor")->first();
-
-    if ($firstScore->user) {
-        return Inertia::render('Result/Results', [
-            'userId' => $firstScore->user->uuid,
-            'scores' => $firstScore->scores,
-            'jobs' => $jobs,
-            'Archetype' => $Archetype,
-        ]);
-    }
-
-    return  to_route('dashboard');
-}
-    public  function personality($id): \Inertia\Response
+    public function personality($id): \Inertia\Response
     {
         $userId = auth()->id();
 
-
         $scores = ResultResource::collection(Result::with('user')->where('user_id', $userId)->get());
+
+        if ($scores->isEmpty()) {
+            return to_route('dashboard');
+        }
 
         $firstScore = $scores->first();
         ds($firstScore->scores);
@@ -72,19 +76,10 @@ public function results(): \Inertia\Response|\Illuminate\Http\RedirectResponse
 
         ds($insights);
 
-      return  Inertia::render('Result/Personality', [
-          "ArchetypeData"=>$ArchetypeData,
-          'firstScore' => $firstScore->scores,
-          'Insights' => $insights,
-
-
-      ]);
-
-
-
-
-
-
-
+        return Inertia::render('Result/Personality', [
+            "ArchetypeData" => $ArchetypeData,
+            'firstScore' => $firstScore->scores,
+            'Insights' => $insights,
+        ]);
     }
 }
