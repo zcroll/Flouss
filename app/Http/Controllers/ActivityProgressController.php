@@ -73,13 +73,11 @@ private function fetchActivitiesByType(string $type, array $categories): array
     $responses = $request->input('responses', []);
 
     if (empty($responses)) {
-        // Handle empty responses
         return to_route('results');
     }
 
     $activities = $this->getActivities($responses);
     if ($activities->isEmpty()) {
-        // Handle empty activities
         return to_route('results');
     }
 

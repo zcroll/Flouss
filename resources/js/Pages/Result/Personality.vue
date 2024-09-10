@@ -139,9 +139,5 @@ export default {
 </script>
 
 <style>
-@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
-    @import url('https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css');
-    @import url('https://d5lqosquewn6c.cloudfront.net/static/reports/compiled/styles/reports.8134c7b6e83b.css');
-    @import url('https://d5lqosquewn6c.cloudfront.net/static/reports/compiled/styles/reports-print.a854292a4ad3.css');
-    @import url('https://use.typekit.net/wpm5wyy.css');
+
 </style>

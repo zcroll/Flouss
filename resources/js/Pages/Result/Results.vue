@@ -10,14 +10,14 @@
                     </div>
                     <div class="w-full grid grid-cols-2 gap-4">
 
-                         <Archetype   :first_trait="Archetype.secondary_trait" :second_trait="Archetype.secondary_trait" :archetype="Archetype" :score1="first_score" :score2="second_score" />
+                         <Archetype :userId="userId"  :first_trait="Archetype.secondary_trait" :second_trait="Archetype.secondary_trait" :archetype="Archetype" :score1="first_score" :score2="second_score" />
 
                     </div>
 
 
 <!--
                     <div v-if="Object.keys(jobs).length > 0" class="dashboard-page-reports grid grid-cols-2 gap-8 text-center mb-2 text-white">
-                        &lt;!&ndash; Report 1 &ndash;&gt;
+                        &lt;!&ndash  ; Report 1 &ndash;&gt;
                         <div class="dashboard-page-report bg-white p-10 mt-6 border border-gray-300 rounded-lg shadow-lg transition-shadow duration-300">
                             <div class="dashboard-page-report-book mx-auto max-w-sm transition-transform duration-300">
                                 <div class="report-book report-book&#45;&#45;trait overflow-hidden rounded-lg relative bg-gray-800 shadow-lg pb-[116.195%] transition-all duration-300">
@@ -25,7 +25,6 @@
                                         <h1 class="report-book-title text-sm font-medium uppercase mb-2">Trait Report</h1>
                                         <h2 class="report-book-heading text-2xl font-light mb-2">You're {{Archetype[0]}}</h2>
                                         <p class="report-book-copy text-base mb-2">In fact, you're more social than 85% of the population.</p>
-                                        <div class="report-book-footer mt-auto"></div>
                                     </div>
                                 </div>
                             </div>
@@ -51,6 +50,7 @@
                         </div>
                     </div>
 -->
+
 
 
 

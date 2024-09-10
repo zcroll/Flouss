@@ -79,7 +79,6 @@ trait ArchetypeFinder
             ];
         }
 
-        // Get the highest and second-highest traits
         $topTraits = array_keys($topTraits);
         $firstTrait = $topTraits[0];
         $secondTrait = $topTraits[1];
