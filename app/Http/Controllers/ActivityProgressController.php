@@ -34,7 +34,6 @@ class ActivityProgressController extends Controller
 //        return to_route('results');
 //    }
 
-<<<<<<< HEAD
     $activities = $this->initializeActivities();
     ds($activities);
     return Inertia::render('ActivityProgress', [
@@ -186,14 +185,6 @@ private function saveResult($closestJobs, $scores, $archetype)
             'jobs' => json_encode($closestJobs, JSON_THROW_ON_ERROR),
             'highestTwoScores' =>$archetype['topTraits'],
             'Archetype' => $archetype['archetypes'],
-=======
-        $activities = $this->initializeActivities();
-        ds($activities);
-        return Inertia::render('ActivityProgress', [
-            'activities' => $activities,
-            'initialResponses' => [],
-            'initialIndex' => 0,
->>>>>>> a5e08fbe41f3ca4ec6dd2d797c3115a68ed7bcf8
         ]);
     }
 
