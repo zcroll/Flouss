@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('result', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id'); // User ID column
-            $table->json('scores'); // JSON column for scores
-            $table->json('jobs'); // JSON column for jobs
+            $table->foreignId('user_id');
+            $table->json('scores');
+            $table->json('jobs'); // JSON colu
             $table->json('highestTwoScores'); // JSON column for highest two scores
             $table->json('Archetype');
             $table->timestamps();

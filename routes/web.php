@@ -40,6 +40,7 @@ use Inertia\Inertia;
                 Route::get('/career/{job}/personality', 'personality')->name('career.personality');
             });
         });
+        
     Route::controller(ResultController::class)->group(function () {
         Route::get('/results', 'results')->name('results');
         Route::get('/results/{id}/personality', 'personality')->name('personality');

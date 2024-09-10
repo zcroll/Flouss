@@ -131,10 +131,21 @@ const jobInfo = computed(() => props.jobInfoDetail.description);
 
 <style scoped>
 /* add your styles here */
+body {
+    font-family: 'aktiv-grotesk-std', 'aktiv-grotesk', 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+
+    margin: 0;
+    padding: 0;
+}
+
 .custom-heading {
     box-sizing: border-box;
     margin: 0px 0px 10px;
     font-weight: 300;
+    background-color: #f2f2f2;
+    color: #797973;
     padding-top: 0px;
     letter-spacing: -0.3px;
     font-size: 32px;

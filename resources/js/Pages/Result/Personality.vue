@@ -1,5 +1,4 @@
 <template>
-  <AppLayout>
     <div class=" p-1 w-full max-w-4xl mx-auto mt-4">
         <h1 class="text-3xl font-bold mb-4">You are a <span class="text-purple-600">{{ ArchetypeData.name }}</span></h1>
         <p class="mb-4">
@@ -31,12 +30,10 @@
             </ul>
         </div>
     </div>
-  </AppLayout>
 </template>
 
 <script>
 import LineChart from "@/Pages/Result/LineChart.vue";
-import AppLayout from "@/Layouts/AppLayout.vue";
 export default {
     props: {
         ArchetypeData: Object,
@@ -44,7 +41,6 @@ export default {
         firstScore:Object
     },
     components: {
-      AppLayout,
         LineChart
     },
     computed: {
@@ -85,38 +81,38 @@ export default {
     data() {
         return {
             data: {
-                labels: ['Realistic', 'Investigative', 'Artistic', 'Social', 'Enterprising', 'Conventional'],
+                labels: ['Strength', 'Agility', 'Intelligence', 'Stamina', 'Emotional Intelligence', 'Creativity'],
        datasets: [
                     {
                         label: 'Your Score',
                         data: [0.5, 0.8, 0.7, 0.9, 0.6, 0.4],
-                        backgroundColor: 'rgba(168 85 247)',
-                        borderColor: 'rgba(168 85 247)',
-                        borderWidth: 3,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 2,
                         borderCapStyle: 'round',
-                        borderDash: [],
+                        borderDash: [22, 5],
                         borderDashOffset: 0.0,
-                        borderJoinStyle: 'bevel',
-                        pointBackgroundColor: 'rgba(168 85 247)',
-                        pointBorderColor: 'rgba(168 85 247)',
+                        borderJoinStyle: 'miter',
+                        pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+                        pointBorderColor: 'rgba(54, 162, 235, 1)',
                         pointBorderWidth: 2,
                         pointHitRadius: 2,
-                        pointHoverBackgroundColor: 'rgba(168 85 247)',
-                        pointHoverBorderColor: 'rgba(168 85 247)',
+                        pointHoverBackgroundColor: 'rgba(54, 162, 235, 0.8)',
+                        pointHoverBorderColor: 'rgba(54, 162, 235, 0.8)',
                         pointHoverBorderWidth: 2,
                         pointHoverRadius: 22,
                         pointRadius: 5,
                         pointRotation: 0,
-                        pointStyle: 'rectRounded',
+                        pointStyle: 'circle',
                         spanGaps: true,
-                        hoverBackgroundColor: 'rgba(168 85 247)',
+                        hoverBackgroundColor: 'rgba(54, 162, 235, 0.2)',
                         hoverBorderCapStyle: 'round',
-                        hoverBorderColor: 'rgba(168 85 247)',
+                        hoverBorderColor: 'rgba(54, 162, 235, 1)',
                         hoverBorderDash: [5, 5],
                         hoverBorderDashOffset: 0.0,
                         hoverBorderJoinStyle: 'miter',
                         hoverBorderWidth: 1,
-                        clip: 6,
+                        clip: 3,
                         fill: true,
                         order: 0,
                         tension: 0
@@ -137,7 +133,17 @@ export default {
     }
 }
 </script>
+<style scoped>
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
+</style>
 
 <style>
+<<<<<<< HEAD
 
+=======
+    @import url('https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css');
+    @import url('https://d5lqosquewn6c.cloudfront.net/static/reports/compiled/styles/reports.8134c7b6e83b.css');
+    @import url('https://d5lqosquewn6c.cloudfront.net/static/reports/compiled/styles/reports-print.a854292a4ad3.css');
+    @import url('https://use.typekit.net/wpm5wyy.css');
+>>>>>>> a5e08fbe41f3ca4ec6dd2d797c3115a68ed7bcf8
 </style>
