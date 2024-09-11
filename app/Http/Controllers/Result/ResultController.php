@@ -42,7 +42,7 @@ class ResultController extends Controller
         $jobsWithDistances = $jobs->map(function ($job) use ($jobsCollection) {
             $jobData = $jobsCollection->firstWhere('job_info_id', $job->id);
             $distance = $jobData['distance'];
-            $rating = 5 - min(round($distance * 100), 5); // Convert distance to a 0-5 rating
+            $rating = 5 - min(round($distance * 60), 1.5); // Convert distance to a 3.5-5 rating
 
             return [
                 'id' => $job->id,
@@ -55,11 +55,35 @@ class ResultController extends Controller
         })->sortBy('distance')->values();
           ds($jobsWithDistances);
         $Archetype = DB::table('persona')->where('name', '=', "Mentor")->first();
+        ds($firstScore->scores,);
+        // Get the scores from $firstScore
+        $scores = json_decode($firstScore->scores, true);
 
+        if (is_array($scores)) {
+            // Sort the scores in descending order
+            arsort($scores);
+
+            // Get the top two scores
+            $topTwoScores = array_slice($scores, 0, 2, true);
+
+            // Create an array with the top two traits and their scores
+            $topTwoResults = [];
+            foreach ($topTwoScores as $trait => $score) {
+                $topTwoResults[$trait] = round($score * 100); // Convert to percentage and round
+            }
+        } else {
+            // Handle the case where $scores is not an array
+            Log::error('Scores is not an array', ['scores' => $firstScore->scores]);
+            $topTwoResults = [];
+        }
+        ds($topTwoResults);
+
+        // Add the top two results to the Inertia response
+ 
         if ($firstScore) {
             return Inertia::render('Result/Results', [
                 'userId' => $firstScore->uuid,
-                'scores' => $firstScore->scores,
+                'scores' => $topTwoResults,
                 'jobs' => $jobsWithDistances,
                 'Archetype' => $Archetype,
             ]);

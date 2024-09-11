@@ -9,11 +9,12 @@
                         <p class="ml-3 mt-2 text-lg text-gray-600">Below are your scores and best-fit career matches.</p>
                     </div>
                     <div class="w-full grid grid-cols-2 gap-4">
-
-                         <Archetype :userId="userId"  :first_trait="Archetype.secondary_trait" :second_trait="Archetype.secondary_trait" :archetype="Archetype" :score1="first_score" :score2="second_score" />
-
+                        <Archetype 
+                            :userId="userId"  
+                            :archetype="Archetype" 
+                            :scores="scores"
+                        />
                     </div>
-
 
 <!--
                     <div v-if="Object.keys(jobs).length > 0" class="dashboard-page-reports grid grid-cols-2 gap-8 text-center mb-2 text-white">
@@ -78,7 +79,7 @@
                         <div
                             v-for="(job, index) in jobs"
                             :key="index"
-                            class="relative flex items-center overflow-hidden text-sm bg-white rounded-xl transition-all duration-300 hover:shadow-lg"
+                            class="relative flex items-center overflow-hidden text-sm bg-white rounded-xl transition-all duration-300 hover:shadow-lg hover:transform hover:translate-y-[-5px]"
                             style="box-shadow: 0 2px 16px 0 rgba(0,0,0,0.09); font-size: 14px;"
                         >
                             <div class="flex-shrink-0 p-4">
@@ -109,7 +110,6 @@
                             </div>
                         </div>
                     </div>
-
 
                 </div>
             </div>
@@ -142,7 +142,7 @@ export default defineComponent({
             required: true,
         },
         Archetype: {
-            type: String,
+            type: Object,
             required: true,
         },
 
@@ -154,9 +154,6 @@ export default defineComponent({
     data() {
         return {
             isCollapsed: {}, // Tracks which categories are collapsed
-            first_score: Math.round(this.scores[this.Archetype.primary_trait] * 100),
-            second_score: Math.round(this.scores[this.Archetype.secondary_trait] * 100)
-
         };
     },
     methods: {
