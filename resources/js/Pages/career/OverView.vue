@@ -1,5 +1,5 @@
 <template>
-    <AppLayout>
+    <AppLayout :headTitle="occupation.name">
 
         <StickySidebar :slug="occupation.slug" :title="occupation.name" :image="occupation.image">
             <div class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white rounded-3xl shadow-2xl">
@@ -144,7 +144,6 @@ body {
     box-sizing: border-box;
     margin: 0px 0px 10px;
     font-weight: 300;
-    background-color: #f2f2f2;
     color: #797973;
     padding-top: 0px;
     letter-spacing: -0.3px;
