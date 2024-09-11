@@ -68,29 +68,43 @@
                     </div>-->
 
                     <!-- Closest Jobs Section -->
-                    <div v-if="Object.keys(jobs).length > 0 " class="text-left ">
-                        <h1 class="ml-1 text-4xl font-serif text-gray-800  ">Your Best Fit Career Matches.</h1>
+                    <div v-if="Object.keys(jobs).length > 0" class="text-left mb-6">
+                        <h1 class="ml-1 text-4xl font-serif text-gray-800">Your Best Fit Career Matches.</h1>
                         <p class="ml-3 mt-2 text-lg text-gray-600">
                             Based on your responses, here are some jobs that you can excel in more than everyone else.
                         </p>
                     </div>
-                    <div v-if="Object.keys(jobs).length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-6 bg-transparent rounded-lg shadow-sm">
+                    <div v-if="Object.keys(jobs).length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         <div
                             v-for="(job, index) in jobs"
                             :key="index"
-                            class="relative flex items-center space-x-4 rounded-2xl border border-gray-300 bg-white p-5 shadow-sm hover:border-indigo-500 transition duration-200"
+                            class="relative flex items-center overflow-hidden text-sm bg-white rounded-xl transition-all duration-300 hover:shadow-lg"
+                            style="box-shadow: 0 2px 16px 0 rgba(0,0,0,0.09); font-size: 14px;"
                         >
-                            <div class="flex-shrink-0">
+                            <div class="flex-shrink-0 p-4">
                                 <img
                                     class="h-12 w-12 rounded-full"
                                     :src="job.image || 'https://via.placeholder.com/160x160'"
                                     alt="Job Image"
                                 />
                             </div>
-                            <div class="min-w-0 flex-1">
+                            <div class="min-w-0 flex-1 p-4">
                                 <Link :href="`/career/${job.slug}`" class="block focus:outline-none">
                                     <span class="absolute inset-0" aria-hidden="true"></span>
                                     <p class="text-base font-medium text-gray-900">{{ job.name }}</p>
+                                    <div class="flex items-center mt-1">
+                                        <template v-for="star in 5" :key="star">
+                                            <svg
+                                                :class="star <= job.rating ? 'text-yellow-400' : 'text-gray-300'"
+                                                class="h-4 w-4 flex-shrink-0"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 20 20"
+                                                fill="currentColor"
+                                            >
+                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                            </svg>
+                                        </template>
+                                    </div>
                                 </Link>
                             </div>
                         </div>
@@ -146,32 +160,12 @@ export default defineComponent({
         };
     },
     methods: {
-/*        getCategoryColor(category) {
-            const colors = {
-                Realistic: "bg-gradient-to-r from-teal-600 to-emerald-800",
-                Investigative: "bg-gradient-to-r from-teal-600 to-emerald-800",
-                Artistic: "bg-gradient-to-r from-teal-700 to-emerald-900",
-                Social: "bg-gradient-to-r from-teal-600 to-emerald-800",
-                Enterprising: "bg-gradient-to-r from-teal-700 to-emerald-800",
-                Conventional: "bg-gradient-to-r from-teal-700 to-emerald-600",
-            };
-            return colors[category] || "bg-gray-500";
-        },*/
+
 
         toggleCollapse(category) {
             this.isCollapsed[category] = !this.isCollapsed[category];
         },
-/*        getCategoryDescription(category) {
-            const descriptions = {
-                Realistic: "A realistic person is someone who is very body-oriented. This individual enjoys using their hands and eyes to solve practical problems. They like doing outdoor, mechanical, and physical activities. It’s very natural for a realistic person to relate to the physical world—this type of person usually does not deal with problems concerning ideas, data, or people, but rather, they like to concentrate on problems they can solve with their hands.",
-                Investigative: "An investigative person is someone who lives in the mind. To solve problems, they prefer reading and studying, books and text, rather than their using their hands. They tend to analyze situations before making decisions. Investigative people are independent thinkers that are both curious and insightful.",
-                Artistic:  "An artistic person is someone who likes to be involved with forms, patterns, and designs in life. They like to use their minds and hands to create things. An artistic person enjoys unusual people, sight, sounds, and textures—they have a lot of spirit and enthusiasm. The enjoy using their own creativity and imagination.",
-                Social: "A social person is someone who thrives in social situations. They like to work with other people and generally love helping others. They are empathetic, caring, and their sensitive nature makes them very good at understanding other people’s mood and feelings. Social people are good at generating positive energy for a good cause.",
-                Enterprising: "An enterprising person is someone who makes an excellent leader. They are excellent problem solvers and enjoy sales and management roles. This type of person is extroverted, and while they may seem restless or irresponsible, their energy and ability to take risks is the reason many projects get started and stay successful.",
-                Conventional: "A conventional person is someone who is careful, quiet, and pays close attention to detail. Following a set of rules appeals to these people as they like to feel secure and certain. They prefer to carry out tasks assigned by others rather than take on a leadership role. They are typically neat, tidy, and enjoy working with data in structured settings.",
-            };
-            return descriptions[category] || "No description available.";
-        },*/
+
         visitJob(job) {
             const formattedJob = job.replace(/ /g, '-');
             router.visit(`/career/${formattedJob}`, {preserveScroll: false});

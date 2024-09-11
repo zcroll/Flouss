@@ -30,23 +30,37 @@ class ResultController extends Controller
         $Archetype = $firstScore->Archetype;
         $closestJobs = collect($firstScore->jobs);
         $decodedJobs = json_decode($closestJobs[0], true, 512, JSON_THROW_ON_ERROR);
-
+        
         $jobsCollection = collect($decodedJobs);
-
         $jobIds = $jobsCollection->pluck('job_info_id');
         $jobIdsArray = $jobIds->toArray();
         $jobs = JobInfo::whereIn('id', $jobIds)
             ->select('id', 'name', 'slug', 'image')
             ->get();
 
+        // Merge job information with distances and calculate ratings
+        $jobsWithDistances = $jobs->map(function ($job) use ($jobsCollection) {
+            $jobData = $jobsCollection->firstWhere('job_info_id', $job->id);
+            $distance = $jobData['distance'];
+            $rating = 5 - min(round($distance * 100), 5); // Convert distance to a 0-5 rating
+
+            return [
+                'id' => $job->id,
+                'name' => $job->name,
+                'slug' => $job->slug,
+                'image' => $job->image,
+                'distance' => $distance,
+                'rating' => $rating
+            ];
+        })->sortBy('distance')->values();
+          ds($jobsWithDistances);
         $Archetype = DB::table('persona')->where('name', '=', "Mentor")->first();
-        ds($firstScore);
 
         if ($firstScore) {
             return Inertia::render('Result/Results', [
                 'userId' => $firstScore->uuid,
                 'scores' => $firstScore->scores,
-                'jobs' => $jobs,
+                'jobs' => $jobsWithDistances,
                 'Archetype' => $Archetype,
             ]);
         }
