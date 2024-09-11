@@ -40,10 +40,11 @@ class ResultController extends Controller
             ->get();
 
         $Archetype = DB::table('persona')->where('name', '=', "Mentor")->first();
+        ds($firstScore);
 
-        if ($firstScore->user) {
+        if ($firstScore) {
             return Inertia::render('Result/Results', [
-                'userId' => $firstScore->user->uuid,
+                'userId' => $firstScore->uuid,
                 'scores' => $firstScore->scores,
                 'jobs' => $jobs,
                 'Archetype' => $Archetype,
@@ -74,7 +75,6 @@ class ResultController extends Controller
             ->distinct()
             ->get();
 
-        ds($insights);
 
         return Inertia::render('Result/Personality', [
             "ArchetypeData" => $ArchetypeData,

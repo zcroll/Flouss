@@ -69,8 +69,7 @@
                             The Science
                         </h3>
                         <p class="Discovery__related__description mb-6 text-white/100 text-base leading-[25px] font-serif">
-                            A Realistic person feels most comfortable in the physical world...
-                        </p>
+{{archetype.scales_descriptor}}                        </p>
                     </div>
 
                     <!-- Scores Section -->

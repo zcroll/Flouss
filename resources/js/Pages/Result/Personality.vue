@@ -23,9 +23,7 @@
   
           <div class="chart-container">
             <h2>Your Personality Traits</h2>
-            <div class="relative w-full h-[400px]">
-              <LineChart :data="data" :options="options"/>
-            </div>
+            <div class="relative w-full h-[300px]" v-html="svgChart"></div>
           </div>
   
           <div class="insights-container">
@@ -52,8 +50,10 @@
   </template>
   
   <script>
-  import LineChart from "@/Pages/Result/LineChart.vue";
   import AppLayout from "@/Layouts/AppLayout.vue";
+  import { radar } from 'svg-radar-chart'
+  import stringify from 'virtual-dom-stringify'
+  import { smoothing } from 'svg-radar-chart/smoothing.js'
   
   export default {
     props: {
@@ -63,8 +63,7 @@
       firstScore: Object
     },
     components: {
-      AppLayout,
-      LineChart
+      AppLayout
     },
     computed: {
       groupedInsights() {
@@ -97,43 +96,26 @@
             buttonText: "LEARN ABOUT YOUR STRENGTHS"
           }
         ],
-        data: {
-          labels: ['Realistic', 'Investigative', 'Artistic', 'Social', 'Enterprising', 'Conventional'],
-          datasets: [
-            {
-              label: 'Your Score',
-              data: [0.5, 0.8, 0.7, 0.9, 0.6, 0.4],
-              backgroundColor: 'rgba(168, 85, 247, 0.2)',
-              borderColor: 'rgba(168, 85, 247, 1)',
-              borderWidth: 2,
-              pointBackgroundColor: 'rgba(168, 85, 247, 1)',
-              pointBorderColor: '#fff',
-              pointHoverBackgroundColor: '#fff',
-              pointHoverBorderColor: 'rgba(168, 85, 247, 1)'
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            r: {
-              angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
-              grid: { color: 'rgba(0, 0, 0, 0.1)' },
-              pointLabels: { font: { size: 14, family: 'SF Pro Display, Helvetica, Arial, sans-serif' }, color: '#333' },
-              ticks: { display: false }
-            }
-          },
-          plugins: { legend: { display: false } }
-        },
         groupedInsights: [],
-        isMobileView: false
+        isMobileView: false,
+        svgChart: '',
+        randomScores: {
+          Realistic: Math.random(),
+          Investigative: Math.random(),
+          Artistic: Math.random(),
+          Social: Math.random(),
+          Enterprising: Math.random(),
+          Conventional: Math.random()
+        }
       }
     },
     created() {
       this.groupInsights();
       this.checkMobileView();
       window.addEventListener('resize', this.checkMobileView);
+    },
+    mounted() {
+      this.createRadarChart();
     },
     beforeUnmount() {
       window.removeEventListener('resize', this.checkMobileView);
@@ -173,6 +155,52 @@
         if (!this.isMobileView) {
           this.groupedInsights.forEach(category => category.isOpen = false);
         }
+      },
+      createRadarChart() {
+        const chart = radar({
+          Realistic: 'Realistic',
+          Investigative: 'Investigative',
+          Artistic: 'Artistic',
+          Social: 'Social',
+          Enterprising: 'Enterprising',
+          Conventional: 'Conventional'
+        }, [
+          {
+            class: 'user-score',
+            Realistic: this.randomScores.Realistic,
+            Investigative: this.randomScores.Investigative,
+            Artistic: this.randomScores.Artistic,
+            Social: this.randomScores.Social,
+            Enterprising: this.randomScores.Enterprising,
+            Conventional: this.randomScores.Conventional
+          }
+        ], {
+          axes: true,
+          scales: 1,
+          captions: true,
+          captionsPosition: 1.2,
+          smoothing: smoothing(0.9),
+          axisProps: () => ({ className: 'axis' }),
+          scaleProps: () => ({ className: 'scale', fill: 'none' }),
+          shapeProps: () => ({ className: 'shape' }),
+          captionProps: () => ({
+            className: 'caption',
+            textAnchor: 'middle',
+            fontSize: 12,
+            fontFamily: 'SF Pro Display, sans-serif',
+          }),
+        });
+  
+        this.svgChart = `
+          <svg version="1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="300" height="250">
+            <style>
+              .axis { stroke: #888; stroke-width: 1; }
+              .shape { fill: rgba(168, 8, 247, 0.5); stroke: rgba(168, 85, 247, 1); stroke-width: 2; }
+            </style>
+            <rect width="100%" height="100%" fill="#f8f8f8" />
+            ${stringify(chart)}
+          </svg>
+        `;
       }
     }
   }
@@ -283,12 +311,23 @@
     padding: 24px;
     margin-bottom: 40px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
   }
   
   .chart-container h2 {
     color: #1d1d1f;
     font-size: 24px;
     margin-bottom: 20px;
+  }
+  
+  .chart-container svg {
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
   }
   
   .insights-container {
@@ -375,50 +414,50 @@
     .personality-report {
       padding: 30px 20px;
     }
-
+  
     .content-wrapper {
       padding: 24px;
       border-radius: 16px;
     }
-
+  
     .report-title {
       font-size: 28px;
     }
-
+  
     .report-header {
       flex-direction: column;
       align-items: flex-start;
       gap: 15px;
     }
-
+  
     .card-container {
       grid-template-columns: 1fr;
     }
-
+  
     .card {
       padding: 20px;
     }
-
+  
     .card p {
       font-size: 16px;
     }
-
+  
     .card-button {
       font-size: 14px;
     }
-
+  
     .insight-header {
       cursor: pointer;
     }
-
+  
     .toggle-icon {
       display: block;
     }
-
+  
     .insight-content.collapsed {
       max-height: 0;
     }
-
+  
     .insight-item[data-open="true"] .toggle-icon {
       transform: rotate(180deg);
     }
