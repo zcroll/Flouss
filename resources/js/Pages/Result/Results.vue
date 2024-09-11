@@ -8,65 +8,22 @@
                         <h1 class="ml-1 text-4xl font-serif text-gray-800 mt-10 ">Your Compatibility Results</h1>
                         <p class="ml-3 mt-2 text-lg text-gray-600">Below are your scores and best-fit career matches.</p>
                     </div>
-                    <div class="w-full grid grid-cols-2 gap-4">
+                    <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
                         <Archetype 
                             :userId="userId"  
                             :archetype="Archetype" 
                             :scores="scores"
                         />
-                    </div>
-
-<!--
-                    <div v-if="Object.keys(jobs).length > 0" class="dashboard-page-reports grid grid-cols-2 gap-8 text-center mb-2 text-white">
-                        &lt;!&ndash  ; Report 1 &ndash;&gt;
-                        <div class="dashboard-page-report bg-white p-10 mt-6 border border-gray-300 rounded-lg shadow-lg transition-shadow duration-300">
-                            <div class="dashboard-page-report-book mx-auto max-w-sm transition-transform duration-300">
-                                <div class="report-book report-book&#45;&#45;trait overflow-hidden rounded-lg relative bg-gray-800 shadow-lg pb-[116.195%] transition-all duration-300">
-                                    <div class="report-book-content absolute inset-0 flex flex-col justify-center text-center p-6">
-                                        <h1 class="report-book-title text-sm font-medium uppercase mb-2">Trait Report</h1>
-                                        <h2 class="report-book-heading text-2xl font-light mb-2">You're {{Archetype[0]}}</h2>
-                                        <p class="report-book-copy text-base mb-2">In fact, you're more social than 85% of the population.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="dashboard-page-report-copy text-gray-800 font-light my-8 mx-auto max-w-xs text-base">
-                                Learn what makes you unique and how you compare to the rest of the world.
-                            </p>
-                        </div>
-                        &lt;!&ndash; Report 2 &ndash;&gt;
-                        <div class="dashboard-page-report bg-white p-10 mt-6 border border-gray-300 rounded-lg shadow-lg transition-shadow duration-300">
-                            <div class="dashboard-page-report-book mx-auto max-w-sm transition-transform duration-300">
-                                <div class="report-book report-book&#45;&#45;personality overflow-hidden rounded-lg relative bg-gray-800 shadow-lg pb-[116.195%] transition-all duration-300">
-                                    <div class="report-book-content absolute inset-0 flex flex-col justify-center text-center p-6">
-                                        <h1 class="report-book-title text-sm font-medium uppercase mb-2">Personality Report</h1>
-                                        <h2 class="report-book-heading text-2xl font-light mb-2">You're an Advocate</h2>
-                                        <p class="report-book-copy text-base mb-2">You're a unique blend of social and investigative types.</p>
-                                        <div class="report-book-footer mt-auto"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="dashboard-page-report-copy text-gray-800 font-light my-8 mx-auto max-w-xs text-base">
-                                Read about what you naturally gravitate towards, working styles, and more.
-                            </p>
-                        </div>
-                    </div>
--->
-
-
-
-
-                    <!-- No Scores Available -->
-<!--                    <div v-else class="flex flex-col items-center justify-center">
-                        <UpNext
-                            title="No Scores Available"
-                            description="It seems like you haven't taken the compatibility test yet. Take
-                            a moment to complete the test and discover your best-fit career matches."
-                            ctaText="Take the Test"
-                            ctaLink="/activities"
-                            image-src="https://www.careerexplorer.com/static/compiled/images/up-next-blobs/11-vert.svg"
-                            backgroundColor="#C27A36"
+                        <Archetype 
+                            :userId="userId"  
+                            :archetype="Archetype" 
+                            :scores="scores"
+                            :comingSoon="true"
                         />
-                    </div>-->
+                    </div>
+
+
+
 
                     <!-- Closest Jobs Section -->
                     <div v-if="Object.keys(jobs).length > 0" class="text-left mb-6">
