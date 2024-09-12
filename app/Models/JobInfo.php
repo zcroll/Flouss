@@ -76,4 +76,10 @@ class JobInfo extends Model
     {
         return $this->hasMany(PersonalityDetails::class);
     }
+
+    public function formations()
+    {
+        return $this->belongsToMany(Formation::class, 'job_formation')
+                    ->withPivot('similarity_score');
+    }
 }

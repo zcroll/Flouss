@@ -11,6 +11,7 @@
                     $page.url === baseUrl ? 'bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500' :
                     $page.url === `${baseUrl}/workEnvironments` ? 'bg-gradient-to-br from-green-500 via-teal-500 to-blue-500' :
                     $page.url === `${baseUrl}/personality` ? 'bg-gradient-to-br from-red-500 via-orange-500 to-yellow-500' :
+                    $page.url === `${baseUrl}/how-to-become` ? 'bg-gradient-to-br from-blue-500 via-cyan-500 to-teal-500' :
                     'bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500'
                  ]">
                 <div class="relative z-10">
@@ -124,6 +125,7 @@ export default {
             { text: 'Overview', url: baseUrl.value },
             { text: 'Work Environments', url: `${baseUrl.value}/workEnvironments` },
             { text: 'Personality', url: `${baseUrl.value}/personality` },
+            { text: 'How to Become', url: `${baseUrl.value}/how-to-become` },
         ];
 
         return {

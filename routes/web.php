@@ -35,6 +35,7 @@ Route::middleware([
             Route::get('/career/{id}', 'index')->name('career');
             Route::get('/career/{id}/workEnvironments', 'workEnvironments')->name('career.workEnvironments');
             Route::get('/career/{job}/personality', 'personality')->name('career.personality');
+            Route::get('/career/{job}/how-to-become', 'howToBecome')->name('career.how-to-become');
         });
 
         Route::controller(ResultController::class)->group(function () {
