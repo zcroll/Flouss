@@ -46,3 +46,7 @@ Route::middleware([
         Route::get('/find-closest-job', [JobMatcherController::class, 'matchJobs']);
     });
 });
+
+Route::get('/degree', function () {
+    return Inertia::render('Degree');
+})->name('degree');
