@@ -1,5 +1,5 @@
 <template>
-    <app-layout title="Results" preserveScroll>
+    <app-layout title="Results" head-title="Your Results" preserveScroll>
         <div class="relative max-w-7xl mx-auto mt-10">
 
             <div class="flex flex-col lg:flex-row">
@@ -9,16 +9,17 @@
                         <p class="ml-3 mt-2 text-lg text-gray-600">Below are your scores and best-fit career matches.</p>
                     </div>
                     <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Archetype 
-                            :userId="userId"  
-                            :archetype="Archetype" 
+                        <Archetype
+                            :userId="userId"
+                            :archetype="Archetype"
                             :scores="scores"
                         />
-                        <Archetype 
-                            :userId="userId"  
-                            :archetype="Archetype" 
+                        <Archetype
+                            :userId="userId"
+                            :archetype="Archetype"
                             :scores="scores"
                             :comingSoon="true"
+                            backgroud_pic="url('/images_options/freya-card.svg')"
                         />
                     </div>
 
@@ -32,7 +33,7 @@
                             Based on your responses, here are some jobs that you can excel in more than everyone else.
                         </p>
                     </div>
-                    <div v-if="Object.keys(jobs).length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div v-if="Object.keys(jobs).length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-20">
                         <div
                             v-for="(job, index) in jobs"
                             :key="index"

@@ -40,7 +40,7 @@ export default {
         headerContentStyles() {
             return {
                 position: 'relative',
-                zIndex: 2,
+                zIndex: 6,
                 padding: '80px 0 40px', // Increased top padding to accommodate navigation
             }
         },
@@ -53,13 +53,15 @@ export default {
                 textAlign: 'left',
                 marginTop: '60px',
                 marginLeft: '233px',
+
             }
         },
         paragraphStyles() {
             return {
                 fontSize: '18px',
                 color: '#ffffff',
-                textAlign: 'center',
+                textAlign: 'left',
+                marginLeft: '233px'
             }
         },
         backgroundStyles() {
@@ -95,7 +97,8 @@ export default {
                 borderRadius: '50%',
                 top: '30%',
                 right: '10%',
-                backgroundImage: `url('/images_options/student5.webp')` // Update with your image path
+                backgroundImage: `url('/images_options/student5.webp')`,
+                zIndex: 3,// Update with your image path
             }
         },
         circularImage2() {
@@ -115,7 +118,8 @@ export default {
                 borderRadius: '50%',
                 bottom: '-10%',
                 right: '30%',
-                backgroundImage: `url('/images_options/student3.webp')` // Update with your image path
+                backgroundImage: `url('/images_options/student3.webp')`,
+                zIndex: 4,// Update with your image path
             }
         },
         circularImage4() {
@@ -125,7 +129,8 @@ export default {
                 borderRadius: '50%',
                 bottom: '-4%',
                 right: '18%',
-                backgroundImage: `url('/images_options/student2.webp')` // Update with your image path
+                backgroundImage: `url('/images_options/student2.webp')`,
+                zIndex: 5,// Update with your image path
             }
         },
         circularImage5() {
