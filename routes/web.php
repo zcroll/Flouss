@@ -8,6 +8,7 @@ use App\Http\Controllers\dashboard\DashboardController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FormationFilterController;
+use App\Http\Controllers\DegreeFilterController;
 
 use Inertia\Inertia;
 
@@ -49,12 +50,8 @@ Route::middleware([
     });
 });
 
-<<<<<<< HEAD
 Route::get('/formations', [FormationFilterController::class, 'index'])->name('formations.index');
 Route::get('/formations/filter', [FormationFilterController::class, 'filter'])->name('formations.filter');
 Route::get('/etablissements', [FormationFilterController::class, 'getEtablissements'])->name('etablissements.list');
-=======
-Route::get('/degree', function () {
-    return Inertia::render('Degree');
-})->name('degree');
->>>>>>> e5194486b9a4ccc8dc995f99e8c8bbad854466f1
+Route::get('/degrees', [DegreeFilterController::class, 'index'])->name('degrees.index');
+Route::get('/degrees/filter', [DegreeFilterController::class, 'filter'])->name('degrees.filter');
