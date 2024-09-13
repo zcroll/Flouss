@@ -54,4 +54,3 @@ Route::get('/formations', [FormationFilterController::class, 'index'])->name('fo
 Route::get('/formations/filter', [FormationFilterController::class, 'filter'])->name('formations.filter');
 Route::get('/etablissements', [FormationFilterController::class, 'getEtablissements'])->name('etablissements.list');
 Route::get('/degrees', [DegreeFilterController::class, 'index'])->name('degrees.index');
-Route::get('/degrees/filter', [DegreeFilterController::class, 'filter'])->name('degrees.filter');

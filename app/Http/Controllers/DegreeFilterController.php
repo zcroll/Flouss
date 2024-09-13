@@ -8,31 +8,22 @@ use Inertia\Inertia;
 
 class DegreeFilterController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         return Inertia::render('Degrees/Index', [
-            'degrees' => Degree::all(),
+            'degrees' => Degree::query()
+                ->when($request->input('search'), function ($query, $search) {
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('slug', 'like', "%{$search}%");
+                })
+                ->paginate(12)
+                ->withQueryString(),
+            'filters' => $request->only(['search'])
         ]);
     }
 
     public function filter(Request $request)
     {
-        $query = Degree::query();
-
-        // Add filter logic here based on request parameters
-        // For example:
-        if ($request->has('level')) {
-            $query->where('level', $request->level);
-        }
-
-        if ($request->has('field')) {
-            $query->where('field', 'like', '%' . $request->field . '%');
-        }
-
-        // Add more filters as needed
-
-        $degrees = $query->get();
-
-        return response()->json($degrees);
+        // This method is no longer needed as filtering is handled in the index method
     }
 }

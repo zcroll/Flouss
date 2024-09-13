@@ -21,21 +21,12 @@
                 <h2 class="filter-title">Filter Degrees</h2>
                 <input
                   v-model="searchQuery"
-                  @input="filterDegrees"
                   type="text"
-                  placeholder="Search degrees by name"
+                  placeholder="Search degrees by name or field"
                   class="search-input"
+                  @input="debouncedSearch"
                 />
-                <vue-multiselect
-                  v-model="selectedIndustries"
-                  :options="industries"
-                  :multiple="true"
-                  :close-on-select="false"
-                  placeholder="Select industries"
-                  label="name"
-                  track-by="id"
-                  class="custom-multiselect"
-                ></vue-multiselect>
+                <!-- ... (keep other filter inputs) ... -->
               </div>
               <div class="job-list">
                 <div v-for="degree in filteredDegrees" :key="degree.id" class="job-card">
@@ -46,10 +37,11 @@
                     <div class="job-stats">
                       <span>Salary: ${{ degree.salary }}</span>
                     </div>
-                    </div>
                   </div>
                 </div>
               </div>
+              <Pagination :links="degrees.links" />
+            </div>
           </div>
         </div>
       </div>
@@ -57,85 +49,73 @@
   </AppLayout>
 </template>
 
-<script>
-import VueMultiselect from 'vue-multiselect'
+<script setup>
+import { ref, watch, computed, onMounted } from 'vue';
+import { router } from '@inertiajs/vue3';
 import AppLayout from "@/Layouts/AppLayout.vue";
-import { ref, computed } from 'vue';
+import VueMultiselect from 'vue-multiselect';
+import debounce from 'lodash/debounce';
 
-export default {
-  components: {
-    AppLayout,
-    VueMultiselect
-  },
-  props: {
-    degrees: {
-      type: Array,
-      required: true
-    }
-  },
-  setup(props) {
-    const activeFilter = ref(null);
-    const selectedIndustries = ref([]);
-    const searchQuery = ref('');
+const props = defineProps({
+    degrees: Object,
+    filters: Object,
+});
 
-    const applyFilter = (filter) => {
-      activeFilter.value = filter;
-    };
+const search = ref(props.filters.search);
+const selectedIndustries = ref([]);
+const activeFilter = ref('');
+const searchQuery = ref('');
 
-    const filterDegrees = () => {
-      // This function is called when the search input changes
-      // The filtering logic is handled in the computed property
-    };
-
-    const filteredDegrees = computed(() => {
-      let filtered = props.degrees;
-
-      // Filter by search query
-      if (searchQuery.value) {
-        const query = searchQuery.value.toLowerCase();
-        filtered = filtered.filter(degree => 
-          degree.name.toLowerCase().includes(query)
-        );
-      }
-
-      // Apply other filters
-      if (activeFilter.value === 'highPaying') {
-        filtered = filtered.sort((a, b) => b.salary - a.salary);
-      } else if (activeFilter.value === 'attainable') {
-        filtered = filtered.sort((a, b) => a.degree_level - b.degree_level);
-      } else if (activeFilter.value === 'partTime') {
-        // Implement part-time filtering logic if applicable
-      } else if (activeFilter.value === 'noDegree') {
-        filtered = filtered.filter(degree => degree.degree_level === 0);
-      }
-
-      if (selectedIndustries.value.length > 0) {
-        filtered = filtered.filter(degree => 
-          selectedIndustries.value.some(industry => 
-            degree.specializations.includes(industry.name)
-          )
-        );
-      }
-
-      return filtered;
+const debouncedSearch = debounce(() => {
+    router.get('/degrees', { search: searchQuery.value }, {
+        preserveState: true,
+        replace: true,
     });
+}, 300);
 
-    return {
-      selectedIndustries,
-      industries: [
-        { id: 1, name: 'Technology' },
-        { id: 2, name: 'Healthcare' },
-        { id: 3, name: 'Finance' },
-        // Add more industries as needed
-      ],
-      activeFilter,
-      applyFilter,
-      filteredDegrees,
-      searchQuery,
-      filterDegrees
-    }
+watch(searchQuery, (value) => {
+    debouncedSearch();
+});
+
+const applyFilter = (filter) => {
+  activeFilter.value = filter;
+};
+
+const filteredDegrees = computed(() => {
+  let filtered = props.degrees.data;
+
+  // Apply other filters
+  if (activeFilter.value === 'highPaying') {
+    filtered = filtered.sort((a, b) => b.salary - a.salary);
+  } else if (activeFilter.value === 'attainable') {
+    filtered = filtered.sort((a, b) => a.degree_level - b.degree_level);
+  } else if (activeFilter.value === 'partTime') {
+    // Implement part-time filtering logic if applicable
+  } else if (activeFilter.value === 'noDegree') {
+    filtered = filtered.filter(degree => degree.degree_level === 0);
   }
-}
+
+  if (selectedIndustries.value.length > 0) {
+    filtered = filtered.filter(degree => 
+      selectedIndustries.value.some(industry => 
+        degree.specializations.includes(industry.name)
+      )
+    );
+  }
+
+  return filtered;
+});
+
+const industries = [
+  { id: 1, name: 'Technology' },
+  { id: 2, name: 'Healthcare' },
+  { id: 3, name: 'Finance' },
+  // Add more industries as needed
+];
+
+onMounted(() => {
+  searchQuery.value = search.value;
+});
 </script>
 
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>
