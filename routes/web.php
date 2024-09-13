@@ -7,6 +7,8 @@ use App\Http\Controllers\Result\ResultController;
 use App\Http\Controllers\dashboard\DashboardController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FormationFilterController;
+
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -46,3 +48,7 @@ Route::middleware([
         Route::get('/find-closest-job', [JobMatcherController::class, 'matchJobs']);
     });
 });
+
+Route::get('/formations', [FormationFilterController::class, 'index'])->name('formations.index');
+Route::get('/formations/filter', [FormationFilterController::class, 'filter'])->name('formations.filter');
+Route::get('/etablissements', [FormationFilterController::class, 'getEtablissements'])->name('etablissements.list');
