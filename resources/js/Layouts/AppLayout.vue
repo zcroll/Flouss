@@ -13,6 +13,8 @@ const props = defineProps({
     isOver10Days: Boolean,
     headTitle: String,
     headSubTitle: String,
+    showSearch: Boolean,
+    name: String,
 });
 
 const showingNavigationDropdown = ref(false);
@@ -44,7 +46,7 @@ const socialLinks = [
     <div >
         <Head :title="title" />
         <div class="min-h-screen bg-gray-100" >
-            <Header :title="headTitle" :sub-title="headSubTitle">
+            <Header :title="headTitle" :sub-title="headSubTitle" :show-search="showSearch" :name="name">
                 <template #navigation>
                     <nav class="absolute top-0 left-0 right-0 z-10 bg-transparent">
                         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

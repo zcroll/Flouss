@@ -1,9 +1,11 @@
 <template>
-  <AppLayout preserveScroll>
-    <div class="min-h-screen bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 py-10 px-5 font-sans">
-      <div class="bg-white shadow-lg rounded-2xl p-10 max-w-6xl mx-auto">
+  <AppLayout preserveScroll :head-title="`Hello ${$page.props.auth.user.name}`">
+      <div class="w-full min-h-screen py-10 px-5 font-sans">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            
+              <div class="lg:col-span-2 bg-white shadow-lg rounded-2xl p-10">
         <header class="flex justify-between items-center mb-8">
-          <h1 class="text-3xl font-bold m-0 text-purple-800">{{ ArchetypeData.name }}'s Personality Report</h1>
+          <h1 class="text-3xl font-light tracking-wide text-gray-800">{{ ArchetypeData.name }}'s Personality Report</h1>
           <div class="flex space-x-3">
             <button class="relative isolate inline-flex items-center justify-center gap-x-2 rounded-lg border text-base/6 font-semibold px-[calc(theme(spacing[3.5])-1px)] py-[calc(theme(spacing[2.5])-1px)] sm:px-[calc(theme(spacing.3)-1px)] sm:py-[calc(theme(spacing[1.5])-1px)] sm:text-sm/6 focus:outline-none data-[focus]:outline data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-500 data-[disabled]:opacity-50 [&>[data-slot=icon]]:-mx-0.5 [&>[data-slot=icon]]:my-0.5 [&>[data-slot=icon]]:size-5 [&>[data-slot=icon]]:shrink-0 [&>[data-slot=icon]]:text-[--btn-icon] [&>[data-slot=icon]]:sm:my-1 [&>[data-slot=icon]]:sm:size-4 forced-colors:[--btn-icon:ButtonText] forced-colors:data-[hover]:[--btn-icon:ButtonText] border-zinc-950/10 text-zinc-950 data-[active]:bg-zinc-950/[2.5%] data-[hover]:bg-zinc-950/[2.5%] dark:border-white/15 dark:text-white dark:[--btn-bg:transparent] dark:data-[active]:bg-white/5 dark:data-[hover]:bg-white/5 [--btn-icon:theme(colors.zinc.500)] data-[active]:[--btn-icon:theme(colors.zinc.700)] data-[hover]:[--btn-icon:theme(colors.zinc.700)] dark:data-[active]:[--btn-icon:theme(colors.zinc.400)] dark:data-[hover]:[--btn-icon:theme(colors.zinc.400)]">
               <i class="fas fa-print mr-2"></i> Print
@@ -13,19 +15,7 @@
             </button>
           </div>
         </header>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-          <div v-for="(card, index) in cards" :key="index" class="relative h-full w-full rounded-xl bg-sky-100 shadow-[0px_0px_0px_1px_rgba(0,0,0,0.5),0px_2px_2px_0px_rgba(0,0,0,0.5)] dark:bg-zinc-900 dark:shadow-[0px_0px_0px_1px_rgba(255,255,255,0.1)] dark:before:pointer-events-none dark:before:absolute dark:before:-inset-px dark:before:rounded-xl dark:before:shadow-[0px_2px_8px_0px_rgba(0,_0,_0,_0.20),_0px_1px_0px_0px_rgba(255,_255,_255,_0.06)_inset] forced-colors:outline">
-            <div class="grid h-full w-full justify-items-center overflow-hidden place-items-center p-4 py-8 sm:p-8 lg:p-12">
-              <p class="mt-0 text-base leading-6 mb-4 flex-grow font-inter text-zinc-700 dark:text-zinc-300">{{ card.content.substring(0, 150) }}...</p>
-              <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 sm:relative sm:bottom-0 sm:left-0 sm:transform-none sm:mt-4">
-                <button @click="scrollToSection(card.sectionId)" class="relative isolate mb-3 inline-flex items-center justify-center gap-x-2 rounded-lg border text-sm font-semibold px-3 py-2 sm:px-2 sm:py-1 sm:text-xs focus:outline-none data-[focus]:outline data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-500 data-[disabled]:opacity-50 [&>[data-slot=icon]]:-mx-0.5 [&>[data-slot=icon]]:my-0.5 [&>[data-slot=icon]]:size-4 [&>[data-slot=icon]]:shrink-0 [&>[data-slot=icon]]:text-[--btn-icon] [&>[data-slot=icon]]:sm:my-1 [&>[data-slot=icon]]:sm:size-3 forced-colors:[--btn-icon:ButtonText] forced-colors:data-[hover]:[--btn-icon:ButtonText] border-transparent bg-[--btn-border] dark:bg-[--btn-bg] before:absolute before:inset-0 before:-z-10 before:rounded-[calc(theme(borderRadius.lg)-1px)] before:bg-[--btn-bg] before:shadow dark:before:hidden dark:border-white/5 after:absolute after:inset-0 after:-z-10 after:rounded-[calc(theme(borderRadius.lg)-1px)] after:shadow-[shadow:inset_0_1px_theme(colors.white/15%)] after:data-[active]:bg-[--btn-hover-overlay] after:data-[hover]:bg-[--btn-hover-overlay] dark:after:-inset-px dark:after:rounded-lg before:data-[disabled]:shadow-none after:data-[disabled]:shadow-none text-white [--btn-bg:theme(colors.zinc.900)] [--btn-border:theme(colors.zinc.950/90%)] [--btn-hover-overlay:theme(colors.white/10%)] dark:text-white dark:[--btn-bg:theme(colors.zinc.600)] dark:[--btn-hover-overlay:theme(colors.white/5%)] [--btn-icon:theme(colors.zinc.400)] data-[active]:[--btn-icon:theme(colors.zinc.300)] data-[hover]:[--btn-icon:theme(colors.zinc.300)] font-inter">
-                  <span class="hidden sm:inline">{{ card.buttonText }}</span>
-                  <span class="sm:hidden text-xs">{{ card.buttonText }}</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+
 
         <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:max-w-4xl lg:px-12">
           <h2 id="personality-profile" class="inline-flex items-center rounded-full px-4 py-1 text-blue-600 ring-1 ring-inset ring-blue-600">
@@ -35,11 +25,11 @@
           </h2>
 
           <h1 class="mt-8 font-display text-4xl font-bold tracking-tight text-slate-900">You are a {{ ArchetypeData.name }}</h1>
-          
+
           <p class="mt-4 text-lg tracking-tight text-slate-700">
             Your strongest trait is {{ ArchetypeData.primary_trait }}, and your second strongest is {{ ArchetypeData.secondary_trait }}, which makes you a {{ ArchetypeData.name }}.
           </p>
-          
+
           <p class="mt-4 text-lg tracking-tight text-slate-700">
             {{ ArchetypeData.description }}
           </p>
@@ -93,8 +83,24 @@
             </div>
           </div>
         </div>
+
+
       </div>
+              <div class="lg:col-span-1">
+                <div class="sticky top-20  rounded-2xl p-6">
+                  <div class="grid gap-4">
+                    <div v-for="(card, index) in cards" :key="index" class="bg-gray-900 rounded-xl p-4 shadow-lg ">
+                      <p class="text-sm font-serif text-zinc-100 mb-3">{{ card.content.substring(0, 100) }}...</p>
+                      <button @click="scrollToSection(card.sectionId)" class="text-xs font-semibold bg-zinc-200 text-black rounded-lg px-3 py-1 hover:bg-zinc-500 transition-colors">
+                        {{ card.buttonText }}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
     </div>
+  </div>
+
   </AppLayout>
 </template>
 

@@ -11,8 +11,8 @@ class Formation extends Model
 
     protected $table = 'formation';
 
-    // Mass assignable attributes
     protected $fillable = [
+        
         'nom', 'nomAr', 'descriptionAr', 'descriptionFr', 'diplomeLibelleAr',
         'EtablissementFr', 'EtablissementAr', 'parcoursNomAr', 'parcoursNomFr',
         'parcoursCode', 'priorite', 'diplomeLibelleFr', 'etablissement_id'

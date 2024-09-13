@@ -49,6 +49,12 @@ Route::middleware([
     });
 });
 
+<<<<<<< HEAD
 Route::get('/formations', [FormationFilterController::class, 'index'])->name('formations.index');
 Route::get('/formations/filter', [FormationFilterController::class, 'filter'])->name('formations.filter');
 Route::get('/etablissements', [FormationFilterController::class, 'getEtablissements'])->name('etablissements.list');
+=======
+Route::get('/degree', function () {
+    return Inertia::render('Degree');
+})->name('degree');
+>>>>>>> e5194486b9a4ccc8dc995f99e8c8bbad854466f1
