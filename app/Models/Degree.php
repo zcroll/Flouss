@@ -37,6 +37,11 @@ class Degree extends Model
         'is_premium' => 'boolean',
         'education_levels' => 'array',
     ];
+
+    public function industries()
+    {
+        return $this->belongsToMany(Industry::class);
+    }
 }
 
 

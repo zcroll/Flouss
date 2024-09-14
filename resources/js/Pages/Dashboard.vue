@@ -94,15 +94,17 @@
                                 <Link href="/categories/education" class="rounded-full bg-green-100 px-3 py-1.5 font-medium text-green-600 hover:bg-green-200">Academic Advancement</Link>
                             </div>
                             <h3 class="text-xl font-semibold text-gray-900 mb-3">
-                                <Link href="/education" class="hover:underline">
+                                <Link href="/degrees" class="hover:underline">
                                     Enhance Your Academic Credentials
                                 </Link>
                             </h3>
                             <p class="text-sm text-gray-600 mb-6">Examine a comprehensive array of academic degrees and professional certifications.</p>
                             <div class="flex justify-end">
-                                <PrimaryButton @click="goToEducation" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded">
-                                    Explore Programs
-                                </PrimaryButton>
+                                <Link href="/degrees">
+                                    <PrimaryButton class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded">
+                                        Explore Programs
+                                    </PrimaryButton>
+                                </Link>
                             </div>
                         </div>
                     </div>
