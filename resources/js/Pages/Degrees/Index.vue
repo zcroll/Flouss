@@ -1,47 +1,82 @@
 <template>
-  <AppLayout :head-title="'Degree'" :show-search="true" name="Degree ">
-    <div class="career-explorer">
-      <div class="content-wrapper">
-        <div class="predefined-filters">
-          <h2>FOR YOU</h2>
-          <h3>Your top matches</h3>
-          <h4>GENERAL</h4>
-          <ul>
-            <li><a href="#" @click.prevent="applyFilter('highPaying')">High paying careers</a></li>
-            <li><a href="#" @click.prevent="applyFilter('attainable')">Attainable careers</a></li>
-            <li><a href="#" @click.prevent="applyFilter('partTime')">Part-time careers</a></li>
-            <li><a href="#" @click.prevent="applyFilter('noDegree')">Careers that don't require a degree</a></li>
-          </ul>
+  <AppLayout :head-title="'Degrees'" :show-search="true" name="Degrees">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-8">Explore Degrees</h1>
+      
+      <div class="flex flex-col lg:flex-row gap-8">
+        <!-- Filter sidebar -->
+        <div class="w-full lg:w-1/4">
+          <div class="bg-white shadow-md rounded-lg p-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Filters</h2>
+            
+            <div class="mb-4">
+              <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+              <input
+                id="search"
+                v-model="searchQuery"
+                type="text"
+                placeholder="Search degrees"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                @input="debouncedSearch"
+              />
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Industries</label>
+              <VueMultiselect
+                v-model="selectedIndustries"
+                :options="industries"
+                :multiple="true"
+                :close-on-select="false"
+                placeholder="Select industries"
+                label="name"
+                track-by="id"
+                class="custom-multiselect"
+              />
+            </div>
+
+            <div class="space-y-2">
+              <button
+                v-for="filter in ['highPaying', 'attainable', 'partTime', 'noDegree']"
+                :key="filter"
+                @click="applyFilter(filter)"
+                class="w-full px-4 py-2 text-sm font-medium rounded-md"
+                :class="activeFilter === filter ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-800 hover:bg-gray-200'"
+              >
+                {{ getFilterLabel(filter) }}
+              </button>
+            </div>
+          </div>
         </div>
 
-        <div class="main-content">
-          <div class="job-explorer">
-            <div class="content-wrapper">
-              <div class="filter-section">
-                <h2 class="filter-title">Filter Degrees</h2>
-                <input
-                  v-model="searchQuery"
-                  type="text"
-                  placeholder="Search degrees by name or field"
-                  class="search-input"
-                  @input="debouncedSearch"
-                />
-                <!-- ... (keep other filter inputs) ... -->
-              </div>
-              <div class="job-list">
-                <div v-for="degree in filteredDegrees" :key="degree.id" class="job-card">
-                  <img :src="degree.image" :alt="degree.name" class="job-image">
-                  <div class="job-details">
-                    <h2>{{ degree.name }}</h2>
-                    <p>{{ degree.slug }}</p>
-                    <div class="job-stats">
-                      <span>Salary: ${{ degree.salary }}</span>
-                    </div>
-                  </div>
+        <!-- Main content -->
+        <div class="w-full lg:w-3/4">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div v-for="degree in degrees.data" :key="degree.id" class="bg-white shadow-md rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg">
+              <img :src="degree.image" :alt="degree.name" class="w-full h-48 object-cover">
+              <div class="p-4">
+                <h2 class="text-xl font-semibold text-gray-800 mb-2">{{ degree.name }}</h2>
+                <p class="text-gray-600 mb-4">{{ degree.slug }}</p>
+                <div class="flex items-center justify-between">
+                  <span class="text-indigo-600 font-medium">Salary: ${{ degree.salary }}</span>
+                  <button class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors duration-300">
+                    Learn More
+                  </button>
                 </div>
               </div>
-              <Pagination :links="degrees.links" />
             </div>
+          </div>
+
+          <div class="mt-8">
+            <Pagination 
+              :links="degrees.links" 
+              :meta="{
+                current_page: degrees.meta.current_page,
+                from: degrees.meta.from,
+                to: degrees.meta.to,
+                total: degrees.meta.total
+              }" 
+            />
           </div>
         </div>
       </div>
@@ -55,10 +90,11 @@ import { router } from '@inertiajs/vue3';
 import AppLayout from "@/Layouts/AppLayout.vue";
 import VueMultiselect from 'vue-multiselect';
 import debounce from 'lodash/debounce';
+import Pagination from '@/Components/Pagination.vue';
 
 const props = defineProps({
-    degrees: Object,
-    filters: Object,
+  degrees: Object,
+  filters: Object,
 });
 
 const search = ref(props.filters.search);
@@ -67,44 +103,45 @@ const activeFilter = ref('');
 const searchQuery = ref('');
 
 const debouncedSearch = debounce(() => {
-    router.get('/degrees', { search: searchQuery.value }, {
-        preserveState: true,
-        replace: true,
-    });
+  router.get('/degrees', 
+    { search: searchQuery.value }, 
+    { 
+      preserveState: true,
+      preserveScroll: true,
+      replace: true,
+    }
+  );
 }, 300);
 
 watch(searchQuery, (value) => {
-    debouncedSearch();
+  debouncedSearch();
 });
 
 const applyFilter = (filter) => {
   activeFilter.value = filter;
+  // Implement filter logic here
+  router.get('/degrees', 
+    { 
+      search: searchQuery.value,
+      filter: filter
+    }, 
+    { 
+      preserveState: true,
+      preserveScroll: true,
+      replace: true,
+    }
+  );
 };
 
-const filteredDegrees = computed(() => {
-  let filtered = props.degrees.data;
-
-  // Apply other filters
-  if (activeFilter.value === 'highPaying') {
-    filtered = filtered.sort((a, b) => b.salary - a.salary);
-  } else if (activeFilter.value === 'attainable') {
-    filtered = filtered.sort((a, b) => a.degree_level - b.degree_level);
-  } else if (activeFilter.value === 'partTime') {
-    // Implement part-time filtering logic if applicable
-  } else if (activeFilter.value === 'noDegree') {
-    filtered = filtered.filter(degree => degree.degree_level === 0);
-  }
-
-  if (selectedIndustries.value.length > 0) {
-    filtered = filtered.filter(degree => 
-      selectedIndustries.value.some(industry => 
-        degree.specializations.includes(industry.name)
-      )
-    );
-  }
-
-  return filtered;
-});
+const getFilterLabel = (filter) => {
+  const labels = {
+    highPaying: 'High Paying',
+    attainable: 'Most Attainable',
+    partTime: 'Part-Time Options',
+    noDegree: 'No Degree Required'
+  };
+  return labels[filter] || filter;
+};
 
 const industries = [
   { id: 1, name: 'Technology' },
@@ -120,171 +157,10 @@ onMounted(() => {
 
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>
 
-<style scoped>
-.job-explorer {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.content-wrapper {
-  display: flex;
-  gap: 20px;
-}
-
-.job-list {
-  flex: 3;
-}
-
-.filter-section {
-  background-color: #f5f5f5;
-  padding: 20px;
-  border-radius: 8px;
-}
-
-.filter-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 15px;
-  font-family: 'Arial', sans-serif;
-}
-
-.search-input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-.job-card {
-  display: flex;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 15px;
-  margin-bottom: 20px;
-  transition: all 0.3s ease;
-}
-
-.job-card:hover {
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  transform: scale(1.02);
-}
-
-.job-image {
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 8px;
-  margin-right: 15px;
-}
-
-.job-details {
-  flex: 1;
-}
-
-.job-stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 10px;
-  font-size: 0.9em;
-  color: #666;
-}
-
-.additional-info {
-  margin-top: 10px;
-  font-size: 0.8em;
-  color: #666;
-}
-
-@media (max-width: 768px) {
-  .content-wrapper {
-    flex-direction: column-reverse;
-  }
-
-  .job-card {
-    flex-direction: column;
-  }
-
-  .job-image {
-    width: 100%;
-    margin-right: 0;
-    margin-bottom: 15px;
-  }
-}
-
-/* Custom styles for vue-multiselect */
-::v-deep .custom-multiselect {
-  font-family: 'Arial', sans-serif;
-}
-
-::v-deep .custom-multiselect .multiselect__tags {
-  background-color: #ffffff;
-}
-
-::v-deep .custom-multiselect .multiselect__tag {
-  color: #ffffff;
-}
-
-::v-deep .custom-multiselect .multiselect__option--highlight {
-  color: #ffffff;
-}
-
-.career-explorer {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
-}
-
-.predefined-filters {
-  width: 200px;
-  padding-right: 20px;
-  border-right: 1px solid #e0e0e0;
-}
-
-.predefined-filters h2 {
-  font-size: 14px;
-  color: #888;
-  margin-bottom: 10px;
-}
-
-.predefined-filters h3 {
-  font-size: 18px;
-  color: #333;
-  margin-bottom: 15px;
-}
-
-.predefined-filters h4 {
-  font-size: 12px;
-  color: #888;
-  margin-top: 20px;
-  margin-bottom: 10px;
-}
-
-.predefined-filters ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.predefined-filters li {
-  margin-bottom: 10px;
-}
-
-.predefined-filters a {
-  color: #333;
-  text-decoration: none;
-  font-size: 14px;
-}
-
-.predefined-filters a:hover {
-  color: #007bff;
-}
-
-.main-content {
-  flex: 1;
+<style>
+.custom-multiselect {
+  --ms-tag-bg: #4f46e5;
+  --ms-tag-color: #ffffff;
+  --ms-option-bg-selected: #4f46e5;
 }
 </style>

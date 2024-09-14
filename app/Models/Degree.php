@@ -25,6 +25,7 @@ class Degree extends Model
         'is_external',
         'is_premium',
         'specializations',
+        'category', // Add this new field
     ];
 
     protected $casts = [
@@ -34,6 +35,7 @@ class Degree extends Model
         'satisfaction_raw' => 'float',
         'is_external' => 'boolean',
         'is_premium' => 'boolean',
+        'education_levels' => 'array',
     ];
 }
 

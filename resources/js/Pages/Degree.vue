@@ -12,7 +12,7 @@
             <h4>GENERAL</h4>
             <ul>
               <li><a href="#" @click.prevent="applyFilter('highPaying')">High paying careers</a></li>
-              <li><a href="#" @click.prevent="applyFilter('attainable')">Attainable careers</a></li>
+              <li><a href="#" @click.prevent="applyFilter('attainable')">Degree categories</a></li>
               <li><a href="#" @click.prevent="applyFilter('partTime')">Part-time careers</a></li>
               <li><a href="#" @click.prevent="applyFilter('noDegree')">Careers that don't require a degree</a></li>
             </ul>
