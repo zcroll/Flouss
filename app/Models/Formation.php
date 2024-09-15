@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Formation extends Model
 {
@@ -21,12 +23,12 @@ class Formation extends Model
     /**
      * Get the etablissement that owns the formation.
      */
-    public function etablissement(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function etablissement(): BelongsTo
     {
         return $this->belongsTo(Etablissement::class, 'etablissement_id', 'id');
     }
 
-    public function jobInfos()
+    public function jobInfos(): BelongsToMany
     {
         return $this->belongsToMany(JobInfo::class, 'job_formation')
                     ->withPivot('similarity_score');

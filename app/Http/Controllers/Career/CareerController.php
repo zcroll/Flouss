@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Career;
 
+use App\Http\Controllers\Controller;
 use App\Models\JobInfo;
-use App\Models\OccupationData;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
-use App\Models\JobFormation;
-use App\Models\Formation;
 
 class CareerController extends Controller
 {

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Filters;
 
+use App\Http\Controllers\Controller;
 use App\Models\Formation;
 use App\Models\Etablissement;
 use Illuminate\Http\Request;

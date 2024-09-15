@@ -1,15 +1,16 @@
 <?php
 
-use App\Http\Controllers\ActivityProgressController;
-use App\Http\Controllers\CareerController;
-use App\Http\Controllers\JobMatcherController;
 use App\Http\Controllers\Result\ResultController;
+use App\Http\Controllers\Career\CareerController;
+use App\Http\Controllers\Filters\DegreeFilterController;
+use App\Http\Controllers\Filters\JobFilterController;
+use App\Http\Controllers\Filters\FormationFilterController;
+use App\Http\Controllers\Assessment\ActivityProgressController;
+use App\Http\Controllers\Assessment\JobMatcherController;
+
 use App\Http\Controllers\dashboard\DashboardController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\FormationFilterController;
-use App\Http\Controllers\DegreeFilterController;
-use App\Http\Controllers\JobFilterController;
 
 use Inertia\Inertia;
 

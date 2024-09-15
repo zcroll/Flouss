@@ -5,10 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class JobInfo extends Model
 {
     use HasFactory;
+
+    protected $table = 'job_infos';
 
     /**
      * The attributes that are mass assignable.
@@ -21,6 +24,7 @@ class JobInfo extends Model
         'eucation_level',
         'score',
         'education_level',
+        'score',
         'salary',
         'satisfaction',
         'satisfaction_Raw',
@@ -36,26 +40,20 @@ class JobInfo extends Model
         'id' => 'integer',
     ];
 
-
     public function jobInfoDuties(): HasMany
     {
         return $this->hasMany(JobInfoDuty::class);
     }
-
 
     public function workEnvironments(): HasMany
     {
         return $this->hasMany(WorkEnvironment::class);
     }
 
-       public function jobInfoDetail(): HasMany
+    public function jobInfoDetail(): HasMany
     {
         return $this->hasMany(JobInfoDetail::class);
     }
-
-
-
-
 
     public function jobInfoTypes(): HasMany
     {
@@ -77,7 +75,7 @@ class JobInfo extends Model
         return $this->hasMany(PersonalityDetails::class);
     }
 
-    public function formations()
+    public function formations(): BelongsToMany
     {
         return $this->belongsToMany(Formation::class, 'job_formation')
                     ->withPivot('similarity_score');

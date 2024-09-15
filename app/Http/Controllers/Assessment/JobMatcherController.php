@@ -1,9 +1,9 @@
 <?php
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Assessment;
 
+use App\Http\Controllers\Controller;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
-use Illuminate\Http\Request;
 
 class JobMatcherController extends Controller
 {

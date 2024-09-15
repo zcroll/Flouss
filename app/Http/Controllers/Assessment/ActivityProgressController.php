@@ -1,16 +1,13 @@
 <?php
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Assessment;
 
-use App\Models\JobInfo;
+use App\Http\Controllers\Controller;
 use App\Models\Question;
 use App\Models\Result;
-use App\Models\Score;
 use App\Services\JobMatcherService;
 use App\Traits\ArchetypeFinder;
 use App\Traits\CalculatesScores;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;

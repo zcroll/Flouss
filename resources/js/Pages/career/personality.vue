@@ -286,4 +286,3 @@ const toggleDialogHolands = () => {
 
 
 </style>
-add some small screen standers
