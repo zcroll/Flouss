@@ -47,12 +47,19 @@
                 <option value="satisfaction_desc">Highest Satisfaction</option>
               </select>
             </div>
+
+            <button
+              @click="resetFilters"
+              class="mt-3 w-full px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors duration-300"
+            >
+              Reset Filters
+            </button>
           </div>
         </div>
 
         <!-- Main content -->
         <div class="w-full lg:w-3/4">
-          <div class="space-y-3">
+          <div v-if="jobs.data.length > 0" class="space-y-3">
             <div v-for="job in jobs.data" :key="job.id" class="bg-white shadow-sm rounded-lg overflow-hidden transition-all duration-300 hover:shadow-md border border-gray-200">
               <div class="flex flex-row items-center">
                 <img :src="job.image" :alt="job.name" class="w-24 h-24 object-cover">
@@ -69,8 +76,17 @@
               </div>
             </div>
           </div>
+          <div v-else class="text-center py-8">
+            <p class="text-lg text-gray-600 mb-4">No jobs found matching your criteria.</p>
+            <button
+              @click="resetFilters"
+              class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors duration-300"
+            >
+              Reset Filters
+            </button>
+          </div>
 
-          <div class="mt-6">
+          <div v-if="jobs.data.length > 0" class="mt-6">
             <Pagination 
               :links="jobs.links" 
               :meta="{
@@ -101,8 +117,17 @@ const props = defineProps({
 });
 
 const searchQuery = ref(props.filters.q || '');
-const selectedEducationLevels = ref(props.filters.education || []);
+const selectedEducationLevels = ref(props.filters.education ? props.filters.education.map(level => educationLevelOptions.find(option => option.value === level)) : []);
 const selectedSort = ref(props.filters.sort || '');
+
+const educationLevelOptions = [
+  { value: "High School", label: "High School" },
+  { value: "Associate", label: "Associate" },
+  { value: "Bachelor's", label: "Bachelor's" },
+  { value: "Doctorate", label: "Doctorate" },
+  { value: "Master's", label: "Master's" },
+  { value: "No Education", label: "No Education" }
+];
 
 const debouncedSearch = debounce(() => {
   applyFilters();
@@ -113,28 +138,24 @@ watch(searchQuery, (value) => {
 });
 
 const applyFilters = () => {
-  router.get('/jobs', 
-    { 
-      q: searchQuery.value,
-      education: selectedEducationLevels.value.map(level => level.value),
-      sort: selectedSort.value,
-    }, 
-    { 
-      preserveState: true,
-      preserveScroll: true,
-      replace: true,
-    }
-  );
+  const params = {};
+  if (searchQuery.value) params.q = searchQuery.value;
+  if (selectedEducationLevels.value.length > 0) params.education = selectedEducationLevels.value.map(level => level.value);
+  if (selectedSort.value) params.sort = selectedSort.value;
+
+  router.get('/jobs', params, { 
+    preserveState: true,
+    preserveScroll: true,
+    replace: true,
+  });
 };
 
-const educationLevelOptions = [
-  { value: 2, label: 'High School' },
-  { value: 5, label: 'Associate' },
-  { value: 7, label: 'Bachelor' },
-  { value: 8, label: 'Master' },
-  { value: 9, label: 'Doctorate' },
-  { value: 3, label: 'Other' }
-];
+const resetFilters = () => {
+  searchQuery.value = '';
+  selectedEducationLevels.value = [];
+  selectedSort.value = '';
+  applyFilters();
+};
 
 onMounted(() => {
   searchQuery.value = props.filters.q || '';

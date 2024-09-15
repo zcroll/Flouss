@@ -55,7 +55,13 @@ class CareerController extends Controller
     public function howToBecome(string $job): Response
     {
         $occupation = JobInfo::where('slug', $job)->firstOrFail();
-        
+        $degrees = DB::table('job_degree_relations')
+            ->join('degrees', 'job_degree_relations.degree_id', '=', 'degrees.id')
+            ->join('degree_descriptions', 'degrees.id', '=', 'degree_descriptions.degree_id')
+            ->where('job_degree_relations.job_id', $occupation->id)
+            ->select('degrees.name', 'degree_descriptions.*')
+            ->get();
+        ds($degrees);
         $formations = DB::table('job_formations')
             ->join('formation', 'job_formations.formation_id', '=', 'formation.id')
             ->where('job_formations.job_id', $occupation->id)
@@ -65,6 +71,7 @@ class CareerController extends Controller
 
         return Inertia::render('career/HowToBecome', [
             'occupation' => $occupation,
+            'degrees' => $degrees,
             'formations' => $formations,
         ]);
     }

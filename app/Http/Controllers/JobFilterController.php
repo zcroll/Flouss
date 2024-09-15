@@ -10,30 +10,34 @@ class JobFilterController extends Controller
 {
     public function index(Request $request)
     {
-        $query = JobInfo::query()
-            ->when($request->input('q'), function ($query, $search) {
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('slug', 'like', "%{$search}%");
-            })
-            ->when($request->input('education'), function ($query, $levels) {
-                $query->where(function ($q) use ($levels) {
-                    foreach ($levels as $level) {
-                        $q->orWhereRaw('FIND_IN_SET(?, education_level)', [$level]);
-                    }
-                });
-            })
-            ->when($request->input('sort'), function ($query, $sort) {
-                switch ($sort) {
-                    case 'salary_desc':
-                        $query->orderBy('salary', 'desc');
-                        break;
-                    case 'satisfaction_desc':
-                        $query->orderBy('satisfaction', 'desc');
-                        break;
-                }
-            });
+        $query = JobInfo::query();
 
-        $jobs = $query->paginate(12)->appends($request->all());
+        $filters = [];
+
+        if ($search = $request->input('q')) {
+            $filters['q'] = $search;
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('slug', 'like', "%{$search}%");
+        }
+        // dd($filters);
+        if ($levels = $request->input('education')) {
+            $filters['education'] = $levels;
+            $query->whereIn('eucation_level', $levels);
+        }
+
+        if ($sort = $request->input('sort')) {
+            $filters['sort'] = $sort;
+            switch ($sort) {
+                case 'salary_desc':
+                    $query->orderBy('salary', 'desc');
+                    break;
+                case 'satisfaction_desc':
+                    $query->orderBy('satisfaction', 'desc');
+                    break;
+            }
+        }
+
+        $jobs = $query->paginate(12)->appends($filters);
 
         return Inertia::render('Jobs/Index', [
             'jobs' => [
@@ -50,7 +54,7 @@ class JobFilterController extends Controller
                     'total' => $jobs->total(),
                 ],
             ],
-            'filters' => $request->only(['q', 'education', 'sort'])
+            'filters' => $filters
         ]);
     }
 }
