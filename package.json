@@ -28,6 +28,7 @@
         "d3": "^7.9.0",
         "gsap": "^3.12.5",
         "lodash": "^4.17.21",
+        "motion": "^10.18.0",
         "node-ray": "^2.1.2",
         "svg-radar-chart": "^1.1.0",
         "virtual-dom-stringify": "^3.0.1",

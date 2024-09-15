@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useForm, Link } from '@inertiajs/vue3';
 import AppLayout from "@/Layouts/AppLayout.vue";
-import gsap from 'gsap';
+import { animate, spring } from 'motion';
 
 export default {
     components: { 
@@ -38,28 +38,21 @@ export default {
             form.answer = answer;
             
             // Animate current activity out (up)
-            gsap.to(activityContainer.value, {
-                opacity: 0,
-                y: -100,
-                duration: 0.5,
-                onComplete: () => {
-                    form.post(route('activity.submit-answer'), {
-                        preserveState: false,
-                        preserveScroll: true,
-                        onSuccess: () => {
-                            // Animate next activity in (from bottom)
-                            gsap.fromTo(nextActivityContainer.value, 
-                                { opacity: 0, y: 100 },
-                                { opacity: 1, y: 0, duration: 0.5 }
-                            );
-                        }
-                    });
-                }
+            animate(activityContainer.value, { opacity: 0, y: -100 }, { duration: 0.2, easing: spring() })
+                .finished.then(() => {
+                    // Animate next activity in (from bottom)
+                    animate(nextActivityContainer.value, { opacity: [0, 1], y: [100, 0] }, { duration: 0.2, easing: spring() });
+                });
+
+            // Post the answer without waiting for the animation to finish
+            form.post(route('activity.submit-answer'), {
+                preserveState: false,
+                preserveScroll: true,
             });
         };
 
         onMounted(() => {
-            gsap.from(activityContainer.value, { opacity: 0, y: 100, duration: 0.5 });
+            animate(activityContainer.value, { opacity: [0, 1], y: [100, 0] }, { duration: 0.2, easing: spring() });
         });
 
         return {
