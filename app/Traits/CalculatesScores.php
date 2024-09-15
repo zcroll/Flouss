@@ -2,50 +2,56 @@
 
 namespace App\Traits;
 
-use App\Models\Activity;
-
 trait CalculatesScores
 {
-
     private const MAX_SCORE = 5;
 
-    public function calculateScores(array $formattedResponses): array
+    public function calculateHollandScores(array $responses): array
     {
         $scores = [];
 
-        foreach ($formattedResponses as $category => $traits) {
-            foreach ($traits as $trait => $responses) {
-                $totalScore = 0;
-                $responseCount = count($responses);
-
-                if ($responseCount === 0) {
-                    continue; // Skip traits with no responses to avoid division by zero
-                }
-
-                foreach ($responses as $response) {
-                    $totalScore += $this->convertResponseToScore($response);
-                }
-
-                $averageScore = $totalScore / $responseCount;
-                $normalizedScore = $averageScore / self::MAX_SCORE;
-
-                $scores[$trait] = round($normalizedScore, 2);
+        foreach ($responses as $response) {
+            if ($response['type'] !== 'holland_codes') {
+                continue;
             }
 
+            $category = $response['category'];
+            $answer = $response['answer'];
+
+            if (!isset($scores[$category])) {
+                $scores[$category] = [];
+            }
+
+            $scores[$category][] = $this->convertResponseToScore($answer);
         }
 
-        return $scores;
+        return $this->calculateAverageScores($scores);
     }
 
     protected function convertResponseToScore($response): int
     {
         return match ($response) {
-            'Strongly Like' => 5,
-            'Like' => 4,
-            'Unsure' => 3,
-            'Dislike' => 2,
-            'Strongly Dislike' => 1,
+            'love' => 5,
+            'like' => 4,
+            'neutral' => 3,
+            'dislike' => 2,
+            'hate' => 1,
             default => 0,
         };
+    }
+
+    private function calculateAverageScores(array $scores): array
+    {
+        $averageScores = [];
+
+        foreach ($scores as $category => $responses) {
+            $totalScore = array_sum($responses);
+            $responseCount = count($responses);
+            $averageScore = $responseCount > 0 ? $totalScore / $responseCount : 0;
+            $normalizedScore = $averageScore / self::MAX_SCORE;
+            $averageScores[$category] = round($normalizedScore, 2);
+        }
+
+        return $averageScores;
     }
 }

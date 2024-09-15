@@ -77,9 +77,11 @@
                                 </h3>
                                 <p class="text-sm text-gray-600 mb-6">Explore our curated database of career opportunities tailored to your academic background and professional aspirations. Embrace the chance to explore new horizons and make informed decisions about your future. Our platform is designed to support you in finding the right career fit, empowering you to take confident steps towards achieving your professional dreams.</p>
                                 <div class="flex justify-end">
-                                    <PrimaryButton @click="goToJobSearch" class="bg-amber-400 hover:bg-yellow-500 text-white font-semibold py-2 px-4 rounded">
-                                        Explore Opportunities
-                                    </PrimaryButton>
+                                    <Link href="/jobs" class="inline-block">
+                                        <PrimaryButton class="bg-amber-400 hover:bg-yellow-500 text-white font-semibold py-2 px-4 rounded">
+                                            Explore Opportunities
+                                        </PrimaryButton>
+                                    </Link>
                                 </div>
                             </div>
 

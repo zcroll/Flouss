@@ -38,10 +38,7 @@ class Degree extends Model
         'education_levels' => 'array',
     ];
 
-    public function industries()
-    {
-        return $this->belongsToMany(Industry::class);
-    }
+ 
 }
 
 

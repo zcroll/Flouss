@@ -32,8 +32,8 @@ Route::middleware([
 
     Route::middleware('auth')->group(function () {
         Route::controller(ActivityProgressController::class)->group(function () {
-            Route::get('/activities', 'index')->name('activities');
-            Route::post('/activity/submit', 'submit')->name('activity.submit');
+            Route::get('/activities', 'index')->name('activity.index');
+            Route::post('/activities', 'submitAnswer')->name('activity.submit-answer');
         });
 
         Route::controller(CareerController::class)->group(function () {

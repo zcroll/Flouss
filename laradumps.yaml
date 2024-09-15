@@ -11,8 +11,8 @@ observers:
   auto_invoke_app: true
   enabled_in_testing: false
   dump: false
-  original_dump: true
-  queries: true
+  original_dump: false
+  queries: false
   slow_queries: false
   mail: false
   logs: true
