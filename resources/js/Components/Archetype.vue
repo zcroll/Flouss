@@ -14,7 +14,7 @@
                 comingSoon ? 'opacity-50' : ''
             ]"
             :style="{
-                backgroundImage: 'url(https://res.cloudinary.com/demo/image/upload/v1689803100/ai/hiker.jpg)',
+                backgroundImage: 'url(https://res.cloudinary.com/hnpb47ejt/image/upload/c_fill,f_auto,h_400,q_auto,w_640/v1558730393/e2cmhbjek730smx9odcv.jpg)',
                 marginBottom: '-1px'
             }"
         >

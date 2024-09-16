@@ -7,6 +7,7 @@ use App\Http\Controllers\Filters\JobFilterController;
 use App\Http\Controllers\Filters\FormationFilterController;
 use App\Http\Controllers\Assessment\ActivityProgressController;
 use App\Http\Controllers\Assessment\JobMatcherController;
+use App\Http\Controllers\Assessment\JobFieldController;
 
 use App\Http\Controllers\dashboard\DashboardController;
 use Illuminate\Foundation\Application;
@@ -50,6 +51,9 @@ Route::middleware([
         });
 
         Route::get('/find-closest-job', [JobMatcherController::class, 'matchJobs']);
+
+        // Add the new route for JobFieldController
+        Route::get('/job-fields', [JobFieldController::class, 'index'])->name('job.fields');
     });
 });
 

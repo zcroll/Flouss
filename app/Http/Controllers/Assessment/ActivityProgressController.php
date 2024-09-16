@@ -18,12 +18,19 @@ class ActivityProgressController extends Controller
 {
     use CalculatesScores, ArchetypeFinder;
 
-
     public function index()
     {
         $activities = Session::get('activities');
         $currentIndex = Session::get('current_index', 0);
         $responses = Session::get('responses', []);
+
+        // Check if the user already has a result
+        $userId = auth()->id();
+        $existingResult = Result::where('user_id', $userId)->first();
+
+        if ($existingResult) {
+            return to_route('dashboard');
+        }
 
         if (!$activities) {
             $activities = $this->initializeActivities();
