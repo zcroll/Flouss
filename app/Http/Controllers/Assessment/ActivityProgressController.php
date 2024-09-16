@@ -18,7 +18,6 @@ class ActivityProgressController extends Controller
 {
     use CalculatesScores, ArchetypeFinder;
 
-    private const HOLLAND_CODE_CATEGORIES = ['Realistic', 'Investigative', 'Artistic', 'Social', 'Enterprising', 'Conventional'];
 
     public function index()
     {
@@ -52,11 +51,21 @@ class ActivityProgressController extends Controller
         $currentIndex = Session::get('current_index', 0);
 
         $currentActivity = $activities[$currentIndex];
-        $responses[$activityId] = [
-            'answer' => $answer,
-            'category' => $currentActivity['category'],
-            'type' => $currentActivity['type'],
-        ];
+        
+        if ($answer === 'skipped') {
+            $responses[$activityId] = [
+                'answer' => 'skipped',
+                'category' => $currentActivity['category'],
+                'type' => $currentActivity['type'],
+            ];
+        } else {
+            $responses[$activityId] = [
+                'answer' => $answer,
+                'category' => $currentActivity['category'],
+                'type' => $currentActivity['type'],
+            ];
+        }
+        
         Session::put('responses', $responses);
 
         $nextIndex = $currentIndex + 1;
@@ -69,14 +78,39 @@ class ActivityProgressController extends Controller
         return redirect()->route('activity.index');
     }
 
+    public function previousActivity()
+    {
+        $currentIndex = Session::get('current_index', 0);
+        
+        if ($currentIndex > 0) {
+            $currentIndex--;
+            Session::put('current_index', $currentIndex);
+            
+            $responses = Session::get('responses', []);
+            array_pop($responses);
+            Session::put('responses', $responses);
+        }
+
+        $activities = Session::get('activities');
+
+        return Inertia::render('ActivityProgress', [
+            'activity' => $activities[$currentIndex],
+            'totalQuestions' => count($activities),
+            'currentIndex' => $currentIndex,
+        ]);
+    }
+
     private function processResults($responses)
     {
-        $hollandScores = $this->calculateHollandScores($responses);
+        $validResponses = array_filter($responses, function($response) {
+            return $response['answer'] !== 'skipped';
+        });
+
+        $hollandScores = $this->calculateHollandScores($validResponses);
         $archetype = $this->getArchetypeAndTopScores($hollandScores);
         $closestJobs = $this->matchJobs($hollandScores);
         $result = $this->saveResult($closestJobs, $hollandScores, $archetype);
 
-        // Format closestJobs to match the expected structure
         $formattedClosestJobs = array_map(function ($job) {
             return [
                 'title' => $job['job_title'] ?? 'Unknown Job',
@@ -84,7 +118,6 @@ class ActivityProgressController extends Controller
             ];
         }, $closestJobs);
 
-        // Clear the session data
         Session::forget(['responses', 'current_index', 'activities']);
 
         return to_route('results')->with('closestJobs', $formattedClosestJobs);
@@ -114,7 +147,7 @@ class ActivityProgressController extends Controller
     {
         try {
             return Result::create([
-                'user_id' => auth()->user()->id,
+                'user_id' => auth()->id(),
                 'scores' => json_encode($scores, JSON_THROW_ON_ERROR),
                 'jobs' => json_encode($closestJobs, JSON_THROW_ON_ERROR),
                 'highestTwoScores' => $archetype['topTraits'],
@@ -128,16 +161,12 @@ class ActivityProgressController extends Controller
 
     private function initializeActivities(): array
     {
-        return $this->fetchActivitiesByType('holland_codes', self::HOLLAND_CODE_CATEGORIES);
+        return $this->fetchActivitiesByType('holland_codes');
     }
 
-    private function fetchActivitiesByType(string $type, array $categories): array
+    private function fetchActivitiesByType(string $type): array
     {
-        $activities = Question::whereIn('trait_category', $categories)
-            ->where('type', $type)
-            ->orderBy(DB::raw("FIELD(trait_category, '" . implode("', '", $categories) . "')"))
-            ->limit(12)
-            ->get();
+        $activities = Question::where('type', $type)->get();
 
         return $activities->map(function ($activity) {
             return [

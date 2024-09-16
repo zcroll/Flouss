@@ -96,7 +96,7 @@
 
                                 <p class="text-base text-gray-700">
                                     Holland Codes are a set of traits that measure your interest in broadly defined groups of activities. Because
-                                    they’re broad, and because they’re specifically designed for career selection, Holland Codes are a good
+                                    they're broad, and because they're specifically designed for career selection, Holland Codes are a good
                                     high-level indicator for the kinds of careers you would enjoy. For more information on Holland Codes, visit the
                                     related <a href="https://www.careerexplorer.com/faqs/assessment-science/what-are-holland-codes/" class="font-bold text-gray-900 underline">FAQs page</a>.
                                 </p>
@@ -211,6 +211,23 @@
                     </li>
                 </ul>
 
+                <!-- Add navigation buttons -->
+                <div class="flex justify-between mt-6">
+                    <button 
+                        @click="goToPrevious" 
+                        class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md"
+                        :disabled="currentIndex === 0"
+                    >
+                        Previous
+                    </button>
+                    <button 
+                        @click="goToNext" 
+                        class="px-4 py-2 bg-blue-500 text-white rounded-md"
+                    >
+                        Next
+                    </button>
+                </div>
+
             </div>
         </StickySidebar>
     </AppLayout>
@@ -220,6 +237,7 @@
 import { ref, computed } from 'vue';
 import StickySidebar from "@/Pages/lib/StickySidebar.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
+import { useForm } from '@inertiajs/vue3';
 
 // Define props using defineProps
 const props = defineProps({
@@ -233,6 +251,10 @@ const props = defineProps({
     },
     personalityDetails: {
         type: Array,
+        required: true,
+    },
+    activity: {
+        type: Object,
         required: true,
     },
 });
@@ -256,6 +278,19 @@ const toggleDialogBigFive = () => {
 };
 const toggleDialogHolands = () => {
     isDialogVisibleHolands.value = !isDialogVisibleHolands.value;
+};
+
+const form = useForm({
+    activityId: props.activity.id,
+    answer: null,
+});
+
+const goToPrevious = () => {
+    form.get(route('activity.previous'));
+};
+
+const goToNext = () => {
+    form.post(route('activity.submit'));
 };
 </script>
 <style>

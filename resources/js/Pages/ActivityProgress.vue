@@ -51,6 +51,27 @@ export default {
             });
         };
 
+        const goToPrevious = () => {
+            form.get(route('activity.previous'));
+        };
+
+        const skipQuestion = () => {
+            form.answer = 'skipped';
+            
+            // Animate current activity out (up)
+            animate(activityContainer.value, { opacity: 0, y: -100 }, { duration: 0.2, easing: spring() })
+                .finished.then(() => {
+                    // Animate next activity in (from bottom)
+                    animate(nextActivityContainer.value, { opacity: [0, 1], y: [100, 0] }, { duration: 0.2, easing: spring() });
+                });
+
+            // Post the skipped answer
+            form.post(route('activity.submit-answer'), {
+                preserveState: false,
+                preserveScroll: true,
+            });
+        };
+
         onMounted(() => {
             animate(activityContainer.value, { opacity: [0, 1], y: [100, 0] }, { duration: 0.2, easing: spring() });
         });
@@ -60,8 +81,10 @@ export default {
             progress,
             options,
             submitAnswer,
+            goToPrevious,
             activityContainer,
             nextActivityContainer,
+            skipQuestion,
         };
     }
 };
@@ -71,11 +94,15 @@ export default {
     <app-layout title="Activity Progress">
         <div class="max-w-3xl mx-auto mt-10 px-4 sm:px-0">
             <div class="flex justify-between items-center mb-6">
-                <Link v-if="canGoBack" :href="route('activity.previous')" class="text-white hover:text-gray-300">
+                <button 
+                    v-if="currentIndex > 0"
+                    @click="goToPrevious" 
+                    class="text-white hover:text-gray-300 focus:outline-none"
+                >
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                     </svg>
-                </Link>
+                </button>
                 <h2 class="text-2xl font-bold text-white">Would you like to...</h2>
             </div>
             
@@ -95,6 +122,17 @@ export default {
                     >
                         <span class="mr-2 w-6 h-6 flex items-center justify-center border border-white rounded-md">{{ option.key }}</span>
                         {{ option.label }}
+                    </button>
+                </div>
+                
+                <!-- Add Skip button -->
+                <div class="mt-4">
+                    <button 
+                        @click="skipQuestion"
+                        class="w-full py-2 px-4 bg-gray-600 text-white rounded-md hover:bg-gray-500 transition-all duration-200"
+                        :disabled="form.processing"
+                    >
+                        Skip this question
                     </button>
                 </div>
             </div>

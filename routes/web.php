@@ -34,6 +34,7 @@ Route::middleware([
         Route::controller(ActivityProgressController::class)->group(function () {
             Route::get('/activities', 'index')->name('activity.index');
             Route::post('/activities', 'submitAnswer')->name('activity.submit-answer');
+            Route::get('/activities/previous', 'previousActivity')->name('activity.previous');
         });
 
         Route::controller(CareerController::class)->group(function () {
