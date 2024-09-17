@@ -1,5 +1,6 @@
 <template>
     <AppLayout :headTitle="occupation.name">
+<<<<<<< HEAD
         <StickySidebar 
             :slug="occupation.slug" 
             :title="occupation.name" 
@@ -10,6 +11,10 @@
             :satisfaction="occupation.satisfaction || 'N/A'"
         >            
             <!-- <div class="w-full lg:w-1/4 space-y-12 px-6 lg:px-16 py-12 bg-white rounded-3xl shadow-2xl"> -->
+=======
+        <StickySidebar :slug="occupation.slug" :title="occupation.name" :image="occupation.image">
+            <div class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white rounded-3xl shadow-2xl">
+>>>>>>> c58fbaae5ec37748a03393f243f6400ca33f564a
 
                 <p class="custom-heading">What personality traits do doctors have?</p>
 
@@ -220,8 +225,11 @@
                 </ul>
 
                 <!-- Add navigation buttons -->
+<<<<<<< HEAD
               
                 <!-- </div> -->
+=======
+>>>>>>> c58fbaae5ec37748a03393f243f6400ca33f564a
 
         </StickySidebar>
     </AppLayout>
@@ -271,6 +279,7 @@ const toggleDialogHolands = () => {
     isDialogVisibleHolands.value = !isDialogVisibleHolands.value;
 };
 
+<<<<<<< HEAD
 // const form = useForm({
 //     activityId: props.activity.id,
 //     answer: null,
@@ -279,6 +288,8 @@ const toggleDialogHolands = () => {
 
 
 
+=======
+>>>>>>> c58fbaae5ec37748a03393f243f6400ca33f564a
 </script>
 <style>
 .custom-heading {

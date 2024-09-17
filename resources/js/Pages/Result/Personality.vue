@@ -35,8 +35,8 @@
           </p>
 
           <div class="mt-16">
+            
             <!-- Replace this with your actual chart component -->
-            <img src="path_to_your_chart_image" alt="Personality Traits Chart" class="max-w-full h-auto mx-auto">
           </div>
 
           <h2 id="strengths-and-growth" class="mt-16 inline-flex items-center rounded-full px-4 py-1 text-blue-600 ring-1 ring-inset ring-blue-600">
@@ -109,6 +109,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import { radar } from 'svg-radar-chart'
 import stringify from 'virtual-dom-stringify'
 import { smoothing } from 'svg-radar-chart/smoothing.js'
+import LineChart from "./LineChart.vue";
 
 export default {
   props: {

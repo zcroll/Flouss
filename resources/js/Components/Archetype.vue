@@ -1,11 +1,7 @@
 <template>
     <div class="w-full relative" :class="{ 'cursor-not-allowed': comingSoon }">
         <!-- Coming Soon Overlay -->
-        <div v-if="comingSoon" class="absolute inset-0 z-10 flex items-center justify-center">
-            <div class="text-red-600 font-bold text-4xl transform -rotate-12 border-4 border-red-600 p-4 bg-white bg-opacity-70">
-                COMING SOON
-            </div>
-        </div>
+
 
         <div
             :class="[
@@ -18,6 +14,11 @@
                 marginBottom: '-1px'
             }"
         >
+        <div v-if="comingSoon" class="absolute inset-0 z-10 flex items-center justify-center">
+            <div class="text-red-600 font-bold text-4xl  border-4 border-red-600 p-4 bg-white bg-opacity-70">
+                COMING SOON
+            </div>
+        </div>
             <!-- Title -->
             <h1 class="text-2xl sm:text-3xl md:text-4xl font-light my-2 sm:my-3 md:my-4 text-shadow-md">
                 {{ comingSoon ? 'Your Broad Interests' : `You are a ${archetype.name}` }}
@@ -68,7 +69,7 @@
                             </div>
                             <PrimaryButton class="block text-center mt-4 sm:mt-5">
                                 <Link :href="comingSoon ? '#' : `results/${userId}/personality`" class="block w-full">
-                                    {{ comingSoon ? 'Coming Soon' : 'read more' }}
+                                    {{ 'Coming Soon'  }}
                                 </Link>
                             </PrimaryButton>
                         </div>
