@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class DegreeSkill extends Model
+class DegreeJob extends Model
 {
-    protected $table = 'degree_skills_v2';
+    protected $table = 'degree_jobs';
 
     protected $fillable = [
         'degree_id',
-        'skill_title',
-        'skill_description',
+        'job_title',
+        'job_description',
     ];
 
     public function degree(): BelongsTo

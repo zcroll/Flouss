@@ -68,9 +68,11 @@
                   <p class="text-sm text-gray-600 mb-2">{{ job.slug }}</p>
                   <div class="flex items-center justify-between">
                     <span class="text-sm text-indigo-600 font-medium">Salary: ${{ job.salary }}</span>
-                    <button class="px-3 py-1.5 text-xs bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors duration-300">
+                    <Link :href="`/career/${job.slug}`" class="px-3 py-1.5 text-xs bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors duration-300">
+                     
+                     
                       Learn More
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -105,7 +107,7 @@
 
 <script setup>
 import { ref, watch, onMounted } from 'vue';
-import { router } from '@inertiajs/vue3';
+import { router , Link } from '@inertiajs/vue3';
 import AppLayout from "@/Layouts/AppLayout.vue";
 import VueMultiselect from 'vue-multiselect';
 import debounce from 'lodash/debounce';

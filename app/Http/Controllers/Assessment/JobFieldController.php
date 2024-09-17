@@ -9,22 +9,22 @@ use Inertia\Inertia;
 class JobFieldController extends Controller
 {
     private const FIELD_CODES = [
-        'Technology' => ['R', 'I', 'C'],
-        'Healthcare' => ['S', 'I', 'R'],
-        'Education' => ['S', 'A', 'I'],
-        'Finance' => ['C', 'E', 'I'],
-        'Engineering' => ['R', 'I', 'C'],
-        'Arts & Entertainment' => ['A', 'S', 'E'],
-        'Business & Management' => ['E', 'C', 'S'],
-        'Science & Research' => ['I', 'R', 'C'],
-        'Law & Public Policy' => ['E', 'S', 'I'],
-        'Trades & Construction' => ['R', 'E', 'C'],
-        'Healthcare Administration' => ['C', 'E', 'S'],
-        'Educational Technology' => ['S', 'R', 'I'],
-        'Financial Technology (FinTech)' => ['C', 'R', 'E'],
-        'Environmental Science' => ['I', 'R', 'S'],
-        'User Experience (UX) Design' => ['A', 'I', 'S'],
-        'Entrepreneurship' => ['E', 'I', 'R'],
+        'Technology' => ['R', 'I'],
+        'Healthcare' => ['S', 'I'],
+        'Education' => ['S', 'A'],
+        'Finance' => ['C', 'E'],
+        'Engineering' => ['R', 'I'],
+        'Arts & Entertainment' => ['A', 'S'],
+        'Business & Management' => ['E', 'C'],
+        'Science & Research' => ['I', 'R'],
+        'Law & Public Policy' => ['E', 'S'],
+        'Trades & Construction' => ['R', 'E'],
+        'Healthcare Administration' => ['C', 'E'],
+        'Educational Technology' => ['S', 'R'],
+        'Financial Technology (FinTech)' => ['C', 'R'],
+        'Environmental Science' => ['I', 'R'],
+        'User Experience (UX) Design' => ['A', 'I'],
+        'Entrepreneurship' => ['E', 'I'],
     ];
 
     private const TRAIT_INITIALS = [
@@ -90,12 +90,12 @@ class JobFieldController extends Controller
         }
 
         arsort($jobScoresWithInitials);
-        $topThreeCodes = array_slice(array_keys($jobScoresWithInitials), 0, 3);
+        $topTwoCodes = array_slice(array_keys($jobScoresWithInitials), 0, 2);
 
         $bestMatch = ['field' => 'Other', 'score' => 0];
 
         foreach (self::FIELD_CODES as $field => $codes) {
-            $matchScore = $this->calculateMatchScore($topThreeCodes, $codes);
+            $matchScore = $this->calculateMatchScore($topTwoCodes, $codes);
             if ($matchScore > $bestMatch['score']) {
                 $bestMatch = ['field' => $field, 'score' => $matchScore];
             }
@@ -110,7 +110,7 @@ class JobFieldController extends Controller
         foreach ($jobCodes as $index => $code) {
             if (in_array($code, $fieldCodes)) {
                 // Give more weight to codes that appear earlier in the list
-                $score += (3 - $index) * (3 - array_search($code, $fieldCodes));
+                $score += (2 - $index) * (2 - array_search($code, $fieldCodes));
             }
         }
         return $score;

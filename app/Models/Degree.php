@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Degree extends Model
 {
@@ -25,7 +27,7 @@ class Degree extends Model
         'is_external',
         'is_premium',
         'specializations',
-        'category', // Add this new field
+        'category',
     ];
 
     protected $casts = [
@@ -38,7 +40,20 @@ class Degree extends Model
         'education_levels' => 'array',
     ];
 
- 
+    public function degreeDescription(): HasOne
+    {
+        return $this->hasOne(DegreeDescription::class);
+    }
+
+    public function degreeSkills(): HasMany
+    {
+        return $this->hasMany(DegreeSkill::class);
+    }
+
+    public function degreeJobs(): HasMany
+    {
+        return $this->hasMany(DegreeJob::class);
+    }
 }
 
 

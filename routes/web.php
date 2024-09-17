@@ -9,6 +9,7 @@ use App\Http\Controllers\Assessment\ActivityProgressController;
 use App\Http\Controllers\Assessment\JobMatcherController;
 use App\Http\Controllers\Assessment\JobFieldController;
 
+use App\Http\Controllers\Degree\DegreeController;
 use App\Http\Controllers\dashboard\DashboardController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -55,6 +56,16 @@ Route::middleware([
         // Add the new route for JobFieldController
         Route::get('/job-fields', [JobFieldController::class, 'index'])->name('job.fields');
     });
+});
+
+
+Route::get('/degree/{degreeSlug}', [DegreeController::class, 'index'])->name('degree.index');
+
+Route::prefix('degree')->group(function () {
+    Route::get('{slug}', [DegreeController::class, 'index'])->name('degree.index');
+    Route::get('{slug}/skills', [DegreeController::class, 'skills'])->name('degree.skills');
+    Route::get('{slug}/jobs', [DegreeController::class, 'jobs'])->name('degree.jobs');
+    Route::get('{slug}/how-to-obtain', [DegreeController::class, 'howToObtain'])->name('degree.howToObtain');
 });
 
 Route::get('/formations', [FormationFilterController::class, 'index'])->name('formations.index');

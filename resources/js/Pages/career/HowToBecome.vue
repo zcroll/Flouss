@@ -6,8 +6,16 @@
       </h2>
     </template>
 
-    <sticky-sidebar :title="occupation.name" :image="occupation.image">
-      <div class="py-12">
+    <StickySidebar 
+            :slug="occupation.slug" 
+            :title="occupation.name" 
+            :image="occupation.image"
+            type="career"
+            :salary="occupation.salary"
+            :personality="occupation.personality || 'N/A'"
+            :satisfaction="occupation.satisfaction || 'N/A'"
+        >   
+           <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
           <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
             <h3 class="text-3xl font-bold mb-6 text-center text-indigo-600">Your Recommended Educational Path</h3>
@@ -25,7 +33,7 @@
           </div>
 </div>
           
-    </sticky-sidebar>
+    </StickySidebar>
   </app-layout>
 </template>
 

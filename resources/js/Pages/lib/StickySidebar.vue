@@ -8,11 +8,9 @@
         <div class="w-full lg:w-1/3 mb-8 lg:mb-0 lg:pl-8">
             <div class="sticky top-4 text-white shadow-2xl rounded-3xl p-6 overflow-hidden"
                  :class="[
-                    $page.url === baseUrl ? 'bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500' :
-                    $page.url === `${baseUrl}/workEnvironments` ? 'bg-gradient-to-br from-green-500 via-teal-500 to-blue-500' :
-                    $page.url === `${baseUrl}/personality` ? 'bg-gradient-to-br from-red-500 via-orange-500 to-yellow-500' :
-                    $page.url === `${baseUrl}/how-to-become` ? 'bg-gradient-to-br from-blue-500 via-cyan-500 to-teal-500' :
-                    'bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500'
+                    type === 'career' ? 'bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500' :
+                    type === 'degree' ? 'bg-gradient-to-br from-blue-500 via-cyan-500 to-teal-500' :
+                    'bg-gradient-to-br from-green-500 via-teal-500 to-blue-500'
                  ]">
                 <div class="relative z-10">
                     <!-- Main Content for Large Screens -->
@@ -28,16 +26,16 @@
 
                         <div class="grid grid-cols-3 gap-4 mb-6">
                             <div class="bg-white bg-opacity-20 rounded-lg text-center p-4 backdrop-filter backdrop-blur-lg">
-                                <h4 class="text-lg font-bold">Salary</h4>
-                                <p class="text-sm">N/A</p>
+                                <h4 class="text-lg font-bold">{{ getFirstBoxTitle }}</h4>
+                                <p class="text-sm">{{ getFirstBoxContent }}</p>
                             </div>
                             <div class="bg-white bg-opacity-20 rounded-lg text-center p-4 backdrop-filter backdrop-blur-lg">
-                                <h4 class="text-lg font-bold">Personality</h4>
-                                <p class="text-sm">N/A</p>
+                                <h4 class="text-lg font-bold">{{ getSecondBoxTitle }}</h4>
+                                <p class="text-sm">{{ getSecondBoxContent }}</p>
                             </div>
                             <div class="bg-white bg-opacity-20 rounded-lg text-center p-4 backdrop-filter backdrop-blur-lg">
                                 <h4 class="text-lg font-bold">Satisfaction</h4>
-                                <p class="text-sm">Very Low</p>
+                                <p class="text-sm">{{ satisfaction }}</p>
                             </div>
                         </div>
                         <ul class="space-y-4">
@@ -63,7 +61,7 @@
                         </div>
                         <h3 class="text-xl font-bold mb-6">{{ title }}</h3>
                         <div class="grid grid-cols-3 gap-4 mb-6 w-full">
-                      
+                            <!-- Add small screen content here if needed -->
                         </div>
                         <div class="flex flex-wrap justify-center gap-2">
                             <Link
@@ -92,49 +90,86 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import { Link } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
 
-export default {
-    components: {
-        Link
+const props = defineProps({
+    type: {
+        type: String,
+        default: 'career',
+        validator: (value) => ['career', 'degree', 'job'].includes(value)
     },
-    props: {
-        sidebarTitle: String,
-        sidebarDescription: String,
-        title: String,
-        image: String,
-    },
-    setup(props) {
-        const isSmallScreen = ref(false);
+    slug: String,
+    title: String,
+    image: String,
+    salary: String,
+    personality: String,
+    satisfaction: String,
+    degreeLevel: String,
+    duration: String,
+    jobType: String,
+    workplaceType: String,
+});
 
-        const updateScreenSize = () => {
-            isSmallScreen.value = window.innerWidth < 1024;
-        };
+const isSmallScreen = ref(false);
 
-        // Call once to set initial value
-        updateScreenSize();
+const updateScreenSize = () => {
+    isSmallScreen.value = window.innerWidth < 1024;
+};
 
-        // Add event listener for resize
-        window.addEventListener('resize', updateScreenSize);
+// Call once to set initial value
+updateScreenSize();
 
-        const baseUrl = computed(() => `/career/${props.title.split(' ').join('-')}`);
+// Add event listener for resize
+window.addEventListener('resize', updateScreenSize);
 
-        const links = [
+const baseUrl = computed(() => `/${props.type}/${props.slug}`);
+
+const links = computed(() => {
+    if (props.type === 'career') {
+        return [
             { text: 'Overview', url: baseUrl.value },
             { text: 'Work Environments', url: `${baseUrl.value}/workEnvironments` },
             { text: 'Personality', url: `${baseUrl.value}/personality` },
-            { text: 'How to Become', url: `${baseUrl.value}/how-to-become` },
         ];
-
-        return {
-            isSmallScreen,
-            baseUrl,
-            links
-        };
+    } else if (props.type === 'degree') {
+        return [
+            { text: 'Overview', url: baseUrl.value },
+            { text: 'How to Obtain', url: `${baseUrl.value}/how-to-obtain` },
+        ];
+    } else {
+        return [
+            { text: 'Overview', url: baseUrl.value },
+            { text: 'Requirements', url: `${baseUrl.value}/requirements` },
+            { text: 'Similar Jobs', url: `${baseUrl.value}/similar-jobs` },
+        ];
     }
-};
+});
+
+const getFirstBoxTitle = computed(() => {
+    if (props.type === 'career') return 'Salary';
+    if (props.type === 'degree') return 'Degree Level';
+    return 'Job Type';
+});
+
+const getFirstBoxContent = computed(() => {
+    if (props.type === 'career') return props.salary;
+    if (props.type === 'degree') return props.degreeLevel;
+    return props.jobType;
+});
+
+const getSecondBoxTitle = computed(() => {
+    if (props.type === 'career') return 'Personality';
+    if (props.type === 'degree') return 'Duration';
+    return 'Workplace';
+});
+
+const getSecondBoxContent = computed(() => {
+    if (props.type === 'career') return props.personality;
+    if (props.type === 'degree') return props.duration;
+    return props.workplaceType;
+});
 </script>
 
 <style scoped>
