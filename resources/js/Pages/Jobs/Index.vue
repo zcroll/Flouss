@@ -197,9 +197,7 @@ watch([selectedEducationLevels, selectedSort], () => {
 .blur-sm {
   filter: blur(4px);
 }
-.blur-sm:hover {
-  filter: blur(0);
-}
+
 .trait-type{
     box-sizing: border-box;
     background-color: transparent;

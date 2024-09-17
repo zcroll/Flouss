@@ -66,7 +66,7 @@
                       </template>
                     </div>
                     <div class="flex flex-col sm:flex-row items-center justify-between mt-2">
-                      <p class="text-sm mb-2 sm:mb-0"><span class="pr-3 text-sm text-sky-800 font-medium blur-sm hover:blur-none transition-all duration-300">{{ formatSalary(degree.salary) }}</span>MAD</p>
+                      <p class="text-sm mb-2 sm:mb-0"><span class="pr-3 text-sm text-sky-800 font-medium blur-sm transition-all duration-300">hidden</span>MAD</p>
                       <button class="px-4 py-2 text-sm bg-emerald-800 font-black text-white rounded-md hover:bg-emerald-900 transition-colors duration-300">
                         Learn More
                       </button>
@@ -157,9 +157,6 @@ onMounted(() => {
 <style scoped>
 .blur-sm {
   filter: blur(4px);
-}
-.blur-sm:hover {
-  filter: blur(0);
 }
 .trait-type{
     box-sizing: border-box;
