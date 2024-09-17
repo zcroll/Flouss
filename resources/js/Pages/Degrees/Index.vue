@@ -47,21 +47,6 @@
         <div class="w-full lg:w-2/4">
           <div v-if="degrees.data.length > 0" class="space-y-4">
             <div v-for="degree in degrees.data" :key="degree.id" class="bg-white shadow-sm rounded-lg overflow-hidden transition-all duration-300 hover:shadow-md border border-gray-200">
-<<<<<<< HEAD
-              <div class="flex flex-row items-center">
-                <img :src="degree.image" :alt="degree.name" class="w-24 h-24 object-cover">
-                <div class="p-3 flex-grow">
-                  <h2 class="text-lg font-semibold text-gray-800 mb-1">{{ degree.name }}</h2>
-                  <p class="text-sm text-gray-600 mb-2">{{ degree.slug }}</p>
-                  <div class="flex items-center justify-between">
-                    <span class="text-sm text-indigo-600 font-medium">Salary: ${{ degree.salary }}</span>
-                    <Link 
-                      :href="route('degree.index', degree.slug)" 
-                      class="px-3 py-1.5 text-xs bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors duration-300"
-                    >
-                      Learn More
-                    </Link>
-=======
               <Link :href="`/degree/${degree.slug}`" class="block">
                 <div class="flex flex-col sm:flex-row items-center p-4">
                   <img :src="degree.image" :alt="degree.name" class="w-24 h-24 object-cover rounded-full mb-4 sm:mb-0 sm:mr-4">
@@ -86,7 +71,6 @@
                         Learn More
                       </button>
                     </div>
->>>>>>> c58fbaae5ec37748a03393f243f6400ca33f564a
                   </div>
                 </div>
               </Link>
@@ -125,7 +109,6 @@ import { router, Link } from '@inertiajs/vue3';
 import AppLayout from "@/Layouts/AppLayout.vue";
 import debounce from 'lodash/debounce';
 import Pagination from '@/Components/Pagination.vue';
-import { Link } from '@inertiajs/vue3';
 
 const props = defineProps({
   degrees: Object,

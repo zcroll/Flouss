@@ -81,15 +81,10 @@
                                         </template>
                                     </div>
                   <div class="flex items-center justify-between">
-<<<<<<< HEAD
                     <span class="text-sm text-indigo-600 font-medium">Salary: ${{ job.salary }}</span>
                     <Link :href="`/career/${job.slug}`" class="px-3 py-1.5 text-xs bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors duration-300">
                      
                      
-=======
-                    <p class="text-sm"><span class="pr-3 text-sm text-sky-800 font-medium blur-sm">hidden</span>MAD</p>
-                    <button class="px-3 py-1.5 text-sm bg-emerald-800 font-black text-white rounded-md hover:bg-emerald-900 transition-colors duration-300">
->>>>>>> c58fbaae5ec37748a03393f243f6400ca33f564a
                       Learn More
                     </Link>
                   </div>
@@ -127,11 +122,7 @@
 
 <script setup>
 import { ref, watch, onMounted } from 'vue';
-<<<<<<< HEAD
 import { router , Link } from '@inertiajs/vue3';
-=======
-import { router,Link } from '@inertiajs/vue3';
->>>>>>> c58fbaae5ec37748a03393f243f6400ca33f564a
 import AppLayout from "@/Layouts/AppLayout.vue";
 import VueMultiselect from 'vue-multiselect';
 import debounce from 'lodash/debounce';
