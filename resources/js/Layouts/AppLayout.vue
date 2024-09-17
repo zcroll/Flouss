@@ -68,6 +68,12 @@ const socialLinks = [
                                     <NavLink :href="route('results')" :active="route().current('results')">
                                         Results
                                     </NavLink>
+                                    <NavLink :href="route('jobs')" :active="route().current('jobs')">
+                                        Jobs
+                                    </NavLink>
+                                    <NavLink :href="route('degrees')" :active="route().current('degrees')">
+                                        Degrees
+                                    </NavLink>
                                     <NavLink v-if="isOver10Days" :href="route('activities')" :active="route().current('activities')">
                                         Career Test
                                     </NavLink>
@@ -194,6 +200,12 @@ const socialLinks = [
                                                     </ResponsiveNavLink>
                                                     <ResponsiveNavLink :href="route('results')" :active="route().current('results')">
                                                         Results
+                                                    </ResponsiveNavLink>
+                                                    <ResponsiveNavLink :href="route('jobs')" :active="route().current('jobs')">
+                                                        Jobs
+                                                    </ResponsiveNavLink>
+                                                    <ResponsiveNavLink :href="route('degrees')" :active="route().current('degrees')">
+                                                        Degrees
                                                     </ResponsiveNavLink>
                                                     <ResponsiveNavLink v-if="isOver10Days" :href="route('activities')" :active="route().current('activities')">
                                                         Career Test

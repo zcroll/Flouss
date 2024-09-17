@@ -1,7 +1,7 @@
 <template>
     <AppLayout :headTitle="occupation.name">
         <StickySidebar :slug="occupation.slug" :title="occupation.name" :image="occupation.image">
-            <div class="w-full lg:w-1/4 space-y-12 px-6 lg:px-16 py-12 bg-white rounded-3xl shadow-2xl">
+            <div class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white rounded-3xl shadow-2xl">
 
                 <p class="custom-heading">What personality traits do doctors have?</p>
 
@@ -212,21 +212,6 @@
                 </ul>
 
                 <!-- Add navigation buttons -->
-                <div class="flex justify-between mt-6">
-                    <button 
-                        @click="goToPrevious" 
-                        class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md"
-                        :disabled="currentIndex === 0"
-                    >
-                        Previous
-                    </button>
-                    <button 
-                        @click="goToNext" 
-                        class="px-4 py-2 bg-blue-500 text-white rounded-md"
-                    >
-                        Next
-                    </button>
-                </div>
 
             </div>
         </StickySidebar>
@@ -280,18 +265,6 @@ const toggleDialogHolands = () => {
     isDialogVisibleHolands.value = !isDialogVisibleHolands.value;
 };
 
-const form = useForm({
-    activityId: props.activity.id,
-    answer: null,
-});
-
-const goToPrevious = () => {
-    form.get(route('activity.previous'));
-};
-
-const goToNext = () => {
-    form.post(route('activity.submit'));
-};
 </script>
 <style>
 .custom-heading {

@@ -3,18 +3,29 @@ import json
 import mysql.connector
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
+import os
+from dotenv import load_dotenv
 
 # Get the JSON encoded target traits from command-line arguments
 target_holland = json.loads(sys.argv[1])
 
 # Connect to your MySQL database
+
+
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Access the environment variables
 conn = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="Zcroll@2001",
-    database="bigdata"
+    host=os.getenv('DB_HOST'),
+    user=os.getenv('DB_USERNAME'),  # Change 'DB_DATABASE' to 'DB_USERNAME' for user
+    password=os.getenv('DB_PASSWORD'),
+    database=os.getenv('DB_DATABASE')
 )
+
 cursor = conn.cursor()
+
 
 # Retrieve all jobs and their Holland traits
 cursor.execute("SELECT job_info_id, trait_name, trait_score FROM personality_traits WHERE trait_type='holland_codes'")
