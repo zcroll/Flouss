@@ -1,151 +1,128 @@
 <template>
-    <div>
-      <NavBar :canLogin="canLogin" :canRegister="canRegister" :laravelVersion="laravelVersion" :phpVersion="phpVersion" />
-      <link rel="stylesheet" media="all" href="//cdn2.careerhunter.io/assets/application-349b29af163d5822a096212e2dd202386f20dc4d2f59953f2fd3e210070ad75c.css" />
+  <div>
+    <NavBar :canLogin="canLogin" :canRegister="canRegister" :laravelVersion="laravelVersion" :phpVersion="phpVersion" />
+    <link rel="stylesheet" media="all" href="//cdn2.careerhunter.io/assets/application-349b29af163d5822a096212e2dd202386f20dc4d2f59953f2fd3e210070ad75c.css" />
+    <div class="banner-top banner-top--home before-fade-in fade-in">
+      <div class="circle top-left-big hide-for-small-only"></div>
+      <div class="circle top-left-small hide-for-small-only"></div>
+
       <div class="grid-container home">
-        <div class="card card--home text-center">
-          <div class="grid-x grid-margin-x small-up-1 medium-up-2 large-up-3 align-center">
-            <div class="cell hide-for-small-only">
-              <div class="card-1" style="margin: 0 auto;">
-                <div class="card__image"></div>
-                <div class="card__section">
-                  <p class="card__name disable-fade-in">Geoscientist</p>
+        <div class="card card--home">
+          <div class="card-1">
+            <div class="card__image"></div>
+            <div class="card__section"><p class="card__name disable-fade-in">Geoscientist</p></div>
+            <div class="match-tank pulse_8">
+              <div class="inner">
+                <div class="fill fillAction_8" style="transform: translate(0px, 12.24px);">
+                  <svg version="1.1" x="0px" y="0px" width="88px" height="88px" viewBox="0 0 88 88" enable-background="new 0 0 88 88">
+                    <path class="wave-shape" d="M300,300V2.5c0,0-0.6-0.1-1.1-0.1c0,0-25.5-2.3-40.5-2.4c-15,0-40.6,2.4-40.6,2.4c-12.3,1.1-30.3,1.8-31.9,1.9c-2-0.1-19.7-0.8-32-1.9c0,0-25.8-2.3-40.8-2.4c-15,0-40.8,2.4-40.8,2.4c-12.3,1.1-30.4,1.8-32,1.9c-2-0.1-20-0.8-32.2-1.9c0,0-3.1-0.3-8.1-0.7V300H300z"></path>
+                  </svg>
                 </div>
+              </div>
+              <div class="match-percent hidden">
+                <div class="qm">64%</div>
+                match
+              </div>
+            </div>
+          </div>
+          <div class="card-2">
+            <div class="card__image"></div>
+            <div class="card__section"><p class="card__name disable-fade-in">Architect</p></div>
+            <div class="match-tank pulse_8">
+              <div class="inner">
+                <div class="fill fillAction_8" style="transform: translate(0px, 12.24px);">
+                  <svg version="1.1" x="0px" y="0px" width="88px" height="88px" viewBox="0 0 88 88" enable-background="new 0 0 88 88">
+                    <path class="wave-shape" d="M300,300V2.5c0,0-0.6-0.1-1.1-0.1c0,0-25.5-2.3-40.5-2.4c-15,0-40.6,2.4-40.6,2.4c-12.3,1.1-30.3,1.8-31.9,1.9c-2-0.1-19.7-0.8-32-1.9c0,0-25.8-2.3-40.8-2.4c-15,0-40.8,2.4-40.8,2.4c-12.3,1.1-30.4,1.8-32,1.9c-2-0.1-20-0.8-32.2-1.9c0,0-3.1-0.3-8.1-0.7V300H300z"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="match-percent hidden">
+                <div class="qm">78%</div>
+                match
+              </div>
+            </div>
+          </div>
+          <div class="card-3 show-for-large">
+            <div class="card__image"></div>
+            <div class="card__section"><p class="card__name disable-fade-in">Web developer</p></div>
+            <div class="match-tank pulse_8">
+              <div class="inner">
+                <div class="fill fillAction_8" style="transform: translate(0px, 12.24px);">
+                  <svg version="1.1" x="0px" y="0px" width="88px" height="88px" viewBox="0 0 88 88" enable-background="new 0 0 88 88">
+                    <path class="wave-shape" d="M300,300V2.5c0,0-0.6-0.1-1.1-0.1c0,0-25.5-2.3-40.5-2.4c-15,0-40.6,2.4-40.6,2.4c-12.3,1.1-30.3,1.8-31.9,1.9c-2-0.1-19.7-0.8-32-1.9c0,0-25.8-2.3-40.8-2.4c-15,0-40.8,2.4-40.8,2.4c-12.3,1.1-30.4,1.8-32,1.9c-2-0.1-20-0.8-32.2-1.9c0,0-3.1-0.3-8.1-0.7V300H300z"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="match-percent hidden">
+                <div class="qm">78%</div>
+                match
+              </div>
+            </div>
+          </div>
+          <div class="card--horizontal">
+            <div class="card-4 hide-for-small-only">
+              <div class="card__image"></div>
+              <div class="card__section">
                 <div class="match-tank pulse_8">
                   <div class="inner">
-                    <div class="fill fillAction_8">
-                      <svg height="88px" width="88px" enableBackground="new 0 0 88 88" version="1.1" viewBox="0 0 88 88" x="0px" y="0px">
-                        <path class="wave-shape" d="M300,300V2.5c0,0-0.6-0.1-1.1-0.1c0,0-25.5-2.3-40.5-2.4c-15,0-40.6,2.4-40.6,2.4c-12.3,1.1-30.3,1.8-31.9,1.9c-2-0.1-19.7-0.8-32-1.9c0,0-25.8-2.3-40.8-2.4c-15,0-40.8,2.4-40.8,2.4c-12.3,1.1-30.4,1.8-32,1.9c-2-0.1-20-0.8-32.2-1.9c0,0-3.1-0.3-8.1-0.7V300H300z" />
+                    <div class="fill fillAction_8" style="transform: translate(0px, 12.24px);">
+                      <svg version="1.1" x="0px" y="0px" width="88px" height="88px" viewBox="0 0 88 88" enable-background="new 0 0 88 88">
+                        <path class="wave-shape" d="M300,300V2.5c0,0-0.6-0.1-1.1-0.1c0,0-25.5-2.3-40.5-2.4c-15,0-40.6,2.4-40.6,2.4c-12.3,1.1-30.3,1.8-31.9,1.9c-2-0.1-19.7-0.8-32-1.9c0,0-25.8-2.3-40.8-2.4c-15,0-40.8,2.4-40.8,2.4c-12.3,1.1-30.4,1.8-32,1.9c-2-0.1-20-0.8-32.2-1.9c0,0-3.1-0.3-8.1-0.7V300H300z"></path>
                       </svg>
                     </div>
                   </div>
-                  <div class="match-percent">
+                  <div class="match-percent hidden">
                     <div class="qm">64%</div>
                     match
                   </div>
                 </div>
+                <p class="card__name disable-fade-in">Business and Management</p>
               </div>
             </div>
-            <div class="cell hide-for-small-only">
-              <div class="card-2" style="margin: 0 auto;">
-                <div class="card__image"></div>
-                <div class="card__section">
-                  <p class="card__name disable-fade-in">Architect</p>
-                </div>
+            <div class="card-5 show-for-large">
+              <div class="card__image"></div>
+              <div class="card__section">
                 <div class="match-tank pulse_8">
                   <div class="inner">
-                    <div class="fill fillAction_8">
-                      <svg height="88px" width="88px" enableBackground="new 0 0 88 88" version="1.1" viewBox="0 0 88 88" x="0px" y="0px">
-                        <path class="wave-shape" d="M300,300V2.5c0,0-0.6-0.1-1.1-0.1c0,0-25.5-2.3-40.5-2.4c-15,0-40.6,2.4-40.6,2.4c-12.3,1.1-30.3,1.8-31.9,1.9c-2-0.1-19.7-0.8-32-1.9c0,0-25.8-2.3-40.8-2.4c-15,0-40.8,2.4-40.8,2.4c-12.3,1.1-30.4,1.8-32,1.9c-2-0.1-20-0.8-32.2-1.9c0,0-3.1-0.3-8.1-0.7V300H300z" />
+                    <div class="fill fillAction_8" style="transform: translate(0px, 12.24px);">
+                      <svg version="1.1" x="0px" y="0px" width="88px" height="88px" viewBox="0 0 88 88" enable-background="new 0 0 88 88">
+                        <path class="wave-shape" d="M300,300V2.5c0,0-0.6-0.1-1.1-0.1c0,0-25.5-2.3-40.5-2.4c-15,0-40.6,2.4-40.6,2.4c-12.3,1.1-30.3,1.8-31.9,1.9c-2-0.1-19.7-0.8-32-1.9c0,0-25.8-2.3-40.8-2.4c-15,0-40.8,2.4-40.8,2.4c-12.3,1.1-30.4,1.8-32,1.9c-2-0.1-20-0.8-32.2-1.9c0,0-3.1-0.3-8.1-0.7V300H300z"></path>
                       </svg>
                     </div>
                   </div>
-                  <div class="match-percent">
-                    <div class="qm">78%</div>
+                  <div class="match-percent hidden">
+                    <div class="qm">64%</div>
                     match
                   </div>
                 </div>
+                <p class="card__name disable-fade-in">Engineering</p>
               </div>
             </div>
-            <div class="cell show-for-large">
-              <div class="card-3" style="margin: 0 auto;">
-                <div class="card__image"></div>
-                <div class="card__section">
-                  <p class="card__name disable-fade-in">Web developer</p>
-                </div>
+            <div class="card-6 show-for-large">
+              <div class="card__image"></div>
+              <div class="card__section">
                 <div class="match-tank pulse_8">
                   <div class="inner">
-                    <div class="fill fillAction_8">
-                      <svg height="88px" width="88px" enableBackground="new 0 0 88 88" version="1.1" viewBox="0 0 88 88" x="0px" y="0px">
-                        <path class="wave-shape" d="M300,300V2.5c0,0-0.6-0.1-1.1-0.1c0,0-25.5-2.3-40.5-2.4c-15,0-40.6,2.4-40.6,2.4c-12.3,1.1-30.3,1.8-31.9,1.9c-2-0.1-19.7-0.8-32-1.9c0,0-25.8-2.3-40.8-2.4c-15,0-40.8,2.4-40.8,2.4c-12.3,1.1-30.4,1.8-32,1.9c-2-0.1-20-0.8-32.2-1.9c0,0-3.1-0.3-8.1-0.7V300H300z" />
+                    <div class="fill fillAction_8" style="transform: translate(0px, 12.24px);">
+                      <svg version="1.1" x="0px" y="0px" width="88px" height="88px" viewBox="0 0 88 88" enable-background="new 0 0 88 88">
+                        <path class="wave-shape" d="M300,300V2.5c0,0-0.6-0.1-1.1-0.1c0,0-25.5-2.3-40.5-2.4c-15,0-40.6,2.4-40.6,2.4c-12.3,1.1-30.3,1.8-31.9,1.9c-2-0.1-19.7-0.8-32-1.9c0,0-25.8-2.3-40.8-2.4c-15,0-40.8,2.4-40.8,2.4c-12.3,1.1-30.4,1.8-32,1.9c-2-0.1-20-0.8-32.2-1.9c0,0-3.1-0.3-8.1-0.7V300H300z"></path>
                       </svg>
                     </div>
                   </div>
-                  <div class="match-percent">
-                    <div class="qm">78%</div>
+                  <div class="match-percent hidden">
+                    <div class="qm">64%</div>
                     match
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-          <div class="card--horizontal hide-for-small-only">
-            <div class="grid-x grid-margin-x small-up-1 medium-up-2 large-up-3 align-center">
-              <div class="cell">
-                <div class="card-4" style="margin: 0 auto;">
-                  <div class="card__image"></div>
-                  <div class="card__section">
-                    <div class="match-tank pulse_8">
-                      <div class="inner">
-                        <div class="fill fillAction_8">
-                          <svg height="88px" width="88px" enableBackground="new 0 0 88 88" version="1.1" viewBox="0 0 88 88" x="0px" y="0px">
-                            <path class="wave-shape" d="M300,300V2.5c0,0-0.6-0.1-1.1-0.1c0,0-25.5-2.3-40.5-2.4c-15,0-40.6,2.4-40.6,2.4c-12.3,1.1-30.3,1.8-31.9,1.9c-2-0.1-19.7-0.8-32-1.9c0,0-25.8-2.3-40.8-2.4c-15,0-40.8,2.4-40.8,2.4c-12.3,1.1-30.4,1.8-32,1.9c-2-0.1-20-0.8-32.2-1.9c0,0-3.1-0.3-8.1-0.7V300H300z" />
-                          </svg>
-                        </div>
-                      </div>
-                      <div class="match-percent">
-                        <div class="qm">64%</div>
-                        match
-                      </div>
-                    </div>
-                    <p class="card__name disable-fade-in">Business and Management</p>
-                  </div>
-                </div>
-              </div>
-              <div class="cell show-for-large">
-                <div class="card-5" style="margin: 0 auto;">
-                  <div class="card__image"></div>
-                  <div class="card__section">
-                    <div class="match-tank pulse_8">
-                      <div class="inner">
-                        <div class="fill fillAction_8">
-                          <svg height="88px" width="88px" enableBackground="new 0 0 88 88" version="1.1" viewBox="0 0 88 88" x="0px" y="0px">
-                            <path class="wave-shape" d="M300,300V2.5c0,0-0.6-0.1-1.1-0.1c0,0-25.5-2.3-40.5-2.4c-15,0-40.6,2.4-40.6,2.4c-12.3,1.1-30.3,1.8-31.9,1.9c-2-0.1-19.7-0.8-32-1.9c0,0-25.8-2.3-40.8-2.4c-15,0-40.8,2.4-40.8,2.4c-12.3,1.1-30.4,1.8-32,1.9c-2-0.1-20-0.8-32.2-1.9c0,0-3.1-0.3-8.1-0.7V300H300z" />
-                          </svg>
-                        </div>
-                      </div>
-                      <div class="match-percent">
-                        <div class="qm">64%</div>
-                        match
-                      </div>
-                    </div>
-                    <p class="card__name disable-fade-in">Engineering</p>
-                  </div>
-                </div>
-              </div>
-              <div class="cell show-for-large">
-                <div class="card-6" style="margin: 0 auto;">
-                  <div class="card__image"></div>
-                  <div class="card__section">
-                    <div class="match-tank pulse_8">
-                      <div class="inner">
-                        <div class="fill fillAction_8">
-                          <svg height="88px" width="88px" enableBackground="new 0 0 88 88" version="1.1" viewBox="0 0 88 88" x="0px" y="0px">
-                            <path class="wave-shape" d="M300,300V2.5c0,0-0.6-0.1-1.1-0.1c0,0-25.5-2.3-40.5-2.4c-15,0-40.6,2.4-40.6,2.4c-12.3,1.1-30.3,1.8-31.9,1.9c-2-0.1-19.7-0.8-32-1.9c0,0-25.8-2.3-40.8-2.4c-15,0-40.8,2.4-40.8,2.4c-12.3,1.1-30.4,1.8-32,1.9c-2-0.1-20-0.8-32.2-1.9c0,0-3.1-0.3-8.1-0.7V300H300z" />
-                          </svg>
-                        </div>
-                      </div>
-                      <div class="match-percent hidden">
-                        <div class="qm">64%</div>
-                        match
-                      </div>
-                    </div>
-                    <p class="card__name disable-fade-in">Creative Arts</p>
-                  </div>
-                </div>
+                <p class="card__name disable-fade-in">Creative Arts</p>
               </div>
             </div>
           </div>
         </div>
         <div class="circle top-right-small"></div>
-        <div class="circle top-personality">
-          <img class="hide-for-small-only" height="43" width="41" src="https://www.careerhunter.io/images/home/personality.png" />
-          <img class="show-for-small-only" height="27" width="26" src="https://www.careerhunter.io/images/home/personality_mobile.png" />
-        </div>
-        <div class="circle top-interests">
-          <img class="hide-for-small-only" height="41" width="49" src="https://www.careerhunter.io/images/home/interests.png" />
-          <img class="show-for-small-only" height="26" width="31" src="https://www.careerhunter.io/images/home/interests.png" />
-        </div>
+        <div class="circle top-personality"><img src="images/home/personality.png" width="41" height="43" class="hide-for-small-only"><img src="images/home/personality_mobile.png" width="26" height="27" class="show-for-small-only"></div>
+        <div class="circle top-interests"><img src="images/home/interests.png" width="49" height="41" class="hide-for-small-only"><img src="images/home/interests.png" width="31" height="26" class="show-for-small-only"></div>
+
         <div class="grid-x text-center">
           <div class="small-12 cell">
             <h1 class="banner-top__title-home">Career choices <span>made easier than ever</span></h1>
@@ -179,10 +156,7 @@
           </div>
         </div>
         <div class="circle bottom-left-small"></div>
-        <div class="circle bottom-abstract">
-          <img class="hide-for-small-only" height="40" width="42" src="https://www.careerhunter.io/images/home/abstract.png" />
-          <img class="show-for-small-only" height="25" width="27" src="https://www.careerhunter.io/images/home/abstract.png" />
-        </div>
+        <div class="circle bottom-abstract"><img src="images/home/abstract.png" width="42" height="40" class="hide-for-small-only"><img src="images/home/abstract.png" width="27" height="25" class="show-for-small-only"></div>
       </div>
     </div>
     <Content :canLogin="canLogin" :canRegister="canRegister" />
@@ -224,63 +198,23 @@
         </div>
       </div>
     </div>
-  </template>
-  
-  <script>
-  import Content from "@/Components/Content.vue";
-  import NavBar from "@/Components/NavBar.vue";
-  import { Link } from '@inertiajs/vue3';
-  
-  export default {
-    name: 'App',
-    components: {NavBar, Content, Link},
-    props: {
-      canLogin: Boolean,
-      canRegister: Boolean,
-      laravelVersion: String,
-      phpVersion: String
-    },
-    data() {
-      return {
-        tests: [
-          {
-            iconClass: 'interests-blue',
-            title: 'Career Interests',
-            description: 'Uncover the work activities that you enjoy the most.',
-            link: 'https://www.careerhunter.io/tests/interests'
-          },
-          {
-            iconClass: 'personality-blue',
-            title: 'Work Personality',
-            description: 'Assess your personality type and work preferences.',
-            link: 'https://www.careerhunter.io/tests/personality'
-          },
-          {
-            iconClass: 'motivators-blue',
-            title: 'Career Motivators',
-            description: 'Reveal what motivates you to work and succeed.',
-            link: 'https://www.careerhunter.io/tests/motivators'
-          },
-          {
-            iconClass: 'abstract-blue',
-            title: 'Abstract Reasoning',
-            description: 'Assess your lateral thinking and ability to analyze patterns.',
-            link: 'https://www.careerhunter.io/tests/abstract'
-          },
-          {
-            iconClass: 'numerical-blue',
-            title: 'Numerical Reasoning',
-            description: 'Discover how well you can decipher data and numbers.',
-            link: 'https://www.careerhunter.io/tests/numerical'
-          },
-          {
-            iconClass: 'verbal-blue',
-            title: 'Verbal Reasoning',
-            description: 'Measure your ability to interpret written information.',
-            link: 'https://www.careerhunter.io/tests/verbal'
-          }
-        ]
-      }
-    }
-  }
-  </script>
+  </div>
+</template>
+
+<script>
+import NavBar from '@/Components/NavBar.vue';
+import Content from '@/Components/Content.vue';
+
+export default {
+  components: {
+    NavBar,
+    Content
+  },
+  props: {
+    canLogin: Boolean,
+    canRegister: Boolean,
+    laravelVersion: String,
+    phpVersion: String
+  },
+}
+</script>
