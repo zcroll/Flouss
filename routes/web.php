@@ -23,7 +23,7 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-});
+})->name('home');
 
 Route::middleware([
     'auth:sanctum',
@@ -73,3 +73,8 @@ Route::get('/formations/filter', [FormationFilterController::class, 'filter'])->
 Route::get('/etablissements', [FormationFilterController::class, 'getEtablissements'])->name('etablissements.list');
 Route::get('/degrees', [DegreeFilterController::class, 'index'])->name('degrees.index');
 Route::get('/jobs', [JobFilterController::class, 'index'])->name('jobs.index');
+
+
+Route::get('/how-it-works', function () {
+    return Inertia::render('HomePage/HowItWork');
+})->name('how-it-works');

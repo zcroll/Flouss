@@ -6,13 +6,13 @@
         <nav role="navigation">
           <ul class="top-menu__list">
             <li class="top-menu__logo">
-              <a href="https://www.careerhunter.io/">
+              <Link :href="route('home')" class="top-menu__option">
                 <img
                     class="top-menu__image"
                     alt="CareerHunter"
                     src="https://cdn1.careerhunter.io/assets/CareerHunter-c5d37d4480b8e9fd358ce4d6f1fe629893627bf89acf827c9c68f5fde015b306.svg"
                 />
-              </a>
+              </Link>
             </li>
             <li class="top-menu__submenu show-for-large">
               <a class="top-menu__option">
@@ -32,7 +32,7 @@
               </div>
             </li>
             <li class="show-for-large">
-              <a class="top-menu__option" href="https://www.careerhunter.io/how">How it works</a>
+              <Link :href="route('how-it-works')" class="top-menu__option">How it works</Link>
             </li>
             <li class="show-for-large">
               <a class="top-menu__option" href="https://www.careerhunter.io/careers">Careers</a>
