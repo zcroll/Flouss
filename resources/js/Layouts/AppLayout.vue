@@ -68,11 +68,16 @@ const socialLinks = [
                                     <NavLink :href="route('results')" :active="route().current('results')">
                                         Results
                                     </NavLink>
-                                  
+                                    <NavLink :href="route('jobs.index')" :active="route().current('jobs.index')">
+                                        Jobs
+                                    </NavLink>
+                                    <NavLink :href="route('degrees.index')" :active="route().current('degrees.index')">
+                                        Degrees
+                                    </NavLink>
                                     <NavLink v-if="isOver10Days" :href="route('activities')" :active="route().current('activities')">
                                         Career Test
                                     </NavLink>
-                                </div>
+                                </div>  
                             </div>
 
                                 <div class="hidden sm:flex sm:items-center sm:ml-6">
@@ -196,7 +201,12 @@ const socialLinks = [
                                                     <ResponsiveNavLink :href="route('results')" :active="route().current('results')">
                                                         Results
                                                     </ResponsiveNavLink>
-                                                 
+                                                    <ResponsiveNavLink :href="route('jobs.index')" :active="route().current('jobs.index')">
+                                                        Jobs
+                                                    </ResponsiveNavLink>
+                                                    <ResponsiveNavLink :href="route('degrees.index')" :active="route().current('degrees.index')">
+                                                        Degrees
+                                                    </ResponsiveNavLink>
                                                     <ResponsiveNavLink v-if="isOver10Days" :href="route('activities')" :active="route().current('activities')">
                                                         Career Test
                                                     </ResponsiveNavLink>

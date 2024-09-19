@@ -81,12 +81,10 @@
                                         </template>
                                     </div>
                   <div class="flex items-center justify-between">
-                    <span class="text-sm text-indigo-600 font-medium">Salary: ${{ job.salary }}</span>
-                    <Link :href="`/career/${job.slug}`" class="px-3 py-1.5 text-xs bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors duration-300">
-                     
-                     
+                    <p class="text-sm"><span class="pr-3 text-sm text-sky-800 font-medium blur-sm">hidden</span>MAD</p>
+                    <button class="px-3 py-1.5 text-sm bg-emerald-800 font-black text-white rounded-md hover:bg-emerald-900 transition-colors duration-300">
                       Learn More
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -94,7 +92,7 @@
             </div>
           </div>
           <div v-else class="text-center py-8">
-            <p class="text-lg text-gray-600 mb-4">No jobs found matching your criteria.</p>
+            <p class="text-lg text-gray-600 mb-4">No jobs found matching your criteria</p>
             <button
               @click="resetFilters"
               class="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-700 transition-colors duration-300"
@@ -122,7 +120,7 @@
 
 <script setup>
 import { ref, watch, onMounted } from 'vue';
-import { router , Link } from '@inertiajs/vue3';
+import { router,Link } from '@inertiajs/vue3';
 import AppLayout from "@/Layouts/AppLayout.vue";
 import VueMultiselect from 'vue-multiselect';
 import debounce from 'lodash/debounce';
