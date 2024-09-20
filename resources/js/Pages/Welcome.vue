@@ -199,16 +199,18 @@
       </div>
     </div>
   </div>
+  <RedaNwi9s />
 </template>
 
 <script>
 import NavBar from '@/Components/NavBar.vue';
 import Content from '@/Components/Content.vue';
-
+import RedaNwi9s from '@/Pages/HomePage/RedaNwi9s.vue';
 export default {
   components: {
     NavBar,
-    Content
+    Content,
+    RedaNwi9s
   },
   props: {
     canLogin: Boolean,

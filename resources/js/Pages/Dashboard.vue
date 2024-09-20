@@ -21,7 +21,7 @@
                                 <!-- Link at the Top -->
                                 <div class="flex items-center gap-x-4 text-xs mb-4">
                                     <Link
-                                        href="/activities"
+                                        :href="route('test-preview')"
                                         class="rounded-full bg-purple-100 px-3 py-1.5 font-medium text-purple-600 hover:bg-purple-200"
                                     >
                                         Aptitude Assessment
@@ -31,7 +31,7 @@
                                 <!-- Heading -->
                                 <h3 class="text-xl font-semibold text-gray-100 mb-3">
                                     <Link
-                                        :href="hasResult ? '/results' : '/activities'"
+                                        :href="hasResult ? '/results' : '/test-preview'"
                                         class="hover:underline"
                                     >
                                         {{ hasResult
@@ -49,7 +49,7 @@
 
                                 <!-- Button at the Bottom -->
                                 <div class="flex justify-end">
-                                    <Link :href="hasResult ? '/results' : '/activities'">
+                                    <Link :href="hasResult ? '/results' : '/test-preview'">
                                         <PrimaryButton
                                             class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded"
                                         >
