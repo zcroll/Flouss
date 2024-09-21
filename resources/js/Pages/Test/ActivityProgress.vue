@@ -10,7 +10,7 @@
     <div class="flex justify-center items-center min-h-screen">
       <div class="test-page__wrapper">
         <div class="test-page__wrapper__main with-save">
-          <div class="blur-box-container blur-box-container__main blur-box-container--spaced">
+          <div v-if="!showOverview" class="blur-box-container blur-box-container__main blur-box-container--spaced">
             <div class="blur-box blur-box__main">
               <div class="interests main-test align-center">
                 <div class="main-test__wrapper">
@@ -96,20 +96,61 @@
               <div class="bg-copy interests"></div>
             </div>
           </div>
+          <div v-else>
+            <Overview
+              :rankedActivities="rankedActivities"
+              :totalActivities="activities.length"
+              :incompletePoints="incompletePoints"
+              :currentPage="currentPage"
+              @go-to-page="goToPage"
+              @go-back-to-test="toggleOverview"
+              @save-for-later="saveForLater"
+              @submit-answers="submitTest"
+            />
+          </div>
           <div class="test-btn-container flex-center">
-            <a class="text-button">Overview</a>
+            <a @click="toggleOverview" class="text-button">{{ showOverview ? 'Return to Test' : 'Overview' }}</a>
             <a class="text-button">Instructions</a>
           </div>
         </div>
       </div>
+    </div>
+    <div v-if="showIncompleteModal" class="popup__content">
+      <div class="grid-x confirmation-content">
+        <div class="cell">
+          <div class="large-icon unanswered-questions mar-auto"></div>
+          <h3 class="popup__title">You haven't answered all the questions!</h3>
+          <p class="popup__text">
+            Submitting your answers now can affect your overall result. Are you sure you want to finish the test?
+          </p>
+        </div>
+        <div class="cell mar-top-20">
+          <button @click="closeIncompleteModal" class="button button--blue-off before-fade-in fade-in button--bigger mar-right-10">
+            No, take me back
+            <span class="button__hovered"></span>
+          </button>
+          <button @click="confirmSubmit" class="button button--green before-fade-in fade-in button--bigger">
+            Yes, I'm done
+            <span class="small-icons next-arrow-white-l"></span>
+            <span class="button__hovered"></span>
+          </button>
+        </div>
+      </div>
+      <a @click="closeIncompleteModal" class="popup__close">×</a>
     </div>
   </div>
 </template>
 
 <script>
 import { useForm } from '@inertiajs/vue3'
+import Overview from './Overview.vue'
+import draggable from 'vuedraggable'
 
 export default {
+  components: {
+    Overview,
+    draggable
+  },
   props: {
     activities: {
       type: Array,
@@ -124,7 +165,9 @@ export default {
       currentActivities: [],
       incompletePoints: [],
       pageInteracted: false,
-      rankedActivities: []
+      rankedActivities: [],
+      showOverview: false,
+      showIncompleteModal: false
     }
   },
   computed: {
@@ -173,7 +216,21 @@ export default {
       }
     },
     submitTest() {
-      this.storeUserResponse(); // Store the last page response
+      this.storeUserResponse();
+      if (this.incompletePoints.length > 0) {
+        this.showIncompleteModal = true;
+      } else {
+        this.performSubmit();
+      }
+    },
+    closeIncompleteModal() {
+      this.showIncompleteModal = false;
+    },
+    confirmSubmit() {
+      this.showIncompleteModal = false;
+      this.performSubmit();
+    },
+    performSubmit() {
       const form = useForm({
         responses: this.rankedActivities
       });
@@ -218,12 +275,10 @@ export default {
         return { id: activity.id, score: score, category: activity.category };
       });
       
-      // Remove any existing entries for these activities
       this.rankedActivities = this.rankedActivities.filter(activity => 
         !rankedActivities.some(newActivity => newActivity.id === activity.id)
       );
       
-      // Add the new rankings
       this.rankedActivities = [...this.rankedActivities, ...rankedActivities];
       
       this.userResponses[this.currentPage - 1] = [...this.currentActivities];
@@ -249,6 +304,13 @@ export default {
     goToPage(page) {
       this.currentPage = page;
       this.loadCurrentActivities();
+      this.showOverview = false;
+    },
+    saveForLater() {
+      console.log('Saving for later...');
+    },
+    toggleOverview() {
+      this.showOverview = !this.showOverview;
     }
   }
 }
@@ -289,5 +351,24 @@ export default {
 .button--blue {
   background-color: #007BFF;
   color: #fff;
+}
+
+.popup__content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  z-index: 1000;
+}
+
+.popup__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  cursor: pointer;
 }
 </style>
