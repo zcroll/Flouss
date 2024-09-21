@@ -1,6 +1,6 @@
 <template>
   <div>
-    <link rel="stylesheet" media="all" href="//cdn2.careerhunter.io/assets/application-349b29af163d5822a096212e2dd202386f20dc4d2f59953f2fd3e210070ad75c.css" />
+    <link rel="stylesheet" media="all" href="/css/landingPage/index.css" />
     <div class="top-menu__main">
       <div class="top-menu__left">
         <nav role="navigation">
@@ -14,47 +14,47 @@
                 />
               </Link>
             </li>
-            <li class="top-menu__submenu show-for-large">
+            <!-- <li class="top-menu__submenu show-for-large">
               <a class="top-menu__option">
                 Our Tests
                 <span class="upgrade-icon caret-down" />
               </a>
               <div class="top-menu__submenu-content">
                 <ul>
-                  <li><a href="https://www.careerhunter.io/tests/interests">Career Interests</a></li>
-                  <li><a href="https://www.careerhunter.io/tests/personality">Work Personality</a></li>
-                  <li><a href="https://www.careerhunter.io/tests/motivators">Career Motivators</a></li>
-                  <li><a href="https://www.careerhunter.io/tests/abstract">Abstract Reasoning</a></li>
-                  <li><a href="https://www.careerhunter.io/tests/numerical">Numerical Reasoning</a></li>
-                  <li><a href="https://www.careerhunter.io/tests/verbal">Verbal Reasoning</a></li>
-                  <li><a href="https://www.careerhunter.io/tests">See all tests</a></li>
+                  <li><a href="">Career Interests</a></li>
+                  <li><a href="">Work Personality</a></li>
+                  <li><a href="">Career Motivators</a></li>
+                  <li><a href="t">Abstract Reasoning</a></li>
+                  <li><a href="">Numerical Reasoning</a></li>
+                  <li><a href="">Verbal Reasoning</a></li>
+                  <li><a href="">See all tests</a></li>
                 </ul>
               </div>
+            </li> -->
+            <li class="show-for-large">
+              <Link :href="route('how-it-works')" class="top-menu__option text-black">How it works</Link>
             </li>
             <li class="show-for-large">
-              <Link :href="route('how-it-works')" class="top-menu__option">How it works</Link>
+              <Link class="top-menu__option" :href="route('interests')">Interests</Link>
             </li>
-            <li class="show-for-large">
-              <a class="top-menu__option" href="https://www.careerhunter.io/careers">Careers</a>
-            </li>
-            <li class="top-menu__submenu show-for-large">
+            <!-- <li class="top-menu__submenu show-for-large">
               <a class="top-menu__option">
                 Explore
                 <span class="upgrade-icon caret-down" />
               </a>
               <div class="top-menu__submenu-content">
                 <ul>
-                  <li><a href="https://www.careerhunter.io/courses">Courses</a></li>
+                  <li><a href="https://www.careerhunter.io/courses" >Courses</a></li>
                   <li><a href="https://www.careerhunter.io/jobs">Jobs</a></li>
                 </ul>
               </div>
-            </li>
-            <li class="show-for-large">
+            </li> -->
+            <!-- <li class="show-for-large">
               <a class="top-menu__option" href="https://www.careerhunter.io/upgrade">Full Access</a>
             </li>
             <li class="show-for-large">
               <a class="top-menu__option" href="https://www.careerhunter.io/group">For Educators</a>
-            </li>
+            </li> -->
           </ul>
         </nav>
       </div>
@@ -70,23 +70,23 @@
             </template>
             <template v-else>
               <li>
-                <Link :href="route('login')" class="top-menu__login-text hide-for-small-only">
+                <Link :href="route('login')" class="hide-for-small-only button button--green">
                   Log in
                 </Link>
               </li>
               <li v-if="canRegister">
-                <Link :href="route('register')" class="top-menu__login-text hide-for-small-only">
+                <Link :href="route('register')" class="hide-for-small-only button button--white">
                   Register
                 </Link>
               </li>
             </template>
-            <li class="top-menu__item">
+            <!-- <li class="top-menu__item">
               <div id="toggle-menu" class="hamburger button button--white">
                 <span class="hamburger__part hamburger__part--top" />
                 <span class="hamburger__part hamburger__part--middle" />
                 <span class="hamburger__part hamburger__part--bottom" />
               </div>
-            </li>
+            </li> -->
           </ul>
         </nav>
       </div>

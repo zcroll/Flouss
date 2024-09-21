@@ -78,3 +78,7 @@ Route::get('/jobs', [JobFilterController::class, 'index'])->name('jobs.index');
 Route::get('/how-it-works', function () {
     return Inertia::render('HomePage/HowItWork');
 })->name('how-it-works');
+
+Route::get('/interests', function () {
+    return Inertia::render('HomePage/Interests');
+})->name('interests');
