@@ -10,9 +10,9 @@
             <div class="blur-box blur-box__main">
               <div class="main-test align-center">
                 <div class="breadcrumbs-nav breadcrumbs-nav--tests">
-                  <a href="https://www.careerhunter.io/tests">Tests</a>
+                  <Link :href="route('dashboard')">Dashboard</Link>
                   <div class="small-icon arrow-breadcrumbs"></div>
-                  <a href="https://www.careerhunter.io/tests/interests">Career Interests</a>
+                  <Link :href="route('interests')">Career Interests</Link>
                   <div class="small-icon arrow-breadcrumbs"></div>
                   <span>Start</span>
                 </div>

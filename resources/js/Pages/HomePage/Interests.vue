@@ -29,6 +29,10 @@
         </div>
       </div>
     </div>
+    <MainInterest />
+    <ActivityProgressExample />
+    <Industries />
+    <BottomBanner />
     <Footer />
   </div>
 </template>
@@ -37,14 +41,21 @@
 import InterestHeader from "@/Components/InterestHeader.vue";
 import Navbar from "@/Components/NavBar.vue";
 import Footer from "@/Components/Footer.vue"
+import MainInterest from "@/Pages/HomePage/MainInterest.vue"; 
+import Industries from "@/Pages/HomePage/Industries.vue";
 import NavBar from "@/Components/NavBar.vue";
-
+import ActivityProgressExample from "@/Pages/HomePage/ActivityProgressExample.vue";
+import BottomBanner from "@/Pages/HomePage/BottomBanner.vue";
 export default {
   name: 'Interests',
   components: {
       NavBar,
       Navbar,
+      MainInterest,
+      Industries,
     InterestHeader,
+    BottomBanner,
+    ActivityProgressExample,  
     Footer
   },
     props: {
