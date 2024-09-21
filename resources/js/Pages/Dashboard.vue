@@ -5,7 +5,7 @@
                 <div class="grid grid-cols-12 gap-8">
 
                     <!-- First Row: Left (4 columns) and Right (8 columns) -->
-                    <div class="col-span-12 lg:col-span-4  cursor-pointer text-blue-600 rounded-xl flex justify-center items-center">
+                    <div class="col-span-12 lg:col-span-4 cursor-pointer text-blue-600 rounded-xl flex justify-center items-center">
                         <div class="relative bg-black shadow-lg rounded-lg overflow-hidden transition duration-300 hover:-translate-y-1">
                             <!-- Image Container -->
                             <div class="relative">
@@ -17,11 +17,10 @@
                             </div>
 
                             <!-- Content Section -->
-                            <div class="p-6">
-                                <!-- Link at the Top -->
+                            <div class="p-4">
                                 <div class="flex items-center gap-x-4 text-xs mb-4">
                                     <Link
-                                        href="/activities"
+                                        :href="'/test-preview'"
                                         class="rounded-full bg-purple-100 px-3 py-1.5 font-medium text-purple-600 hover:bg-purple-200"
                                     >
                                         Aptitude Assessment
@@ -31,12 +30,10 @@
                                 <!-- Heading -->
                                 <h3 class="text-xl font-semibold text-gray-100 mb-3">
                                     <Link
-                                        :href="hasResult ? '/results' : '/activities'"
+                                        :href="hasResult ? '/results' : '/test-preview'"
                                         class="hover:underline"
                                     >
-                                        {{ hasResult
-                                        ? 'Analyze Your Assessment Results'
-                                        : 'Evaluate Your Academic and Professional Aptitudes' }}
+                                        {{ hasResult ? 'View Your Results' : 'Take the Assessment' }}
                                     </Link>
                                 </h3>
 
@@ -47,9 +44,8 @@
                                     : 'Participate in our rigorous aptitude assessment to identify your academic strengths and professional competencies.' }}
                                 </p>
 
-                                <!-- Button at the Bottom -->
                                 <div class="flex justify-end">
-                                    <Link :href="hasResult ? '/results' : '/activities'">
+                                    <Link :href="hasResult ? '/results' : '/test-preview'">
                                         <PrimaryButton
                                             class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded"
                                         >

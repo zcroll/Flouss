@@ -1,6 +1,6 @@
 <template>
-    <Navbar />
-  <div class="bg-[#0A1E2E] text-white">
+    <NavBar :canLogin="canLogin" :canRegister="canRegister" :laravelVersion="laravelVersion" :phpVersion="phpVersion" />
+    <div class="bg-[#0A1E2E] text-white">
     <InterestHeader />
 
     <div class="max-w-[1400px] mx-auto py-20 px-4">
@@ -17,7 +17,7 @@
             </li>
           </ul>
         </div>
-        
+
         <div>
           <h2 class="text-2xl font-semibold mb-5">About the test</h2>
           <p class="mb-5 max-w-[525px]">
@@ -37,14 +37,23 @@
 import InterestHeader from "@/Components/InterestHeader.vue";
 import Navbar from "@/Components/NavBar.vue";
 import Footer from "@/Components/Footer.vue"
+import NavBar from "@/Components/NavBar.vue";
 
 export default {
   name: 'Interests',
   components: {
+      NavBar,
       Navbar,
     InterestHeader,
     Footer
   },
+    props: {
+        canLogin: Boolean,
+        canRegister: Boolean,
+        laravelVersion: String,
+        phpVersion: String,
+        navigation:Array,
+    },
   data() {
     return {
       benefitPoints: [

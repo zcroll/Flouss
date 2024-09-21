@@ -207,19 +207,22 @@
           </div>
         </div>
       </div>
+        <Section />
       <Footer />
     </div>
-    
+
   </template>
 
   <script>
+  import { Link } from '@inertiajs/vue3';
   import Content from "@/Components/Content.vue";
   import NavBar from "@/Components/NavBar.vue";
   import Footer from "@/Components/Footer.vue"
+  import Section from "@/Pages/HomePage/Section.vue";
 
   export default {
     name: 'App',
-    components: {NavBar, Content, Footer},
+    components: {Section, NavBar, Content, Footer,Link},
     props: {
       canLogin: Boolean,
       canRegister: Boolean,

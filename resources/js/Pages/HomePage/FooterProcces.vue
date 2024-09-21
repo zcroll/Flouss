@@ -10,29 +10,30 @@
             options.
           </h4>
         </div>
-        <div class="small-12 cell">
-          <a
-            class="button button--green--large before-fade-in fade-in"
-            aria-label="Get your Discount"
-            href="https://www.careerhunter.io/tests"
-          >
-            Go to Tests
-            <span class="button__hovered" />
-          </a>
-        </div>
+          <div class="small-12 cell mt-10">
+              <a
+                  class="button button--green--large before-fade-in fade-in"
+                  aria-label="Get your Discount"
+                  :href="route('test-preview')"
+              >
+                  Go to Tests
+                  <span class="button__hovered" />
+              </a>
+          </div>
       </div>
+
       <div class="circle right-large show-for-large" />
       <div class="circle right-small show-for-large" />
       <div class="circle right-medium show-for-large" />
     </div>
   </template>
-  
+
   <script>
   export default {
     name: 'FooterProcces'
   };
   </script>
-  
+
   <style scoped>
   @import url('//cdn2.careerhunter.io/assets/application-349b29af163d5822a096212e2dd202386f20dc4d2f59953f2fd3e210070ad75c.css');
   </style>

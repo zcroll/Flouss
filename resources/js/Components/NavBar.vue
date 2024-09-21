@@ -4,7 +4,7 @@
     <div class="top-menu__main">
       <div class="top-menu__left">
         <nav role="navigation">
-          <ul class="top-menu__list">
+          <ul class="top-menu__list space-x-8">
             <li class="top-menu__logo">
               <Link :href="route('home')" class="top-menu__option">
                 <img
@@ -14,47 +14,12 @@
                 />
               </Link>
             </li>
-            <!-- <li class="top-menu__submenu show-for-large">
-              <a class="top-menu__option">
-                Our Tests
-                <span class="upgrade-icon caret-down" />
-              </a>
-              <div class="top-menu__submenu-content">
-                <ul>
-                  <li><a href="">Career Interests</a></li>
-                  <li><a href="">Work Personality</a></li>
-                  <li><a href="">Career Motivators</a></li>
-                  <li><a href="t">Abstract Reasoning</a></li>
-                  <li><a href="">Numerical Reasoning</a></li>
-                  <li><a href="">Verbal Reasoning</a></li>
-                  <li><a href="">See all tests</a></li>
-                </ul>
-              </div>
-            </li> -->
             <li class="show-for-large">
-              <Link :href="route('how-it-works')" class="top-menu__option text-black">How it works</Link>
+              <Link :href="route('how-it-works')" class="bg-white text-gray-900 font-bold py-2 px-3 rounded hover:bg-transparent hover:text-blue-500 transition duration-150 ease-in-out">How it works</Link>
             </li>
             <li class="show-for-large">
-              <Link class="top-menu__option" :href="route('interests')">Interests</Link>
+              <Link :href="route('interests')" class="bg-white text-gray-900 font-bold py-2 px-3 rounded hover:bg-transparent hover:text-blue-500 transition duration-150 ease-in-out">Interests</Link>
             </li>
-            <!-- <li class="top-menu__submenu show-for-large">
-              <a class="top-menu__option">
-                Explore
-                <span class="upgrade-icon caret-down" />
-              </a>
-              <div class="top-menu__submenu-content">
-                <ul>
-                  <li><a href="https://www.careerhunter.io/courses" >Courses</a></li>
-                  <li><a href="https://www.careerhunter.io/jobs">Jobs</a></li>
-                </ul>
-              </div>
-            </li> -->
-            <!-- <li class="show-for-large">
-              <a class="top-menu__option" href="https://www.careerhunter.io/upgrade">Full Access</a>
-            </li>
-            <li class="show-for-large">
-              <a class="top-menu__option" href="https://www.careerhunter.io/group">For Educators</a>
-            </li> -->
           </ul>
         </nav>
       </div>
@@ -63,30 +28,23 @@
           <ul class="top-menu__list">
             <template v-if="$page.props.auth.user">
               <li>
-                <Link :href="route('dashboard')" class="button button--green">
+                <Link :href="route('dashboard')" class="bg-emerald-800 text-white font-bold py-2 px-3 rounded hover:bg-transparent transition duration-150 ease-in-out">
                   Dashboard
                 </Link>
               </li>
             </template>
             <template v-else>
               <li>
-                <Link :href="route('login')" class="hide-for-small-only button button--green">
+                <Link :href="route('login')" class="bg-emerald-800 text-white font-bold m-1 py-2 px-3 rounded hover:bg-emerald-900 transition duration-150 ease-in-out hide-for-small-only">
                   Log in
                 </Link>
               </li>
               <li v-if="canRegister">
-                <Link :href="route('register')" class="hide-for-small-only button button--white">
+                <Link :href="route('register')" class="bg-black text-gray-100 font-bold m-1 py-2 px-3 rounded hover:bg-zinc-900 hover:text-gray-100 transition duration-150 ease-in-out hide-for-small-only">
                   Register
                 </Link>
               </li>
             </template>
-            <!-- <li class="top-menu__item">
-              <div id="toggle-menu" class="hamburger button button--white">
-                <span class="hamburger__part hamburger__part--top" />
-                <span class="hamburger__part hamburger__part--middle" />
-                <span class="hamburger__part hamburger__part--bottom" />
-              </div>
-            </li> -->
           </ul>
         </nav>
       </div>

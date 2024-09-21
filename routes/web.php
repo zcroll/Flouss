@@ -8,9 +8,9 @@ use App\Http\Controllers\Filters\FormationFilterController;
 use App\Http\Controllers\Assessment\ActivityProgressController;
 use App\Http\Controllers\Assessment\JobMatcherController;
 use App\Http\Controllers\Assessment\JobFieldController;
-
 use App\Http\Controllers\Degree\DegreeController;
 use App\Http\Controllers\dashboard\DashboardController;
+use App\Http\Controllers\test\TestController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 
@@ -75,6 +75,7 @@ Route::get('/degrees', [DegreeFilterController::class, 'index'])->name('degrees.
 Route::get('/jobs', [JobFilterController::class, 'index'])->name('jobs.index');
 
 
+
 Route::get('/how-it-works', function () {
     return Inertia::render('HomePage/HowItWork');
 })->name('how-it-works');
@@ -82,3 +83,10 @@ Route::get('/how-it-works', function () {
 Route::get('/interests', function () {
     return Inertia::render('HomePage/Interests');
 })->name('interests');
+
+Route::get('/test-preview', function () {
+    return Inertia::render('Test/TestPreview2');
+})->name('test-preview');
+
+Route::get('/test', [TestController::class, 'index'])->name('test');
+Route::post('/test', [TestController::class, 'submitAnswer'])->name('test.submit-answer');
