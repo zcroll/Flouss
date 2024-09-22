@@ -15,10 +15,10 @@
               </Link>
             </li>
             <li class="show-for-large">
-              <Link :href="route('how-it-works')" class="bg-white text-gray-900 font-bold py-2 px-3 rounded hover:bg-transparent hover:text-blue-500 transition duration-150 ease-in-out">How it works</Link>
+              <Link :href="route('how-it-works')" class=" text-white font-bold py-2 px-3 rounded hover:bg-transparent hover:text-blue-500 transition duration-150 ease-in-out">How it works</Link>
             </li>
             <li class="show-for-large">
-              <Link :href="route('interests')" class="bg-white text-gray-900 font-bold py-2 px-3 rounded hover:bg-transparent hover:text-blue-500 transition duration-150 ease-in-out">Interests</Link>
+              <Link :href="route('interests')" class=" text-white font-bold py-2 px-3 rounded hover:bg-transparent hover:text-blue-500 transition duration-150 ease-in-out">Interests</Link>
             </li>
           </ul>
         </nav>
@@ -28,19 +28,19 @@
           <ul class="top-menu__list">
             <template v-if="$page.props.auth.user">
               <li>
-                <Link :href="route('dashboard')" class="bg-emerald-800 text-white font-bold py-2 px-3 rounded hover:bg-transparent transition duration-150 ease-in-out">
+                <Link :href="route('dashboard')" class="button button--green hover:bg-transparent transition duration-150 ease-in-out">
                   Dashboard
                 </Link>
               </li>
             </template>
             <template v-else>
               <li>
-                <Link :href="route('login')" class="bg-emerald-800 text-white font-bold m-1 py-2 px-3 rounded hover:bg-emerald-900 transition duration-150 ease-in-out hide-for-small-only">
+                <Link :href="route('login')" class="button button--green before-fade-in fade-in m-1 py-2 px-3 transition duration-150 ease-in-out hide-for-small-only">
                   Log in
                 </Link>
               </li>
               <li v-if="canRegister">
-                <Link :href="route('register')" class="bg-black text-gray-100 font-bold m-1 py-2 px-3 rounded hover:bg-zinc-900 hover:text-gray-100 transition duration-150 ease-in-out hide-for-small-only">
+                <Link :href="route('register')" class="button button--white before-fade-in fade-in transition duration-150 ease-in-out hide-for-small-only">
                   Register
                 </Link>
               </li>

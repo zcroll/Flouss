@@ -3,13 +3,13 @@
     <link
       rel="stylesheet"
       media="all"
-      href="//cdn2.careerhunter.io/assets/application-349b29af163d5822a096212e2dd202386f20dc4d2f59953f2fd3e210070ad75c.css"
+      href="/css/landingPage/index.css"
     />
     <link 
       rel="stylesheet" 
       media="all" 
-      href="//cdn3.careerhunter.io/assets/main_tests-bd884139ec646feab4ac86d2f494e405033a3d476b5b9ac820fc8fbc6576c466.css" 
-    />
+      href="//cdn3.careerhunter.io/assets/main_tests-bd884139ec646feab4ac86d2f494e405033a3d476b5b9ac820fc8fbc6576c466.css" />
+  
     
     <div class="test-image test-image--parallax interests">
       <div class="test-page">
@@ -61,7 +61,7 @@
                         </draggable>
                         <!-- Navigation buttons -->
                         <div class="grid-x fixed-grid">
-                          <button @click="previousPage" :disabled="currentPage === 1" class="button button--white">
+                          <button @click="previousPage" :disabled="currentPage === 1" class="button button--white transition duration-150 ease-in-out hide-for-small-only">
                             Previous
                           </button>
                           <button v-if="!isLastPage" @click="nextPage" class="button button--green">
@@ -167,21 +167,6 @@ export default {
   background-color: #4CAF50;
   border-radius: 5px;
   transition: width 0.3s ease-in-out;
-}
-
-.button--white {
-  background-color: #FFFFFF;
-  color: #000;
-}
-
-.button--green {
-  background-color: #4CAF50;
-  color: #fff;
-}
-
-.button--blue {
-  background-color: #007BFF;
-  color: #fff;
 }
 
 .colored-list-item {

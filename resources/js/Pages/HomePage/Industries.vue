@@ -3,12 +3,12 @@
     <link
       rel="stylesheet"
       media="all"
-      href="//cdn2.careerhunter.io/assets/application-349b29af163d5822a096212e2dd202386f20dc4d2f59953f2fd3e210070ad75c.css"
+      href="/css/landingPage/index.css"
     />
     <link 
       rel="stylesheet" 
       media="all" 
-      href="//cdn3.careerhunter.io/assets/main_tests-bd884139ec646feab4ac86d2f494e405033a3d476b5b9ac820fc8fbc6576c466.css" 
+      href="/css/landingPage/index.css" 
     />
 
     <div class="grid-container industries">

@@ -89,7 +89,7 @@
               <div class="lg:col-span-1">
                 <div class="sticky top-20  rounded-2xl p-6">
                   <div class="grid gap-4">
-                    <div v-for="(card, index) in cards" :key="index" class="bg-gray-900 rounded-xl p-4 shadow-lg ">
+                    <div v-for="(card, index) in cards" :key="index" class="bg-[#172939] rounded-xl p-4 shadow-lg ">
                       <p class="text-sm font-serif text-zinc-100 mb-3">{{ card.content.substring(0, 100) }}...</p>
                       <button @click="scrollToSection(card.sectionId)" class="text-xs font-semibold bg-zinc-200 text-black rounded-lg px-3 py-1 hover:bg-zinc-500 transition-colors">
                         {{ card.buttonText }}

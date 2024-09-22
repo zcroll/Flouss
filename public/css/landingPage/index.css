@@ -6576,10 +6576,10 @@ body.active::-webkit-scrollbar{
     }
 }
 .button--green{
-    background:#064e3b;
-    border-radius:10px;
-    -webkit-border-radius:10px;
-    -moz-border-radius:10px;
+    background:#59ce61;
+    border-radius:5px;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
     font-size:15px;
     padding:11px 18px;
     margin:5px;
@@ -6597,9 +6597,9 @@ body.active::-webkit-scrollbar{
 }
 .button--green--large{
     background:#59ce61;
-    border-radius:30px;
-    -webkit-border-radius:30px;
-    -moz-border-radius:30px;
+    border-radius:5px;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
     font-size:20px;
     padding:18px 30px 22px;
     height:60px;
@@ -6654,9 +6654,9 @@ body.active::-webkit-scrollbar{
 }
 .button--white{
     background:rgba(255,255,255,.1);
-    border-radius:10px;
-    -webkit-border-radius:10px;
-    -moz-border-radius:10px;
+    border-radius:5px;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
     padding:10px 19px;
     margin:5px;
     font-size:15px;
@@ -6678,7 +6678,8 @@ body.active::-webkit-scrollbar{
     color:#fff
 }
 .button--white:hover{
-    color:#fff
+    color:#fff;
+    background-color: #18181b;
 }
 .button--white.disable{
     color:rgba(255,255,255,.2)
@@ -6690,9 +6691,9 @@ body.active::-webkit-scrollbar{
     background:rgba(255,255,255,.2)
 }
 .button--white--big{
-    border-radius:10px;
-    -webkit-border-radius:10px;
-    -moz-border-radius:10px;
+    border-radius:5px;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
     font-size:18px;
     height:60px;
     padding:19px 28px;
@@ -8303,7 +8304,7 @@ h2.section-title{
 @media screen and (max-width:39.99875em){
     .process__step-img-blk{
         margin:0 -30px;
-        
+
         width:calc(100% + 60px)!important;
         float:none!important
 

@@ -5,8 +5,8 @@
             <div class="flex flex-col lg:flex-row">
                 <div class="w-full lg:w-4/4 space-y-20">
                     <div v-if="Object.keys(jobs).length > 0 " class="text-left mt-10">
-                        <h1 class="ml-1 text-4xl font-serif text-gray-800 mt-10 ">Your Compatibility Results</h1>
-                        <p class="ml-3 mt-2 text-lg text-gray-600">Below are your scores and best-fit career matches.</p>
+                        <h1 class="ml-1 text-4xl font-serif text-gray-100 mt-10 ">Your Compatibility Results</h1>
+                        <p class="ml-3 mt-2 text-lg text-slate-300">Below are your scores and best-fit career matches.</p>
                     </div>
                     <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
                         <Archetype
@@ -28,8 +28,8 @@
 
                     <!-- Closest Jobs Section -->
                     <div v-if="Object.keys(jobs).length > 0" class="text-left mb-6">
-                        <h1 class="ml-1 text-4xl font-serif text-gray-800">Your Best Fit Career Matches.</h1>
-                        <p class="ml-3 mt-2 text-lg text-gray-600">
+                        <h1 class="ml-1 text-4xl font-serif text-gray-100">Your Best Fit Career Matches.</h1>
+                        <p class="ml-3 mt-2 text-lg text-slate-300">
                             Based on your responses, here are some jobs that you can excel in more than everyone else.
                         </p>
                     </div>

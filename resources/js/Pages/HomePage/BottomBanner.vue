@@ -2,9 +2,9 @@
         <link
       rel="stylesheet"
       media="all"
-      href="//cdn2.careerhunter.io/assets/application-349b29af163d5822a096212e2dd202386f20dc4d2f59953f2fd3e210070ad75c.css"
+      href="/css/landingPage/index.css"
     />
-    <link rel="stylesheet" media="all" href="//cdn3.careerhunter.io/assets/main_tests-bd884139ec646feab4ac86d2f494e405033a3d476b5b9ac820fc8fbc6576c466.css" />
+
 
   <div class="bottom-banner with-extra-pad">
     <img class="wave-top hideForXsmall before-fade-in fade-in" height="153" width="419" alt="Perfect career wave" src="https://cdn0.careerhunter.io/assets/upgrade/wave-top-48ad3a7b57599dd38621ac0130144bcfd25f03dabb8b48f37038558c9a91557f.png" />
@@ -22,7 +22,7 @@
           </h4>
         </div>
         <div class="small-12 cell">
-          <a class="button button--green button--green--big before-fade-in fade-in" aria-label="Get Started" href="https://www.careerhunter.io/tests/interests/take">
+          <a class="button button--green--large before-fade-in fade-in before-fade-in fade-in" aria-label="Get Started" href="https://www.careerhunter.io/tests/interests/take">
             Get Started
             <span class="button__hovered"></span>
           </a>

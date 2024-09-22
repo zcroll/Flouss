@@ -45,7 +45,7 @@ const socialLinks = [
 <template >
     <div >
         <Head :title="title" />
-        <div class="min-h-screen bg-gray-100" >
+        <div class="min-h-screen bg-[#0a1e2e]" >
             <Header :title="headTitle" :sub-title="headSubTitle" :show-search="showSearch" :name="name">
                 <template #navigation>
                     <nav class="absolute top-0 left-0 right-0 z-10 bg-transparent">
@@ -77,7 +77,7 @@ const socialLinks = [
                                     <NavLink v-if="isOver10Days" :href="route('activities')" :active="route().current('activities')">
                                         Career Test
                                     </NavLink>
-                                </div>  
+                                </div>
                             </div>
 
                                 <div class="hidden sm:flex sm:items-center sm:ml-6">

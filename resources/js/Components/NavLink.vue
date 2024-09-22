@@ -15,7 +15,7 @@ const classes = computed(() => {
 
 // Define text classes that will change based on the `active` prop
 const textClasses = computed(() => {
-    return props.active ? ' text-blue-500 font-bold' : 'bg-gray-200 text-gray-900 font-bold bg-white py-1 px-3 rounded hover:bg-transparent hover:text-blue-500 transition duration-150 ease-in-out ' ;
+    return props.active ? ' text-blue-500 font-bold' : ' text-white font-bold py-2 px-3 rounded hover:bg-transparent hover:text-blue-500 transition duration-150 ease-in-out' ;
 });
 </script>
 

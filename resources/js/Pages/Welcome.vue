@@ -1,7 +1,7 @@
 <template>
     <div>
       <NavBar :canLogin="canLogin" :canRegister="canRegister" :laravelVersion="laravelVersion" :phpVersion="phpVersion" />
-      <link rel="stylesheet" media="all" href="" />
+      <link rel="stylesheet" media="all" href="/css/landingPage/index.css" />
       <div class="grid-container home">
         <div class="card card--home">
           <div class="card-1">
@@ -138,14 +138,14 @@
               <div>
                 <div class="banner-top--home-btns">
                   <template v-if="$page.props.auth.user">
-                    <Link :href="route('dashboard')" class="button button--green before-fade-in fade-in button--with-icon button--green--big rounded-2xl">
+                    <Link :href="route('dashboard')" class="button button--green--large before-fade-in fade-in button--with-icon">
                       Dashboard
                       <span class="small-icons next-arrow-white-s"></span>
                       <span class="button__hovered"></span>
                     </Link>
                   </template>
                   <template v-else>
-                    <Link :href="route('login')" class="button button--green before-fade-in fade-in button--with-icon button--green--big">
+                    <Link :href="route('login')" class=" button button--green--large before-fade-in fade-in button--with-icon ">
                       Log in
                       <span class="small-icons next-arrow-white-s"></span>
                       <span class="button__hovered"></span>
