@@ -24,7 +24,7 @@
                       <div>
                         <div class="rc-slider rc-slider-with-marks">
                           <div class="slider">
-                            <span class="slider-mark">{{ currentPage }}</span>
+                            <span class="slider-mark">{{ currentQuestion }}</span>
                             <span class="slider-mark">{{ Math.ceil(activities.length / 6) }}</span>
                           </div>
                         </div>
@@ -33,8 +33,8 @@
                           <div class="progress" :style="{ width: progressPercentage + '%' }"></div>
                           <div v-for="(point, index) in incompletePoints" :key="index" 
                                class="incomplete-point" 
-                               :style="{ left: (point / Math.ceil(activities.length / 6)) * 100 + '%' }"
-                               @click="goToPage(point)">
+                               :style="{ left: (point * 100 / Math.ceil(activities.length / 6)) + '%' }"
+                               @click="goToQuestion(point)">
                           </div>
                         </div>
                       </div>
@@ -61,6 +61,7 @@
                                     <p class="test-statement__option__text">
                                       {{ element.name }}
                                     </p>
+                                  
                                   </div>
                                   <div class="cell shrink">
                                     <div class="remove">
@@ -74,14 +75,14 @@
                         </template>
                       </draggable>
                       <div class="grid-x fixed-grid">
-                        <button @click="previousPage" :disabled="currentPage === 1" class="button button--white before-fade-in fade-in nav-btn">
+                        <button @click="previousQuestion" :disabled="currentQuestion === 1" class="button button--white before-fade-in fade-in nav-btn">
                           <span class="small-icons back-arrow-white-xs is-left"></span>
                           Previous
                         </button>
-                        <button v-if="!pageInteracted && !isPageRanked && !isLastPage" @click="skipPage" class="button button--yellow before-fade-in fade-in nav-btn">
+                        <button v-if="!questionInteracted && !isQuestionRanked && !isLastQuestion" @click="skipQuestion" class="button button--yellow before-fade-in fade-in nav-btn">
                           Skip
                         </button>
-                        <button v-else-if="!isLastPage" @click="nextPage" class="button button--green before-fade-in fade-in nav-btn">
+                        <button v-else-if="!isLastQuestion" @click="nextQuestion" class="button button--green before-fade-in fade-in nav-btn">
                           Next
                           <span class="small-icons next-arrow-white-xs is-right"></span>
                         </button>
@@ -101,8 +102,8 @@
               :rankedActivities="rankedActivities"
               :totalActivities="activities.length"
               :incompletePoints="incompletePoints"
-              :currentPage="currentPage"
-              @go-to-page="goToPage"
+              :currentQuestion="currentQuestion"
+              @go-to-question="goToQuestion"
               @go-back-to-test="toggleOverview"
               @save-for-later="saveForLater"
               @submit-answers="submitTest"
@@ -159,12 +160,12 @@ export default {
   },
   data() {
     return {
-      currentPage: 1,
+      currentQuestion: 1,
       drag: false,
       userResponses: [],
       currentActivities: [],
       incompletePoints: [],
-      pageInteracted: false,
+      questionInteracted: false,
       rankedActivities: [],
       showOverview: false,
       showIncompleteModal: false
@@ -172,14 +173,14 @@ export default {
   },
   computed: {
     progressPercentage() {
-      return (this.currentPage / Math.ceil(this.activities.length / 6)) * 100;
+      return (this.currentQuestion / Math.ceil(this.activities.length / 6)) * 100;
     },
-    isPageRanked() {
-      const start = (this.currentPage - 1) * 6;
+    isQuestionRanked() {
+      const start = (this.currentQuestion - 1) * 6;
       return this.rankedActivities.some(activity => activity.id === this.activities[start].id);
     },
-    isLastPage() {
-      return this.currentPage === Math.ceil(this.activities.length / 6);
+    isLastQuestion() {
+      return this.currentQuestion === Math.ceil(this.activities.length / 6);
     }
   },
   watch: {
@@ -195,23 +196,23 @@ export default {
   },
   methods: {
     loadCurrentActivities() {
-      const start = (this.currentPage - 1) * 6;
+      const start = (this.currentQuestion - 1) * 6;
       const end = start + 6;
       this.currentActivities = this.activities.slice(start, end);
-      this.pageInteracted = false;
+      this.questionInteracted = false;
     },
     onDragStart() {
-      this.pageInteracted = true;
-      this.removeIncompletePoint(this.currentPage);
+      this.questionInteracted = true;
+      this.removeIncompletePoint(this.currentQuestion);
     },
     onDragEnd() {
       this.drag = false;
       this.storeUserResponse();
     },
-    nextPage() {
-      if (this.currentPage < Math.ceil(this.activities.length / 6)) {
+    nextQuestion() {
+      if (this.currentQuestion < Math.ceil(this.activities.length / 6)) {
         this.storeUserResponse();
-        this.currentPage++;
+        this.currentQuestion++;
         this.loadCurrentActivities();
       }
     },
@@ -246,21 +247,21 @@ export default {
         }
       });
     },
-    skipPage() {
-      if (this.currentPage < Math.ceil(this.activities.length / 6)) {
-        this.addIncompletePoint(this.currentPage);
-        this.currentPage++;
+    skipQuestion() {
+      if (this.currentQuestion < Math.ceil(this.activities.length / 6)) {
+        this.addIncompletePoint(this.currentQuestion);
+        this.currentQuestion++;
         this.loadCurrentActivities();
       }
     },
-    previousPage() {
-      if (this.currentPage > 1) {
-        this.currentPage--;
+    previousQuestion() {
+      if (this.currentQuestion > 1) {
+        this.currentQuestion--;
         this.loadCurrentActivities();
       }
     },
     storeUserResponse() {
-      const start = (this.currentPage - 1) * 6;
+      const start = (this.currentQuestion - 1) * 6;
       const rankedActivities = this.currentActivities.map((activity, index) => {
         let score;
         switch(index) {
@@ -281,28 +282,28 @@ export default {
       
       this.rankedActivities = [...this.rankedActivities, ...rankedActivities];
       
-      this.userResponses[this.currentPage - 1] = [...this.currentActivities];
+      this.userResponses[this.currentQuestion - 1] = [...this.currentActivities];
       console.log('User responses:', this.userResponses);
       console.log('Ranked activities:', this.rankedActivities);
     },
     updateActivities(newActivities) {
-      const start = (this.currentPage - 1) * 6;
+      const start = (this.currentQuestion - 1) * 6;
       const end = start + 6;
       this.activities.splice(start, 6, ...newActivities);
     },
-    addIncompletePoint(page) {
-      if (!this.incompletePoints.includes(page)) {
-        this.incompletePoints.push(page);
+    addIncompletePoint(question) {
+      if (!this.incompletePoints.includes(question)) {
+        this.incompletePoints.push(question);
       }
     },
-    removeIncompletePoint(page) {
-      const index = this.incompletePoints.indexOf(page);
+    removeIncompletePoint(question) {
+      const index = this.incompletePoints.indexOf(question);
       if (index > -1) {
         this.incompletePoints.splice(index, 1);
       }
     },
-    goToPage(page) {
-      this.currentPage = page;
+    goToQuestion(question) {
+      this.currentQuestion = question;
       this.loadCurrentActivities();
       this.showOverview = false;
     },
@@ -370,5 +371,11 @@ export default {
   right: 10px;
   font-size: 24px;
   cursor: pointer;
+}
+
+.test-statement__option__category {
+  font-size: 14px;
+  color: #888;
+  margin-top: 5px;
 }
 </style>
