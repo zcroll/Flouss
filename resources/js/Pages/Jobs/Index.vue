@@ -1,7 +1,7 @@
 <style src="public/css/vueMultiselect.css"></style>
 <template>
-  <AppLayout :head-title="'Jobs'" :show-search="true" name="Jobs">
-    <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+  <AppLayout :head-title="'Career Insights'" head-sub-title="Unlock opportunities that perfectly match your personality and skills." :show-search="true" name="Jobs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <h1 class="text-2xl font-bold text-gray-100 mb-6 trait-type">Explore Jobs</h1>
 
       <div class="flex flex-col lg:flex-row gap-6">
@@ -62,8 +62,8 @@
         <div class="w-full lg:w-4/4">
           <div v-if="jobs.data.length > 0" class="space-y-3">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                <div v-for="job in jobs.data" :key="job.id" class="bg-slate-200 shadow-sm rounded-sm overflow-hidden transition-all duration-300 hover:shadow-md border border-gray-200">
+              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
+                <div v-for="job in jobs.data" :key="job.id" class="bg-white shadow-sm rounded-sm overflow-hidden transition-all duration-300 hover:shadow-md border border-gray-200">
                   <Link :href="`/career/${job.slug}`" class="block">
                     <div class="flex flex-col h-full">
                       <div class="flex justify-center pt-4">

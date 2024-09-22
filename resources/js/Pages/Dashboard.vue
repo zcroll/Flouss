@@ -1,5 +1,5 @@
 <template>
-    <AppLayout head-title="A new way to find your path." head-sub-title="Embark on a journey of scholarly discovery and professional growth with our expert guidance.">
+    <AppLayout head-title="Welcome to your Orientation Space" head-sub-title="Discover Jobs, Degrees ans schools that best suit your Personnality" :show-div="false" :name-exist="true">
         <div class="py-12 sm:py-16">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-12 gap-8">
