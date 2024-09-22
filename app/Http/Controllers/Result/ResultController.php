@@ -10,6 +10,8 @@ use App\Models\Result;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ArchetypeCareer;
 
 class ResultController extends Controller
 {
@@ -18,7 +20,7 @@ class ResultController extends Controller
      */
     public function results() : \Inertia\Response|\Illuminate\Http\RedirectResponse
     {
-        $userId = auth()->id();
+        $userId = Auth::id();
         $scores = ResultResource::collection(Result::with('user')->where('user_id', $userId)->latest()->get());
 
         if ($scores->isEmpty()) {
@@ -54,7 +56,7 @@ class ResultController extends Controller
             ];
         })->sortBy('distance')->values();
           ds($jobsWithDistances);
-        $Archetype = DB::table('persona')->where('name', '=', "Mentor")->first();
+        $Archetype = DB::table('persona')->where('name', '=', "Captain")->first();
         ds($firstScore->scores,);
         // Get the scores from $firstScore
         $scores = json_decode($firstScore->scores, true);
@@ -76,16 +78,23 @@ class ResultController extends Controller
             Log::error('Scores is not an array', ['scores' => $firstScore->scores]);
             $topTwoResults = [];
         }
-        ds($topTwoResults);
+        // ds($topTwoResults);
 
+        // Get the careers based on the archetype using the ArchetypeCareer model
+        ds($Archetype);
+        $archetypeCareers = ArchetypeCareer::where('archetype', $Archetype->name)
+            ->get(['career', 'image', 'slug']);
+           
+          ds($archetypeCareers->toArray());
         // Add the top two results to the Inertia response
- 
+
         if ($firstScore) {
             return Inertia::render('Result/Results', [
                 'userId' => $firstScore->uuid,
                 'scores' => $topTwoResults,
                 'jobs' => $jobsWithDistances,
                 'Archetype' => $Archetype,
+                'ArchetypeJobs' => $archetypeCareers,
             ]);
         }
 
@@ -94,7 +103,7 @@ class ResultController extends Controller
 
     public function personality($id): \Inertia\Response
     {
-        $userId = auth()->id();
+        $userId = Auth::id();
 
         $scores = ResultResource::collection(Result::with('user')->where('user_id', $userId)->get());
 
@@ -113,6 +122,8 @@ class ResultController extends Controller
             ->distinct()
             ->get();
 
+        // Update the query to use the new model
+        $archetypeCareers = ArchetypeCareer::where('archetype', $Archetype)->get();
 
         return Inertia::render('Result/Personality', [
             "ArchetypeData" => $ArchetypeData,
