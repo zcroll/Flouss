@@ -15,6 +15,7 @@
               <input
                 id="search"
                 v-model="searchQuery"
+                class="w-full px-3 py-1.5 text-gray-400 text-sm border bg-gray-800 rounded-md shadow-sm focus:ring-[#4db554] focus:border-[#4db554]"
                 type="text"
                 placeholder="Search degrees"
                 @input="debouncedSearch"
@@ -62,7 +63,7 @@
           <div v-if="degrees.data.length > 0" class="space-y-3">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
-                <div v-for="degree in degrees.data" :key="degree.id" class="bg-white shadow-sm rounded-sm overflow-hidden transition-all duration-300 hover:shadow-md border border-gray-200">
+                <div v-for="degree in degrees.data" :key="degree.id" class="bg-white shadow-sm rounded-md overflow-hidden transition-all duration-300 hover:shadow-md border border-gray-200">
                   <Link :href="`/degree/${degree.slug}`" class="block">
                     <div class="flex flex-col h-full">
                       <div class="flex justify-center pt-4">
