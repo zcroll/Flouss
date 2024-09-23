@@ -17,7 +17,6 @@
                 v-model="searchQuery"
                 type="text"
                 placeholder="Search degrees"
-                class="w-full px-3 py-1.5 text-gray-400 text-sm border bg-gray-800 rounded-md shadow-sm focus:ring-[#4db554] focus:border-[#4db554]"
                 @input="debouncedSearch"
               />
             </div>
