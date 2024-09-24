@@ -83,10 +83,9 @@ return [
     |
     */
 
-    'locale' => Locale::French->value,
+    'locale' => 'en',
     'available_locales' => [
         'en',
-        'de',
         'fr'
     ],
     'fallback_locale' => Locale::English->value,

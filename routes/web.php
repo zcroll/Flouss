@@ -15,6 +15,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 
 use Inertia\Inertia;
+use App\Http\Controllers\LanguageController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -90,3 +91,5 @@ Route::get('/test-preview', function () {
 
 Route::get('/test', [TestController::class, 'index'])->name('test');
 Route::post('/test', [TestController::class, 'submitAnswer'])->name('test.submit-answer');
+
+Route::post('language/', LanguageController::class)->name('language.switch');

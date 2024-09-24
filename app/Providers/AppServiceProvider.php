@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
@@ -21,6 +22,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-
+        JsonResource::withoutWrapping();
     }
 }

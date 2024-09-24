@@ -16,6 +16,8 @@ class DegreeController extends Controller
             ->where('slug', $slug)
             ->firstOrFail();
 
+
+
         return Inertia::render('degree/Overview', [
             'degree' => $degree,
             'degreeDescription' => $degree->degreeDescription,

@@ -9,7 +9,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Degree extends Model
 {
-    use HasFactory;
+    // use HasFactory;
+
+    // protected $table = 'degrees';
 
     protected $fillable = [
         'name',

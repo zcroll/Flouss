@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Enum\Lang;
+use App\Http\Resources\LanguageResource;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -36,8 +38,9 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         return array_merge(parent::share($request), [
-            'availableLocales' => config('app.available_locales'),
-            'currentLocale' => app()->getLocale(),
+            // 'availableLocales' => config('app.available_locales'),
+            'language' => app()->getLocale(),
+            'languages' => LanguageResource::collection(Lang::cases()),
         ]);
     }
 }

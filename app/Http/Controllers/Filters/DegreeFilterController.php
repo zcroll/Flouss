@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Filters;
 
 use App\Http\Controllers\Controller;
 use App\Models\Degree;
+use App\Models\JobInfo;
+use App\Models\Question;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -12,6 +14,10 @@ class DegreeFilterController extends Controller
     public function index(Request $request)
     {
         $query = Degree::query();
+
+
+        $user = \DB::table('job_infos')->get();
+        ds($user);
 
         $filters = [];
 
@@ -50,6 +56,8 @@ class DegreeFilterController extends Controller
         }
 
         $degrees = $query->paginate(12)->appends($filters);
+
+        ds($degrees);
 
         return Inertia::render('Degrees/Index', [
             'degrees' => [

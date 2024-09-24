@@ -56,7 +56,7 @@ class ResultController extends Controller
             ];
         })->sortBy('distance')->values();
           ds($jobsWithDistances);
-        $Archetype = DB::table('persona')->where('name', '=', "Captain")->first();
+        $Archetype = DB::table('persona')->where('name', '=', "Inventor")->first();
         ds($firstScore->scores,);
         // Get the scores from $firstScore
         $scores = json_decode($firstScore->scores, true);
