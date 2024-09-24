@@ -1,5 +1,5 @@
 <template>
-    <AppLayout head-title="Welcome to your Orientation Space" head-sub-title="Discover Jobs, Degrees ans schools that best suit your Personnality" :show-div="false" :name-exist="true">
+    <AppLayout :head-title="__('dashboard.welcome')" :head-sub-title="__('dashboard.discover')" :show-div="false" :name-exist="true">
         <div class="py-12 sm:py-16">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-12 gap-8">
@@ -23,7 +23,7 @@
                                         :href="'/test-preview'"
                                         class="rounded-full bg-purple-100 px-3 py-1.5 font-medium text-purple-600 hover:bg-purple-200"
                                     >
-                                        Aptitude Assessment
+                                        {{ __('dashboard.aptitude_assessment') }}
                                     </Link>
                                 </div>
 
@@ -33,15 +33,15 @@
                                         :href="hasResult ? '/results' : '/test-preview'"
                                         class="hover:underline"
                                     >
-                                        {{ hasResult ? 'View Your Results' : 'Take the Assessment' }}
+                                        {{ hasResult ? __('dashboard.view_results') : __('dashboard.take_assessment') }}
                                     </Link>
                                 </h3>
 
                                 <!-- Description -->
                                 <p class="text-sm text-gray-300 mb-6 leading-relaxed">
                                     {{ hasResult
-                                    ? 'Review your comprehensive assessment results to gain insights into your academic strengths and professional inclinations.'
-                                    : 'Participate in our rigorous aptitude assessment to identify your academic strengths and professional competencies.' }}
+                                    ? __('dashboard.review_assessment')
+                                    : __('dashboard.participate_assessment') }}
                                 </p>
 
                                 <div class="flex justify-end">
@@ -49,7 +49,7 @@
                                         <PrimaryButton
                                             class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded"
                                         >
-                                            {{ hasResult ? 'View Assessment Results' : 'Begin Assessment' }}
+                                            {{ hasResult ? __('dashboard.view_assessment_results') : __('dashboard.begin_assessment') }}
                                         </PrimaryButton>
                                     </Link>
                                 </div>
@@ -64,18 +64,18 @@
                             </div>
                             <div class="p-6">
                                 <div class="flex items-center gap-x-4 text-xs mb-4">
-                                    <Link href="/categories/job-search" class="rounded-full bg-yellow-100 px-3 py-1.5 font-medium text-yellow-700 hover:bg-yellow-200">Career Exploration</Link>
+                                    <Link href="/categories/job-search" class="rounded-full bg-yellow-100 px-3 py-1.5 font-medium text-yellow-700 hover:bg-yellow-200">{{ __('dashboard.career_exploration') }}</Link>
                                 </div>
                                 <h3 class="text-xl font-semibold text-gray-900 mb-3">
                                     <Link href="/job-search" class="hover:underline">
-                                        Discover Career Opportunities
+                                        {{ __('dashboard.discover_opportunities') }}
                                     </Link>
                                 </h3>
-                                <p class="text-sm text-gray-600 mb-6">Explore our curated database of career opportunities tailored to your academic background and professional aspirations. Embrace the chance to explore new horizons and make informed decisions about your future. Our platform is designed to support you in finding the right career fit, empowering you to take confident steps towards achieving your professional dreams.</p>
+                                <p class="text-sm text-gray-600 mb-6">{{ __('dashboard.explore_careers') }}</p>
                                 <div class="flex justify-end">
                                     <Link href="/jobs" class="inline-block">
                                         <PrimaryButton class="bg-amber-400 hover:bg-yellow-500 text-white font-semibold py-2 px-4 rounded">
-                                            Explore Opportunities
+                                            {{ __('dashboard.explore_opportunities') }}
                                         </PrimaryButton>
                                     </Link>
                                 </div>
@@ -89,18 +89,18 @@
                         </div>
                         <div class="p-6">
                             <div class="flex items-center gap-x-4 text-xs mb-4">
-                                <Link href="/categories/education" class="rounded-full bg-green-100 px-3 py-1.5 font-medium text-green-600 hover:bg-green-200">Academic Advancement</Link>
+                                <Link href="/categories/education" class="rounded-full bg-green-100 px-3 py-1.5 font-medium text-green-600 hover:bg-green-200">{{ __('dashboard.academic_advancement') }}</Link>
                             </div>
                             <h3 class="text-xl font-semibold text-gray-900 mb-3">
                                 <Link href="/degrees" class="hover:underline">
-                                    Enhance Your Academic Credentials
+                                    {{ __('dashboard.enhance_credentials') }}
                                 </Link>
                             </h3>
-                            <p class="text-sm text-gray-600 mb-6">Examine a comprehensive array of academic degrees and professional certifications.</p>
+                            <p class="text-sm text-gray-600 mb-6">{{ __('dashboard.explore_degrees') }}</p>
                             <div class="flex justify-end">
                                 <Link href="/degrees">
                                     <PrimaryButton class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded">
-                                        Explore Programs
+                                        {{ __('dashboard.explore_programs') }}
                                     </PrimaryButton>
                                 </Link>
                             </div>
@@ -113,20 +113,20 @@
                         </div>
                         <div class="p-6">
                             <div class="flex items-center gap-x-4 text-xs mb-4">
-                                <Link href="/etablissement" class="rounded-full bg-sky-200 px-3 py-1.5 font-medium text-sky-800 hover:bg-sky-300">Aptitude Assessment</Link>
+                                <Link href="/etablissement" class="rounded-full bg-sky-200 px-3 py-1.5 font-medium text-sky-800 hover:bg-sky-300">{{ __('dashboard.aptitude_assessment') }}</Link>
                             </div>
                             <h3 class="text-xl font-semibold text-gray-900 mb-3">
                                 <span  class="hover:underline">
-                                Quick look at Campus
+                                {{ __('dashboard.quick_look_campus') }}
                                 </span>
                             </h3>
                             <p class="text-sm text-gray-600 mb-6">
-                                Schools and universities where you can nurture your passion.
+                                {{ __('dashboard.nurture_passion') }}
                             </p>
                             <div class="flex justify-end">
                                 <Link href="/etablissement">
                                     <PrimaryButton class="bg-sky-500 hover:bg-sky-600 text-white font-semibold py-2 px-4 rounded">
-                                        Explore Schools
+                                        {{ __('dashboard.explore_schools') }}
                                     </PrimaryButton>
                                 </Link>
                             </div>
@@ -144,6 +144,7 @@ import {Link} from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import {defineProps} from 'vue';
+import __ from '@/lang';
 
 const props = defineProps({
     hasResult: Boolean,

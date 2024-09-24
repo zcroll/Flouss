@@ -6,7 +6,8 @@ use App\Enum\Lang;
 use App\Http\Resources\LanguageResource;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
-
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Arr;
 class HandleInertiaRequests extends Middleware
 {
     /**
@@ -41,6 +42,22 @@ class HandleInertiaRequests extends Middleware
             // 'availableLocales' => config('app.available_locales'),
             'language' => app()->getLocale(),
             'languages' => LanguageResource::collection(Lang::cases()),
-        ]);
+            'translations' => function() {
+                return cache()->rememberForever('translations' . app()->getLocale(), function() {
+
+                
+                return collect(File::allFiles(base_path('lang/' . app()->getLocale())))
+                    ->flatMap(function ($file) {
+
+                        return Arr::dot(
+                          File::getRequire($file->getRealPath()),
+                        $filename = $file->getBasename('.' . $file->getExtension()) . '.' 
+
+
+                        );
+                    });
+                   
+            });
+        }]);
     }
 }

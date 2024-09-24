@@ -1,0 +1,24 @@
+<?php
+
+return [
+    'welcome' => 'Welcome to your Orientation Space',
+    'discover' => 'Discover Jobs, Degrees, and Schools that best suit your Personality',
+    'aptitude_assessment' => 'Aptitude Assessment',
+    'take_assessment' => 'Take the Assessment',
+    'view_results' => 'View Your Results',
+    'participate_assessment' => 'Participate in our rigorous aptitude assessment to identify your academic strengths and professional competencies.',
+    'review_assessment' => 'Review your comprehensive assessment results to gain insights into your academic strengths and professional inclinations.',
+    'begin_assessment' => 'Begin Assessment',
+    'view_assessment_results' => 'View Assessment Results',
+    'career_exploration' => 'Career Exploration',
+    'discover_opportunities' => 'Discover Career Opportunities',
+    'explore_careers' => 'Explore our curated database of career opportunities tailored to your academic background and professional aspirations. Embrace the chance to explore new horizons and make informed decisions about your future. Our platform is designed to support you in finding the right career fit, empowering you to take confident steps towards achieving your professional dreams.',
+    'explore_opportunities' => 'Explore Opportunities',
+    'academic_advancement' => 'Academic Advancement',
+    'enhance_credentials' => 'Enhance Your Academic Credentials',
+    'explore_degrees' => 'Examine a comprehensive array of academic degrees and professional certifications.',
+    'explore_programs' => 'Explore Programs',
+    'quick_look_campus' => 'Quick look at Campus',
+    'nurture_passion' => 'Schools and universities where you can nurture your passion.',
+    'explore_schools' => 'Explore Schools',
+];
