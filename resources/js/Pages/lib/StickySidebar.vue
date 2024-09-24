@@ -6,10 +6,10 @@
 
         <!-- Sticky Sidebar -->
         <div class="w-full lg:w-1/3 mb-8 lg:mb-0 lg:pl-8">
-            <div class="sticky top-4 text-white shadow-2xl rounded-3xl p-6 overflow-hidden"
+            <div class="sticky top-4 text-white  rounded-3xl p-6 overflow-hidden"
                  :class="[
-                    type === 'career' ? 'bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500' :
-                    type === 'degree' ? 'bg-gradient-to-br from-blue-500 via-cyan-500 to-teal-500' :
+                    type === 'career' ? 'bg-gradient-to-br from-[#132535] via-[#172f44] to-[#18354f]' :
+                    type === 'degree' ? 'bg-gradient-to-br from-[#132535] via-[#172f44] to-[#18354f]' :
                     'bg-gradient-to-br from-green-500 via-teal-500 to-blue-500'
                  ]">
                 <div class="relative z-10">
@@ -103,7 +103,7 @@ const props = defineProps({
     slug: String,
     title: String,
     image: String,
-    salary: String,
+    salary: Number,
     personality: String,
     satisfaction: String,
     degreeLevel: String,
@@ -154,7 +154,7 @@ const getFirstBoxTitle = computed(() => {
 });
 
 const getFirstBoxContent = computed(() => {
-    if (props.type === 'career') return props.salary;
+    if (props.type === 'career') return 'N/A';
     if (props.type === 'degree') return props.degreeLevel;
     return props.jobType;
 });
