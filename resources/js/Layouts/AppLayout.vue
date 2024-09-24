@@ -74,6 +74,12 @@ const socialLinks = [
                                     <NavLink :href="route('degrees.index')" :active="route().current('degrees.index')">
                                         Degrees
                                     </NavLink>
+
+                                    <select name="language" id="language" v-on:change="router.post(route('language.switch',{language:$event.target.value}))">
+                                        <option :value="language.value" v-for="language in $page.props.languages" 
+                                        :key="language.value" :selected="language.value === $page.props.language">{{ language.label }}</option>
+                                    </select>
+
                                     <NavLink v-if="isOver10Days" :href="route('activities')" :active="route().current('activities')">
                                         Career Test
                                     </NavLink>
@@ -133,6 +139,9 @@ const socialLinks = [
 
                                     <!-- Settings Dropdown -->
                                     <div class="ml-3 relative">
+
+
+
                                         <Dropdown align="right" width="60">
                                             <template #trigger>
                                                 <button v-if="$page.props.jetstream.managesProfilePhotos" class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
@@ -207,6 +216,7 @@ const socialLinks = [
                                                     <ResponsiveNavLink :href="route('degrees.index')" :active="route().current('degrees.index')">
                                                         Degrees
                                                     </ResponsiveNavLink>
+                                                    
                                                     <ResponsiveNavLink v-if="isOver10Days" :href="route('activities')" :active="route().current('activities')">
                                                         Career Test
                                                     </ResponsiveNavLink>
