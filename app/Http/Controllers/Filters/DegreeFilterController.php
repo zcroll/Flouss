@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Filters;
 
 use App\Http\Controllers\Controller;
 use App\Models\Degree;
-use App\Models\JobInfo;
-use App\Models\Question;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -13,18 +11,20 @@ class DegreeFilterController extends Controller
 {
     public function index(Request $request)
     {
+        $locale = app()->getLocale();
+        $nameColumn = $locale === 'fr' ? 'name_fr' : 'name';
+        $descriptionColumn = $locale === 'fr' ? 'secondary_description_fr' : 'secondary_description';
+
         $query = Degree::query();
-
-
-        $user = \DB::table('job_infos')->get();
-        ds($user);
 
         $filters = [];
 
         if ($search = $request->input('q')) {
             $filters['q'] = $search;
-            $query->where('name', 'like', "%{$search}%")
-                ->orWhere('slug', 'like', "%{$search}%");
+            $query->where(function ($query) use ($search, $nameColumn) {
+                $query->where($nameColumn, 'like', "%{$search}%")
+                      ->orWhere('slug', 'like', "%{$search}%");
+            });
         }
 
         if ($levels = $request->input('education')) {
@@ -57,11 +57,19 @@ class DegreeFilterController extends Controller
 
         $degrees = $query->paginate(12)->appends($filters);
 
-        ds($degrees);
-
         return Inertia::render('Degrees/Index', [
             'degrees' => [
-                'data' => $degrees->items(),
+                'data' => $degrees->map(function ($degree) use ($locale, $nameColumn, $descriptionColumn) {
+                    return [
+                        'id' => $degree->id,
+                        'name' => $degree->$nameColumn,
+                        'image'=>$degree->image,
+                        'slug' => $degree->slug,
+                        'description' => $degree->degreeDescription ? $degree->degreeDescription->$descriptionColumn : null,
+                        'salary' => $degree->salary,
+                        'satisfaction' => $degree->satisfaction,
+                    ];
+                }),
                 'links' => $degrees->linkCollection()->toArray(),
                 'meta' => [
                     'current_page' => $degrees->currentPage(),

@@ -12,6 +12,7 @@ class DegreeJob extends Model
     protected $fillable = [
         'degree_id',
         'job_title',
+        'job_title_fr',
         'job_description',
     ];
 

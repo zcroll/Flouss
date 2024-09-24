@@ -11,19 +11,25 @@ class JobFilterController extends Controller
 {
     public function index(Request $request)
     {
+        $locale = app()->getLocale();
+        $nameColumn = $locale === 'fr' ? 'name_fr' : 'name';
+        $descriptionColumn = $locale === 'fr' ? 'description_fr' : 'description';
+
         $query = JobInfo::query();
 
         $filters = [];
 
         if ($search = $request->input('q')) {
             $filters['q'] = $search;
-            $query->where('name', 'like', "%{$search}%")
-                ->orWhere('slug', 'like', "%{$search}%");
+            $query->where(function ($query) use ($search, $nameColumn) {
+                $query->where($nameColumn, 'like', "%{$search}%")
+                      ->orWhere('slug', 'like', "%{$search}%");
+            });
         }
-        // dd($filters);
+
         if ($levels = $request->input('education')) {
             $filters['education'] = $levels;
-            $query->whereIn('eucation_level', $levels);
+            $query->whereIn('education_level', $levels);
         }
 
         if ($sort = $request->input('sort')) {
@@ -42,7 +48,17 @@ class JobFilterController extends Controller
 
         return Inertia::render('Jobs/Index', [
             'jobs' => [
-                'data' => $jobs->items(),
+                'data' => $jobs->map(function ($job) use ($locale, $nameColumn, $descriptionColumn) {
+                    return [
+                        'id' => $job->id,
+                        'name' => $job->$nameColumn,
+                        'image'=>$job->image,
+                        'slug' => $job->slug,
+                        'description' => $job->$descriptionColumn,
+                        'salary' => $job->salary,
+                        'satisfaction' => $job->satisfaction,
+                    ];
+                }),
                 'links' => $jobs->linkCollection()->toArray(),
                 'meta' => [
                     'current_page' => $jobs->currentPage(),

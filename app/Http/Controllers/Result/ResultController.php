@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Result;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ResultResource;
-use App\Http\Resources\UserResource;
 use App\Models\JobInfo;
 use App\Models\Result;
 use Illuminate\Support\Facades\DB;
@@ -12,7 +11,7 @@ use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ArchetypeCareer;
-
+use App\Models\Insight;
 class ResultController extends Controller
 {
     /**
@@ -20,6 +19,9 @@ class ResultController extends Controller
      */
     public function results() : \Inertia\Response|\Illuminate\Http\RedirectResponse
     {
+        $locale = app()->getLocale();
+        $nameColumn = $locale === 'fr' ? 'name_fr' : 'name';
+
         $userId = Auth::id();
         $scores = ResultResource::collection(Result::with('user')->where('user_id', $userId)->latest()->get());
 
@@ -37,7 +39,7 @@ class ResultController extends Controller
         $jobIds = $jobsCollection->pluck('job_info_id');
         $jobIdsArray = $jobIds->toArray();
         $jobs = JobInfo::whereIn('id', $jobIds)
-            ->select('id', 'name', 'slug', 'image')
+            ->select('id', $nameColumn . ' as name', 'slug', 'image')
             ->get();
 
         // Merge job information with distances and calculate ratings
@@ -55,7 +57,7 @@ class ResultController extends Controller
                 'rating' => $rating
             ];
         })->sortBy('distance')->values();
-          ds($jobsWithDistances);
+
         $Archetype = DB::table('persona')->where('name', '=', "Inventor")->first();
         ds($firstScore->scores,);
         // Get the scores from $firstScore
@@ -85,7 +87,7 @@ class ResultController extends Controller
         $archetypeCareers = ArchetypeCareer::where('archetype', $Archetype->name)
             ->get(['career', 'image', 'slug']);
            
-          ds($archetypeCareers->toArray());
+        ds($archetypeCareers->toArray());
         // Add the top two results to the Inertia response
 
         if ($firstScore) {
@@ -103,6 +105,10 @@ class ResultController extends Controller
 
     public function personality($id): \Inertia\Response
     {
+        $locale = app()->getLocale();
+        $nameColumn = $locale === 'fr' ? 'name_fr' : 'name';
+        $insightColumn = $locale === 'fr' ? 'insight_fr' : 'insight';
+
         $userId = Auth::id();
 
         $scores = ResultResource::collection(Result::with('user')->where('user_id', $userId)->get());
@@ -115,10 +121,21 @@ class ResultController extends Controller
         ds($firstScore->scores);
         $Archetype = $firstScore->Archetype;
         $ArchetypeData = DB::table('persona')->where('name', '=', "Mentor")->first();
-        $insights = DB::table('insights')
+        
+        $insights = Insight::with('persona')
             ->join('insight_categories', 'insights.insight_category_slug', '=', 'insight_categories.insight_category_slug')
             ->where('insights.persona_id', '=', $ArchetypeData->id)
-            ->select('insights.*', 'insight_categories.insight_category')
+            ->select(
+                'insights.id', 
+                'insights.persona_id', 
+                'insights.insight_category_slug', 
+                'insight_categories.insight_category'
+            )
+            ->when($locale === 'fr', function ($query) {
+                return $query->selectRaw('CASE WHEN insights.insight_fr IS NOT NULL AND insights.insight_fr != "" THEN insights.insight_fr ELSE insights.insight END as insight');
+            }, function ($query) {
+                return $query->select('insights.insight as insight');
+            })
             ->distinct()
             ->get();
 

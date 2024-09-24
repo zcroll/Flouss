@@ -13,6 +13,8 @@ class DegreeDescription extends Model
         'degree_id',
         'main_description',
         'secondary_description',
+        'secondary_description_fr',
+        'main_description_fr',
     ];
 
     public function degree(): BelongsTo

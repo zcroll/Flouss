@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DegreeSkill extends Model
 {
-    protected $table = 'degree_skills_v2';
+    protected $table = 'degree_skills_v3';
 
     protected $fillable = [
         'degree_id',
-        'skill_title',
         'skill_description',
+        'skill_description_fr',
     ];
 
     public function degree(): BelongsTo
