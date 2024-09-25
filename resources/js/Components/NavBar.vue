@@ -15,10 +15,10 @@
               </Link>
             </li>
             <li class="show-for-large">
-              <Link :href="route('how-it-works')" class="btn_link text-white font-bold py-2 px-3 rounded hover:bg-transparent hover:text-blue-500 transition duration-150 ease-in-out">How it works</Link>
+              <Link :href="route('how-it-works')" class="btn_link text-white font-bold py-2 px-3 rounded hover:bg-transparent hover:text-blue-500 transition duration-150 ease-in-out">{{__('navigation.how_it_works')}}</Link>
             </li>
             <li class="show-for-large">
-              <Link :href="route('interests')" class="btn_link text-white font-bold py-2 px-3 rounded hover:bg-transparent hover:text-blue-500 transition duration-150 ease-in-out">Interests</Link>
+              <Link :href="route('interests')" class="btn_link text-white font-bold py-2 px-3 rounded hover:bg-transparent hover:text-blue-500 transition duration-150 ease-in-out">{{__('navigation.test')}}</Link>
             </li>
           </ul>
         </nav>
@@ -26,22 +26,41 @@
       <div class="top-menu__right">
         <nav role="navigation" v-if="canLogin">
           <ul class="top-menu__list">
+
+            <li>
+              <select 
+                  name="language" 
+                  id="language" 
+                  v-on:change="router.post(route('language.switch',{language:$event.target.value}))"
+                  class="bg-transparent text-white border border-slate-500 focus:border-green-400 focus:ring-2 focus:ring-green-400 rounded-md px-2 py-1 text-sm mr-4"
+              >
+                  <option 
+                      :value="language.value" 
+                      v-for="language in $page.props.languages"
+                      :key="language.value" 
+                      :selected="language.value === $page.props.language"
+                      class="bg-[#0a1e2e] text-white"
+                  >
+                      {{ language.value === 'en' ? 'En' : 'Fr' }}
+                  </option>
+               </select>
+            </li>
             <template v-if="$page.props.auth.user">
               <li>
                 <Link :href="route('dashboard')" class="button button--green hover:bg-transparent transition duration-150 ease-in-out">
-                  Dashboard
+                  {{ __('navigation.dashboard') }}
                 </Link>
               </li>
             </template>
             <template v-else>
               <li>
                 <Link :href="route('login')" class="button button--green before-fade-in fade-in m-1 py-2 px-3 transition duration-150 ease-in-out hide-for-small-only">
-                  Log in
+                  {{ __('navigation.log_in') }}
                 </Link>
               </li>
               <li v-if="canRegister">
                 <Link :href="route('register')" class="button button--white before-fade-in fade-in transition duration-150 ease-in-out hide-for-small-only">
-                  Register
+                  {{ __('navigation.register') }}
                 </Link>
               </li>
             </template>

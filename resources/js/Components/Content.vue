@@ -4,16 +4,16 @@
       <div class="grid-x">
         <div class="large-4 medium-12 small-12 cell">
           <h2 class="why-ch__title before-fade-in fade-in">
-            Unrivaled career testing
+            {{ __('welcome.unrivaled_testing') }}
           </h2>
           <ul class="accordion nested enable-active-medium-up">
             <li v-for="(item, index) in accordionItems" :key="index" class="accordion-item before-fade-in fade-in" :class="{ 'is-active': activeIndex === index }">
               <span class="accordion-title" @click="toggleAccordion(index)">
-                {{ item.title }}
+                {{ __(`welcome.accordion_items.${item.key}.title`) }}
               </span>
               <div class="accordion-content" :style="{ display: activeIndex === index ? 'block' : 'none' }">
                 <p :class="{ 'before-fade-in fade-in': activeIndex === index }">
-                  {{ item.content }}
+                  {{ __(`welcome.accordion_items.${item.key}.content`) }}
                 </p>
               </div>
             </li>
@@ -39,17 +39,17 @@
               />
               <img
                   class="show-for-large before-fade-in fade-in"
-                  alt="Reveal your strengths"
+                  :alt="__('welcome.reveal_your_strengths')"
                   src="https://www.careerhunter.io/images/home/benefits-desktop-home.png"
               />
               <img
                   class="show-for-medium-only"
-                  alt="Reveal your strengths"
+                  :alt="__('welcome.reveal_your_strengths')"
                   src="https://www.careerhunter.io/images/home/benefits-desktop-home.png"
               />
               <img
                   class="show-for-small-only"
-                  alt="Reveal your strengths"
+                  :alt="__('welcome.reveal_your_strengths')"
                   src="https://www.careerhunter.io/images/home/benefits-mobile-2.png"
               />
             </picture>
@@ -68,26 +68,11 @@ export default {
     return {
       activeIndex: null,
       accordionItems: [
-        {
-          title: 'Smart and accurate career matching',
-          content: 'CareerHunter evaluates your test answers to accurately match you to the careers you\'re best suited to according to your unique interests, personality type, motivations and strengths.'
-        },
-        {
-          title: 'Built by experts and scientifically validated',
-          content: 'Our tests were developed by a team of psychometricians, career experts and researchers, and have undergone extensive validity and reliability testing to ensure the accuracy and integrity of the entire platform.'
-        },
-        {
-          title: 'Unique and intelligent algorithm',
-          content: 'We score test-takers using an advanced and innovative technology based on our continuously evolving algorithm, designed to analyze the results of each test in real time to generate personalized results.'
-        },
-        {
-          title: 'Database of 250+ popular professions',
-          content: 'Explore our database of popular and emerging professions across all major industries, and read up on the ones that you want to pursue with our detailed and insightful career profiles.'
-        },
-        {
-          title: 'Personalized insights and reporting',
-          content: 'Get detailed insights into your results as you complete each test — including your scores, what they mean and how they can impact your future career — plus access your full career report that compiles all your matches.'
-        }
+        { key: 'smart_matching' },
+        { key: 'expert_built' },
+        { key: 'unique_algorithm' },
+        { key: 'profession_database' },
+        { key: 'personalized_insights' }
       ]
     }
   },
@@ -101,6 +86,6 @@ export default {
 
 <style scoped>
 .content-wrapper {
-  padding-left: 20px; /* Adjust this value to move the content more or less to the right */
+  padding-left: 20px;
 }
 </style>

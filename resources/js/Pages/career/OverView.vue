@@ -1,5 +1,5 @@
 <template>
-    <AppLayout :headTitle="occupation.name">
+    <AppLayout>
 
         <StickySidebar
             :slug="occupation.slug"

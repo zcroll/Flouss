@@ -11,34 +11,27 @@
         <div class="grid-x align-middle">
           <div class="large-6 medium-12 small-12 cell how-science__left">
             <h2 class="blue-blk__title text-white">
-              The science behind our tests
+              {{ __('how_it_works.science_behind_tests') }}
             </h2>
             <div class="tutorial-video show-for-small-only ">
               <div>
                 <div class="preview-img">
                   <img
-
-                    alt="preview image for the tutorial video"
+                    :alt="__('how_it_works.preview_image_alt')"
                     src="https://cdn0.careerhunter.io/packs/media/components/home/preview-img-6e9ac4a5a3b7af2e8c90b269a03e4a66.png"
                   />
                 </div>
               </div>
             </div>
             <p class="text-white">
-              Each of CareerHunter's six tests were professionally developed
-              by a team of experienced psychologists, psychometricians and
-              career experts, using scientific sampling protocols and
-              methodologies.
-            </p>
-            <p class="text-white">
-
+              {{ __('how_it_works.test_development_description') }}
             </p>
           </div>
           <div class="large-6 medium-12 small-12 cell tutorial-video hide-for-small-only">
             <div>
               <div class="preview-img">
                 <img
-                  alt="preview image for the tutorial video"
+                  :alt="__('how_it_works.preview_image_alt')"
                   src="https://cdn0.careerhunter.io/packs/media/components/home/preview-img-6e9ac4a5a3b7af2e8c90b269a03e4a66.png"
                 />
               </div>
@@ -57,6 +50,7 @@ import Procces from './Procces.vue';
 import Navbar from '@/Components/NavBar.vue';
 import Footer from '@/Components/Footer.vue';
 import NavBar from "@/Components/NavBar.vue";
+
 export default {
   name: 'HowItWork',
   components: {

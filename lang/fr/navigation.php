@@ -16,4 +16,8 @@ return [
     'profile' => 'Profil',
     'api_tokens' => 'Jetons API',
     'log_out' => 'Déconnexion',
+    'log_in' => 'Se connecter',
+    'register' => 'S\'inscrire',
+    'test' => 'Test',
+    'how_it_works' => 'Comment ça marche',
 ];

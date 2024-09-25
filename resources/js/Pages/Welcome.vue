@@ -7,7 +7,7 @@
           <div class="card-1">
             <div class="card__image"></div>
             <div class="card__section">
-              <p class="card__name disable-fade-in">Geoscientist</p>
+              <p class="card__name disable-fade-in">{{ __('welcome.job_titles.geoscientist') }}</p>
             </div>
             <div class="match-tank pulse_8">
               <div class="inner">
@@ -19,14 +19,14 @@
               </div>
               <div class="match-percent">
                 <div class="qm">64%</div>
-                match
+                {{ __('welcome.match') }}
               </div>
             </div>
           </div>
           <div class="card-2">
             <div class="card__image"></div>
             <div class="card__section">
-              <p class="card__name disable-fade-in">Architect</p>
+              <p class="card__name disable-fade-in">{{ __('welcome.job_titles.architect') }}</p>
             </div>
             <div class="match-tank pulse_8">
               <div class="inner">
@@ -38,14 +38,14 @@
               </div>
               <div class="match-percent">
                 <div class="qm">78%</div>
-                match
+                {{ __('welcome.match') }}
               </div>
             </div>
           </div>
           <div class="card-3 show-for-large">
             <div class="card__image"></div>
             <div class="card__section">
-              <p class="card__name disable-fade-in">Web developer</p>
+              <p class="card__name disable-fade-in">{{ __('welcome.job_titles.web_developer') }}</p>
             </div>
             <div class="match-tank pulse_8">
               <div class="inner">
@@ -57,7 +57,7 @@
               </div>
               <div class="match-percent">
                 <div class="qm">78%</div>
-                match
+                {{ __('welcome.match') }}
               </div>
             </div>
           </div>
@@ -75,10 +75,10 @@
                   </div>
                   <div class="match-percent">
                     <div class="qm">64%</div>
-                    match
+                    {{ __('welcome.match') }}
                   </div>
                 </div>
-                <p class="card__name disable-fade-in">Business and Management</p>
+                <p class="card__name disable-fade-in">{{ __('welcome.job_titles.business_management') }}</p>
               </div>
             </div>
             <div class="card-5 show-for-large">
@@ -94,10 +94,10 @@
                   </div>
                   <div class="match-percent">
                     <div class="qm">64%</div>
-                    match
+                    {{ __('welcome.match') }}
                   </div>
                 </div>
-                <p class="card__name disable-fade-in">Engineering</p>
+                <p class="card__name disable-fade-in">{{ __('welcome.job_titles.engineering') }}</p>
               </div>
             </div>
             <div class="card-6 show-for-large">
@@ -113,46 +113,46 @@
                   </div>
                   <div class="match-percent ">
                     <div class="qm">64%</div>
-                    match
+                    {{ __('welcome.match') }}
                   </div>
                 </div>
-                <p class="card__name disable-fade-in">Creative Arts</p>
+                <p class="card__name disable-fade-in">{{ __('welcome.job_titles.creative_arts') }}</p>
               </div>
             </div>
           </div>
         </div>
         <div class="circle top-right-small"></div>
         <div class="circle top-personality">
-          <img class="hide-for-small-only" height="43" width="41" src="https://www.careerhunter.io/images/home/personality.png" />
-          <img class="show-for-small-only" height="27" width="26" src="https://www.careerhunter.io/images/home/personality_mobile.png" />
+          <img class="hide-for-small-only" height="43" width="41" src="https://www.careerhunter.io/images/home/personality.png" :alt="__('welcome.personality_image_alt')" />
+          <img class="show-for-small-only" height="27" width="26" src="https://www.careerhunter.io/images/home/personality_mobile.png" :alt="__('welcome.personality_image_alt')" />
         </div>
         <div class="circle top-interests">
-          <img class="hide-for-small-only" height="41" width="49" src="https://www.careerhunter.io/images/home/interests.png" />
-          <img class="show-for-small-only" height="26" width="31" src="https://www.careerhunter.io/images/home/interests.png" />
+          <img class="hide-for-small-only" height="41" width="49" src="https://www.careerhunter.io/images/home/interests.png" :alt="__('welcome.interests_image_alt')" />
+          <img class="show-for-small-only" height="26" width="31" src="https://www.careerhunter.io/images/home/interests.png" :alt="__('welcome.interests_image_alt')" />
         </div>
         <div class="grid-x text-center">
           <div class="small-12 cell">
-            <h1 class="banner-top__title-home">Career choices <span>made easier than ever</span></h1>
-            <h2 class="banner-top__subtitle">Our tests will accurately match you to professions that <span>you'll love</span> and <span>succeed in!</span></h2>
+            <h1 class="banner-top__title-home">{{ __('welcome.title1') }} <span>{{ __('welcome.title2') }}</span></h1>
+            <h2 class="banner-top__subtitle">{{ __('welcome.subtitle1') }} <span>{{ __('welcome.subtitle2') }}</span>{{ __('welcome.subtitle3') }}<span>{{ __('welcome.subtitle4') }}</span></h2>
             <div class="banner-top--home-btns-container">
               <div>
                 <div class="banner-top--home-btns">
                   <template v-if="$page.props.auth.user">
                     <Link :href="route('dashboard')" class="button button--green--large before-fade-in fade-in button--with-icon">
-                      Dashboard
+                        {{ __('welcome.dashboard') }}
                       <span class="small-icons next-arrow-white-s"></span>
                       <span class="button__hovered"></span>
                     </Link>
                   </template>
                   <template v-else>
-                    <Link :href="route('login')" class=" button button--green--large before-fade-in fade-in button--with-icon ">
-                      Log in
+                    <Link :href="route('login')" class="button button--green--large before-fade-in fade-in button--with-icon">
+                        {{ __('welcome.login') }}
                       <span class="small-icons next-arrow-white-s"></span>
                       <span class="button__hovered"></span>
                     </Link>
-                    <p class="banner-top--home-or before-fade-in fade-in">or</p>
+                    <p class="banner-top--home-or before-fade-in fade-in">{{ __('welcome.or') }}</p>
                     <Link v-if="canRegister" :href="route('register')" class="button button--white before-fade-in fade-in button--with-icon button--white--big">
-                      Register
+                        {{ __('welcome.register') }}
                       <span class="small-icons green-small-lock-s"></span>
                       <span class="button__hovered"></span>
                     </Link>
@@ -164,8 +164,8 @@
         </div>
         <div class="circle bottom-left-small"></div>
         <div class="circle bottom-abstract">
-          <img class="hide-for-small-only" height="40" width="42" src="https://www.careerhunter.io/images/home/abstract.png" />
-          <img class="show-for-small-only" height="25" width="27" src="https://www.careerhunter.io/images/home/abstract.png" />
+          <img class="hide-for-small-only" height="40" width="42" src="https://www.careerhunter.io/images/home/abstract.png" :alt="__('welcome.abstract_image_alt')" />
+          <img class="show-for-small-only" height="25" width="27" src="https://www.careerhunter.io/images/home/abstract.png" :alt="__('welcome.abstract_image_alt')" />
         </div>
       </div>
     </div>
@@ -176,10 +176,10 @@
         <div class="grid-x text-center">
           <div class="small-12 cell">
             <h2 class="home-tests__heading before-fade-in fade-in">
-              Our self-assessments
+              {{ __('welcome.self_assessments') }}
             </h2>
             <p class="home-tests__desc before-fade-in fade-in">
-              Uniquely crafted to deliver actionable reporting
+              {{ __('welcome.self_assessments_desc') }}
             </p>
           </div>
         </div>
@@ -192,14 +192,14 @@
                 <div :class="['large-icon', test.iconClass, 'float-center', 'before-fade-in', 'fade-in']"></div>
               </div>
               <h3 class="home-tests__title before-fade-in fade-in">
-                {{ test.title }}
+                {{ __(`welcome.tests.${test.key}.title`) }}
               </h3>
               <p class="home-tests__info before-fade-in fade-in">
-                {{ test.description }}
+                {{ __(`welcome.tests.${test.key}.description`) }}
               </p>
               <div>
                 <a class="button button--blue-off before-fade-in fade-in" :href="test.link">
-                  Learn more
+                  {{ __('welcome.learn_more') }}
                   <span class="button__hovered"></span>
                 </a>
               </div>
@@ -222,51 +222,45 @@
 
   export default {
     name: 'App',
-    components: {Section, NavBar, Content, Footer,Link},
+    components: {Section, NavBar, Content, Footer, Link},
     props: {
       canLogin: Boolean,
       canRegister: Boolean,
       laravelVersion: String,
       phpVersion: String,
-      navigation:Array,
+      navigation: Array,
     },
     data() {
       return {
         tests: [
           {
+            key: 'interests',
             iconClass: 'interests-blue',
-            title: 'Career Interests',
-            description: 'Uncover the work activities that you enjoy the most.',
             link: 'https://www.careerhunter.io/tests/interests'
           },
           {
+            key: 'personality',
             iconClass: 'personality-blue',
-            title: 'Work Personality',
-            description: 'Assess your personality type and work preferences.',
             link: 'https://www.careerhunter.io/tests/personality'
           },
           {
+            key: 'motivators',
             iconClass: 'motivators-blue',
-            title: 'Career Motivators',
-            description: 'Reveal what motivates you to work and succeed.',
             link: 'https://www.careerhunter.io/tests/motivators'
           },
           {
+            key: 'abstract',
             iconClass: 'abstract-blue',
-            title: 'Abstract Reasoning',
-            description: 'Assess your lateral thinking and ability to analyze patterns.',
             link: 'https://www.careerhunter.io/tests/abstract'
           },
           {
+            key: 'numerical',
             iconClass: 'numerical-blue',
-            title: 'Numerical Reasoning',
-            description: 'Discover how well you can decipher data and numbers.',
             link: 'https://www.careerhunter.io/tests/numerical'
           },
           {
+            key: 'verbal',
             iconClass: 'verbal-blue',
-            title: 'Verbal Reasoning',
-            description: 'Measure your ability to interpret written information.',
             link: 'https://www.careerhunter.io/tests/verbal'
           }
         ]

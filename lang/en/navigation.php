@@ -16,4 +16,8 @@ return [
     'profile' => 'Profile',
     'api_tokens' => 'API Tokens',
     'log_out' => 'Log Out',
+    'log_in' => 'Log In',
+    'register' => 'Register',
+    'how_it_works' => 'How it works',
+    'test' => 'Test'
 ];

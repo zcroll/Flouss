@@ -1,10 +1,5 @@
 <template>
-        <link
-      rel="stylesheet"
-      media="all"
-      href="/css/landingPage/index.css"
-    />
-
+  <link rel="stylesheet" media="all" href="/css/landingPage/index.css" />
 
   <div class="bottom-banner with-extra-pad">
     <img class="wave-top hideForXsmall before-fade-in fade-in" height="153" width="419" alt="Perfect career wave" src="https://cdn0.careerhunter.io/assets/upgrade/wave-top-48ad3a7b57599dd38621ac0130144bcfd25f03dabb8b48f37038558c9a91557f.png" />
@@ -15,15 +10,15 @@
       <div class="grid-x text-center">
         <div class="small-12 cell">
           <h2 class="bottom-banner__headline-small before-fade-in fade-in">
-            What interests you the most?
+            {{ __('bottom_banner.what_interests_you') }}
           </h2>
           <h4 class="bottom-banner__desc before-fade-in fade-in">
-            Take the test to reveal which work activities you enjoy the most, and choose a more suitable career direction.
+            {{ __('bottom_banner.take_test_description') }}
           </h4>
         </div>
         <div class="small-12 cell">
           <a class="button button--green--large before-fade-in fade-in before-fade-in fade-in" aria-label="Get Started" href="https://www.careerhunter.io/tests/interests/take">
-            Get Started
+            {{ __('bottom_banner.get_started') }}
             <span class="button__hovered"></span>
           </a>
         </div>

@@ -15,11 +15,10 @@
       <div class="grid-x">
         <div class="large-3 medium-12 cell">
           <h2 class="industries__title before-fade-in fade-in">
-            Explore our areas of interest
+            {{ __('industries.explore_areas') }}
           </h2>
           <p class="industries__description before-fade-in fade-in">
-            We'll score you against each of our 27 areas of interest to
-            uncover where your passions truly lie.
+            {{ __('industries.areas_description') }}
           </p>
         </div>
         <div class="large-9 medium-12 cell">
@@ -27,7 +26,7 @@
             <div class="grid-x">
               <div v-for="(industry, index) in industries" :key="index" class="card industries__card large-3 medium-6 small-12 cell" :class="{'fade-out': industry.fading, 'fade-in': !industry.fading}">
                 <h3 class="industries__name">
-                  {{ industry.name }}
+                  {{ __(`industries.industries.${industry.key}`) }}
                 </h3>
               </div>
             </div>
@@ -44,12 +43,12 @@ export default {
   data() {
     return {
       industries: [
-        { name: 'Construction and Trades', fading: false },
-        { name: 'Military', fading: false },
-        { name: 'Counseling and Social Services', fading: false },
-        { name: 'Banking and Finance', fading: false },
-        { name: 'Engineering', fading: false },
-        { name: 'Healthcare', fading: false },
+        { key: 'construction_trades', fading: false },
+        { key: 'military', fading: false },
+        { key: 'counseling_social_services', fading: false },
+        { key: 'banking_finance', fading: false },
+        { key: 'engineering', fading: false },
+        { key: 'healthcare', fading: false },
       ],
       currentIndex: 0
     }
@@ -63,7 +62,7 @@ export default {
         this.industries[this.currentIndex].fading = true;
         
         setTimeout(() => {
-          this.industries[this.currentIndex].name = this.getNextIndustry();
+          this.industries[this.currentIndex].key = this.getNextIndustry();
           this.industries[this.currentIndex].fading = false;
           this.currentIndex = (this.currentIndex + 1) % this.industries.length;
         }, 500);
@@ -71,9 +70,9 @@ export default {
     },
     getNextIndustry() {
       const allIndustries = [
-        'Construction and Trades', 'Military', 'Counseling and Social Services',
-        'Banking and Finance', 'Engineering', 'Healthcare', 'Education',
-        'Technology', 'Arts and Entertainment', 'Law and Legal Services'
+        'construction_trades', 'military', 'counseling_social_services',
+        'banking_finance', 'engineering', 'healthcare', 'education',
+        'technology', 'arts_entertainment', 'law_legal_services'
       ];
       return allIndustries[Math.floor(Math.random() * allIndustries.length)];
     }

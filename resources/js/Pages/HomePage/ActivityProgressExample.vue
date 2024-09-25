@@ -17,10 +17,10 @@
           <div class="test-page__wrapper__main">
             <div class="test-sample-desc">
               <h2 class="before-fade-in fade-in">
-                Test sample
+                {{ __('activity_progress.test_sample') }}
               </h2>
               <p class="before-fade-in fade-in">
-                Below is an example of the test window and the type of questions that will come up in the Career Interests Test.
+                {{ __('activity_progress.sample_description') }}
               </p>
             </div>
             <div class="blur-box-container blur-box-container__main blur-box-container--spaced">
@@ -31,14 +31,14 @@
                     <div class="inner">
                       <div class="main-test__box">
                         <h2 class="main-test__header">
-                          Career Interests Test Example
+                          {{ __('activity_progress.career_interests_test_example') }}
                         </h2>
                         <!-- Progress bar -->
                         <div class="progress-bar">
                           <div class="progress" :style="{ width: progressPercentage + '%' }"></div>
                         </div>
                         <p class="test__question">
-                          Rank the activities in order of preference.
+                          {{ __('activity_progress.rank_activities') }}
                         </p>
                         <!-- Draggable list -->
                         <draggable
@@ -52,7 +52,7 @@
                               <span class="item" :class="`number-${index + 1}`">{{ index + 1 }}</span>
                               <div class="test-statement">
                                 <p class="test-statement__option__text">
-                                  {{ element.name }}
+                                  {{ __(`activity_progress.activities.${element.key}`) }}
                                 </p>
                               </div>
                               <span class="drag-handle-icon">&#8942;</span>
@@ -62,13 +62,13 @@
                         <!-- Navigation buttons -->
                         <div class="grid-x fixed-grid">
                           <button @click="previousPage" :disabled="currentPage === 1" class="button button--white transition duration-150 ease-in-out hide-for-small-only">
-                            Previous
+                            {{ __('activity_progress.previous') }}
                           </button>
                           <button v-if="!isLastPage" @click="nextPage" class="button button--green">
-                            Next
+                            {{ __('activity_progress.next') }}
                           </button>
                           <button v-else @click="submitTest" class="button button--blue">
-                            Submit
+                            {{ __('activity_progress.submit') }}
                           </button>
                         </div>
                       </div>
@@ -96,11 +96,11 @@ export default {
   },
   setup() {
     const activities = [
-      { id: 1, name: 'Develop a mobile app', category: 'Technology' },
-      { id: 2, name: 'Write a short story', category: 'Creative Writing' },
-      { id: 3, name: 'Design a logo', category: 'Graphic Design' },
-      { id: 4, name: 'Analyze financial data', category: 'Finance' },
-      { id: 5, name: 'Plan a marketing campaign', category: 'Marketing' },
+      { id: 1, key: 'develop_mobile_app' },
+      { id: 2, key: 'write_short_story' },
+      { id: 3, key: 'design_logo' },
+      { id: 4, key: 'analyze_financial_data' },
+      { id: 5, key: 'plan_marketing_campaign' },
     ];
 
     const currentPage = ref(1);
