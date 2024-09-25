@@ -15,6 +15,8 @@ class DegreeController extends Controller
         $locale = app()->getLocale();
         $mainDescriptionColumn = $locale === 'fr' ? 'main_description_fr' : 'main_description';
         $secondaryDescriptionColumn = $locale === 'fr' ? 'secondary_description_fr' : 'secondary_description';
+        $jobTitleColumn = $locale === 'fr' ? 'job_title_fr' : 'job_title';
+        $jobDescriptionColumn = $locale === 'fr' ? 'job_description_fr' : 'job_description';
 
         $degree = Degree::with(['degreeDescription', 'degreeSkills', 'degreeJobs'])
             ->where('slug', $slug)
@@ -31,10 +33,10 @@ class DegreeController extends Controller
                     'skill_description' => $locale === 'fr' ? $skill->skill_description_fr : $skill->skill_description,
                 ];
             }),
-            'degreeJobs' => $degree->degreeJobs->map(function ($job) use ($locale) {
+            'degreeJobs' => $degree->degreeJobs->map(function ($job) use ($jobTitleColumn, $jobDescriptionColumn) {
                 return [
-                    'job_title' => $locale === 'fr' ? $job->job_title_fr : $job->job_title,
-                    'job_description' => $job->job_description,
+                    'job_title' => $job->$jobTitleColumn,
+                    'job_description' => $job->$jobDescriptionColumn,
                 ];
             }),
         ]);

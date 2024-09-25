@@ -21,7 +21,11 @@ class CareerController extends Controller
             ->firstOrFail();
 
         return Inertia::render('career/OverView', [
-            'occupation' => $occupation,
+            'occupation' => [
+                'name' => $locale === 'fr' ? $occupation->name_fr : $occupation->name,
+                'slug' => $occupation->slug,
+                'image' => $occupation->image,
+            ],
             'jobInfoDetail' => $occupation->jobInfoDetail->map(function ($detail) use ($locale) {
                 return [
                     'role_description_main' => $locale === 'fr' ? $detail->role_description_main_fr : $detail->role_description_main,
@@ -58,10 +62,15 @@ class CareerController extends Controller
             ->firstOrFail();
 
         return Inertia::render('career/workEnvironments', [
-            'occupation' => $occupation,
+            'occupation' => [
+                'name' => $locale === 'fr' ? $occupation->name_fr : $occupation->name,
+                'slug' => $occupation->slug,
+                'image' => $occupation->image,
+            ],    
             'workEnvironments' => $occupation->workEnvironments->map(function ($environment) use ($nameColumn, $descriptionColumn) {
                 return [
                     'name' => $environment->$nameColumn,
+                    'score' => $environment->score,
                     'description' => $environment->$descriptionColumn,
                 ];
             }),
@@ -79,7 +88,11 @@ class CareerController extends Controller
             ->firstOrFail();
 
         return Inertia::render('career/personality', [
-            'occupation' => $occupation,
+            'occupation' => [
+                'name' => $locale === 'fr' ? $occupation->name_fr : $occupation->name,
+                'slug' => $occupation->slug,
+                'image' => $occupation->image,
+            ],
             'personalityTraits' => $occupation->personalityTraits,
             'personalityDetails' => $occupation->personalityDetails->map(function ($detail) use ($careerNameColumn, $descriptionColumn) {
                 return [
