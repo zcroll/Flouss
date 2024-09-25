@@ -46,7 +46,7 @@ class ResultController extends Controller
         $jobsWithDistances = $jobs->map(function ($job) use ($jobsCollection) {
             $jobData = $jobsCollection->firstWhere('job_info_id', $job->id);
             $distance = $jobData['distance'];
-            $rating = 5 - min(round($distance * 60), 1.5); // Convert distance to a 3.5-5 rating
+            $rating = 5 - min(round($distance * 60), 1.5); 
 
             return [
                 'id' => $job->id,
@@ -84,12 +84,13 @@ class ResultController extends Controller
 
         // Get the careers based on the archetype using the ArchetypeCareer model
         ds($Archetype);
+        $careerColumn = $locale === 'fr' ? 'name_fr as career' : 'career as career';
         $archetypeCareers = ArchetypeCareer::where('archetype', $Archetype->name)
-            ->get(['career', 'image', 'slug']);
+            ->get([$careerColumn, 'image', 'slug']);
            
         ds($archetypeCareers->toArray());
         // Add the top two results to the Inertia response
-
+            ds($topTwoResults   );
         if ($firstScore) {
             return Inertia::render('Result/Results', [
                 'userId' => $firstScore->uuid,
