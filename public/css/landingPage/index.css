@@ -5318,6 +5318,18 @@ p{
     color:#fff;
     margin-bottom:16px
 }
+.custom-heading {
+    box-sizing: border-box;
+    margin: 0px 0px 10px;
+    font-weight: 300;
+    color: #797973;
+    padding-top: 0px;
+    letter-spacing: -0.3px;
+    font-size: 32px;
+    line-height: 36px;
+    margin-bottom: 30px;
+    font-family: 'aktiv-grotesk', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
 p.primary{
     color:#59ce61
 }
@@ -5339,12 +5351,11 @@ p.marginless{
 ul li,ol li{
     font-size:15px;
     font-family:sofia-pro-light,sans-serif;
-    color:rgba(255,255,255,.5)
 }
 .no-style-list{
     list-style:none
 }
-a{
+a.btn_link{
     font-family:sofia-pro-regular,sans-serif;
     font-size:12px;
     text-decoration:none
@@ -9158,7 +9169,7 @@ textarea{
     text-align:right;
     margin-top:-10px
 }
-select,.currencies-select{
+/* select,.currencies-select{
     border-radius:20px;
     -webkit-border-radius:20px;
     -moz-border-radius:20px;
@@ -9180,7 +9191,7 @@ select,.currencies-select{
     box-sizing:border-box;
     width:100%;
     margin-bottom:10px
-}
+} */
 select::-webkit-input-placeholder,.currencies-select::-webkit-input-placeholder{
     color:rgba(255,255,255,.5)
 }

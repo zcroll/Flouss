@@ -69,7 +69,7 @@
                             </div>
                             <PrimaryButton class="block text-center mt-4 sm:mt-5">
                                 <Link :href="comingSoon ? '#' : `results/${userId}/personality`" class="block w-full">
-                                    {{ 'Coming Soon'  }}
+                                    {{ 'Read More'  }}
                                 </Link>
                             </PrimaryButton>
                         </div>

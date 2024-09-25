@@ -14,14 +14,13 @@ defineProps({
 </script>
 
 <template>
-    <AppLayout title="Profile">
+    <AppLayout :title="__('profile.profile')">
         <template #header >
             <div class="mb-3">
-                <h2 class=" mt-20 font-semibold text-xl text-gray-800 leading-tight">
-                    Profile
+                <h2 class="mt-20 font-semibold text-xl text-gray-800 leading-tight">
+                    {{ __('profile.profile') }}
                 </h2>
             </div>
-
         </template>
 
         <div>

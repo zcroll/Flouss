@@ -15,20 +15,20 @@
               <div class="med-spaced-between small-flex-center">
                 <div>
                   <p class="large-mobile overview__test-name">
-                    Career Interests
+                    {{ __('test.career_interests') }}
                   </p>
                   <p class="large-mobile overview__subheading">
-                    Overview
+                    {{ __('test.overview') }}
                   </p>
                 </div>
                 <div class="flex">
                   <div class="overview__space">
                     <p class="overview__answered">{{ answeredCount }}</p>
-                    <p>Answered</p>
+                    <p>{{ __('test.answered') }}</p>
                   </div>
                   <div>
                     <p class="overview__unanswered">{{ unansweredCount }}</p>
-                    <p>Unanswered</p>
+                    <p>{{ __('test.unanswered') }}</p>
                   </div>
                 </div>
               </div>
@@ -50,8 +50,8 @@
                 <button @click="goBackToTest" class="button button--white before-fade-in fade-in nav-btn">
                   <span class="small-icons back-arrow-white-xs is-left" />
                   <span class="large-mobile">
-                    Back
-                    <span class="show-for-medium"> to test</span>
+                    {{ __('test.back') }}
+                    <span class="show-for-medium"> {{ __('test.back_to_test') }}</span>
                   </span>
                   <span class="button__hovered" />
                 </button>
@@ -68,6 +68,8 @@
 </template>
 
 <script>
+import __ from '@/lang';
+
 export default {
   name: 'Overview',
   props: {
@@ -128,7 +130,8 @@ export default {
     },
     submitAnswers() {
       this.$emit('submit-answers');
-    }
+    },
+    __
   }
 }
 </script>

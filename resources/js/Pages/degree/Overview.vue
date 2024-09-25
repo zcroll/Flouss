@@ -95,18 +95,7 @@ defineProps({
 
 <style scoped>
 /* Use the same styles as in the OverView.vue file */
-.custom-heading {
-    box-sizing: border-box;
-    margin: 0px 0px 10px;
-    font-weight: 300;
-    color: #797973;
-    padding-top: 0px;
-    letter-spacing: -0.3px;
-    font-size: 32px;
-    line-height: 36px;
-    margin-bottom: 30px;
-    font-family: 'aktiv-grotesk', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
+
 
 ul.list-custom {
     list-style: none;

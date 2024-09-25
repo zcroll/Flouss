@@ -23,19 +23,19 @@
                                         :href="'/test-preview'"
                                         class="rounded-full bg-purple-100 px-3 py-1.5 font-medium text-purple-600 hover:bg-purple-200"
                                     >
-                                        {{ __('dashboard.aptitude_assessment') }}
+                                        {{ __('dashboard.aptitude_assessment') }}  
                                     </Link>
                                 </div>
 
                                 <!-- Heading -->
-                                <h3 class="text-xl font-semibold text-gray-100 mb-3">
-                                    <Link
+                                <h2 class="text-xl font-semibold text-gray-100 mb-3">
+                                    <span
                                         :href="hasResult ? '/results' : '/test-preview'"
                                         class="hover:underline"
                                     >
                                         {{ hasResult ? __('dashboard.view_results') : __('dashboard.take_assessment') }}
-                                    </Link>
-                                </h3>
+                                    </span>
+                                </h2>
 
                                 <!-- Description -->
                                 <p class="text-sm text-gray-300 mb-6 leading-relaxed">
@@ -66,11 +66,11 @@
                                 <div class="flex items-center gap-x-4 text-xs mb-4">
                                     <Link href="/categories/job-search" class="rounded-full bg-yellow-100 px-3 py-1.5 font-medium text-yellow-700 hover:bg-yellow-200">{{ __('dashboard.career_exploration') }}</Link>
                                 </div>
-                                <h3 class="text-xl font-semibold text-gray-900 mb-3">
-                                    <Link href="/job-search" class="hover:underline">
+                                <h2 class="text-xl font-semibold text-gray-900 mb-3">
+                                    <span class="hover:underline">
                                         {{ __('dashboard.discover_opportunities') }}
-                                    </Link>
-                                </h3>
+                                    </span>
+                                </h2>
                                 <p class="text-sm text-gray-600 mb-6">{{ __('dashboard.explore_careers') }}</p>
                                 <div class="flex justify-end">
                                     <Link href="/jobs" class="inline-block">
@@ -91,11 +91,11 @@
                             <div class="flex items-center gap-x-4 text-xs mb-4">
                                 <Link href="/categories/education" class="rounded-full bg-green-100 px-3 py-1.5 font-medium text-green-600 hover:bg-green-200">{{ __('dashboard.academic_advancement') }}</Link>
                             </div>
-                            <h3 class="text-xl font-semibold text-gray-900 mb-3">
-                                <Link href="/degrees" class="hover:underline">
+                            <h2 class="text-xl font-semibold text-gray-900 mb-3">
+                                <span class="hover:underline">
                                     {{ __('dashboard.enhance_credentials') }}
-                                </Link>
-                            </h3>
+                                </span>
+                            </h2>
                             <p class="text-sm text-gray-600 mb-6">{{ __('dashboard.explore_degrees') }}</p>
                             <div class="flex justify-end">
                                 <Link href="/degrees">
@@ -115,11 +115,11 @@
                             <div class="flex items-center gap-x-4 text-xs mb-4">
                                 <Link href="/etablissement" class="rounded-full bg-sky-200 px-3 py-1.5 font-medium text-sky-800 hover:bg-sky-300">{{ __('dashboard.aptitude_assessment') }}</Link>
                             </div>
-                            <h3 class="text-xl font-semibold text-gray-900 mb-3">
+                            <h2 class="text-xl font-semibold text-gray-900 mb-3">
                                 <span  class="hover:underline">
                                 {{ __('dashboard.quick_look_campus') }}
                                 </span>
-                            </h3>
+                            </h2>
                             <p class="text-sm text-gray-600 mb-6">
                                 {{ __('dashboard.nurture_passion') }}
                             </p>

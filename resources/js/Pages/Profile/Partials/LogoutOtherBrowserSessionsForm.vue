@@ -45,16 +45,16 @@ const closeModal = () => {
 <template>
     <ActionSection>
         <template #title>
-            Browser Sessions
+            {{ __('profile.browser_sessions') }}
         </template>
 
         <template #description>
-            Manage and log out your active sessions on other browsers and devices.
+            {{ __('profile.manage_sessions') }}
         </template>
 
         <template #content>
             <div class="max-w-xl text-sm text-gray-600">
-                If necessary, you may log out of all of your other browser sessions across all of your devices. Some of your recent sessions are listed below; however, this list may not be exhaustive. If you feel your account has been compromised, you should also update your password.
+                {{ __('profile.logout_other_sessions_info') }}
             </div>
 
             <!-- Other Browser Sessions -->
@@ -89,22 +89,22 @@ const closeModal = () => {
 
             <div class="flex items-center mt-5">
                 <PrimaryButton @click="confirmLogout">
-                    Log Out Other Browser Sessions
+                    {{ __('profile.logout_other_browser_sessions') }}
                 </PrimaryButton>
 
                 <ActionMessage :on="form.recentlySuccessful" class="ms-3">
-                    Done.
+                    {{ __('profile.done') }}
                 </ActionMessage>
             </div>
 
             <!-- Log Out Other Devices Confirmation Modal -->
             <DialogModal :show="confirmingLogout" @close="closeModal">
                 <template #title>
-                    Log Out Other Browser Sessions
+                    {{ __('profile.logout_other_browser_sessions') }}
                 </template>
 
                 <template #content>
-                    Please enter your password to confirm you would like to log out of your other browser sessions across all of your devices.
+                    {{ __('profile.please_enter_password') }}
 
                     <div class="mt-4">
                         <TextInput
@@ -112,7 +112,7 @@ const closeModal = () => {
                             v-model="form.password"
                             type="password"
                             class="mt-1 block w-3/4"
-                            placeholder="Password"
+                            :placeholder="__('profile.password')"
                             autocomplete="current-password"
                             @keyup.enter="logoutOtherBrowserSessions"
                         />
@@ -123,7 +123,7 @@ const closeModal = () => {
 
                 <template #footer>
                     <SecondaryButton @click="closeModal">
-                        Cancel
+                        {{ __('profile.cancel') }}
                     </SecondaryButton>
 
                     <PrimaryButton
@@ -132,7 +132,7 @@ const closeModal = () => {
                         :disabled="form.processing"
                         @click="logoutOtherBrowserSessions"
                     >
-                        Log Out Other Browser Sessions
+                        {{ __('profile.logout_other_browser_sessions') }}
                     </PrimaryButton>
                 </template>
             </DialogModal>

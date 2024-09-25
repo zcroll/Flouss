@@ -15,10 +15,10 @@
               </Link>
             </li>
             <li class="show-for-large">
-              <Link :href="route('how-it-works')" class=" text-white font-bold py-2 px-3 rounded hover:bg-transparent hover:text-blue-500 transition duration-150 ease-in-out">How it works</Link>
+              <Link :href="route('how-it-works')" class="btn_link text-white font-bold py-2 px-3 rounded hover:bg-transparent hover:text-blue-500 transition duration-150 ease-in-out">How it works</Link>
             </li>
             <li class="show-for-large">
-              <Link :href="route('interests')" class=" text-white font-bold py-2 px-3 rounded hover:bg-transparent hover:text-blue-500 transition duration-150 ease-in-out">Interests</Link>
+              <Link :href="route('interests')" class="btn_link text-white font-bold py-2 px-3 rounded hover:bg-transparent hover:text-blue-500 transition duration-150 ease-in-out">Interests</Link>
             </li>
           </ul>
         </nav>

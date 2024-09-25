@@ -18,7 +18,7 @@
                     <div class="main-test__box">
                       <div class="grid-x main-test__top">
                         <h2 class="main-test__header">
-                          Career Interests Test
+                          {{ __('test.career_interests_test') }}
                         </h2>
                       </div>
                       <div>
@@ -40,7 +40,7 @@
                       </div>
                       <div class="grid-x">
                         <p class="test__question">
-                          Rank the activities in order of preference.
+                          {{ __('test.rank_activities') }}
                         </p>
                       </div>
                       <draggable
@@ -77,17 +77,17 @@
                       <div class="grid-x fixed-grid">
                         <button @click="previousQuestion" :disabled="currentQuestion === 1" class="button button--white before-fade-in fade-in nav-btn">
                           <span class="small-icons back-arrow-white-xs is-left"></span>
-                          Previous
+                          {{ __('test.previous') }}
                         </button>
                         <button v-if="!questionInteracted && !isQuestionRanked && !isLastQuestion" @click="skipQuestion" class="button button--yellow before-fade-in fade-in nav-btn">
-                          Skip
+                          {{ __('test.skip') }}
                         </button>
                         <button v-else-if="!isLastQuestion" @click="nextQuestion" class="button button--green before-fade-in fade-in nav-btn">
-                          Next
+                          {{ __('test.next') }}
                           <span class="small-icons next-arrow-white-xs is-right"></span>
                         </button>
                         <button v-else @click="submitTest" class="button button--blue before-fade-in fade-in nav-btn">
-                          Submit
+                          {{ __('test.submit') }}
                         </button>
                       </div>
                     </div>
@@ -110,8 +110,8 @@
             />
           </div>
           <div class="test-btn-container flex-center">
-            <a @click="toggleOverview" class="text-button">{{ showOverview ? 'Return to Test' : 'Overview' }}</a>
-            <a class="text-button">Instructions</a>
+            <a @click="toggleOverview" class="text-button">{{ showOverview ? __('test.return_to_test') : __('test.overview') }}</a>
+            <a class="text-button">{{ __('test.instructions') }}</a>
           </div>
         </div>
       </div>
@@ -120,18 +120,18 @@
       <div class="grid-x confirmation-content">
         <div class="cell">
           <div class="large-icon unanswered-questions mar-auto"></div>
-          <h3 class="popup__title">You haven't answered all the questions!</h3>
+          <h3 class="popup__title">{{ __('test.unanswered_questions') }}</h3>
           <p class="popup__text">
-            Submitting your answers now can affect your overall result. Are you sure you want to finish the test?
+            {{ __('test.incomplete_warning') }}
           </p>
         </div>
         <div class="cell mar-top-20">
           <button @click="closeIncompleteModal" class="button button--blue-off before-fade-in fade-in button--bigger mar-right-10">
-            No, take me back
+            {{ __('test.no_take_me_back') }}
             <span class="button__hovered"></span>
           </button>
           <button @click="confirmSubmit" class="button button--green before-fade-in fade-in button--bigger">
-            Yes, I'm done
+            {{ __('test.yes_im_done') }}
             <span class="small-icons next-arrow-white-l"></span>
             <span class="button__hovered"></span>
           </button>
@@ -146,6 +146,7 @@
 import { useForm } from '@inertiajs/vue3'
 import Overview from './Overview.vue'
 import draggable from 'vuedraggable'
+import __ from '@/lang'
 
 export default {
   components: {
@@ -312,7 +313,8 @@ export default {
     },
     toggleOverview() {
       this.showOverview = !this.showOverview;
-    }
+    },
+    __
   }
 }
 </script>

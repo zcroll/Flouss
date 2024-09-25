@@ -1,16 +1,16 @@
 <template>
     <AppLayout :headTitle="occupation.name">
-        <StickySidebar 
-            :slug="occupation.slug" 
-            :title="occupation.name" 
+        <StickySidebar
+            :slug="occupation.slug"
+            :title="occupation.name"
             :image="occupation.image"
             type="career"
             :salary="occupation.salary"
             :personality="occupation.personality || 'N/A'"
             :satisfaction="occupation.satisfaction || 'N/A'"
-        >            <div class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white rounded-3xl shadow-2xl">
-                <h2 class="custom-heading">Typical Work Environments:</h2>
-
+        >
+            <div class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white rounded-3xl shadow-2xl">
+                <h2 class="custom-heading">{{ __('career.typical_work_environments') }}</h2>
 
                 <aside id="table-of-contents-container" class="block">
                     <div
@@ -21,7 +21,7 @@
                         title="Table of contents"
                     >
                         <p class="custom-heading">
-                            In this article:
+                            {{ __('career.in_this_article') }}
                         </p>
                         <ol v-for="(items, category, index) in groupedByCategory" :key="category" class="category-block">
                             <!-- Category Title with Toggle -->
@@ -57,7 +57,6 @@
                 <!-- Work Environment Section -->
                 <div>
 
-
                     <div v-for="environment in workEnvironments" :key="environment.id"  class="Box block py-4 bg-transparent border-b border-white/18">
                         <div :id="`section-${environment.id}`" class="text-gray-700 text-xl font-black leading-[25px] pr-5 rounded-xl ">
                             {{ environment.name }}
@@ -66,8 +65,8 @@
                         <p class="text-gray-700 mt-5 mb-5">{{ environment.description }}</p>
                         <figure v-if="environment.score" class="relative">
                             <span
-                                class="block h-[34px] rounded-full bg-gradient-to-r from-red-400 to-orange-600 shadow-md"
-                                :style="{ width: `${environment.score < 15 ? 11 : environment.score}%` }"
+                                class="block h-[34px] rounded-full bg-gradient-to-r "
+                                :style="{ width: `${environment.score < 15 ? 11 : environment.score} %` }"
                             >
                                 <span class="text-gray-200 font-medium text-lg leading-[32px] ml-2 absolute top-1/2 transform -translate-y-1/2">
                                     {{ environment.score }}%
@@ -196,15 +195,7 @@ p {
         aktiv-grotesk, "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-.custom-heading {
-    font-size: 32px;
-    line-height: 36px;
-    font-weight: 300;
-    letter-spacing: -0.3px;
-    margin-bottom: 30px;
-    font-family:
-        aktiv-grotesk, "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
+
 
 h3.category-title {
     cursor: pointer;

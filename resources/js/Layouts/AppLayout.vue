@@ -7,6 +7,7 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import Header from "@/Components/Header.vue";
+import __ from '@/lang';
 
 const props = defineProps({
     title: String,
@@ -53,40 +54,57 @@ const socialLinks = [
                             <div class="flex justify-between items-center w-full">
 
                             <div class="flex">
-
                                         <div class="flex-shrink-0">
                                 <Link :href="route('dashboard')">
                                     <ApplicationMark class="block h-8 w-15" />
                                 </Link>
                                         </div>
                                 <!-- Navigation Links -->
-                                <div class="hidden space-x-8 sm:-my-px sm:ml-32 sm:flex">
-
-                                    <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                                        Dashboard
-                                    </NavLink>
-                                    <NavLink :href="route('results')" :active="route().current('results')">
-                                        Results
-                                    </NavLink>
-                                    <NavLink :href="route('jobs.index')" :active="route().current('jobs.index')">
-                                        Jobs
-                                    </NavLink>
-                                    <NavLink :href="route('degrees.index')" :active="route().current('degrees.index')">
-                                        Degrees
-                                    </NavLink>
-
-                                    <select name="language" id="language" v-on:change="router.post(route('language.switch',{language:$event.target.value}))">
-                                        <option :value="language.value" v-for="language in $page.props.languages" 
-                                        :key="language.value" :selected="language.value === $page.props.language">{{ language.label }}</option>
-                                    </select>
-
-                                    <NavLink v-if="isOver10Days" :href="route('activities')" :active="route().current('activities')">
-                                        Career Test
-                                    </NavLink>
+                                <div class="hidden sm:-my-px sm:ml-32 sm:flex items-center justify-between w-full">
+                                    <div class="flex space-x-8">
+                                        <NavLink :href="route('dashboard')" :active="route().current('dashboard')" class="btn_link text-white hover:text-green-400 transition duration-150 ease-in-out">
+                                            {{ __('navigation.dashboard') }}
+                                        </NavLink>
+                                        <NavLink :href="route('results')" :active="route().current('results')" class="btn_link text-white hover:text-green-400 transition duration-150 ease-in-out">
+                                            {{ __('navigation.results') }}
+                                        </NavLink>
+                                        <NavLink :href="route('jobs.index')" :active="route().current('jobs.index')" class="btn_link text-white hover:text-green-400 transition duration-150 ease-in-out">
+                                            {{ __('navigation.jobs') }}
+                                        </NavLink>
+                                        <NavLink :href="route('degrees.index')" :active="route().current('degrees.index')" class="btn_link text-white hover:text-green-400 transition duration-150 ease-in-out">
+                                            {{ __('navigation.degrees') }}
+                                        </NavLink>
+                                        <NavLink 
+                                            v-if="isOver10Days" 
+                                            :href="route('activities')" 
+                                            :active="route().current('activities')"
+                                            class="btn_link text-white hover:text-green-400 transition duration-150 ease-in-out"
+                                        >
+                                            {{ __('navigation.career_test') }}
+                                        </NavLink>
+                                    </div>
                                 </div>
                             </div>
 
                                 <div class="hidden sm:flex sm:items-center sm:ml-6">
+                                    <!-- Language Selector -->
+                                    <select 
+                                        name="language" 
+                                        id="language" 
+                                        v-on:change="router.post(route('language.switch',{language:$event.target.value}))"
+                                        class="bg-transparent text-white border border-slate-500 focus:border-green-400 focus:ring-2 focus:ring-green-400 rounded-md px-2 py-1 text-sm mr-4"
+                                    >
+                                        <option 
+                                            :value="language.value" 
+                                            v-for="language in $page.props.languages"
+                                            :key="language.value" 
+                                            :selected="language.value === $page.props.language"
+                                            class="bg-[#0a1e2e] text-white"
+                                        >
+                                            {{ language.value === 'en' ? 'En' : 'Fr' }}
+                                        </option>
+                                    </select>
+
                                     <!-- Teams Dropdown -->
                                     <div class="ml-3 relative" v-if="$page.props.jetstream.hasTeamFeatures">
                                         <Dropdown align="right" width="60">
@@ -104,20 +122,20 @@ const socialLinks = [
                                                 <div class="w-60">
                                                     <!-- Team Management -->
                                                     <div class="block px-4 py-2 text-xs text-gray-400">
-                                                        Manage Team
+                                                        {{ __('navigation.manage_team') }}
                                                     </div>
                                                     <!-- Team Settings -->
                                                     <DropdownLink :href="route('teams.show', $page.props.auth.user.current_team)">
-                                                        Team Settings
+                                                        {{ __('navigation.team_settings') }}
                                                     </DropdownLink>
                                                     <DropdownLink v-if="$page.props.jetstream.canCreateTeams" :href="route('teams.create')">
-                                                        Create New Team
+                                                        {{ __('navigation.create_new_team') }}
                                                     </DropdownLink>
                                                     <!-- Team Switcher -->
                                                     <template v-if="$page.props.auth.user.all_teams.length > 1">
                                                         <div class="border-t border-gray-200"></div>
                                                         <div class="block px-4 py-2 text-xs text-gray-400">
-                                                            Switch Teams
+                                                            {{ __('navigation.switch_teams') }}
                                                         </div>
                                                         <template v-for="team in $page.props.auth.user.all_teams" :key="team.id">
                                                             <form @submit.prevent="switchToTeam(team)">
@@ -139,9 +157,6 @@ const socialLinks = [
 
                                     <!-- Settings Dropdown -->
                                     <div class="ml-3 relative">
-
-
-
                                         <Dropdown align="right" width="60">
                                             <template #trigger>
                                                 <button v-if="$page.props.jetstream.managesProfilePhotos" class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
@@ -160,19 +175,19 @@ const socialLinks = [
                                                 <div class="w-60">
                                                 <!-- Account Management -->
                                                 <div class="block px-4 py-2 text-xs text-gray-400">
-                                                    Manage Account
+                                                    {{ __('navigation.manage_account') }}
                                                 </div>
                                                 <DropdownLink :href="route('profile.show')">
-                                                    Profile
+                                                    {{ __('navigation.profile') }}
                                                 </DropdownLink>
                                                 <DropdownLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')">
-                                                    API Tokens
+                                                    {{ __('navigation.api_tokens') }}
                                                 </DropdownLink>
                                                 <div class="border-t border-gray-200"></div>
                                                 <!-- Authentication -->
                                                 <form @submit.prevent="logout">
                                                     <DropdownLink as="button">
-                                                        Log Out
+                                                        {{ __('navigation.log_out') }}
                                                     </DropdownLink>
                                                 </form>
                                                 </div>
@@ -205,20 +220,19 @@ const socialLinks = [
                                             <div class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                                                 <div class="mt-2">
                                                     <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                                                        Dashboard
+                                                        {{ __('navigation.dashboard') }}
                                                     </ResponsiveNavLink>
                                                     <ResponsiveNavLink :href="route('results')" :active="route().current('results')">
-                                                        Results
+                                                        {{ __('navigation.results') }}
                                                     </ResponsiveNavLink>
                                                     <ResponsiveNavLink :href="route('jobs.index')" :active="route().current('jobs.index')">
-                                                        Jobs
+                                                        {{ __('navigation.jobs') }}
                                                     </ResponsiveNavLink>
                                                     <ResponsiveNavLink :href="route('degrees.index')" :active="route().current('degrees.index')">
-                                                        Degrees
+                                                        {{ __('navigation.degrees') }}
                                                     </ResponsiveNavLink>
-                                                    
                                                     <ResponsiveNavLink v-if="isOver10Days" :href="route('activities')" :active="route().current('activities')">
-                                                        Career Test
+                                                        {{ __('navigation.career_test') }}
                                                     </ResponsiveNavLink>
                                                 </div>
 
@@ -236,15 +250,15 @@ const socialLinks = [
 
                                                     <div class="mt-3 space-y-1">
                                                         <ResponsiveNavLink :href="route('profile.show')" :active="route().current('profile.show')">
-                                                            Profile
+                                                            {{ __('navigation.profile') }}
                                                         </ResponsiveNavLink>
                                                         <ResponsiveNavLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')" :active="route().current('api-tokens.index')">
-                                                            API Tokens
+                                                            {{ __('navigation.api_tokens') }}
                                                         </ResponsiveNavLink>
                                                         <!-- Authentication -->
                                                         <form method="POST" @submit.prevent="logout">
                                                             <ResponsiveNavLink as="button">
-                                                                Log Out
+                                                                {{ __('navigation.log_out') }}
                                                             </ResponsiveNavLink>
                                                         </form>
                                                     </div>

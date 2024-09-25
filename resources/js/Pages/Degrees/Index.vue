@@ -1,51 +1,50 @@
 <style src="public/css/vueMultiselect.css"></style>
 <template>
-  <AppLayout :head-title="'Explore Degrees'" head-sub-title="Find the academic paths that align with your unique talents and aspirations." :show-div="false" name="Degrees">
+  <AppLayout :head-title="__('degrees.explore_degrees')" :head-sub-title="__('degrees.find_academic_paths')" :show-div="false" name="Degrees">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <h1 class="text-2xl font-bold text-gray-100 mb-6 trait-type">Explore Degrees</h1>
+      <h1 class="text-2xl font-bold text-gray-100 mb-6 trait-type">{{ __('degrees.explore_degrees') }}</h1>
 
       <div class="flex flex-col lg:flex-row gap-6">
         <!-- Filter sidebar -->
         <div class="w-full lg:w-1/4">
           <div class="bg-transparent shadow-sm p-4">
-            <h2 class="text-lg font-semibold text-gray-100 mb-3">Filters</h2>
+            <h2 class="text-lg font-semibold text-gray-100 mb-3">{{ __('degrees.filters') }}</h2>
 
             <div class="mb-3">
-              <label for="search" class="block text-sm font-medium text-gray-100 mb-1">Search</label>
+              <label for="search" class="block text-sm font-medium text-gray-100 mb-1">{{ __('degrees.search') }}</label>
               <input
                 id="search"
                 v-model="searchQuery"
-                class="w-full px-3 py-1.5 text-gray-400 text-sm border bg-gray-800 rounded-md shadow-sm focus:ring-[#4db554] focus:border-[#4db554]"
+                class="w-full px-3 py-1.5 text-gray-400 text-sm border bg-gray-800 rounded-md shadow-sm  focus:ring-[#4db554] focus:border-[#4db554]"
                 type="text"
-                placeholder="Search degrees"
+                :placeholder="__('degrees.search_degrees')"
                 @input="debouncedSearch"
               />
             </div>
 
             <div class="mb-3">
-              <label class="block text-sm font-medium text-gray-100 mb-1">Degree Levels</label>
+              <label class="block text-sm font-medium text-gray-100 mb-1">{{ __('degrees.degree_levels') }}</label>
               <VueMultiselect
                 v-model="selectedDegreeLevels"
                 :options="degreeLevelOptions"
                 :multiple="true"
                 :close-on-select="false"
-                placeholder="Select degree levels"
+                :placeholder="__('degrees.select_degree_levels')"
                 label="label"
                 track-by="value"
                 class="multiselect"
               />
             </div>
             <div class="mb-3">
-              <label class="block text-sm font-medium text-gray-100 mb-1">Sort By</label>
+              <label class="block text-sm font-medium text-gray-100 mb-1">{{ __('degrees.sort_by') }}</label>
               <select
                 v-model="selectedSort"
-                class="w-full px-3 py-1.5 text-gray-500 text-sm bg-gray-800 rounded-md shadow-sm focus:ring-[#4db554] focus:border-[#4db554]"
+                class="w-full px-3 py-1.5 text-gray-400 text-sm border bg-gray-800 rounded-md border-gray-500 focus:border-[#4db554] shadow-sm "
                 @change="applyFilters"
               >
-                <option value="" disabled selected>Select sorting option</option>
-
-                <option value="salary_desc">Highest Salary</option>
-                <option value="satisfaction_desc">Highest Satisfaction</option>
+                <option value="" disabled selected>{{ __('degrees.select_sorting_option') }}</option>
+                <option value="salary_desc">{{ __('degrees.highest_salary') }}</option>
+                <option value="satisfaction_desc">{{ __('degrees.highest_satisfaction') }}</option>
               </select>
             </div>
 
@@ -53,7 +52,7 @@
               @click="resetFilters"
               class="mt-3 w-full px-4 py-2 bg-[#4db554] font-black text-gray-100 rounded-md hover:bg-gray-800 hover:text-white transition-colors duration-300"
             >
-              Reset Filters
+              {{ __('degrees.reset_filters') }}
             </button>
           </div>
         </div>
@@ -85,7 +84,7 @@
                           </template>
                         </div>
                         <p class="text-sm text-center">
-                          <span class="pr-3 text-sm text-sky-800 font-medium blur-sm">hidden</span>MAD
+                          <span class="pr-3 text-sm text-sky-800 font-medium blur-sm">{{ __('degrees.hidden') }}</span>MAD
                         </p>
                       </div>
                     </div>
@@ -95,12 +94,12 @@
             </div>
           </div>
           <div v-else class="text-center py-8">
-            <p class="text-lg text-gray-600 mb-4">No degrees found matching your criteria</p>
+            <p class="text-lg text-gray-600 mb-4">{{ __('degrees.no_degrees_found') }}</p>
             <button
               @click="resetFilters"
               class="px-4 py-2 bg-[#4db554] text-white rounded-md hover:bg-gray-700 transition-colors duration-300"
             >
-              Reset Filters
+              {{ __('degrees.reset_filters') }}
             </button>
           </div>
 
@@ -122,8 +121,8 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue';
-import { router, Link } from '@inertiajs/vue3';
+import { ref, watch, onMounted, computed } from 'vue';
+import { router, Link, usePage } from '@inertiajs/vue3';
 import AppLayout from "@/Layouts/AppLayout.vue";
 import VueMultiselect from 'vue-multiselect';
 import debounce from 'lodash/debounce';

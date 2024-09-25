@@ -10,56 +10,56 @@
             <div class="blur-box blur-box__main">
               <div class="main-test align-center">
                 <div class="breadcrumbs-nav breadcrumbs-nav--tests">
-                  <Link :href="route('dashboard')">Dashboard</Link>
+                  <Link :href="route('dashboard')">{{ __('test.dashboard') }}</Link>
                   <div class="small-icon arrow-breadcrumbs"></div>
-                  <Link :href="route('interests')">Career Interests</Link>
+                  <Link :href="route('interests')">{{ __('test.career_interests') }}</Link>
                   <div class="small-icon arrow-breadcrumbs"></div>
-                  <span>Start</span>
+                  <span>{{ __('test.start') }}</span>
                 </div>
 
                 <div class="large-icon interests-white-bold"></div>
-                <h1 class="main-test__title">Career Interests Test</h1>
+                <h1 class="main-test__title">{{ __('test.career_interests_test') }}</h1>
 
                 <div class="grid-x main-test__details">
                   <div class="small-5 medium-4 cell flex-center">
                     <span class="small-icons questions main-test__details__icon"></span>
-                    27 questions
+                    27 {{ __('test.questions') }}
                   </div>
                   <div class="small-7 medium-4 cell flex-center">
                     <span class="small-icons timed main-test__details__icon"></span>
-                    Approx. 15 minutes
+                    {{ __('test.approx_minutes', { minutes: 15 }) }}
                   </div>
                   <div class="small-12 medium-4 cell flex-center main-test__details__last">
                     <span class="small-icons clock-stop-green main-test__details__icon"></span>
-                    No time limit
+                    {{ __('test.no_time_limit') }}
                   </div>
                 </div>
 
                 <p class="max-width-777 ci-test-introduction">
-                  Discover your areas of interest based on the work activities that you find most interesting and enjoyable.
+                  {{ __('test.test_introduction') }}
                 </p>
 
                 <Link :href="route('test')">
                   <button class="button button--green before-fade-in fade-in button--with-icon">
-                    Continue
+                    {{ __('test.continue') }}
                     <span class="small-icons next-arrow-white-xs is-right"></span>
                   </button>
                 </Link>
 
                 <div class="test-btn-container flex-center">
-                  <a class="text-button-small" @click="readInstructions">Read instructions</a>
+                  <a class="text-button-small" @click="readInstructions">{{ __('test.read_instructions') }}</a>
                 </div>
 
                 <div class="tooltip-box tooltip-box-ci-test">
                   <div class="tooltip-trigger small-icon white-tooltip-icon"></div>
-                  Complete all tests to reveal your career matches.
+                  {{ __('test.complete_all_tests') }}
                 </div>
 
                 <div class="ci-test-benefits-block">
-                  <h4>Why take this test?</h4>
-                  <p>Discover your areas of interest according to the work activities that you find interesting and enjoyable.</p>
+                  <h4>{{ __('test.why_take_this_test') }}</h4>
+                  <p>{{ __('test.test_description') }}</p>
                   <ul class="ci-test-benefits-list">
-                    <li v-for="benefit in benefits" :key="benefit" class="ci-test-benefits-point">
+                    <li v-for="(benefit, key) in translatedBenefits" :key="key" class="ci-test-benefits-point">
                       {{ benefit }}
                     </li>
                   </ul>
@@ -78,28 +78,35 @@
 
 <script>
 import { Link } from '@inertiajs/vue3';
+import { computed } from 'vue';
+import __ from '@/lang';
 
 export default {
   name: 'TestPreview2',
   components: {
     Link,
   },
-  data() {
+  setup() {
+    const translatedBenefits = computed(() => {
+      return {
+        'Compare interests': __('test.benefits.Compare interests'),
+        'Discover passions': __('test.benefits.Discover passions'),
+        'Identify activities': __('test.benefits.Identify activities'),
+        'Informed decision': __('test.benefits.Informed decision'),
+        'Ensure enjoyment': __('test.benefits.Ensure enjoyment'),
+      };
+    });
+
     return {
-      benefits: [
-        'See how your interests compare against 27 key areas',
-        'Discover if you have any unrealized passions to pursue',
-        'Identify what work activities you enjoy most',
-        'Make an informed decision about your career aspirations',
-        'Ensure you are pursuing a job or course you enjoy'
-      ]
-    }
+      translatedBenefits,
+    };
   },
   methods: {
     readInstructions() {
       // Implement the logic to show instructions
       console.log('Reading instructions...')
-    }
+    },
+    __
   }
 }
 </script>

@@ -1,17 +1,16 @@
 <template>
     <AppLayout :headTitle="occupation.name">
-        <StickySidebar 
-            :slug="occupation.slug" 
-            :title="occupation.name" 
+        <StickySidebar
+            :slug="occupation.slug"
+            :title="occupation.name"
             :image="occupation.image"
             type="career"
             :salary="occupation.salary"
             :personality="occupation.personality || 'N/A'"
             :satisfaction="occupation.satisfaction || 'N/A'"
         >     
-                 <div class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white rounded-3xl shadow-2xl">
-
-                <p class="custom-heading">What personality traits do doctors have?</p>
+            <div class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white rounded-3xl shadow-2xl">
+                <p class="custom-heading">{{ __('career.what_personality_traits', { occupation: occupation.name.toLowerCase() }) }}</p>
 
                 <aside id="table-of-contents-container" class="block">
                     <div
@@ -21,25 +20,18 @@
                         tabindex="0"
                         title="Table of contents"
                     >
-                        <p class="custom-heading" >
-                            In this article:
+                        <p class="custom-heading">
+                            {{ __('career.in_this_article') }}
                         </p>
                         <ol class="list-none m-0 p-0 text-base leading-6 font-light tracking-tight">
                             <li class="relative mb-0 text-xl leading-10 hover:underline sm:text-base md:text-lg lg:text-xl">
-
-                            <a
-                                    href="#holland-codes"
-                                    class="trait-type"
-                                >
-                                    Primary interests (Holland Codes)
+                                <a href="#holland-codes" class="trait-type">
+                                    {{ __('career.primary_interests') }}
                                 </a>
                             </li>
                             <li class="relative mb-0 text-xl leading-10 hover:underline sm:text-base md:text-lg lg:text-xl">
-                                <a
-                                    href="#big-five"
-                                    class="trait-type"
-                                >
-                                    Broad personality traits (Big 5)
+                                <a href="#big-five" class="trait-type">
+                                    {{ __('career.broad_personality_traits') }}
                                 </a>
                             </li>
                         </ol>
@@ -49,9 +41,8 @@
                 <!-- Holland Codes Section -->
                 <section id="holland-codes">
                     <div class="relative flex" id="holland-codes">
-                        <!-- Button with SVG icon to trigger the popup -->
-                        <button @click="toggleDialogHolands" class=" text-xl relative cursor-pointer text-gray-700 font-bold flex items-center">
-                            Holland Codes
+                        <button @click="toggleDialogHolands" class="text-xl relative cursor-pointer text-gray-700 font-bold flex items-center">
+                            {{ __('career.holland_codes') }}
                             <i class="ml-1">
                                 <svg
                                     class="w-4 h-4"
@@ -99,14 +90,11 @@
                                 </button>
 
 
-                                <h1 class="text-2xl font-light text-black mb-4">Holland Codes</h1>
+                                <h1 class="text-2xl font-light text-black mb-4">{{ __('career.holland_codes') }}</h1>
 
 
                                 <p class="text-base text-gray-700">
-                                    Holland Codes are a set of traits that measure your interest in broadly defined groups of activities. Because
-                                    they're broad, and because they're specifically designed for career selection, Holland Codes are a good
-                                    high-level indicator for the kinds of careers you would enjoy. For more information on Holland Codes, visit the
-                                    related <a href="https://www.careerexplorer.com/faqs/assessment-science/what-are-holland-codes/" class="font-bold text-gray-900 underline">FAQs page</a>.
+                                    {{ __('career.holland_codes_description') }}
                                 </p>
                             </div>
 
@@ -136,7 +124,7 @@
                     <div class="relative flex">
                         <!-- Button with SVG icon to trigger the popup -->
                         <button @click="toggleDialogBigFive" class=" text-xl relative cursor-pointer text-gray-700 font-bold flex items-center">
-                            Big Five
+                            {{ __('career.big_five') }}
                             <i class="ml-1">
                                 <svg
                                     class="w-4 h-4"
@@ -183,11 +171,11 @@
                                 </button>
 
                                 <!-- Dialog title -->
-                                <h1 class="text-2xl font-light text-black mb-4" id="big-five">Big Five</h1>
+                                <h1 class="text-2xl font-light text-black mb-4" id="big-five">{{ __('career.big_five') }}</h1>
 
                                 <!-- Dialog body content -->
                                 <p class="text-base text-gray-700">
-                                    The Big Five are measures of your temperament (as opposed to interests or values) across five broad traits. The Big Five is the most widely accepted measure of personality in the scientific and psychological community. It is theorized that most other stable personality traits we can think of, such as warmth or modesty can largely be predicted with these more-broad traits. The Big Five is the basis for many other psychological inventories. For more information on the Big Five, visit the related  <a href="https://en.wikipedia.org/wiki/Big_Five_personality_traits" class="font-bold text-gray-900 underline">Wiki Page</a>.
+                                    {{ __('career.big_five_description') }}
                                 </p>
                             </div>
                         </div>
@@ -212,7 +200,7 @@
                 </section>
 
                 <!-- Personality Details Section -->
-                <h2 class="text-2xl font-semibold text-gray-800">Personality Details:</h2>
+                <h2 class="text-2xl font-semibold text-gray-800">{{ __('career.personality_details') }}</h2>
                 <ul>
                     <li v-for="(detail, index) in personalityDetails" :key="index" class="text-gray-700 pt-4">
                         {{ detail.description }}
@@ -231,6 +219,7 @@ import { ref, computed } from 'vue';
 import StickySidebar from "@/Pages/lib/StickySidebar.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { useForm } from '@inertiajs/vue3';
+import __ from '@/lang'; // Change this line
 
 // Define props using defineProps
 const props = defineProps({

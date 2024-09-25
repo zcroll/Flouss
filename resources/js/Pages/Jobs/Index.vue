@@ -1,35 +1,40 @@
 <style src="public/css/vueMultiselect.css"></style>
 <template>
-  <AppLayout :head-title="'Career Insights'" head-sub-title="Unlock opportunities that perfectly match your personality and skills." :show-search="true" name="Jobs">
+  <AppLayout 
+    :head-title="__('jobs.head_title')" 
+    :head-sub-title="__('jobs.head_subtitle')" 
+    :show-search="true" 
+    name="Jobs"
+  >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <h1 class="text-2xl font-bold text-gray-100 mb-6 trait-type">Explore Jobs</h1>
+      <h1 class="text-2xl font-bold text-gray-100 mb-6 trait-type">{{ __('jobs.explore_jobs') }}</h1>
 
       <div class="flex flex-col lg:flex-row gap-6">
         <!-- Filter sidebar -->
         <div class="w-full lg:w-1/4">
           <div class="bg-transparent shadow-sm  p-4  ">
-            <h2 class="text-lg font-semibold text-gray-100 mb-3">Filters</h2>
+            <h2 class="text-lg font-semibold text-gray-100 mb-3">{{ __('jobs.filters') }}</h2>
 
             <div class="mb-3">
-              <label for="search" class="block text-sm font-medium text-gray-100 mb-1">Search</label>
+              <label for="search" class="block text-sm font-medium text-gray-100 mb-1">{{ __('jobs.search') }}</label>
               <input
                 id="search"
                 v-model="searchQuery"
                 type="text"
-                placeholder="Search jobs"
+                :placeholder="__('jobs.search_jobs')"
                 class="w-full px-3 py-1.5 text-gray-400 text-sm border bg-gray-800 rounded-md shadow-sm focus:ring-[#4db554] focus:border-[#4db554]"
                 @input="debouncedSearch"
               />
             </div>
 
             <div class="mb-3">
-              <label class="block text-sm font-medium text-gray-100 mb-1">Education Levels</label>
+              <label class="block text-sm font-medium text-gray-100 mb-1">{{ __('jobs.education_levels') }}</label>
               <VueMultiselect
                 v-model="selectedEducationLevels"
                 :options="educationLevelOptions"
                 :multiple="true"
                 :close-on-select="false"
-                placeholder="Select education levels"
+                :placeholder="__('jobs.select_education_levels')"
                 label="label"
                 track-by="value"
                 class="multiselect"
@@ -37,15 +42,15 @@
             </div>
 
             <div class="mb-3">
-              <label class="block text-sm font-medium text-gray-100 mb-1">Sort By</label>
+              <label class="block text-sm font-medium text-gray-100 mb-1">{{ __('jobs.sort_by') }}</label>
               <select
                 v-model="selectedSort"
                 class="w-full px-3 py-1.5 text-gray-400 text-sm border bg-gray-800 rounded-md shadow-sm border-[#4db554]"
                 @change="applyFilters"
               >
-                <option value="Select sorting option" disabled selected >Select sorting option</option>
-                <option value="salary_desc">Highest Salary</option>
-                <option value="satisfaction_desc">Highest Satisfaction</option>
+                <option value="Select sorting option" disabled selected>{{ __('jobs.select_sorting_option') }}</option>
+                <option value="salary_desc">{{ __('jobs.highest_salary') }}</option>
+                <option value="satisfaction_desc">{{ __('jobs.highest_satisfaction') }}</option>
               </select>
             </div>
 
@@ -53,7 +58,7 @@
               @click="resetFilters"
               class="mt-3 w-full px-4 py-2 bg-[#4db554] font-black text-gray-100 rounded-md hover:bg-gray-800 hover:text-white transition-colors duration-300"
             >
-              Reset Filters
+              {{ __('jobs.reset_filters') }}
             </button>
           </div>
         </div>
@@ -95,12 +100,12 @@
             </div>
           </div>
           <div v-else class="text-center py-8">
-            <p class="text-lg text-gray-600 mb-4">No jobs found matching your criteria</p>
+            <p class="text-lg text-gray-600 mb-4">{{ __('jobs.no_jobs_found') }}</p>
             <button
               @click="resetFilters"
               class="px-4 py-2 bg-[#4db554] text-white rounded-md hover:bg-gray-700 transition-colors duration-300"
             >
-              Reset Filters
+              {{ __('jobs.reset_filters') }}
             </button>
           </div>
 

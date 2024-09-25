@@ -26,15 +26,15 @@
 
                         <div class="grid grid-cols-3 gap-4 mb-6">
                             <div class="bg-white bg-opacity-20 rounded-lg text-center p-4 backdrop-filter backdrop-blur-lg">
-                                <h4 class="text-lg font-bold">{{ getFirstBoxTitle }}</h4>
+                                <h4 class="text-lg font-bold">{{ __(`stickybar.${getFirstBoxTitle.toLowerCase()}`) }}</h4>
                                 <p class="text-sm">{{ getFirstBoxContent }}</p>
                             </div>
                             <div class="bg-white bg-opacity-20 rounded-lg text-center p-4 backdrop-filter backdrop-blur-lg">
-                                <h4 class="text-lg font-bold">{{ getSecondBoxTitle }}</h4>
+                                <h4 class="text-lg font-bold">{{ __(`stickybar.${getSecondBoxTitle.toLowerCase()}`) }}</h4>
                                 <p class="text-sm">{{ getSecondBoxContent }}</p>
                             </div>
                             <div class="bg-white bg-opacity-20 rounded-lg text-center p-4 backdrop-filter backdrop-blur-lg">
-                                <h4 class="text-lg font-bold">Satisfaction</h4>
+                                <h4 class="text-lg font-bold">{{ __('stickybar.satisfaction') }}</h4>
                                 <p class="text-sm">{{ satisfaction }}</p>
                             </div>
                         </div>
@@ -49,7 +49,7 @@
                                     :aria-disabled="$page.url === link.url"
                                     class="block py-2 px-4 rounded-lg transition-colors duration-200 hover:bg-white hover:bg-opacity-20"
                                 >
-                                    <span class="text-xl font-semibold">{{ link.text }}</span>
+                                    <span class="text-xl font-semibold">{{ __(`stickybar.${link.text.toLowerCase().replace(' ', '_')}`) }}</span>
                                 </Link>
                             </li>
                         </ul>
@@ -75,7 +75,7 @@
                                 :aria-disabled="$page.url === link.url"
                                 class="py-2 px-4 bg-white bg-opacity-20 rounded-lg text-center transition-colors duration-200 hover:bg-opacity-30"
                             >
-                                <span class="text-sm font-semibold">{{ link.text }}</span>
+                                <span class="text-sm font-semibold">{{ __(`stickybar.${link.text.toLowerCase().replace(' ', '_')}`) }}</span>
                             </Link>
                         </div>
                     </div>
@@ -93,6 +93,7 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
+import __ from '@/lang';
 
 const props = defineProps({
     type: {
@@ -129,28 +130,28 @@ const baseUrl = computed(() => `/${props.type}/${props.slug}`);
 const links = computed(() => {
     if (props.type === 'career') {
         return [
-            { text: 'Overview', url: baseUrl.value },
-            { text: 'Work Environments', url: `${baseUrl.value}/workEnvironments` },
-            { text: 'Personality', url: `${baseUrl.value}/personality` },
+            { text: 'overview', url: baseUrl.value },
+            { text: 'work_environments', url: `${baseUrl.value}/workEnvironments` },
+            { text: 'personality', url: `${baseUrl.value}/personality` },
         ];
     } else if (props.type === 'degree') {
         return [
-            { text: 'Overview', url: baseUrl.value },
-            { text: 'How to Obtain', url: `${baseUrl.value}/how-to-obtain` },
+            { text: 'overview', url: baseUrl.value },
+            { text: 'how_to_obtain', url: `${baseUrl.value}/how-to-obtain` },
         ];
     } else {
         return [
-            { text: 'Overview', url: baseUrl.value },
-            { text: 'Requirements', url: `${baseUrl.value}/requirements` },
-            { text: 'Similar Jobs', url: `${baseUrl.value}/similar-jobs` },
+            { text: 'overview', url: baseUrl.value },
+            { text: 'requirements', url: `${baseUrl.value}/requirements` },
+            { text: 'similar_jobs', url: `${baseUrl.value}/similar-jobs` },
         ];
     }
 });
 
 const getFirstBoxTitle = computed(() => {
-    if (props.type === 'career') return 'Salary';
-    if (props.type === 'degree') return 'Degree Level';
-    return 'Job Type';
+    if (props.type === 'career') return 'salary';
+    if (props.type === 'degree') return 'degree_level';
+    return 'job_type';
 });
 
 const getFirstBoxContent = computed(() => {
@@ -160,9 +161,9 @@ const getFirstBoxContent = computed(() => {
 });
 
 const getSecondBoxTitle = computed(() => {
-    if (props.type === 'career') return 'Personality';
-    if (props.type === 'degree') return 'Duration';
-    return 'Workplace';
+    if (props.type === 'career') return 'personality';
+    if (props.type === 'degree') return 'duration';
+    return 'workplace';
 });
 
 const getSecondBoxContent = computed(() => {
