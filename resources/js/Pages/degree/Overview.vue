@@ -1,5 +1,13 @@
 <template>
     <AppLayout :headTitle="degree.name">
+        <div class="container mx-auto">
+        <div class="breadcrumbs-nav breadcrumbs-nav--tests">
+                 <Link :href="route('degrees.index')">{{ __('navigation.degrees') }}</Link>
+                 <div class="small-icon arrow-breadcrumbs"></div>
+                 <Link :href="route('degree.index', { id: degree.slug })">{{ __('stickybar.overview') }}</Link>
+                 <div class="small-icon arrow-breadcrumbs"></div>
+                 <span>{{degree.name}}</span> 
+        </div>
         <StickySidebar
             :slug="degree.slug"
             :title="degree.name"
@@ -9,8 +17,11 @@
             :satisfaction="degree.satisfaction || __('degreeOverview.notAvailable')"
         >
             <div class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white rounded-3xl shadow-2xl">
+
                 <!-- Main Degree Description Section -->
                 <section class="space-y-8">
+
+
                     <h2 class="custom-heading">{{ __('degreeOverview.whatIs', { name: degree.name }) }}</h2>
 
                     <div class="space-y-6">
@@ -65,6 +76,7 @@
                 </section>
             </div>
         </StickySidebar>
+    </div>
     </AppLayout>
 </template>
 
@@ -72,6 +84,7 @@
 import { defineProps } from 'vue';
 import StickySidebar from "@/Pages/lib/StickySidebar.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
+import { Link } from '@inertiajs/vue3';
 
 defineProps({
     degree: {

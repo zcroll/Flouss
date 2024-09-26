@@ -1,5 +1,13 @@
 <template>
     <AppLayout>
+        <div class="container mx-auto">
+            <div class="breadcrumbs-nav breadcrumbs-nav--tests">
+            <Link :href="route('jobs.index')">{{ __('navigation.jobs') }}</Link>
+            <div class="small-icon arrow-breadcrumbs"></div>
+            <Link :href="route('career', { id: occupation.slug })">{{ __('stickybar.personality') }}</Link>
+            <div class="small-icon arrow-breadcrumbs"></div>
+            <span>{{occupation.name}}</span> 
+        </div>
         <StickySidebar
             :slug="occupation.slug"
             :title="occupation.name"
@@ -9,6 +17,7 @@
             :personality="occupation.personality || 'N/A'"
             :satisfaction="occupation.satisfaction || 'N/A'"
         >     
+
             <div class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white rounded-3xl shadow-2xl">
                 <p class="custom-heading">{{ __('career.what_personality_traits', { occupation: occupation.name.toLowerCase() }) }}</p>
 
@@ -211,6 +220,7 @@
                 <!-- Add navigation buttons -->
 
         </StickySidebar>
+    </div>
     </AppLayout>
 </template>
 
@@ -220,6 +230,7 @@ import StickySidebar from "@/Pages/lib/StickySidebar.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { useForm } from '@inertiajs/vue3';
 import __ from '@/lang'; // Change this line
+import { Link } from '@inertiajs/vue3';
 
 // Define props using defineProps
 const props = defineProps({

@@ -4,29 +4,34 @@
         media="all"
         href="/css/landingPage/index.css"
     />
-    <header class="relative overflow-x-auto min-h-[200px] ">
+
+    <header class="relative overflow-x-auto min-h-[200px]">
         <div class="header-content mt-20 mb-1">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex flex-wrap">
-                    <div class="w-full">
-                        <h1 class="text-3xl font-normal text-white font-sofia-pro-semi-bold mt-2.5">
+                <div class="flex flex-wrap items-center justify-between">
+                    <div class="w-full lg:w-3/4">
+                        <h1 class="text-3xl font-normal text-white font-sofia-pro-semi-bold mt-2.5 mb-4">
                             {{ title }}
                         </h1>
-                        <p class="float-right text-xs text-white/50 font-sofia-pro-regular mb-4 hidden lg:block">
+                        <p class="text-xl text-white font-sofia-pro-regular mb-4 max-w-[713px]">
+                            <span v-if="name" class="font-sofia-pro-bold">
+                                {{ $page.props.auth.user.name }},
+                            </span>
+                            {{ subTitle }}
+                        </p>
+                    </div>
+                    <div class="w-full lg:w-1/4 text-right">
+                        <!-- <p class="text-xs text-white/50 font-sofia-pro-regular mb-4 hidden lg:block">
                             <span class="inline-block w-4 h-4 bg-[url('https://cdn3.careerhunter.io/assets/sprites/small_icons_01-6bcc3606a70b883b3aac6954e60c3487e99faacba6fa7fa27f577aa7cfc7cfb0.svg')] bg-[-502px_-14px] mr-1.5 -mb-0.5"></span>
                             <span class="font-sofia-pro-bold">1 of 6 tests complete.</span>
                             Finish all to reveal your career matches.
-                        </p>
+                        </p> -->
                     </div>
                 </div>
-                <p class="text-xl text-white font-sofia-pro-regular mb-0 max-w-[713px]">
-                    <span v-if="name" class="font-sofia-pro-bold">
-                        {{ $page.props.auth.user.name }},
-                    </span>
-                    {{ subTitle }}
-                </p>
 
-                <div v-if="show" >
+
+
+                <div v-if="show">
                     <Jobs :jobs="jobsData" />
                 </div>
             </div>
@@ -39,6 +44,7 @@
 
 <script>
 import Jobs from '@/Components/JObs.vue';
+import { Link } from '@inertiajs/vue3';
 export default {
     props: {
         title: {
@@ -57,7 +63,7 @@ export default {
         }
     },
     components: {
-        Jobs
+        Jobs,Link
     }
 }
 </script>

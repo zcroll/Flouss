@@ -2,11 +2,19 @@
 <template>
   <AppLayout :head-title="__('degrees.explore_degrees')" :head-sub-title="__('degrees.find_academic_paths')" :show-div="false" name="Degrees">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <h1 class="text-2xl font-bold text-gray-100 mb-6 trait-type">{{ __('degrees.explore_degrees') }}</h1>
+      <div class="breadcrumbs-nav breadcrumbs-nav--tests">
+                  <Link :href="route('degrees.index')">{{ __('navigation.degrees') }}</Link>
+                  <div class="small-icon arrow-breadcrumbs"></div>
+                  <span>List</span>
+                  <div class="small-icon arrow-breadcrumbs"></div>
+                  <span>Page {{ degrees.meta.current_page }}</span>
+        </div>
 
       <div class="flex flex-col lg:flex-row gap-6">
+        
         <!-- Filter sidebar -->
         <div class="w-full lg:w-1/4">
+          
           <div class="bg-transparent shadow-sm p-4">
             <h2 class="text-lg font-semibold text-gray-100 mb-3">{{ __('degrees.filters') }}</h2>
 

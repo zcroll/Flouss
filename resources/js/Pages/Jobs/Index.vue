@@ -7,7 +7,13 @@
     name="Jobs"
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <h1 class="text-2xl font-bold text-gray-100 mb-6 trait-type">{{ __('jobs.explore_jobs') }}</h1>
+      <div class="breadcrumbs-nav breadcrumbs-nav--tests">
+                  <Link :href="route('jobs.index')">{{ __('navigation.jobs') }}</Link>
+                  <div class="small-icon arrow-breadcrumbs"></div>
+                  <span>List</span>
+                  <div class="small-icon arrow-breadcrumbs"></div>
+                  <span>Page {{ jobs.meta.current_page }}</span>
+        </div>
 
       <div class="flex flex-col lg:flex-row gap-6">
         <!-- Filter sidebar -->

@@ -1,6 +1,15 @@
 <template>
     <AppLayout>
 
+        <div class="container mx-auto">
+        <div class="breadcrumbs-nav breadcrumbs-nav--tests">
+                 <Link :href="route('jobs.index')">{{ __('navigation.jobs') }}</Link>
+                 <div class="small-icon arrow-breadcrumbs"></div>
+                 <Link :href="route('career', { id: occupation.slug })">{{ __('stickybar.overview') }}</Link>
+                 <div class="small-icon arrow-breadcrumbs"></div>
+                 <span>{{occupation.name}}</span> 
+        </div>
+
         <StickySidebar
             :slug="occupation.slug"
             :title="occupation.name"
@@ -10,6 +19,8 @@
             :personality="occupation.personality || 'N/A'"
             :satisfaction="occupation.satisfaction || 'N/A'"
         >
+
+
             <div class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white rounded-3xl shadow-2xl">
 
 
@@ -101,6 +112,7 @@
 
 
         </StickySidebar>
+    </div>
     </AppLayout>
 </template>
 
@@ -109,7 +121,7 @@ import {ref, computed} from 'vue';
 import {defineProps} from 'vue';
 import StickySidebar from "@/Pages/lib/StickySidebar.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
-
+import { Link } from '@inertiajs/vue3';
 defineProps({
     occupation: {
         type: Object,
