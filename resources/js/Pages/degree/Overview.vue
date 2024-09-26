@@ -6,12 +6,12 @@
             :image="degree.image"
             type="degree"
             :degreeLevel="degree.degree_level"
-            :satisfaction="degree.satisfaction || 'N/A'"
+            :satisfaction="degree.satisfaction || __('degreeOverview.notAvailable')"
         >
             <div class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white rounded-3xl shadow-2xl">
                 <!-- Main Degree Description Section -->
                 <section class="space-y-8">
-                    <h2 class="custom-heading">What Is a {{ degree.name }}?</h2>
+                    <h2 class="custom-heading">{{ __('degreeOverview.whatIs', { name: degree.name }) }}</h2>
 
                     <div class="space-y-6">
                         <div class="space-y-4">
@@ -25,14 +25,14 @@
                 </section>
 
                 <aside id="table-of-contents-container" class="block">
-                    <div id="table-of-contents" class="table-of-contents rounded-lg my-4 w-full bg-[#F8EDE3] text-gray-900 relative p-9" role="directory" tabindex="0" title="Table of contents">
-                        <p class="custom-heading">In this article:</p>
+                    <div id="table-of-contents" class="table-of-contents rounded-lg my-4 w-full bg-[#F8EDE3] text-gray-900 relative p-9" role="directory" tabindex="0" :title="__('degreeOverview.tableOfContents')">
+                        <p class="custom-heading">{{ __('degreeOverview.inThisArticle') }}</p>
                         <ol class="list-none m-0 p-0 text-base leading-6 font-light tracking-tight">
                             <li class="relative mb-0 text-xl leading-10 hover:underline">
-                                <a href="#skills" class="trait-type">Skills Gained</a>
+                                <a href="#skills" class="trait-type">{{ __('degreeOverview.skillsGained') }}</a>
                             </li>
                             <li class="relative mb-0 text-xl leading-10 hover:underline">
-                                <a href="#related-jobs" class="trait-type">Related Jobs</a>
+                                <a href="#related-jobs" class="trait-type">{{ __('degreeOverview.relatedJobs') }}</a>
                             </li>
                         </ol>
                     </div>
@@ -40,7 +40,7 @@
 
                 <!-- Skills Section -->
                 <section id="skills" class="space-y-8 mt-12">
-                    <h2 class="text-2xl font-extralight text-gray-900 border-b-2 pb-2 border-gray-200">Skills Gained</h2>
+                    <h2 class="text-2xl font-extralight text-gray-900 border-b-2 pb-2 border-gray-200">{{ __('degreeOverview.skillsGained') }}</h2>
 
                     <ul class="list-custom">
                         <li v-for="skill in degreeSkills" :key="skill.id" class="text-l text-gray-700 pt-3">
@@ -51,7 +51,7 @@
 
                 <!-- Related Jobs Section -->
                 <section id="related-jobs" class="space-y-8 mt-12">
-                    <h2 class="text-2xl font-extralight text-gray-900 border-b-2 pb-2 border-gray-200">Related Jobs</h2>
+                    <h2 class="text-2xl font-extralight text-gray-900 border-b-2 pb-2 border-gray-200">{{ __('degreeOverview.relatedJobs') }}</h2>
 
                     <div v-for="job in degreeJobs" :key="job.id" class="space-y-4">
                         <h3 class="text-l font-black text-gray-800">{{ job.job_title }}</h3>
@@ -61,7 +61,7 @@
 
                 <!-- Conclusion Section -->
                 <section class="mt-12 space-y-4 text-center">
-                    <p class="text-xl text-gray-600">Interested in pursuing this degree? Explore our <a href="#" class="text-blue-600 hover:text-blue-500 underline">Degree Guide</a>.</p>
+                    <p class="text-xl text-gray-600">{{ __('degreeOverview.interestedInDegree') }} <a href="#" class="text-blue-600 hover:text-blue-500 underline">{{ __('degreeOverview.degreeGuide') }}</a>.</p>
                 </section>
             </div>
         </StickySidebar>
