@@ -24,7 +24,7 @@
         </nav>
       </div>
       <div class="top-menu__right">
-        <nav role="navigation" v-if="canLogin">
+        <nav role="navigation" v-if="$page.props.canLogin">
           <ul class="top-menu__list">
             <li>
               <LanguageSelector :languages="$page.props.languages" :selected-language="$page.props.language" />
@@ -42,7 +42,7 @@
                   {{ __('navigation.log_in') }}
                 </Link>
               </li>
-              <li v-if="canRegister">
+              <li v-if="$page.props.canRegister">
                 <Link :href="route('register')" class="button button--white before-fade-in fade-in transition duration-150 ease-in-out hide-for-small-only">
                   {{ __('navigation.register') }}
                 </Link>
@@ -66,14 +66,6 @@ export default {
     LanguageSelector,
   },
   props: {
-    canLogin: {
-      type: Boolean,
-      default: false
-    },
-    canRegister: {
-      type: Boolean,
-      default: false
-    },
     laravelVersion: {
       type: String,
       required: true
@@ -82,7 +74,6 @@ export default {
       type: String,
       required: true
     },
-
   }
 }
 </script>

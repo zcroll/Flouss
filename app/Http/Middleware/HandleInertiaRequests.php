@@ -7,6 +7,7 @@ use App\Http\Resources\LanguageResource;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Arr;
 class HandleInertiaRequests extends Middleware
 {
@@ -42,6 +43,8 @@ class HandleInertiaRequests extends Middleware
             // 'availableLocales' => config('app.available_locales'),
             'language' => app()->getLocale(),
             'languages' => LanguageResource::collection(Lang::cases()),
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
             'translations' => function() {
                 return cache()->rememberForever('translations' . app()->getLocale(), function() {
 
