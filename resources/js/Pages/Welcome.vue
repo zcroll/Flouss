@@ -1,6 +1,6 @@
 <template>
     <div>
-      <NavBar :canLogin="canLogin" :canRegister="canRegister" :laravelVersion="laravelVersion" :phpVersion="phpVersion" />
+      <NavBar   :canLogin="canLogin" :canRegister="canRegister" :laravelVersion="laravelVersion" :phpVersion="phpVersion" />
       <link rel="stylesheet" media="all" href="/css/landingPage/index.css" />
       <div class="grid-container home">
         <div class="card card--home">
@@ -214,15 +214,17 @@
   </template>
 
   <script>
-  import { Link } from '@inertiajs/vue3';
+  import { Link , usePage } from '@inertiajs/vue3';
   import Content from "@/Components/Content.vue";
-  import NavBar from "@/Components/NavBar.vue";
+  import NavBar from "@/Pages/NavBar.vue";
   import Footer from "@/Components/Footer.vue"
   import Section from "@/Pages/HomePage/Section.vue";
 
+
+
   export default {
     name: 'App',
-    components: {Section, NavBar, Content, Footer, Link},
+    components: {Section, NavBar, Content, Footer, Link, usePage},
     props: {
       canLogin: Boolean,
       canRegister: Boolean,

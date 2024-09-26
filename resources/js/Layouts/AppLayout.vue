@@ -7,6 +7,7 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import Header from "@/Components/Header.vue";
+import LanguageSelector from '@/Components/LanguageSelector.vue';
 import __ from '@/lang';
 
 const props = defineProps({
@@ -88,22 +89,7 @@ const socialLinks = [
 
                                 <div class="hidden sm:flex sm:items-center sm:ml-6">
                                     <!-- Language Selector -->
-                                    <select 
-                                        name="language" 
-                                        id="language" 
-                                        v-on:change="router.post(route('language.switch',{language:$event.target.value}))"
-                                        class="bg-transparent text-white border border-slate-500 focus:border-green-400 focus:ring-2 focus:ring-green-400 rounded-md px-2 py-1 text-sm mr-4"
-                                    >
-                                        <option 
-                                            :value="language.value" 
-                                            v-for="language in $page.props.languages"
-                                            :key="language.value" 
-                                            :selected="language.value === $page.props.language"
-                                            class="bg-[#0a1e2e] text-white"
-                                        >
-                                            {{ language.value === 'en' ? 'En' : 'Fr' }}
-                                        </option>
-                                    </select>
+                                    <LanguageSelector :languages="$page.props.languages" :selectedLanguage="$page.props.language" />
 
                                     <!-- Teams Dropdown -->
                                     <div class="ml-3 relative" v-if="$page.props.jetstream.hasTeamFeatures">

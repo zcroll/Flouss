@@ -15,7 +15,7 @@ class CareerController extends Controller
         $locale = app()->getLocale();
         $nameColumn = $locale === 'fr' ? 'name_fr' : 'name';
         $descriptionColumn = $locale === 'fr' ? 'description_fr' : 'description';
-
+        
         $occupation = JobInfo::with(['jobInfoDetail', 'jobInfoDuties', 'jobInfoTypes', 'workplaces'])
             ->where('slug', $job)
             ->firstOrFail();
@@ -70,6 +70,7 @@ class CareerController extends Controller
             'workEnvironments' => $occupation->workEnvironments->map(function ($environment) use ($nameColumn, $descriptionColumn) {
                 return [
                     'name' => $environment->$nameColumn,
+                    'category' => $environment->category,
                     'score' => $environment->score,
                     'description' => $environment->$descriptionColumn,
                 ];

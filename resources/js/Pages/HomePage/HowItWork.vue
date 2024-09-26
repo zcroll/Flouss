@@ -47,9 +47,9 @@
 
 <script>
 import Procces from './Procces.vue';
-import Navbar from '@/Components/NavBar.vue';
+import Navbar from '@/Pages/NavBar.vue';
 import Footer from '@/Components/Footer.vue';
-import NavBar from "@/Components/NavBar.vue";
+import NavBar from "@/Pages/NavBar.vue";
 
 export default {
   name: 'HowItWork',

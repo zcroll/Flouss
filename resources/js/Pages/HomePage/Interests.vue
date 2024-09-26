@@ -39,11 +39,11 @@
 
 <script>
 import InterestHeader from "@/Components/InterestHeader.vue";
-import Navbar from "@/Components/NavBar.vue";
+import Navbar from "@/Pages/NavBar.vue";
 import Footer from "@/Components/Footer.vue"
-import MainInterest from "@/Pages/HomePage/MainInterest.vue"; 
+import MainInterest from "@/Pages/HomePage/MainInterest.vue";
 import Industries from "@/Pages/HomePage/Industries.vue";
-import NavBar from "@/Components/NavBar.vue";
+import NavBar from "@/Pages/NavBar.vue";
 import ActivityProgressExample from "@/Pages/HomePage/ActivityProgressExample.vue";
 import BottomBanner from "@/Pages/HomePage/BottomBanner.vue";
 
@@ -56,7 +56,7 @@ export default {
     Industries,
     InterestHeader,
     BottomBanner,
-    ActivityProgressExample,  
+    ActivityProgressExample,
     Footer
   },
   props: {
@@ -78,8 +78,3 @@ export default {
   }
 }
 </script>
-
-
-
-
-
