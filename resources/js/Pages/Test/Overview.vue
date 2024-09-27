@@ -3,9 +3,9 @@
     <link
       rel="stylesheet"
       media="all"
-      href="//cdn2.careerhunter.io/assets/application-349b29af163d5822a096212e2dd202386f20dc4d2f59953f2fd3e210070ad75c.css"
+      href="/css/landingPage/index.css"
     />
-    <link rel="stylesheet" media="all" href="//cdn3.careerhunter.io/assets/main_tests-bd884139ec646feab4ac86d2f494e405033a3d476b5b9ac820fc8fbc6576c466.css" />
+    <link rel="stylesheet" media="all" href="/css/landingPage/main-test.css"/>
 
     <div class="test-page__wrapper__main" :style="wrapperStyle">
       <div class="blur-box-container blur-box-container--spaced overview__container">
@@ -36,7 +36,7 @@
                 <button
                   v-for="index in totalPages"
                   :key="index"
-                  :class="['button', 'before-fade-in', 'fade-in', 'button--answer', 
+                  :class="['button', 'before-fade-in', 'fade-in', 'button--answer',
                     getButtonClass(index)]"
                   @click="goToPage(index)"
                 >
@@ -56,7 +56,7 @@
                   <span class="button__hovered" />
                 </button>
               </div>
-              
+
             </div>
           </div>
           <div class="bg-copy interests" />

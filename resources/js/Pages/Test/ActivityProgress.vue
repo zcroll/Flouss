@@ -5,7 +5,8 @@
       media="all"
       href="/css/landingPage/index.css"
     />
-    <link rel="stylesheet" media="all" href="//cdn3.careerhunter.io/assets/main_tests-bd884139ec646feab4ac86d2f494e405033a3d476b5b9ac820fc8fbc6576c466.css" />
+
+      <link rel="stylesheet" media="all" href="/css/landingPage/main-test.css"/>
 
     <div class="flex justify-center items-center min-h-screen">
       <div class="test-page__wrapper">
@@ -31,8 +32,8 @@
                         <!-- Progress bar with conditional red points -->
                         <div class="progress-bar">
                           <div class="progress" :style="{ width: progressPercentage + '%' }"></div>
-                          <div v-for="(point, index) in incompletePoints" :key="index" 
-                               class="incomplete-point" 
+                          <div v-for="(point, index) in incompletePoints" :key="index"
+                               class="incomplete-point"
                                :style="{ left: (point * 100 / Math.ceil(activities.length / 6)) + '%' }"
                                @click="goToQuestion(point)">
                           </div>
@@ -61,7 +62,7 @@
                                     <p class="test-statement__option__text">
                                       {{ element.name }}
                                     </p>
-                                  
+
                                   </div>
                                   <div class="cell shrink">
                                     <div class="remove">
@@ -276,13 +277,13 @@ export default {
         }
         return { id: activity.id, score: score, category: activity.category };
       });
-      
-      this.rankedActivities = this.rankedActivities.filter(activity => 
+
+      this.rankedActivities = this.rankedActivities.filter(activity =>
         !rankedActivities.some(newActivity => newActivity.id === activity.id)
       );
-      
+
       this.rankedActivities = [...this.rankedActivities, ...rankedActivities];
-      
+
       this.userResponses[this.currentQuestion - 1] = [...this.currentActivities];
       console.log('User responses:', this.userResponses);
       console.log('Ranked activities:', this.rankedActivities);
