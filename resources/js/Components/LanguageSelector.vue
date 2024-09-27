@@ -12,7 +12,7 @@
     </label>
     <ul
       v-show="showDropdown"
-      class="bg-white flex flex-col gap-2 p-2 rounded-box shadow text-black absolute z-10 w-28 end-1"
+      class="bg-white flex flex-col gap-2 p-2 rounded-xl shadow text-black absolute z-10 w-28 end-1"
       tabindex="0"
       @mouseenter="cancelCloseTimer"
       @mouseleave="startCloseTimer"

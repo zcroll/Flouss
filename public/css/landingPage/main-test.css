@@ -7779,7 +7779,8 @@
     background-attachment:fixed;
     -webkit-background-size:cover;
     background-size:cover;
-    overflow:hidden
+    overflow:hidden;
+    border-radius:10px
 }
 @media screen and (max-width:39.99875em){
     .bg-copy{
