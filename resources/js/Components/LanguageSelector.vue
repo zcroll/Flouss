@@ -1,14 +1,12 @@
 <template>
   <ol class="relative" @mouseleave="startCloseTimer">
     <label
-      class="flex gap-2 items-center py-1.5 cursor-pointer lowercase text-white"
+      class="flex gap-2 items-center py-1.5 pr-3 cursor-pointer lowercase text-white "
       tabindex="0"
       @mouseenter="showDropdown = true"
     >
       <img class="h-5" :src="getFlagSrc(selectedLanguage)" :alt="`${selectedLanguage} flag`" />
-      <svg height="16" width="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6l1.41-1.42Z" fill="currentColor" />
-      </svg>
+  
     </label>
     <ul
       v-show="showDropdown"

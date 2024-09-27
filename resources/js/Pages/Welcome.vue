@@ -185,23 +185,20 @@
         </div>
         <div class="grid-x card__equalizer home-tests__cards">
           <div v-for="(test, index) in tests" :key="index" class="large-2 medium-6 small-12 cell text-center card__equal-items">
-            <div class="home-tests__card">
+            <div class="home-tests__card" style="border: 2px solid #59ce61; border-radius: 10px; margin: 10px; padding: 15px; transition: all 0.3s ease;">
               <div class="circle half-top"></div>
               <div class="circle right-small"></div>
               <div class="home-tests__icon">
-                <div :class="['large-icon', test.iconClass, 'float-center', 'before-fade-in', 'fade-in']"></div>
+                <div :class="['large-icon',  'float-center', 'before-fade-in', 'fade-in']"></div>
               </div>
-              <h3 class="home-tests__title before-fade-in fade-in">
+              <h3 class="home-tests__title before-fade-in fade-in" style="margin: 15px 0; transition: color 0.3s ease;">
                 {{ __(`welcome.tests.${test.key}.title`) }}
               </h3>
-              <p class="home-tests__info before-fade-in fade-in">
+              <p class="home-tests__info before-fade-in fade-in" style="margin: 15px 0; transition: color 0.3s ease;">
                 {{ __(`welcome.tests.${test.key}.description`) }}
               </p>
               <div>
-                <a class="button button--blue-off before-fade-in fade-in" :href="test.link">
-                  {{ __('welcome.learn_more') }}
-                  <span class="button__hovered"></span>
-                </a>
+
               </div>
             </div>
           </div>
