@@ -48,23 +48,24 @@
         margin-top:-40px
     }
 }
-.breadcrumbs-nav{
-    font-size:10px;
-    line-height:15px;
-    color:rgba(255,255,255,.5);
-    margin:0 0 15px;
-    display:-webkit-box;
-    display:-webkit-flex;
-    display:-ms-flexbox;
-    display:flex;
-    -webkit-box-align:center;
-    -webkit-align-items:center;
-    -ms-flex-align:center;
-    align-items:center
+.breadcrumbs-nav {
+    font-family: sofia-pro-regular,sans-serif;
+    font-size: 15px;
+    line-height: 15px;
+    color: rgba(255,255,255,.5);
+    margin: 0 0 15px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center
 }
 .breadcrumbs-nav a{
     color:rgba(255,255,255,.5);
-    font-size:10px;
+    font-size:15px;
     line-height:15px
 }
 .test-top-hero__title-icon{
@@ -5262,7 +5263,8 @@ h1,h2,h3,h4,h5,p{
 }
 div,ul,ol,li,h1,h2,h3,h4,h5,form,p{
     margin:0;
-    padding:0
+    padding:0;
+    border-radius: 10px
 }
 b{
     font-family:sofia-pro-bold,sans-serif;
@@ -7721,10 +7723,10 @@ body.active::-webkit-scrollbar{
 .err.cvc .red-warning{
     top:11px
 }
-.err input,.err select,.err textarea{
+.err input,.err .err textarea{
     border:2px solid #ff3737!important
 }
-.share-email-input .err input,.share-email-input .err select,.share-email-input .err textarea{
+.share-email-input .err input,.share-email-input .err .share-email-input .err textarea{
     border:2px solid red!important
 }
 .content-wrapper{
@@ -9169,68 +9171,12 @@ textarea{
     text-align:right;
     margin-top:-10px
 }
-/* select,.currencies-select{
-    border-radius:20px;
-    -webkit-border-radius:20px;
-    -moz-border-radius:20px;
-    background-image:none;
-    background-color:rgba(255,255,255,.03);
-    color:rgba(255,255,255,.5);
-    line-height:1.1;
-    border:none!important;
-    -webkit-box-shadow:none!important;
-    box-shadow:none!important;
-    height:40px;
-    font-size:15px;
-    font-family:sofia-pro-regular,sans-serif!important;
-    padding:8px 15px;
-    -webkit-appearance:none;
-    -moz-appearance:none;
-    appearance:none;
-    -webkit-box-sizing:border-box;
-    box-sizing:border-box;
-    width:100%;
-    margin-bottom:10px
-} */
-select::-webkit-input-placeholder,.currencies-select::-webkit-input-placeholder{
-    color:rgba(255,255,255,.5)
-}
-select::-moz-placeholder,.currencies-select::-moz-placeholder{
-    color:rgba(255,255,255,.5)
-}
-select:-ms-input-placeholder,.currencies-select:-ms-input-placeholder{
-    color:rgba(255,255,255,.5)
-}
-select::-ms-input-placeholder,.currencies-select::-ms-input-placeholder{
-    color:rgba(255,255,255,.5)
-}
-select::placeholder,.currencies-select::placeholder{
-    color:rgba(255,255,255,.5)
-}
-select:focus,.currencies-select:focus{
-    background-color:rgba(255,255,255,.03);
-    border:none!important;
-    color:#fff;
-    -webkit-box-shadow:none;
-    box-shadow:none;
-    outline:none!important
-}
-select:-webkit-autofill,select:-webkit-autofill:focus,select:-webkit-autofill:active,.currencies-select:-webkit-autofill,.currencies-select:-webkit-autofill:focus,.currencies-select:-webkit-autofill:active{
-    -webkit-box-shadow:0 0 0 1000px rgba(10,30,46,.1) inset;
-    font-family:sofia-pro-regular,sans-serif;
-    -webkit-transition:background-color 5000s ease-in-out;
-    transition:background-color 5000s ease-in-out
-}
 .with-autofill select:-webkit-autofill,.with-autofill select:-webkit-autofill:focus,.with-autofill select:-webkit-autofill:active{
     -webkit-box-shadow:0 0 0 1000px #e5e7e9 inset!important;
     -webkit-transition:none;
     transition:none
 }
-option{
-    background:rgba(255,255,255,.03);
-    border:rgba(255,255,255,.03);
-    border-radius:20px
-}
+
 .select-label.full-opacity:after{
     opacity:1!important
 }
