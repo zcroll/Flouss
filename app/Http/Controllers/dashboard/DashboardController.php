@@ -14,6 +14,8 @@ class DashboardController extends Controller
         $user = auth()->user();     
         $hasResult = $user->results()->exists();
         ds($hasResult);
+        // ray()->showEvents();
+        ray()->showCache();
         return Inertia::render('Dashboard', [
             'hasResult' => $hasResult
         ]);

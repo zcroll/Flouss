@@ -57,5 +57,10 @@ class Degree extends Model
     {
         return $this->hasMany(DegreeJob::class);
     }
+
+    public function degreeFormationMatches(): HasMany
+    {
+        return $this->hasMany(DegreeFormationMatch::class);
+    }
 }
 

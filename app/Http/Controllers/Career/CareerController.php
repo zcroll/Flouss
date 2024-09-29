@@ -107,28 +107,26 @@ class CareerController extends Controller
     public function howToBecome(string $job): Response
     {
         $locale = app()->getLocale();
-        $nameColumn = $locale === 'fr' ? 'name_fr' : 'name';
-        $descriptionColumn = $locale === 'fr' ? 'secondary_description_fr' : 'secondary_description';
-
-        $occupation = JobInfo::where('slug', $job)->firstOrFail();
-        $degrees = DB::table('job_degree_relations')
-            ->join('degrees', 'job_degree_relations.degree_id', '=', 'degrees.id')
-            ->join('degree_descriptions', 'degrees.id', '=', 'degree_descriptions.degree_id')
-            ->where('job_degree_relations.job_id', $occupation->id)
-            ->select("degrees.$nameColumn as name", "degree_descriptions.$descriptionColumn as description")
-            ->get();
-
-        $formations = DB::table('job_formations')
-            ->join('formation', 'job_formations.formation_id', '=', 'formation.id')
-            ->where('job_formations.job_id', $occupation->id)
-            ->select('formation.*', 'job_formations.similarity_score')
-            ->orderByDesc('job_formations.similarity_score')
-            ->get();
+        
+        $occupation = JobInfo::with(['degreeJobs' => function ($query) use ($locale) {
+            $query->with(['degree' => function ($query) use ($locale) {
+                $query->select('id', $locale === 'fr' ? 'name_fr as name' : 'name');
+            }]);
+        }])->where('slug', $job)->firstOrFail();
 
         return Inertia::render('career/HowToBecome', [
-            'occupation' => $occupation,
-            'degrees' => $degrees,
-            'formations' => $formations,
+            'occupation' => [
+                'name' => $locale === 'fr' ? $occupation->name_fr : $occupation->name,
+                'slug' => $occupation->slug,
+                'image' => $occupation->image,
+            ],
+            'degreeJobs' => $occupation->degreeJobs->map(function ($degreeJob) use ($locale) {
+                return [
+                    'degree' => $degreeJob->degree,
+                    'job_title' => $locale === 'fr' ? $degreeJob->job_title_fr : $degreeJob->job_title,
+                    'job_description' => $locale === 'fr' ? $degreeJob->job_description_fr : $degreeJob->job_description,
+                ];
+            }),
         ]);
     }
 }
