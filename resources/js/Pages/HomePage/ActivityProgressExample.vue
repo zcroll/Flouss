@@ -8,7 +8,7 @@
     <link 
       rel="stylesheet" 
       media="all" 
-      href="//cdn3.careerhunter.io/assets/main_tests-bd884139ec646feab4ac86d2f494e405033a3d476b5b9ac820fc8fbc6576c466.css" />
+      href="/css/landingPage/main-test.css" />
   
     
     <div class="test-image test-image--parallax interests">
@@ -164,7 +164,7 @@ export default {
 
 .progress {
   height: 100%;
-  background-color: #4CAF50;
+  background-color: #fb6303;
   border-radius: 5px;
   transition: width 0.3s ease-in-out;
 }

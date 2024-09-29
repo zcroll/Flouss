@@ -50,7 +50,7 @@
               </a>
             </div>
 
-            <p class="text-2xl text-[#59CE61] mb-1">{{ __('interest_header.test_price', { price: '150.99 MAD' }) }}</p>
+            <p class="text-2xl text-[#fb6303] mb-1">{{ __('interest_header.test_price', { price: '150.99 MAD' }) }}</p>
             <p class="text-sm text-white/50 mb-4">{{ __('interest_header.includes_takes') }}</p>
           </div>
         </div>

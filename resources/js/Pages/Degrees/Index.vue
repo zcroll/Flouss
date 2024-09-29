@@ -23,7 +23,7 @@
               <input
                 id="search"
                 v-model="searchQuery"
-                class="w-full px-3 py-1.5 text-gray-400 text-sm border bg-gray-800 rounded-md shadow-sm  focus:ring-[#4db554] focus:border-[#4db554]"
+                class="w-full px-3 py-1.5 text-gray-400 text-sm border bg-gray-800 rounded-md shadow-sm  focus:ring-[#fb6302] focus:border-[#fb6302]"
                 type="text"
                 :placeholder="__('degrees.search_degrees')"
                 @input="debouncedSearch"
@@ -46,11 +46,11 @@
             <div class="mb-3">
               <label class="block text-sm font-medium text-gray-100 mb-1">{{ __('degrees.sort_by') }}</label>
               <select
-                v-model="selectedSort"
-                class="w-full px-3 py-1.5 text-gray-400 text-sm border bg-gray-800 rounded-md border-gray-500 focus:border-[#4db554] shadow-sm "
+                :v-model="selectedSort"
+                class="w-full px-3 py-1.5 text-gray-400 text-sm border bg-gray-800 rounded-md border-[#fb6302] focus:ring-[#fb6302] focus:border-[#fb6302] shadow-sm "
                 @change="applyFilters"
               >
-                <option value="" disabled selected>{{ __('degrees.select_sorting_option') }}</option>
+                <option value="">{{ __('degrees.select_sorting_option') }}</option>
                 <option value="salary_desc">{{ __('degrees.highest_salary') }}</option>
                 <option value="satisfaction_desc">{{ __('degrees.highest_satisfaction') }}</option>
               </select>
@@ -58,7 +58,7 @@
 
             <button
               @click="resetFilters"
-              class="mt-3 w-full px-4 py-2 bg-[#4db554] font-black text-gray-100 rounded-md hover:bg-gray-800 hover:text-white transition-colors duration-300"
+              class="mt-3 w-full px-4 py-2 bg-[#fb6302] font-black text-gray-100 rounded-md hover:bg-gray-800 hover:text-white transition-colors duration-300"
             >
               {{ __('degrees.reset_filters') }}
             </button>
@@ -105,7 +105,7 @@
             <p class="text-lg text-gray-600 mb-4">{{ __('degrees.no_degrees_found') }}</p>
             <button
               @click="resetFilters"
-              class="px-4 py-2 bg-[#4db554] text-white rounded-md hover:bg-gray-700 transition-colors duration-300"
+              class="px-4 py-2 bg-[#fb6302] text-white rounded-md hover:bg-gray-700 transition-colors duration-300"
             >
               {{ __('degrees.reset_filters') }}
             </button>

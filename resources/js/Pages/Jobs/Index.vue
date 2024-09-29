@@ -1,9 +1,9 @@
 <style src="public/css/vueMultiselect.css"></style>
 <template>
-  <AppLayout 
-    :head-title="__('jobs.head_title')" 
-    :head-sub-title="__('jobs.head_subtitle')" 
-    :show-search="true" 
+  <AppLayout
+    :head-title="__('jobs.head_title')"
+    :head-sub-title="__('jobs.head_subtitle')"
+    :show-search="true"
     name="Jobs"
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -28,7 +28,7 @@
                 v-model="searchQuery"
                 type="text"
                 :placeholder="__('jobs.search_jobs')"
-                class="w-full px-3 py-1.5 text-gray-400 text-sm border bg-gray-800 rounded-md shadow-sm focus:ring-[#4db554] focus:border-[#4db554]"
+                class="w-full px-3 py-1.5 text-gray-400 text-sm border bg-gray-800 rounded-md shadow-sm focus:ring-[#fb6303] focus:border-[#fb6303]"
                 @input="debouncedSearch"
               />
             </div>
@@ -50,11 +50,11 @@
             <div class="mb-3">
               <label class="block text-sm font-medium text-gray-100 mb-1">{{ __('jobs.sort_by') }}</label>
               <select
-                v-model="selectedSort"
-                class="w-full px-3 py-1.5 text-gray-400 text-sm border bg-gray-800 rounded-md shadow-sm border-[#4db554]"
+                :v-model="selectedSort"
+                class="w-full px-3 py-1.5 text-gray-400 text-sm border bg-gray-800 rounded-md shadow-sm border-[#fb6303]"
                 @change="applyFilters"
               >
-                <option value="Select sorting option" disabled selected>{{ __('jobs.select_sorting_option') }}</option>
+                <option value="">{{ __('jobs.select_sorting_option') }}</option>
                 <option value="salary_desc">{{ __('jobs.highest_salary') }}</option>
                 <option value="satisfaction_desc">{{ __('jobs.highest_satisfaction') }}</option>
               </select>
@@ -62,7 +62,7 @@
 
             <button
               @click="resetFilters"
-              class="mt-3 w-full px-4 py-2 bg-[#4db554] font-black text-gray-100 rounded-md hover:bg-gray-800 hover:text-white transition-colors duration-300"
+              class="mt-3 w-full px-4 py-2 bg-[#fb6303] font-black text-gray-100 rounded-md hover:bg-gray-800 hover:text-white transition-colors duration-300"
             >
               {{ __('jobs.reset_filters') }}
             </button>

@@ -9,9 +9,10 @@
         </div>
         <div class="upgrade-benefits__imgs">
           <picture>
-            <!-- ... (image sources remain unchanged) ... -->
-            <img loading="lazy" :alt="__('welcome.discover_compatibility')" class="w-full h-auto rounded-lg shadow-lg opacity-0 animate-fade-in" src="//cdn2.careerhunter.io/assets/upgrade/benefits-desktop-37aacfccaac3b64f126e68ba81e87003d992c0d68f900789be3022494c130569.png" />
+              <img loading="lazy" :alt="__('welcome.discover_compatibility')" class="w-full h-auto rounded-lx shadow-lg opacity-0 animate-fade-in" src="/jobs.webp" />
+            <div class="shadow-lg shadow-gray-50"></div>
           </picture>
+
         </div>
       </div>
     </div>

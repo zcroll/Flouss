@@ -332,7 +332,7 @@ export default {
 
 .progress {
   height: 100%;
-  background-color: #4CAF50;
+  background-color: #fb6303;
   border-radius: 5px;
   transition: width 0.3s ease-in-out;
 }
@@ -348,7 +348,7 @@ export default {
 }
 
 .button--yellow {
-  background-color: #FFD700;
+  background-color: #fb6303;
   color: #000;
 }
 

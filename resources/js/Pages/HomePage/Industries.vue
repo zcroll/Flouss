@@ -24,7 +24,7 @@
         <div class="large-9 medium-12 cell">
           <div>
             <div class="grid-x">
-              <div v-for="(industry, index) in industries" :key="index" class="card industries__card large-3 medium-6 small-12 cell" :class="{'fade-out': industry.fading, 'fade-in': !industry.fading}">
+              <div v-for="(industry, index) in industries" :key="index" class="card industries__card large-3 medium-6 small-12 cell rounded-xl" :class="{'fade-out': industry.fading, 'fade-in': !industry.fading}">
                 <h3 class="industries__name">
                   {{ __(`industries.industries.${industry.key}`) }}
                 </h3>

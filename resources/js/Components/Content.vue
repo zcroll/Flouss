@@ -8,7 +8,7 @@
           </h2>
           <ul class="accordion nested enable-active-medium-up">
             <li v-for="(item, index) in accordionItems" :key="index" class="accordion-item before-fade-in fade-in" :class="{ 'is-active': activeIndex === index }">
-              <span class="accordion-title text-gray-400" @click="toggleAccordion(index)">
+              <span class="accordion-title text-gray-900" @click="toggleAccordion(index)">
                 {{ __(`welcome.accordion_items.${item.key}.title`) }}
               </span>
               <div class="accordion-content" :style="{ display: activeIndex === index ? 'block' : 'none' }">
@@ -22,35 +22,18 @@
         <div class="large-8 medium-12 large-order-1 small-order-2 cell">
           <div class="why-ch__imgs">
             <picture>
-              <source
-                  type="image/webp"
-                  media="(min-width: 1025px)"
-                  srcset="https://www.careerhunter.io/images/home/benefits-desktop-home.webp"
-              />
-              <source
-                  type="image/webp"
-                  media="(min-width: 641px) and (max-width: 1024px)"
-                  srcset="https://www.careerhunter.io/images/home/benefits-desktop-home.webp"
-              />
+
+        
               <source
                   type="image/webp"
                   media="(min-width: 320px) and (max-width: 640px)"
-                  srcset="https://www.careerhunter.io/images/home/benefits-mobile-2.webp"
+                  srcset="/jobs.webp"
+                  class="h-20 w-20"
               />
               <img
-                  class="show-for-large before-fade-in fade-in"
+                  class="show-for-large before-fade-in fade-in test_home"
                   :alt="__('welcome.reveal_your_strengths')"
-                  src="https://www.careerhunter.io/images/home/benefits-desktop-home.png"
-              />
-              <img
-                  class="show-for-medium-only"
-                  :alt="__('welcome.reveal_your_strengths')"
-                  src="https://www.careerhunter.io/images/home/benefits-desktop-home.png"
-              />
-              <img
-                  class="show-for-small-only"
-                  :alt="__('welcome.reveal_your_strengths')"
-                  src="https://www.careerhunter.io/images/home/benefits-mobile-2.png"
+                  src="/test1.webp"
               />
             </picture>
           </div>

@@ -185,7 +185,7 @@
         </div>
         <div class="grid-x card__equalizer home-tests__cards">
           <div v-for="(test, index) in tests" :key="index" class="large-2 medium-6 small-12 cell text-center card__equal-items">
-            <div class="home-tests__card" style="border: 2px solid #59ce61; border-radius: 10px; margin: 10px; padding: 15px; transition: all 0.3s ease;">
+            <div class="home-tests__card" style="border: 2px solid #fb6302; border-radius: 10px; margin: 10px; padding: 15px; transition: all 0.3s ease;">
               <div class="circle half-top"></div>
               <div class="circle right-small"></div>
               <div class="home-tests__icon">
@@ -235,32 +235,32 @@
           {
             key: 'interests',
             iconClass: 'interests-blue',
-            link: 'https://www.careerhunter.io/tests/interests'
+            
           },
           {
             key: 'personality',
             iconClass: 'personality-blue',
-            link: 'https://www.careerhunter.io/tests/personality'
+            
           },
           {
             key: 'motivators',
             iconClass: 'motivators-blue',
-            link: 'https://www.careerhunter.io/tests/motivators'
+            
           },
           {
             key: 'abstract',
             iconClass: 'abstract-blue',
-            link: 'https://www.careerhunter.io/tests/abstract'
+            
           },
           {
             key: 'numerical',
             iconClass: 'numerical-blue',
-            link: 'https://www.careerhunter.io/tests/numerical'
+            
           },
           {
             key: 'verbal',
             iconClass: 'verbal-blue',
-            link: 'https://www.careerhunter.io/tests/verbal'
+            
           }
         ]
       }

@@ -4,21 +4,33 @@
     <div class="top-menu__main">
       <div class="top-menu__left">
         <nav role="navigation">
-          <ul class="top-menu__list space-x-8">
+          <ul class="top-menu__list space-x-8 show-for-large">
             <li class="top-menu__logo">
               <Link :href="route('home')" class="top-menu__option">
                 <img
-                    class="top-menu__image"
-                    alt="CareerHunter"
-                    src="https://cdn1.careerhunter.io/assets/CareerHunter-c5d37d4480b8e9fd358ce4d6f1fe629893627bf89acf827c9c68f5fde015b306.svg"
+                    class="h-11 w-20"
+                    alt="GenZ"
+                    src="/logo_copy.webp"
                 />
               </Link>
             </li>
+
             <li class="show-for-large">
               <Link :href="route('how-it-works')" class="btn_link text-white font-bold py-2 px-3 rounded hover:bg-transparent hover:text-blue-500 transition duration-150 ease-in-out">{{__('navigation.how_it_works')}}</Link>
             </li>
             <li class="show-for-large">
               <Link :href="route('interests')" class="btn_link text-white font-bold py-2 px-3 rounded hover:bg-transparent hover:text-blue-500 transition duration-150 ease-in-out">{{__('navigation.test')}}</Link>
+            </li>
+          </ul>
+          <ul class="top-menu__list space-x-1 ">
+            <li class="show-for-small-only">
+              <Link :href="route('home')" class="top-menu__left">
+                <img
+                    class="h-11 w-20"
+                    alt="GenZ"
+                    src="/logo_copy.webp"
+                />
+              </Link>
             </li>
           </ul>
         </nav>

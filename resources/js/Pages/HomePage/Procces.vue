@@ -19,7 +19,7 @@
         </div>
         <div :class="['large-7 cell', index % 2 === 0 ? 'large-order-2 medium-order-1 small-order-1' : '', 'process__step-img-blk']">
           <img
-            :class="['process__step-img', index % 2 === 0 ? 'float-right' : '', 'before-fade-in fade-in']"
+            :class="['process__step-img rounded-xl', index % 2 === 0 ? 'float-right' : '', 'before-fade-in fade-in']"
             height="351"
             width="589"
             :alt="__(`process.steps.${step.key}.imageAlt`)"

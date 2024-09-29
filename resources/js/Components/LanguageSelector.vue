@@ -6,7 +6,7 @@
       @mouseenter="showDropdown = true"
     >
       <img class="h-5" :src="getFlagSrc(selectedLanguage)" :alt="`${selectedLanguage} flag`" />
-  
+
     </label>
     <ul
       v-show="showDropdown"
@@ -17,7 +17,7 @@
     >
       <li v-for="language in languages" :key="language.value">
         <a
-          class="hover:text-primary duration-300 transition ease-in-out flex gap-1 flex-row items-center px-3 py-1"
+          class="text-black duration-300 transition ease-in-out flex gap-1 flex-row items-center px-3 py-1"
           @click.prevent="switchLanguage(language.value)"
           href="#"
           rel="nofollow"
