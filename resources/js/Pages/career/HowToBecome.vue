@@ -21,12 +21,13 @@
             <h3 class="text-3xl font-bold mb-6 text-center text-indigo-600">Your Recommended Educational Path</h3>
             <p class="text-lg text-gray-600 mb-8 text-center">Based on your test results, we've curated the best educational routes for you to pursue a career as a {{ occupation.name }}.</p>
             
-            <div v-if="degrees.length > 0" class="mb-12">
+            <div v-if="degreeJobs.length > 0" class="mb-12">
               <h4 class="text-2xl font-semibold text-indigo-700 mb-4">Recommended Degrees</h4>
-              <div v-for="degree in degrees" :key="degree.degree_id" 
+              <div v-for="degreeJob in degreeJobs" :key="degreeJob.id" 
                    class="mb-6 p-4 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg shadow-md">
-                <h5 class="text-xl font-medium text-indigo-600 mb-2">{{ degree.name }}</h5>
-                <p class="text-gray-700">{{ degree.main_description }}</p>
+                <h5 class="text-xl font-medium text-indigo-600 mb-2">{{ degreeJob.degree.name }}</h5>
+                <p class="text-gray-700 mb-2">{{ degreeJob.job_title }}</p>
+                <p class="text-gray-600">{{ degreeJob.job_description }}</p>
               </div>
             </div>
           </div>
@@ -49,8 +50,7 @@ export default defineComponent({
   },
   props: {
     occupation: Object,
-    formations: Array,
-    degrees: Array,
+    degreeJobs: Array,
   },
   setup(props) {
     const sortedFormationsWithDescription = computed(() => {

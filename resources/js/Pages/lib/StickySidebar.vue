@@ -133,6 +133,7 @@ const links = computed(() => {
             { text: 'overview', url: baseUrl.value },
             { text: 'work_environments', url: `${baseUrl.value}/workEnvironments` },
             { text: 'personality', url: `${baseUrl.value}/personality` },
+            { text: 'how_to_become', url: `${baseUrl.value}/how-to-become` },
         ];
     } else if (props.type === 'degree') {
         return [

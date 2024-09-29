@@ -80,4 +80,9 @@ class JobInfo extends Model
         return $this->belongsToMany(Formation::class, 'job_formation')
                     ->withPivot('similarity_score');
     }
+
+    public function degreeJobs()
+    {
+        return $this->hasMany(DegreeJob::class, 'job_title', 'name');
+    }
 }

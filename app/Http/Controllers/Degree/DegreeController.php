@@ -79,16 +79,27 @@ class DegreeController extends Controller
         ]);
     }
 
-    public function howToObtain(string $slug): Response
+    public function howToObtain(string $id): Response
     {
-        $degree = Degree::where('slug', $slug)->firstOrFail();
-        $requirements = DB::table('degree_requirements')
-            ->where('degree_id', $degree->id)
-            ->get();
+        $locale = app()->getLocale();
+        
+        $degree = Degree::with(['degreeFormationMatches' => function ($query) {
+            $query->orderBy('similarity_score', 'desc');
+        }])->where('slug', $id)->firstOrFail();
 
         return Inertia::render('degree/HowToObtain', [
-            'degree' => $degree,
-            'requirements' => $requirements,
+            'degree' => [
+                'name' => $locale === 'fr' ? $degree->name_fr : $degree->name,
+                'slug' => $degree->slug,
+                'image' => $degree->image,
+            ],
+            'formations' => $degree->degreeFormationMatches->map(function ($match) use ($locale) {
+                return [
+                    'id' => $match->formation_id,
+                    'name' => $locale === 'fr' ? $match->formation_name_fr : $match->formation_name,
+                    'similarity_score' => $match->similarity_score,
+                ];
+            }),
         ]);
     }
 }
