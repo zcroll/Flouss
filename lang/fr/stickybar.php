@@ -11,6 +11,7 @@ return [
     'overview' => 'Aperçu',
     'work_environments' => 'Environnements de travail',
     'how_to_obtain' => 'Comment l\'obtenir',
+    'how_to_become' => 'Comment Devenir',
     'requirements' => 'Exigences',
     'similar_jobs' => 'Emplois similaires',
 ];

@@ -2,8 +2,8 @@
 
 return [
 
-    'title1' => 'Les choix de carrière  ',
-    'title2' => 'rendus plus faciles que jamais',
+    'title1' => 'La Clé du Succès,',
+    'title2' => 'pour une nouvelle génération Bien',
     'subtitle1' => 'Nos tests vous associeront avec précision à des professions que ',
     'subtitle2' => 'vous aimerez ',
     'subtitle3' => ' et dans lesquelles ',

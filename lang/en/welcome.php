@@ -1,8 +1,9 @@
 <?php
 
 return [
-    'title1' => 'Career choices ',
-    'title2' => 'made easier than ever',
+
+    'title1' => 'The Key to Success,',
+    'title2' => 'for a new generation perfectly',
     'subtitle1' => 'Our tests will accurately match you to professions that ',
     'subtitle2' => 'you\'ll love ',
     'subtitle3' => ' and ',

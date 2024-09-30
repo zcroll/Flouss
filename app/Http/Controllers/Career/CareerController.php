@@ -125,6 +125,8 @@ class CareerController extends Controller
                     'degree' => $degreeJob->degree,
                     'job_title' => $locale === 'fr' ? $degreeJob->job_title_fr : $degreeJob->job_title,
                     'job_description' => $locale === 'fr' ? $degreeJob->job_description_fr : $degreeJob->job_description,
+                    
+
                 ];
             }),
         ]);

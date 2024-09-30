@@ -76,7 +76,7 @@
                         <figure v-if="environment.score" class="relative">
                             <span
                                 class="block h-[34px] rounded-full bg-gradient-to-r "
-                                :style="{ width: `${environment.score < 15 ? 11 : environment.score} %` }"
+                                :style="{ width: `${environment.score < 15 ? 11 : environment.score}%` }"
                             >
                                 <span class="text-gray-200 font-medium text-lg leading-[32px] ml-2 absolute top-1/2 transform -translate-y-1/2">
                                     {{ environment.score }}%

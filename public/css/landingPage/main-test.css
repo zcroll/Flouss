@@ -13380,7 +13380,7 @@
     cursor:pointer
 }
 .breadcrumbs-nav span{
-    color:rgba(255,255,255,.5)
+    color:rgba(255,255,255,.5);
 }
 [data-indicator-container]{
     position:relative

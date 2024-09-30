@@ -133,6 +133,8 @@
         <div class="grid-x text-center">
           <div class="small-12 cell">
             <h1 class="banner-top__title-home">{{ __('welcome.title1') }} <span>{{ __('welcome.title2') }}</span></h1>
+            <img v-if="$page.props.language === 'fr'" src="/orienté.webp" alt="orienté" width="40%" height="auto">
+            <img v-if="$page.props.language === 'en'" src="/oriented.webp" alt="orienté" width="40%" height="auto">
             <h2 class="banner-top__subtitle">{{ __('welcome.subtitle1') }} <span>{{ __('welcome.subtitle2') }}</span>{{ __('welcome.subtitle3') }}<span>{{ __('welcome.subtitle4') }}</span></h2>
             <div class="banner-top--home-btns-container">
               <div>
@@ -216,6 +218,7 @@
   import NavBar from "@/Pages/NavBar.vue";
   import Footer from "@/Components/Footer.vue"
   import Section from "@/Pages/HomePage/Section.vue";
+
 
 
 

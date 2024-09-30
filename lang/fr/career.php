@@ -23,4 +23,10 @@ return [
 
     // WorkEnvironments.vue
     'typical_work_environments' => 'Environnements de travail typiques :',
+
+
+    //how to become
+    'how_to_become' => "Comment devenir un(e)",
+    'best_routes' => "En fonction de vos résultats de test, nous avons sélectionné les meilleures voies éducatives pour vous permettre de poursuivre une carrière en tant que"
+
 ];

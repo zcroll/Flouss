@@ -6,6 +6,7 @@ return [
     
     // Overview.vue
     'what_is_a' => 'What Is a',
+    
     'responsibilities_and_duties' => 'Responsibilities and Duties',
     'related_jobs' => 'Related Jobs',
     'core_duties_and_responsibilities' => 'Core Duties and Responsibilities',
@@ -24,4 +25,9 @@ return [
 
     // WorkEnvironments.vue
     'typical_work_environments' => 'Typical Work Environments:',
+
+    //how to become
+    'how_to_become' => "How to Become a",
+    'best_routes' => "Based on your test results, we've curated the best educational routes for you to pursue a career as a"
+
 ];
