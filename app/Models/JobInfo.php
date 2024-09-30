@@ -85,4 +85,9 @@ class JobInfo extends Model
     {
         return $this->hasMany(DegreeJob::class, 'job_title', 'name');
     }
+
+    public function howToBecome()
+    {
+        return $this->hasOne(JobHowToBecome::class, 'job_id');
+    }
 }

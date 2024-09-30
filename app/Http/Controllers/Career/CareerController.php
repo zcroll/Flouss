@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Career;
 
 use App\Http\Controllers\Controller;
+use App\Models\Degree;
+use App\Models\DegreeJob;
 use App\Models\JobInfo;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -110,9 +112,27 @@ class CareerController extends Controller
         
         $occupation = JobInfo::with(['degreeJobs' => function ($query) use ($locale) {
             $query->with(['degree' => function ($query) use ($locale) {
-                $query->select('id', $locale === 'fr' ? 'name_fr as name' : 'name');
+                $query->select('id', $locale === 'fr' ? 'name_fr as name' : 'name', 'image');
             }]);
-        }])->where('slug', $job)->firstOrFail();
+        }, 'howToBecome'])->where('slug', $job)->firstOrFail();
+
+        // Find all degrees by the job title
+        $jobTitle = $locale === 'fr' ? $occupation->name_fr : $occupation->name;
+        $relatedDegrees = DegreeJob::where('job_title', 'LIKE', '%' . $jobTitle . '%')
+            ->orWhere('job_title_fr', 'LIKE', '%' . $jobTitle . '%')
+            ->with(['degree' => function ($query) use ($locale) {
+                $query->select('id', $locale === 'fr' ? 'name_fr as name' : 'name', 'image');
+            }])
+            ->get();
+
+        // Prepare the data for the view
+        $degreeJobs = $relatedDegrees->map(function ($degreeJob) use ($locale) {
+            return [
+                'degree' => $degreeJob->degree,
+                'job_title' => $locale === 'fr' ? $degreeJob->job_title_fr : $degreeJob->job_title,
+                'job_description' => $locale === 'fr' ? $degreeJob->job_description_fr : $degreeJob->job_description,
+            ];
+        });
 
         return Inertia::render('career/HowToBecome', [
             'occupation' => [
@@ -120,15 +140,8 @@ class CareerController extends Controller
                 'slug' => $occupation->slug,
                 'image' => $occupation->image,
             ],
-            'degreeJobs' => $occupation->degreeJobs->map(function ($degreeJob) use ($locale) {
-                return [
-                    'degree' => $degreeJob->degree,
-                    'job_title' => $locale === 'fr' ? $degreeJob->job_title_fr : $degreeJob->job_title,
-                    'job_description' => $locale === 'fr' ? $degreeJob->job_description_fr : $degreeJob->job_description,
-                    
-
-                ];
-            }),
+            'degreeJobs' => $degreeJobs,
+            'howToBecome' => $occupation->howToBecome,
         ]);
     }
 }
