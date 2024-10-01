@@ -19,9 +19,15 @@
         :salary="occupation.salary"
         :personality="occupation.personality || 'N/A'"
         :satisfaction="occupation.satisfaction || 'N/A'"
+        :job-steps="occupation.jobSteps"
+        :disableStepsLink="disableStepsLink"
       >
         
-        <div class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white rounded-3xl shadow-2xl">
+        <div v-if="!occupation || !howToBecome || !jobDegrees" class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white rounded-3xl shadow-2xl">
+          <p class="text-lg text-gray-700">No data available for this occupation.</p>
+        </div>
+        
+        <div v-else class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white rounded-3xl shadow-2xl">
           <h2 class="custom-heading mb-8">{{ howToBecome.title }}</h2>
           <section id="step-1" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0" style="box-sizing: border-box; display: block; transition: box-shadow 0.33s, transform 0.33s; background-color: rgb(255, 255, 255); padding: 30px; border-radius: 19px; margin-top: 40px; box-shadow: rgba(0, 0, 0, 0.12) 0px 12px 48px 0px;">
               <span class="Tag" style="box-sizing: border-box; border-radius: 6.5px; display: inline-block; color: rgb(102, 57, 116); background-color: rgb(229, 224, 234); font-weight: 400; letter-spacing: -0.15px; line-height: 1.2; margin-right: 10px; padding: 8px 12px; font-size: 16px; font-family: 'aktiv-grotesk', 'Helvetica Neue', Helvetica, Arial, sans-serif;">
@@ -37,31 +43,34 @@
                   </li>
                 </ul>
               </div>
+              <div v-else class="space-y-4 mb-8">
+                <p class="text-lg text-gray-700">No steps available for this occupation.</p>
+              </div>
             </section>
             <section id="step-2" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0" style="box-sizing: border-box; display: block; transition: box-shadow 0.33s, transform 0.33s; background-color: rgb(255, 255, 255); padding: 30px; border-radius: 19px; margin-top: 40px; box-shadow: rgba(0, 0, 0, 0.12) 0px 12px 48px 0px;">
               <span class="Tag" style="box-sizing: border-box; border-radius: 6.5px; display: inline-block; color: rgb(102, 57, 116); background-color: rgb(229, 224, 234); font-weight: 400; letter-spacing: -0.15px; line-height: 1.2; margin-right: 10px; padding: 8px 12px; font-size: 16px; font-family: 'aktiv-grotesk', 'Helvetica Neue', Helvetica, Arial, sans-serif;">
                 Step 2
               </span>
               <h2 class="custom-heading mb-8" itemProp="name" style="box-sizing: border-box; line-height: 1.16; letter-spacing: -0.7px; font-weight: 300; font-size: 1.55em; margin: 12px 0px 27px; padding: 0px; margin-bottom: 27px; padding-top: 0px;">
-                Based on the career steps, we suggest this degree for you:
+                Degrees
               </h2>
-              <p class="custom-heading mb-8">
-                {{ __('career.best_routes', { occupation: occupation.name }) }}
-              </p>
-              <div v-for="degreeJob in degreeJobs" :key="degreeJob.key" class="relative flex items-center space-x-3 rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400 mb-8">
-                <div class="flex-shrink-0">
-                  <img class="h-10 w-10 rounded-xl" :src="degreeJob.degree.image" :alt="degreeJob.degree.name" />
-                </div>
-                <div class="min-w-0 flex-1">
-                  <span class="absolute inset-0" aria-hidden="true" />
-                  <p class="text-2xl font-medium text-gray-900">{{ degreeJob.degree.name }}</p>
-                  <p class="truncate text-md text-gray-500">{{ degreeJob.job_title}}</p>
-                  <p class="font-thin text-gray-500">{{ degreeJob.job_description }}</p>
-                </div>
+              <div v-if="jobDegrees && jobDegrees.length > 0" class="space-y-4 mb-8">
+                <ul class="list-custom">
+                  <li v-for="(degree, index) in jobDegrees" :key="index" class="flex items-center space-x-4 text-lg text-gray-700 leading-relaxed">
+                    <img v-if="degree.image" :src="degree.image" :alt="degree.title" class="w-12 h-12 object-cover rounded-full">
+                    <div>
+                      <Link v-if="degree.slug" :href="route('degree.index', { slug: degree.slug })">{{ degree.title }}</Link>
+                      <span v-else>{{ degree.title }}</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div v-else class="space-y-4 mb-8">
+                <p class="text-lg text-gray-700">No degrees available for this occupation.</p>
               </div>
             </section>
 
-            <section id="step-2" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0" style="box-sizing: border-box; display: block; transition: box-shadow 0.33s, transform 0.33s; background-color: rgb(255, 255, 255); padding: 30px; border-radius: 19px; margin-top: 40px; box-shadow: rgba(0, 0, 0, 0.12) 0px 12px 48px 0px;">
+            <section id="step-3" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0" style="box-sizing: border-box; display: block; transition: box-shadow 0.33s, transform 0.33s; background-color: rgb(255, 255, 255); padding: 30px; border-radius: 19px; margin-top: 40px; box-shadow: rgba(0, 0, 0, 0.12) 0px 12px 48px 0px;">
               <span class="Tag" style="box-sizing: border-box; border-radius: 6.5px; display: inline-block; color: rgb(102, 57, 116); background-color: rgb(229, 224, 234); font-weight: 400; letter-spacing: -0.15px; line-height: 1.2; margin-right: 10px; padding: 8px 12px; font-size: 16px; font-family: 'aktiv-grotesk', 'Helvetica Neue', Helvetica, Arial, sans-serif;">
                 Step 3
               </span>
@@ -78,16 +87,19 @@
                   </li>
                 </ul>
               </div>
+              <div v-else class="space-y-4 mb-8">
+                <p class="text-lg text-gray-700">No certifications available for this occupation.</p>
+              </div>
             </section>
 
-            <section id="step-3" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0" style="box-sizing: border-box; display: block; transition: box-shadow 0.33s, transform 0.33s; background-color: rgb(255, 255, 255); padding: 30px; border-radius: 19px; margin-top: 40px; box-shadow: rgba(0, 0, 0, 0.12) 0px 12px 48px 0px;">
+            <section v-if="howToBecome.associations && howToBecome.associations.length > 0" id="step-4" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0" style="box-sizing: border-box; display: block; transition: box-shadow 0.33s, transform 0.33s; background-color: rgb(255, 255, 255); padding: 30px; border-radius: 19px; margin-top: 40px; box-shadow: rgba(0, 0, 0, 0.12) 0px 12px 48px 0px;">
               <span class="Tag" style="box-sizing: border-box; border-radius: 6.5px; display: inline-block; color: rgb(102, 57, 116); background-color: rgb(229, 224, 234); font-weight: 400; letter-spacing: -0.15px; line-height: 1.2; margin-right: 10px; padding: 8px 12px; font-size: 16px; font-family: 'aktiv-grotesk', 'Helvetica Neue', Helvetica, Arial, sans-serif;">
                 Step 4
               </span>
               <h2 class="custom-heading mb-8" itemProp="name" style="box-sizing: border-box; line-height: 1.16; letter-spacing: -0.7px; font-weight: 300; font-size: 1.55em; margin: 12px 0px 27px; padding: 0px; margin-bottom: 27px; padding-top: 0px;">
                 Associations
               </h2>
-              <div v-if="howToBecome.associations && howToBecome.associations.length > 0" class="space-y-4 mb-8">  
+              <div class="space-y-4 mb-8">  
                 <ul class="list-custom">
                   <li v-for="(association, index) in howToBecome.associations" :key="index" class="text-lg text-gray-700 leading-relaxed">
                     {{ association.title }}
@@ -116,8 +128,9 @@ export default defineComponent({
   },
   props: {
     occupation: Object,
-    degreeJobs: Array,
     howToBecome: Object,
+    jobDegrees: Array,
+    disableStepsLink: Boolean,
   }
 })
 </script>

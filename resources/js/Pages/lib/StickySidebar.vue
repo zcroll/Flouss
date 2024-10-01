@@ -41,6 +41,7 @@
                         <ul class="space-y-4">
                             <li v-for="(link, index) in links" :key="index">
                                 <Link
+                                    v-if="!(link.text === 'how_to_become' && disableStepsLink)"
                                     :href="link.url"
                                     :class="{
                                         'active': $page.url === link.url,
@@ -68,6 +69,7 @@
                                 v-for="(link, index) in links"
                                 :key="index"
                                 :href="link.url"
+                                v-if="!(link.text === 'how_to_become' && disableStepsLink)"
                                 :class="{
                                     'active': $page.url === link.url,
                                     'disabled-link': $page.url === link.url
@@ -111,6 +113,7 @@ const props = defineProps({
     duration: String,
     jobType: String,
     workplaceType: String,
+    disableStepsLink: Boolean,
 });
 
 const isSmallScreen = ref(false);
@@ -133,7 +136,7 @@ const links = computed(() => {
             { text: 'overview', url: baseUrl.value },
             { text: 'work_environments', url: `${baseUrl.value}/workEnvironments` },
             { text: 'personality', url: `${baseUrl.value}/personality` },
-            { text: 'how_to_become', url: `${baseUrl.value}/how-to-become` },
+            { text: 'how_to_become', url: `${baseUrl.value}/how-to-become` , disabled: props.disableStepsLink},
         ];
     } else if (props.type === 'degree') {
         return [

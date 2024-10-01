@@ -109,30 +109,26 @@ class CareerController extends Controller
     public function howToBecome(string $job): Response
     {
         $locale = app()->getLocale();
-        
-        $occupation = JobInfo::with(['degreeJobs' => function ($query) use ($locale) {
-            $query->with(['degree' => function ($query) use ($locale) {
-                $query->select('id', $locale === 'fr' ? 'name_fr as name' : 'name', 'image');
-            }]);
-        }, 'howToBecome'])->where('slug', $job)->firstOrFail();
 
-        // Find all degrees by the job title
-        $jobTitle = $locale === 'fr' ? $occupation->name_fr : $occupation->name;
-        $relatedDegrees = DegreeJob::where('job_title', 'LIKE', '%' . $jobTitle . '%')
-            ->orWhere('job_title_fr', 'LIKE', '%' . $jobTitle . '%')
-            ->with(['degree' => function ($query) use ($locale) {
-                $query->select('id', $locale === 'fr' ? 'name_fr as name' : 'name', 'image');
-            }])
-            ->get();
+        $occupation = JobInfo::with([
+            'jobSteps',
+            'jobCertifications',
+            'jobAssociations',
+            'jobDegrees',
+            'howToBecome',
+        ])->where('slug', $job)->firstOrFail();
 
-        // Prepare the data for the view
-        $degreeJobs = $relatedDegrees->map(function ($degreeJob) use ($locale) {
+        $degrees = $occupation->jobDegrees->map(function ($jobDegree) {
+            $degree = Degree::where('name', $jobDegree->degree_title)->first();
             return [
-                'degree' => $degreeJob->degree,
-                'job_title' => $locale === 'fr' ? $degreeJob->job_title_fr : $degreeJob->job_title,
-                'job_description' => $locale === 'fr' ? $degreeJob->job_description_fr : $degreeJob->job_description,
+                'title' => $jobDegree->degree_title,
+                'image' => $degree ? $degree->image : null,
+                'slug' => $degree ? $degree->slug : null,
+                'name' => $degree ? $degree->name : null,
             ];
         });
+
+        ds($occupation->jobSteps->isEmpty());
 
         return Inertia::render('career/HowToBecome', [
             'occupation' => [
@@ -140,8 +136,13 @@ class CareerController extends Controller
                 'slug' => $occupation->slug,
                 'image' => $occupation->image,
             ],
-            'degreeJobs' => $degreeJobs,
+            'jobSteps' => $occupation->jobSteps,
+            'jobCertifications' => $occupation->jobCertifications,
+            'jobAssociations' => $occupation->jobAssociations,
+            'jobDegrees' => $degrees,
             'howToBecome' => $occupation->howToBecome,
+            'disableStepsLink' => $occupation->jobSteps->isEmpty(),
+       
         ]);
     }
 }

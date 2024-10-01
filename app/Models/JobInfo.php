@@ -90,4 +90,24 @@ class JobInfo extends Model
     {
         return $this->hasOne(JobHowToBecome::class, 'job_id');
     }
+
+    public function jobSteps()
+    {
+        return $this->hasMany(JobStep::class);
+    }
+
+    public function jobCertifications()
+    {
+        return $this->hasMany(JobCertification::class);
+    }
+
+    public function jobAssociations()
+    {
+        return $this->hasMany(JobAssociation::class);
+    }
+
+    public function jobDegrees()
+    {
+        return $this->hasMany(JobDegree::class);
+    }
 }
