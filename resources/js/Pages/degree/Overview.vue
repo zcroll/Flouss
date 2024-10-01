@@ -1,5 +1,5 @@
 <template>
-    <AppLayout :headTitle="degree.name">
+    <AppLayout >
         <div class="container mx-auto">
         <div class="breadcrumbs-nav breadcrumbs-nav--tests">
                  <Link :href="route('degrees.index')">{{ __('navigation.degrees') }}</Link>
@@ -70,10 +70,7 @@
                     </div>
                 </section>
 
-                <!-- Conclusion Section -->
-                <section class="mt-12 space-y-4 text-center">
-                    <p class="text-xl text-gray-600">{{ __('degreeOverview.interestedInDegree') }} <a href="#" class="text-blue-600 hover:text-blue-500 underline">{{ __('degreeOverview.degreeGuide') }}</a>.</p>
-                </section>
+            
             </div>
         </StickySidebar>
     </div>
@@ -128,14 +125,4 @@ ul.list-custom li::before {
     color: #a36fb2;
 }
 
-.trait-type {
-    box-sizing: border-box;
-    background-color: transparent;
-    text-decoration: none;
-    transition: color 0.2s ease-in-out, border-bottom 0.2s ease-in-out;
-    border-bottom: 0px;
-    color: rgb(36, 36, 36);
-    font-weight: 300;
-    font-family: aktiv-grotesk, "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
 </style>
