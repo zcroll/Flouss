@@ -39,7 +39,7 @@
                                 class="cursor-pointer trait-type text-xl"
                                 @click="toggleSection(index)"
                             >
-                                {{ category }} ...
+                                {{ category }} {{ openSections[index] ? '_' : '+' }}
                             </li>
 
                             <!-- Collapsible Content -->

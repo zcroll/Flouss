@@ -1,10 +1,10 @@
 <template>
-    <app-layout :title="__('results.title')" :head-title="__('results.head_title')" preserveScroll>
-        <div class="relative max-w-7xl mx-auto mt-10">
+    <app-layout  preserveScroll>
+        <div class="relative max-w-7xl mx-auto">
 
             <div class="flex flex-col lg:flex-row">
                 <div class="w-full lg:w-4/4 space-y-20">
-                    <div v-if="Object.keys(jobs).length > 0 " class="text-left mt-10">
+                    <div v-if="Object.keys(jobs).length > 0 " class="text-left">
                         <h1 class="ml-1 text-4xl font-serif text-gray-100 mt-10 ">{{ __('results.your_compatibility_results') }}</h1>
                         <p class="ml-3 mt-2 text-lg text-slate-300">{{ __('results.scores_and_matches') }}</p>
                     </div>

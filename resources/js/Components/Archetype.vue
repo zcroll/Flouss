@@ -16,7 +16,7 @@
         >
         <div v-if="comingSoon" class="absolute inset-0 z-10 flex items-center justify-center">
             <div class="text-red-600 font-bold text-4xl  border-4 border-red-600 p-4 bg-white bg-opacity-70">
-                COMING SOON
+                {{__('results.comming_soon')}}
             </div>
         </div>
             <!-- Title -->
@@ -46,7 +46,7 @@
                     <!-- Scores Section -->
                     <div class="bg-gradient-to-b from-black to-black/100 p-4 sm:p-5 md:p-6 mt-0">
                         <h3 class="Discovery__related__lil-subheading text-white/50 uppercase tracking-wider border-b border-white/18 pb-2 text-xs font-light">
-                            Your scores
+                            {{ __('results.your_score') }}
                         </h3>
 
                         <div class="grid gap-y-3 sm:gap-y-4 p-2 sm:p-3 md:p-4">
@@ -69,7 +69,7 @@
                             </div>
                             <PrimaryButton class="block text-center mt-4 sm:mt-5">
                                 <Link :href="comingSoon ? '#' : `results/${userId}/personality`" class="block w-full">
-                                    {{ 'Read More'  }}
+                                    {{ __('results.read_more') }}
                                 </Link>
                             </PrimaryButton>
                         </div>
