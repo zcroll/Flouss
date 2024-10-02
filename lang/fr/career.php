@@ -27,6 +27,10 @@ return [
 
     //how to become
     'how_to_become' => "Comment devenir un(e)",
-    'best_routes' => "En fonction de vos résultats de test, nous avons sélectionné les meilleures voies éducatives pour vous permettre de poursuivre une carrière en tant que"
+    'best_routes' => "En fonction de vos résultats de test, nous avons sélectionné les meilleures voies éducatives pour vous permettre de poursuivre une carrière en tant que",
 
+    //demo
+    "occupation_name" => "Psychiatre",
+    "occupation_description_1" => "Un psychiatre est un médecin spécialisé dans le diagnostic, le traitement et la prévention des maladies et troubles mentaux. Ils sont formés pour comprendre les facteurs biologiques, psychologiques et sociaux qui contribuent à la santé mentale d'une personne. Les psychiatres utilisent diverses méthodes pour évaluer leurs patients, telles que des entretiens, des tests psychologiques et des examens médicaux. Ils travaillent en étroite collaboration avec leurs patients pour élaborer un plan de traitement pouvant inclure des médicaments, une thérapie ou une combinaison des deux. De plus, les psychiatres sont formés pour gérer les situations d’urgence, telles que les comportements suicidaires ou violents, et peuvent intervenir en cas de crise si nécessaire.",
+    "occupation_description_2" => "Les psychiatres sont également chargés de comprendre l’impact que les problèmes de santé mentale peuvent avoir sur la santé et le bien-être général d’une personne. Ils travaillent avec d'autres professionnels de la santé, tels que des psychologues, des travailleurs sociaux et des médecins de premier recours, pour garantir que les patients reçoivent des soins complets. Les psychiatres peuvent également participer à la recherche et à l’éducation, contribuant ainsi à faire progresser le domaine de la santé mentale et à améliorer les traitements de la maladie mentale."
 ];

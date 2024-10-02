@@ -41,7 +41,6 @@
                         <ul class="space-y-4">
                             <li v-for="(link, index) in links" :key="index">
                                 <Link
-                                    v-if="!(link.text === 'how_to_become' && disableStepsLink)"
                                     :href="link.url"
                                     :class="{
                                         'active': $page.url === link.url,
@@ -69,7 +68,6 @@
                                 v-for="(link, index) in links"
                                 :key="index"
                                 :href="link.url"
-                                v-if="!(link.text === 'how_to_become' && disableStepsLink)"
                                 :class="{
                                     'active': $page.url === link.url,
                                     'disabled-link': $page.url === link.url

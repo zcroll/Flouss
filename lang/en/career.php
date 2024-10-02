@@ -28,6 +28,10 @@ return [
 
     //how to become
     'how_to_become' => "How to Become a",
-    'best_routes' => "Based on your test results, we've curated the best educational routes for you to pursue a career as a"
+    'best_routes' => "Based on your test results, we've curated the best educational routes for you to pursue a career as a",
 
+    //demo
+    "occupation_name" => "Psychiatrist",
+    "occupation_description_1" => "A psychiatrist is a doctor specializing in the diagnosis, treatment, and prevention of mental illnesses and disorders. They are trained to understand the biological, psychological, and social factors that contribute to a person's mental health. Psychiatrists use various methods to evaluate their patients, such as interviews, psychological tests, and medical examinations. They work closely with their patients to develop a treatment plan that may include medications, therapy, or a combination of both. Additionally, psychiatrists are trained to manage emergency situations, such as suicidal or violent behaviors, and can intervene in crisis situations if necessary.",
+    "occupation_description_2" => "Psychiatrists are also responsible for understanding the impact that mental health problems can have on a person's overall health and well-being. They work with other healthcare professionals, such as psychologists, social workers, and primary care physicians, to ensure that patients receive comprehensive care. Psychiatrists may also participate in research and education, contributing to the advancement of the field of mental health and the improvement of mental illness treatments."
 ];
