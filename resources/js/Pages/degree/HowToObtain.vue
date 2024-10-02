@@ -33,7 +33,7 @@
 
             <!-- Formations List -->
             <div v-if="formations.length > 0" class="space-y-6">
-              <div v-for="formation in formations" :key="formation.id" class="p-6 bg-slate-100 rounded-lg">
+              <div v-for="formation in formations" :key="formation.id" class="flex border-b border-gray-200 p-5 rounded-3xl items-center space-x-4 text-lg m-5 text-gray-700 leading-relaxed">
                 <!-- Formation Title -->
                 <h5 class="text-xl font-semibold text-slate-600 mb-2">
                   {{ formation.name }}
@@ -55,6 +55,7 @@
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </div>
