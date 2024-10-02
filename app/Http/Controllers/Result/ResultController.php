@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ArchetypeCareer;
+use App\Models\ArchetypeCareerJobMatch;
 use App\Models\Insight;
 class ResultController extends Controller
 {
@@ -85,12 +86,33 @@ class ResultController extends Controller
         // Get the careers based on the archetype using the ArchetypeCareer model
         ds($Archetype);
         $careerColumn = $locale === 'fr' ? 'name_fr as career' : 'career as career';
-        $archetypeCareers = ArchetypeCareer::where('archetype', $Archetype->name)
+        $archetypeCareers = ArchetypeCareer::where('archetype', 'Anchor')
             ->get([$careerColumn, 'image', 'slug']);
-           
-        ds($archetypeCareers->toArray());
-        // Add the top two results to the Inertia response
-            ds($topTwoResults   );
+
+        $similarJobs = ArchetypeCareerJobMatch::where('archetype', 'Anchor')
+            ->orderBy('similarity_score', 'desc')
+            ->get(['job_id', 'job_name', 'similarity_score', 'career']);
+
+        $combinedJobs = $archetypeCareers->map(function ($career) use ($similarJobs) {
+            $matchingJobs = $similarJobs->where('career', $career->career);
+            return [
+                'career' => $career->career,
+                'image' => $career->image,
+                'slug' => $career->slug,
+                'similar_jobs' => $matchingJobs->map(function ($job) {
+                    return [
+                        'job_id' => $job->job_id,
+                        'job_name' => $job->job_name,
+                        'similarity_score' => $job->similarity_score,
+                    ];
+                })->values()->all(),
+            ];
+        });
+        ds($combinedJobs->toArray());
+
+       
+        // ds($similarJobs->toArray());
+     
         if ($firstScore) {
             return Inertia::render('Result/Results', [
                 'userId' => $firstScore->uuid,
@@ -98,6 +120,8 @@ class ResultController extends Controller
                 'jobs' => $jobsWithDistances,
                 'Archetype' => $Archetype,
                 'ArchetypeJobs' => $archetypeCareers,
+                'SimilarJobs' => $similarJobs,
+                'combinedJobs' => $combinedJobs,
             ]);
         }
 

@@ -90,7 +90,8 @@ class TestController extends Controller
     {
         $hollandScores = $this->calculateHollandScores($groupedResponses);
         $archetype = $this->getArchetypeAndTopScores($hollandScores);
-        $closestJobs = $this->matchJobs($hollandScores);
+        // $closestJobs = $this->matchJobs($hollandScores);
+        $closestJobs = [];
         $result = $this->saveResult($closestJobs, $hollandScores, $archetype);
 
         return $result;
@@ -122,7 +123,7 @@ class TestController extends Controller
             return Result::create([
                 'user_id' => auth()->id(),
                 'scores' => json_encode($scores, JSON_THROW_ON_ERROR),
-                'jobs' => json_encode($closestJobs, JSON_THROW_ON_ERROR),
+                'jobs' => json_encode($closestJobs, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT),
                 'highestTwoScores' => $archetype['topTraits'],
                 'Archetype' => $archetype['archetypes'],
             ]);

@@ -14,4 +14,11 @@ class ArchetypeCareer extends Model
     ];
 
     public $timestamps = false;
+
+    public function similarJobs()
+    {
+        return $this->hasMany(ArchetypeCareerJobMatch::class, 'archetype', 'archetype')
+            ->where('career', $this->career)
+            ->orderBy('similarity_score', 'desc');
+    }
 }

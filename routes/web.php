@@ -93,3 +93,11 @@ Route::get('/test', [TestController::class, 'index'])->name('test');
 Route::post('/test', [TestController::class, 'submitAnswer'])->name('test.submit-answer');
 
 Route::post('language/', LanguageController::class)->name('language.switch');
+
+Route::get('/strategist-description', function () {
+    return Inertia::render('StrategistDescription');
+})->name('strategist-description');
+
+Route::get('/model', function () {
+    return Inertia::render('Model');
+})->name('model');
