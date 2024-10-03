@@ -101,3 +101,7 @@ Route::get('/strategist-description', function () {
 Route::get('/model', function () {
     return Inertia::render('Model');
 })->name('model');
+
+Route::get('/im', function () {
+    return Inertia::render('im');
+})->name('im');

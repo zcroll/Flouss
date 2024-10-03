@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\ArchetypeCareer;
 use App\Models\ArchetypeCareerJobMatch;
 use App\Models\Insight;
+use App\Models\Persona;
+
 class ResultController extends Controller
 {
     /**
@@ -60,6 +62,10 @@ class ResultController extends Controller
         })->sortBy('distance')->values();
 
         $Archetype = DB::table('persona')->where('name', '=', "Inventor")->first();
+
+        $archetypeDiscovery = DB::table('archetype_discoveries')->where('slug', '=', "anchor")->first();
+
+        ds(['archetypeDiscovery'=>$archetypeDiscovery]);
         ds($firstScore->scores,);
         // Get the scores from $firstScore
         $scores = json_decode($firstScore->scores, true);
@@ -86,10 +92,11 @@ class ResultController extends Controller
         // Get the careers based on the archetype using the ArchetypeCareer model
         ds($Archetype);
         $careerColumn = $locale === 'fr' ? 'name_fr as career' : 'career as career';
-        $archetypeCareers = ArchetypeCareer::where('archetype', 'Anchor')
+        $archetypeCareers = ArchetypeCareer::where('archetype', 'Visionary')
             ->get([$careerColumn, 'image', 'slug']);
 
-        $similarJobs = ArchetypeCareerJobMatch::where('archetype', 'Anchor')
+        $similarJobs = ArchetypeCareerJobMatch::where('archetype', 'Visionary')
+            ->where('similarity_score', '>', 0.7)
             ->orderBy('similarity_score', 'desc')
             ->get(['job_id', 'job_name', 'similarity_score', 'career']);
 
@@ -108,10 +115,10 @@ class ResultController extends Controller
                 })->values()->all(),
             ];
         });
-        ds($combinedJobs->toArray());
+
 
        
-        // ds($similarJobs->toArray());
+       
      
         if ($firstScore) {
             return Inertia::render('Result/Results', [
@@ -119,6 +126,7 @@ class ResultController extends Controller
                 'scores' => $topTwoResults,
                 'jobs' => $jobsWithDistances,
                 'Archetype' => $Archetype,
+                'archetypeDiscovery' => $archetypeDiscovery,
                 'ArchetypeJobs' => $archetypeCareers,
                 'SimilarJobs' => $similarJobs,
                 'combinedJobs' => $combinedJobs,
@@ -145,32 +153,32 @@ class ResultController extends Controller
         $firstScore = $scores->first();
         ds($firstScore->scores);
         $Archetype = $firstScore->Archetype;
-        $ArchetypeData = DB::table('persona')->where('name', '=', "Mentor")->first();
+        $ArchetypeData = DB::table('persona')->where('name', '=', "mentor")->first();
         
-        $insights = Insight::with('persona')
-            ->join('insight_categories', 'insights.insight_category_slug', '=', 'insight_categories.insight_category_slug')
-            ->where('insights.persona_id', '=', $ArchetypeData->id)
-            ->select(
-                'insights.id', 
-                'insights.persona_id', 
-                'insights.insight_category_slug', 
-                'insight_categories.insight_category'
-            )
-            ->when($locale === 'fr', function ($query) {
-                return $query->selectRaw('CASE WHEN insights.insight_fr IS NOT NULL AND insights.insight_fr != "" THEN insights.insight_fr ELSE insights.insight END as insight');
-            }, function ($query) {
-                return $query->select('insights.insight as insight');
-            })
-            ->distinct()
-            ->get();
+        // Fetch insights grouped by category
+        $insights = Insight::where('persona_id', $ArchetypeData->id)
+            ->select('insight_category_slug', $insightColumn)
+            ->get()
+            ->groupBy('insight_category_slug')
+            ->map(function ($group) use ($insightColumn) {
+                return $group->pluck($insightColumn);
+            });
 
+            
+
+        // Transform the grouped insights into the desired format
+    
+
+        $archetypeDiscovery = DB::table('archetype_discoveries')->where('slug', '=', "anchor")->first();
         // Update the query to use the new model
-        $archetypeCareers = ArchetypeCareer::where('archetype', $Archetype)->get();
-
-        return Inertia::render('Result/Personality', [
+           ds(['archetypeDiscovery'=>$archetypeDiscovery]);
+           ds(['ArchetypeData'=>$ArchetypeData]);
+           ds(['insights'=>$insights->toArray()]);
+        return Inertia::render('Result/StrategistDescription', [
             "ArchetypeData" => $ArchetypeData,
             'firstScore' => $firstScore->scores,
             'Insights' => $insights,
+            'archetypeDiscovery' => $archetypeDiscovery,
         ]);
     }
 }

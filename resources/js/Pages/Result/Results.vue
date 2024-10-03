@@ -12,19 +12,21 @@
                         <p class="ml-3 mt-2 text-lg text-slate-300">{{ __('results.scores_and_matches') }}</p>
                     </div>
                     <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Archetype
-                            :userId="userId"
-                            :archetype="Archetype"
-                            :scores="scores"
-                        />
-                        <Archetype
-                            :userId="userId"
-                            :archetype="Archetype"
-                            :scores="scores"
-                            :comingSoon="true"
-                            backgroud_pic="url('https://res.cloudinary.com/hnpb47ejt/image/upload/c_fill,f_auto,h_400,q_auto,w_640/v1558730393/e2cmhbjek730smx9odcv.jpg')"
-                        />
+
+                        <div>
+                            <div
+                                class="DiscoveryCard__image"
+                                :style="[imageStyle, showArchetypeModel ? { backgroundColor: 'blue' } : {}]"
+                                @click="openArchetypeModel"
+                            >
+                                <span>{{ Archetype.name.charAt(0) }}</span>
+                            </div>
+                        </div>
+                        
+                    
+                    
                     </div>
+                  
 
 
 
@@ -59,6 +61,14 @@
                         </div>
                     </div>
                     <Model v-if="selectedJob" :job="selectedJob" @close="selectedJob = null" />
+                    <Archetype
+                            v-if="showArchetypeModel"
+                            :archetype="Archetype"
+                            :archetypeJobs="ArchetypeJobs"
+                            :archetypeDiscovery="archetypeDiscovery"
+                            :userId="userId"
+                            @close="showArchetypeModel = false"
+                        />
                 </div>
             </div>
         </div>
@@ -107,6 +117,10 @@ export default defineComponent({
             type: Array,
             required: true,
         },
+        archetypeDiscovery: {
+            type: Object,
+            required: true,
+        },
     },
     data() {
         return {
@@ -128,7 +142,8 @@ export default defineComponent({
                     rating: 5
                 },
                 // Add more card data here
-            ]
+            ],
+            showArchetypeModel: false,
         };
     },
     methods: {
@@ -147,6 +162,9 @@ export default defineComponent({
 
         closeModel() {
             this.selectedJob = null;
+        },
+        openArchetypeModel() {
+            this.showArchetypeModel = true;
         },
     },
 });
