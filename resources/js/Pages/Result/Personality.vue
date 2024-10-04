@@ -84,6 +84,7 @@
           </div>
         </div>
 
+   
 
       </div>
               <div class="lg:col-span-1">
@@ -110,6 +111,7 @@ import { radar } from 'svg-radar-chart'
 import stringify from 'virtual-dom-stringify'
 import { smoothing } from 'svg-radar-chart/smoothing.js'
 import LineChart from "./LineChart.vue";
+import StrategistDescription from './StrategistDescription.vue';
 
 export default {
   props: {
@@ -119,7 +121,8 @@ export default {
     firstScore: Object
   },
   components: {
-    AppLayout
+    AppLayout,
+    StrategistDescription,
   },
   computed: {
     groupedInsights() {
