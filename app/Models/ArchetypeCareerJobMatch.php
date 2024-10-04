@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ArchetypeCareerJobMatch extends Model
 {
-    protected $table = 'archetype_career_job_matches_2';
+    protected $table = 'archetype_career_job_matches';
     
     public $timestamps = false;
 

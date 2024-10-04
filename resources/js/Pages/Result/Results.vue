@@ -3,7 +3,16 @@
 
         <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/user-results.3aa4bb301b9f.css">
     <app-layout  preserveScroll>
-        <div class="relative max-w-7xl mx-auto">
+        <div class="DashboardPage">        
+                <section class="section">
+                
+            </section>
+            <Folder :archetype="Archetype"
+                            :archetypeJobs="ArchetypeJobs"
+                            :archetypeDiscovery="archetypeDiscovery"
+                            :userId="userId" /> 
+
+
 
             <div class="flex flex-col lg:flex-row">
                 <div class="w-full lg:w-4/4 space-y-20">
@@ -13,7 +22,7 @@
                     </div>
                     <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
 
-                        <div>
+                        <!-- <div>
                             <div
                                 class="DiscoveryCard__image"
                                 :style="[imageStyle, showArchetypeModel ? { backgroundColor: 'blue' } : {}]"
@@ -21,7 +30,7 @@
                             >
                                 <span>{{ Archetype.name.charAt(0) }}</span>
                             </div>
-                        </div>
+                        </div> -->
 
 
 
@@ -80,6 +89,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import UpNext from "@/Components/UpNext.vue";
 import Archetype from "@/Components/Archetype.vue";
 import Model from "@/Components/Result/Model.vue";
+import Folder from "@/Components/Result/Folder.vue";
 import __ from '@/lang';
 
 export default defineComponent({
@@ -89,6 +99,7 @@ export default defineComponent({
         AppLayout,
         Link,
         Model,
+        Folder,
     },
     props: {
         scores: {

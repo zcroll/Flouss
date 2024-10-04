@@ -57,6 +57,10 @@ return [
             'channels' => explode(',', env('LOG_STACK', 'single')),
             'ignore_exceptions' => false,
         ],
+        'flare' => [
+    'driver' => 'flare',
+            'level' => 'critical', // The minimum log level to send to Flare
+        ],
 
         'single' => [
             'driver' => 'single',

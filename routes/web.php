@@ -105,3 +105,7 @@ Route::get('/model', function () {
 Route::get('/im', function () {
     return Inertia::render('im');
 })->name('im');
+
+Route::get('/testin_uis/addvance', function () {
+    return Inertia::render('testin_uis/addvance');
+})->name('testin_uis.addvance');

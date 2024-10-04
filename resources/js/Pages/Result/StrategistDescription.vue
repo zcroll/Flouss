@@ -1,5 +1,5 @@
 <template>
-  <AppLayout>
+  <!-- <AppLayout> -->
   <div>
     <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css">
     <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/shared-discovery.4d94d358083a.css"> 
@@ -72,7 +72,7 @@
       </div>
     </div>
   </div>
-  </AppLayout>
+  <!-- </AppLayout> -->
 </template>
 
 <script>
