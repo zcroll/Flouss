@@ -92,13 +92,15 @@ class ResultController extends Controller
         // Get the careers based on the archetype using the ArchetypeCareer model
         ds($Archetype);
         $careerColumn = $locale === 'fr' ? 'name_fr as career' : 'career as career';
-        $archetypeCareers = ArchetypeCareer::where('archetype', 'Visionary')
+        $archetypeCareers = ArchetypeCareer::where('archetype', 'Maverick')
             ->get([$careerColumn, 'image', 'slug']);
 
-        $similarJobs = ArchetypeCareerJobMatch::where('archetype', 'Visionary')
+        $similarJobs = ArchetypeCareerJobMatch::where('archetype', 'Maverick')
             ->where('similarity_score', '>', 0.7)
             ->orderBy('similarity_score', 'desc')
-            ->get(['job_id', 'job_name', 'similarity_score', 'career']);
+            ->groupBy('job_id', 'job_name', 'similarity_score', 'career')
+            ->select('job_id', 'job_name', 'similarity_score', 'career')
+            ->get();
 
         $combinedJobs = $archetypeCareers->map(function ($career) use ($similarJobs) {
             $matchingJobs = $similarJobs->where('career', $career->career);
