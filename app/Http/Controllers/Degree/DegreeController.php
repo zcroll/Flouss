@@ -83,9 +83,9 @@ class DegreeController extends Controller
     {
         $locale = app()->getLocale();
         
-        $degree = Degree::with(['degreeFormationMatches' => function ($query) {
-            $query->orderBy('similarity_score', 'desc');
-        }])->where('slug', $id)->firstOrFail();
+        $degree = Degree::with(['degreeFormationMatches.formation.etablissement']) // Eager load formations and their etablissement
+            ->where('slug', $id)
+            ->firstOrFail();
 
         return Inertia::render('degree/HowToObtain', [
             'degree' => [
@@ -98,6 +98,7 @@ class DegreeController extends Controller
                     'id' => $match->formation_id,
                     'name' => $locale === 'fr' ? $match->formation_name_fr : $match->formation_name,
                     'similarity_score' => $match->similarity_score,
+                    'etablissement' => $match->formation->etablissement, // Include etablissement data
                 ];
             }),
         ]);

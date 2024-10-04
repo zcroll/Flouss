@@ -37,7 +37,7 @@ class ResultController extends Controller
         $Archetype = $firstScore->Archetype;
         $closestJobs = collect($firstScore->jobs);
         $decodedJobs = json_decode($closestJobs[0], true, 512, JSON_THROW_ON_ERROR);
-        
+
         $jobsCollection = collect($decodedJobs);
         $jobIds = $jobsCollection->pluck('job_info_id');
         $jobIdsArray = $jobIds->toArray();
@@ -49,7 +49,7 @@ class ResultController extends Controller
         $jobsWithDistances = $jobs->map(function ($job) use ($jobsCollection) {
             $jobData = $jobsCollection->firstWhere('job_info_id', $job->id);
             $distance = $jobData['distance'];
-            $rating = 5 - min(round($distance * 60), 1.5); 
+            $rating = 5 - min(round($distance * 60), 1.5);
 
             return [
                 'id' => $job->id,
@@ -61,9 +61,9 @@ class ResultController extends Controller
             ];
         })->sortBy('distance')->values();
 
-        $Archetype = DB::table('persona')->where('name', '=', "Inventor")->first();
+        $Archetype = DB::table('persona')->where('name', '=', "Mentor")->first();
 
-        $archetypeDiscovery = DB::table('archetype_discoveries')->where('slug', '=', "anchor")->first();
+        $archetypeDiscovery = DB::table('archetype_discoveries')->where('slug', '=', "Mentor")->first();
 
         ds(['archetypeDiscovery'=>$archetypeDiscovery]);
         ds($firstScore->scores,);
@@ -92,10 +92,10 @@ class ResultController extends Controller
         // Get the careers based on the archetype using the ArchetypeCareer model
         ds($Archetype);
         $careerColumn = $locale === 'fr' ? 'name_fr as career' : 'career as career';
-        $archetypeCareers = ArchetypeCareer::where('archetype', 'Visionary')
+        $archetypeCareers = ArchetypeCareer::where('archetype', 'Mentor')
             ->get([$careerColumn, 'image', 'slug']);
 
-        $similarJobs = ArchetypeCareerJobMatch::where('archetype', 'Visionary')
+        $similarJobs = ArchetypeCareerJobMatch::where('archetype', 'Mentor')
             ->where('similarity_score', '>', 0.7)
             ->orderBy('similarity_score', 'desc')
             ->get(['job_id', 'job_name', 'similarity_score', 'career']);
@@ -117,9 +117,9 @@ class ResultController extends Controller
         });
 
 
-       
-       
-     
+
+
+
         if ($firstScore) {
             return Inertia::render('Result/Results', [
                 'userId' => $firstScore->uuid,
@@ -154,7 +154,7 @@ class ResultController extends Controller
         ds($firstScore->scores);
         $Archetype = $firstScore->Archetype;
         $ArchetypeData = DB::table('persona')->where('name', '=', "mentor")->first();
-        
+
         // Fetch insights grouped by category
         $insights = Insight::where('persona_id', $ArchetypeData->id)
             ->select('insight_category_slug', $insightColumn)
@@ -164,10 +164,10 @@ class ResultController extends Controller
                 return $group->pluck($insightColumn);
             });
 
-            
+
 
         // Transform the grouped insights into the desired format
-    
+
 
         $archetypeDiscovery = DB::table('archetype_discoveries')->where('slug', '=', "anchor")->first();
         // Update the query to use the new model

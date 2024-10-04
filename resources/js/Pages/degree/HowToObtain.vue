@@ -8,12 +8,12 @@
     </template>
 
     <!-- Sticky Sidebar with Degree Information -->
-    <StickySidebar 
-      :slug="degree.slug" 
-      :title="degree.name" 
+    <StickySidebar
+      :slug="degree.slug"
+      :title="degree.name"
       :image="degree.image"
       type="degree"
-    >   
+    >
       <div class="py-5 bg-gray-50 rounded-3xl">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
           <div class="p-6">
@@ -22,21 +22,40 @@
               Recommended Formations
             </h2>
 
+            <!-- Filter Section -->
+
+
             <!-- Section Description -->
             <aside class="block">
-                    <div id="table-of-contents" class="table-of-contents rounded-lg my-4 w-full bg-[#F8EDE3] text-gray-900 relative p-7">
-                      <p class="text-lg text-gray-600 text-left">
-                      Based on the similarity analysis, here are the recommended formations to obtain a {{ degree.name }} degree.
-                      </p>
-                    </div>
-              </aside>
+              <div id="table-of-contents" class="table-of-contents rounded-lg my-4 w-full bg-[#0a1e2e] text-gray-900 relative p-7">
+                <div class="mb-4">
+              <label for="categoryEtablissement" class="block mb-2 text-sm font-medium text-gray-200">Category Etablissement</label>
+              <select v-model="selectedCategory" id="categoryEtablissement" class="w-full px-3 py-1.5 text-gray-400 text-sm border bg-gray-800 rounded-md  focus:ring-[#fb6302] focus:border-[#fb6302] shadow-sm ">
+                <option value="">All Categories</option>
+                <option v-for="category in uniqueCategories" :key="category" :value="category">{{ category }}</option>
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label for="ville" class="block mb-2 text-sm font-medium text-gray-200">Ville</label>
+              <select v-model="selectedVille" id="ville" class="w-full px-3 py-1.5 text-gray-400 text-sm border bg-gray-800 rounded-md focus:ring-[#fb6302] focus:border-[#fb6302] shadow-sm ">
+                <option value="">All Villes</option>
+                <option v-for="ville in uniqueVilles" :key="ville" :value="ville">{{ ville }}</option>
+              </select>
+            </div>
+              </div>
+            </aside>
 
             <!-- Formations List -->
-            <div v-if="formations.length > 0" class="space-y-6">
-              <div v-for="formation in formations" :key="formation.id" class="flex border-b border-gray-200 p-5 rounded-3xl items-center space-x-4 text-lg m-5 text-gray-700 leading-relaxed">
+            <div v-if="filteredFormations.length > 0" class="space-y-6">
+              <div v-for="formation in filteredFormations" :key="formation.id" class="flex-1 border-b border-gray-200 py-5 p-5 rounded-3xl items-center space-x-4 text-lg m-5 text-gray-700 leading-relaxed">
                 <!-- Formation Title -->
                 <h5 class="text-xl font-semibold text-slate-600 mb-2">
                   {{ formation.name }}
+                </h5>
+                <!-- Etablissement Name -->
+                <h5 class="text-lg font-medium text-slate-500 mb-2">
+                  {{ formation.etablissement.nom }} <!-- Display etablissement name -->
                 </h5>
 
                 <!-- Similarity Score -->
@@ -55,7 +74,6 @@
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>
@@ -64,7 +82,7 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue'
+import { defineComponent, computed } from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import StickySidebar from '@/Pages/lib/StickySidebar.vue'
 
@@ -77,6 +95,30 @@ export default defineComponent({
     degree: Object,
     formations: Array,
   },
+  data() {
+    return {
+      selectedCategory: '',
+      selectedVille: '',
+    };
+  },
+  computed: {
+    uniqueCategories() {
+      return [...new Set(this.formations.map(formation => formation.etablissement.categoryEtablissement))];
+    },
+    uniqueVilles() {
+      return [...new Set(this.formations.map(formation => formation.etablissement.ville))];
+    },
+    filteredFormations() {
+      return this.formations.filter(formation => {
+        const matchesCategory = this.selectedCategory ? formation.etablissement.categoryEtablissement === this.selectedCategory : true;
+        const matchesVille = this.selectedVille ? formation.etablissement.ville === this.selectedVille : true;
+        return matchesCategory && matchesVille;
+      });
+    },
+  },
 })
 </script>
 
+<style scoped>
+/* Add any necessary styles */
+</style>
