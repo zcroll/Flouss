@@ -46,10 +46,7 @@
                 </div>
               </div>
             </div>
-            <div class="absolute top-0 left-0 w-full h-full overflow-hidden opacity-10">
-              <div class="absolute top-0 left-0 w-40 h-40 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
-              <div class="absolute bottom-0 right-0 w-60 h-60 bg-white rounded-full transform translate-x-1/2 translate-y-1/2"></div>
-            </div>
+
           </div>
 
           <!-- Wrapping div for overflow -->
@@ -173,5 +170,19 @@ export default {
 
 .animate-fade-in {
   animation: fadeIn 1s ease-out forwards;
+}
+
+.module {
+  max-width: 250px;
+  padding: 1rem;
+  color: white;
+  border-width: 3px;
+  border-style: solid;
+  border-image: 
+    linear-gradient(
+      to bottom, 
+      red, 
+      rgba(0, 0, 0, 0)
+    ) 1 100%;
 }
 </style>

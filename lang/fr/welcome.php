@@ -40,7 +40,7 @@ return [
             'description' => 'Mesurez votre capacité à interpréter l\'information écrite.',
         ],
     ],
-    'match' => 'correspondance',
+    'match' => 'adéquat',
     'job_titles' => [
         'geoscientist' => 'Géoscientifique',
         'architect' => 'Architecte',

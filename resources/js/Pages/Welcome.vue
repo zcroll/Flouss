@@ -187,7 +187,7 @@
         </div>
         <div class="grid-x card__equalizer home-tests__cards">
           <div v-for="(test, index) in tests" :key="index" class="large-2 medium-6 small-12 cell text-center card__equal-items">
-            <div class="home-tests__card" style="border: 2px solid #fb6302; border-radius: 10px; margin: 10px; padding: 15px; transition: all 0.3s ease;">
+            <div class="module" >
               <div class="circle half-top"></div>
               <div class="circle right-small"></div>
               <div class="home-tests__icon">
@@ -270,3 +270,20 @@
     }
   }
   </script>
+<style>
+
+.module {
+  margin-top: 20px;
+  max-width: 250px;
+  padding: 1rem;
+  color: white;
+  border-width: 3px;
+  border-style: solid;
+  border-image: 
+    linear-gradient(
+      to bottom, 
+      #fb6302, 
+      rgba(0, 0, 0, 0)
+    ) 1 100%;
+}
+</style>

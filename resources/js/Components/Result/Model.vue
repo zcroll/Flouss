@@ -10,14 +10,14 @@
           </svg>
         </button>
         <div>
-          <p role="heading" aria-level="1" id="dialog-discovery-title" class="dialog-title Dialog-title">You are a Kingpin</p>
+
           <div class="Dialog-wrap__background">
-            <div class="Dialog-discovery" style="background-image: url('https://res.cloudinary.com/hnpb47ejt/image/upload/c_fill,f_auto,h_400,q_auto,w_640/v1558730202/jtddhqeseoujqmhh4m5g.jpg');">
+            <div class="Dialog-discovery" :style="{ backgroundImage: `url(${job.image})`, backgroundSize: '100px', backgroundPosition: 'center' }">
               <div class="Dialog-discovery__actions">
                 <button class="Dialog-discovery__share-button alans-butt--grey" tabindex="0" aria-label="Click here to share your discovery on social media." @click="shareDiscovery">
                   <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="share-from-square" class="svg-inline--fa fa-share-from-square Dialog-discovery__share-button__icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
                     <path fill="currentColor" d="M568.9 143.5l-150.9-138.2C404.8-6.773 384 3.039 384 21.84V96C241.2 97.63 128 126.1 128 260.6c0 54.3 35.2 108.1 74.08 136.2c12.14 8.781 29.42-2.238 24.94-16.46C186.7 252.2 256 224 384 223.1v74.2c0 18.82 20.84 28.59 34.02 16.51l150.9-138.2C578.4 167.8 578.4 152.2 568.9 143.5zM416 384c-17.67 0-32 14.33-32 32v31.1l-320-.0013V128h32c17.67 0 32-14.32 32-32S113.7 64 96 64H64C28.65 64 0 92.65 0 128v319.1c0 35.34 28.65 64 64 64l320-.0013c35.35 0 64-28.66 64-64V416C448 398.3 433.7 384 416 384z" />
-                  </svg> Share
+                  </svg> share
                 </button>
                 <button class="Dialog-discovery__extraclose-button alans-butt--grey" tabindex="0" aria-label="Click here to close the dialog and to continue your assessment." @click="closeDialog">
                   <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="xmark" class="svg-inline--fa fa-xmark Dialog-discovery__extraclose-button__icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
@@ -25,54 +25,32 @@
                   </svg>
                 </button>
               </div>
-              <span class="Discovery__rarity DiscoveryRarityTag DiscoveryRarityTag--very-rare" aria-hidden="true">
-                <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="gem" class="svg-inline--fa fa-gem Discovery__rarity__icon DiscoveryRarityTag__icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                  <path fill="currentColor" d="M378.7 32H133.3L256 182.7L378.7 32zM512 192l-107.4-141.3L289.6 192H512zM107.4 50.67L0 192h222.4L107.4 50.67zM244.3 474.9C247.3 478.2 251.6 480 256 480s8.653-1.828 11.67-5.062L510.6 224H1.365L244.3 474.9z" />
-                </svg> VERY RARE—4.5% of Users
-              </span>
-              <h1 class="Discovery__title" tabindex="0" aria-label="You are a Kingpin. That is actually very rare! This places you in the top 4.5% of users.">You are a Kingpin</h1>
+              <h1 class="Discovery__title_model" tabindex="0">{{ job.career }}</h1>
               <p class="Discovery__rationale" tabindex="0">Resourceful, Ambitious, Methodical</p>
             </div>
             <div class="Discovery__related">
               <div class="Discovery__related__readmore">
-                <p class="Discovery__related__description" tabindex="0">Kingpins are leaders who prefer an organized structure for running the show. Success is important to the Kingpin and they feel at home when they are managing a business or team of people. Though some Kingpins like taking risks in their endeavors, many like to stay calculated and structured in the way they approach their big ideas. This makes them excellent at maintaining a steady and successful workload.</p>
+                <p class="Discovery__related__description" tabindex="0">{{ job.description}}</p>
                 <h3 class="Discovery__related__lil-subheading">The Science</h3>
                 <p class="Discovery__related__description">An Enterprising person is energetic and a natural risk taker that fits well into leadership roles. A Conventional person is detail oriented and methodical, feeling most at ease in structured environments where they feel in control. </p>
-                <div class="Discovery__related__content Discovery__related__content--scales">
-                  <h3 class="Discovery__related__lil-subheading" tabindex="0" aria-label="Below you will find a list of scores detailing where you match-up to chosen traits.">Your scores</h3>
-                  <div class="PersonalityGraphs">
-                    <a href="#" class="Box">
-                      <div class="PersonalityGraphs__scale">
-                        <div class="PersonalityGraphs__scale__name" id="5-personalitygraph-scale-label">Enterprising</div>
-                        <span class="sr-only" id="5-personalitygraph-scale-desc">Your enterprising rates at 75.01249375312344 out of 100.</span>
-                        <figure class="PersonalityGraphs__scale__graph" tabindex="0" aria-labelledby="5-personalitygraph-scale-label" aria-describedby="5-personalitygraph-scale-desc">
-                          <span class="BarMeter--gradient-dusk" data-value="75">
-                            <span class="BarMeter__meter" style="width: 75%;">
-                              <span class="BarMeter__label">75%</span>
-                            </span>
-                          </span>
-                        </figure>
-                      </div>
-                    </a>
-                    <a href="#" class="Box">
-                      <div class="PersonalityGraphs__scale">
-                        <div class="PersonalityGraphs__scale__name" id="6-personalitygraph-scale-label">Conventional</div>
-                        <span class="sr-only" id="6-personalitygraph-scale-desc">Your conventional rates at 90.75462268865567 out of 100.</span>
-                        <figure class="PersonalityGraphs__scale__graph" tabindex="0" aria-labelledby="6-personalitygraph-scale-label" aria-describedby="6-personalitygraph-scale-desc">
-                          <span class="BarMeter--gradient-dusk" data-value="91">
-                            <span class="BarMeter__meter" style="width: 91%;">
-                              <span class="BarMeter__label">91%</span>
-                            </span>
-                          </span>
-                        </figure>
-                      </div>
-                    </a>
-                  </div>
-                </div>
+
                 <h3 class="Discovery__related__lil-subheading" tabindex="0" aria-label="Below you will find a list of similar jobs.">Similar Jobs</h3>
                 <ul>
                   <li v-for="similarJob in job.similar_jobs" :key="similarJob.job_id">
-                    {{ similarJob.job_name }} (Similarity Score: {{ similarJob.similarity_score }})
+                    {{ similarJob.job_name }}
+                    <div class="flex">
+                      <template v-for="star in 5" :key="star">
+                        <svg
+                          :class="star <= Math.ceil(similarJob.similarity_score * 5) ? 'text-yellow-400' : 'text-gray-300'"
+                          class="h-5 w-5 flex-shrink-0"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      </template>
+                    </div>
                   </li>
                 </ul>
               </div>
@@ -90,7 +68,9 @@
                     </svg>
                   </button>
                 </div>
-                <button class="Dialog__back-button alans-butt--grey" tabindex="0" aria-label="Click here to close the dialog and to continue your assessment." @click="closeDialog">Close</button>
+                <Link :href="`/career/${job.career}`" class="Dialog__back-button alans-butt--grey" tabindex="0" aria-label="Click here to view your career details.">
+                  View
+                </Link>
               </div>
             </div>
           </div>
@@ -101,6 +81,8 @@
 </template>
 
 <script>
+import { Link } from '@inertiajs/vue3';
+ 
 export default {
   methods: {
     closeDialog() {
@@ -110,11 +92,38 @@ export default {
       // Implement share discovery logic
     },
   },
+
   props: {
     job: {
       type: Object,
-      required: true,
+      
     },
+    jobs: {
+            type: Object,
+            required: true,
+        },
   }
 }
+
 </script>
+
+<style>
+
+.Discovery__title_model{
+    color: #0a1e2e;
+    font-weight: 300;
+    font-size: 40px;
+    backdrop-filter: blur(11px);
+    display: flex;
+    justify-content: center; /* Center the text */
+    align-items: center;
+    width: 100%;
+    padding: 40px; /* Add padding */
+    color: #0a1e2e; /* Change text color to white */
+    border-bottom-left-radius: 10px; /* Updated property */
+    border-bottom-right-radius: 10px; /* Updated property */
+    
+   
+}
+
+</style>
