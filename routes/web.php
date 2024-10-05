@@ -109,3 +109,7 @@ Route::get('/im', function () {
 Route::get('/testin_uis/addvance', function () {
     return Inertia::render('testin_uis/addvance');
 })->name('testin_uis.addvance');
+Route::get('/compability', function () {
+    return Inertia::render('testin_uis/compability');
+})->name('testin_uis.compability');
+
