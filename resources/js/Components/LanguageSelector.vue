@@ -1,5 +1,5 @@
 <template>
-  <ol class="relative" @mouseleave="startCloseTimer">
+  <ol class="relative mb-0" @mouseleave="startCloseTimer">
     <label
       class="flex gap-2 items-center py-1.5 pr-3 cursor-pointer lowercase text-white "
       tabindex="0"

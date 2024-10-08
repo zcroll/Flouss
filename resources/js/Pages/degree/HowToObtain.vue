@@ -50,10 +50,15 @@
             <div v-if="filteredFormations.length > 0" class="space-y-6">
               <div v-for="formation in filteredFormations" :key="formation.id" class="flex-1 border-b border-gray-200 py-5 p-5 rounded-3xl items-center space-x-4 text-lg m-5 text-gray-700 leading-relaxed">
                 <!-- Formation Title -->
-                <h5 class="text-xl font-semibold text-slate-600 mb-2">
+                 <div>
+                  <h5 class="text-xl font-semibold text-slate-600">
                   {{ formation.name }}
                 </h5>
-                <!-- Etablissement Name -->
+                <h6 class="text-sm font-small text-slate-500 mb-1">
+                      {{ formation.libelle }} <!-- Display etablissement name -->
+                  </h6>
+
+                  <div>
                 <h5 class="text-lg font-medium text-slate-500 mb-2">
                   {{ formation.etablissement.nom }} <!-- Display etablissement name -->
                 </h5>
@@ -72,6 +77,11 @@
                     </svg>
                   </template>
                 </div>
+                  </div>
+                 </div>
+
+                <!-- Etablissement Name -->
+
               </div>
             </div>
           </div>
