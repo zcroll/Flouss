@@ -14,13 +14,13 @@
 
 
 
-            <div class="flex flex-col lg:flex-row">
-                <div class="w-full lg:w-4/4 space-y-20">
-                    <div v-if="Object.keys(jobs).length > 0 " class="text-left">
+           <div class="flex flex-col lg:flex-row"> 
+                 <div class="w-full lg:w-4/4 space-y-20"> -->
+                    <!-- <div v-if="Object.keys(jobs).length > 0 " class="text-left">
                         <h1 class="ml-1 text-4xl font-serif text-gray-100 mt-10 ">{{ __('results.your_compatibility_results') }}</h1>
                         <p class="ml-3 mt-2 text-lg text-slate-300">{{ __('results.scores_and_matches') }}</p>
                     </div>
-                    <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4"> --> -->
 
                         <!-- <div>
                             <div
@@ -34,7 +34,7 @@
 
 
 
-                    </div>
+                    <!-- </div> --> -->
 
 
 
@@ -44,7 +44,7 @@
 
                     <div class="DashboardPage__careers">
                         <div
-                            v-for="job in combinedJobs"
+                            v-for="job in jobs"
                             :key="job.slug"
                             class="HorizontalCard HorizontalCard--wide"
                             :aria-labelledby="`HorizontalCard-${job.slug}`"
@@ -59,7 +59,7 @@
                             />
                             <div class="HorizontalCard-wrap">
                                 <div :id="`HorizontalCard-${job.slug}`" class="HorizontalCard-name">
-                                    <a :href="job.link" class="HorizontalCard-name-link">{{ job.career }}</a>
+                                    <a :href="job.link" class="HorizontalCard-name-link">{{ job.name }}</a>
                                 </div>
                             </div>
                             <svg class="mr-3" width="50px" height="50px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

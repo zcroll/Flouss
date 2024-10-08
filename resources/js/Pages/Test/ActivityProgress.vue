@@ -6,12 +6,12 @@
       href="/css/landingPage/index.css"
     />
 
-      <link rel="stylesheet" media="all" href="/css/landingPage/main-test.css"/>
+    <link rel="stylesheet" media="all" href="/css/landingPage/main-test.css"/>
 
     <div class="flex justify-center items-center min-h-screen">
       <div class="test-page__wrapper">
         <div class="test-page__wrapper__main with-save">
-          <div v-if="!showOverview" class="blur-box-container blur-box-container__main blur-box-container--spaced">
+          <div v-if="!showOverview && !showJobTypes" class="blur-box-container blur-box-container__main blur-box-container--spaced">
             <div class="blur-box blur-box__main">
               <div class="interests main-test align-center">
                 <div class="main-test__wrapper">
@@ -29,7 +29,6 @@
                             <span class="slider-mark">{{ Math.ceil(activities.length / 6) }}</span>
                           </div>
                         </div>
-                        <!-- Progress bar with conditional red points -->
                         <div class="progress-bar">
                           <div class="progress" :style="{ width: progressPercentage + '%' }"></div>
                           <div v-for="(point, index) in incompletePoints" :key="index"
@@ -87,6 +86,66 @@
                           {{ __('test.next') }}
                           <span class="small-icons next-arrow-white-xs is-right"></span>
                         </button>
+                        <button v-else @click="showJobTypesSelection" class="button button--blue before-fade-in fade-in nav-btn">
+                          {{ __('test.show_job_types') }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="bg-copy interests"></div>
+            </div>
+          </div>
+          <div v-else-if="showJobTypes" class="blur-box-container blur-box-container__main blur-box-container--spaced">
+            <div class="blur-box blur-box__main">
+              <div class="interests main-test align-center">
+                <div class="main-test__wrapper">
+                  <div class="inner">
+                    <div class="main-test__box">
+                      <div class="grid-x main-test__top">
+                        <h2 class="main-test__header">
+                          {{ __('test.select_job_types') }}
+                        </h2>
+                      </div>
+                      <div>
+                        <div class="rc-slider rc-slider-with-marks">
+                          <div class="slider">
+                            <span class="slider-mark">{{ currentJobTypeIndex + 1 }}</span>
+                            <span class="slider-mark">{{ jobTypes.length }}</span>
+                          </div>
+                        </div>
+                        <div class="progress-bar">
+                          <div class="progress" :style="{ width: jobTypesProgressPercentage + '%' }"></div>
+                        </div>
+                      </div>
+                      <div class="grid-x">
+                        <p class="test__question">
+                          {{ __('test.rank_job_type') }}
+                        </p>
+                      </div>
+                      <p class="job-type-text">{{ currentJobType.text }}</p>
+                      <div class="job-type-options">
+                        <div v-for="option in currentJobTypeOptions" :key="option.id" class="job-type-option">
+                          <input
+                            type="radio"
+                            :id="'option-' + option.id"
+                            :value="option"
+                            v-model="selectedJobTypeOption"
+                            @change="onJobTypeOptionChange"
+                          >
+                          <label :for="'option-' + option.id">{{ option.text }}</label>
+                        </div>
+                      </div>
+                      <div class="grid-x fixed-grid">
+                        <button @click="previousJobType" :disabled="currentJobTypeIndex === 0" class="button button--white before-fade-in fade-in nav-btn">
+                          <span class="small-icons back-arrow-white-xs is-left"></span>
+                          {{ __('test.previous') }}
+                        </button>
+                        <button v-if="!isLastJobType" @click="nextJobType" class="button button--green before-fade-in fade-in nav-btn">
+                          {{ __('test.next') }}
+                          <span class="small-icons next-arrow-white-xs is-right"></span>
+                        </button>
                         <button v-else @click="submitTest" class="button button--blue before-fade-in fade-in nav-btn">
                           {{ __('test.submit') }}
                         </button>
@@ -107,7 +166,7 @@
               @go-to-question="goToQuestion"
               @go-back-to-test="toggleOverview"
               @save-for-later="saveForLater"
-              @submit-answers="submitTest"
+              @submit-answers="showJobTypesSelection"
             />
           </div>
           <div class="test-btn-container flex-center">
@@ -158,6 +217,10 @@ export default {
     activities: {
       type: Array,
       required: true
+    },
+    jobTypes: {
+      type: Array,
+      required: true
     }
   },
   data() {
@@ -170,12 +233,27 @@ export default {
       questionInteracted: false,
       rankedActivities: [],
       showOverview: false,
-      showIncompleteModal: false
+      showIncompleteModal: false,
+      showJobTypes: false,
+      currentJobTypeIndex: 0,
+      currentJobTypeOptions: [],
+      rankedJobTypes: [],
+      selectedJobTypeOption: null,
+      jobTypeOptions: [
+        { id: 627, text: "Hate it", value: 1.0, reverse_coded_value: 5.0 },
+        { id: 628, text: "Dislike it", value: 2.0, reverse_coded_value: 4.0 },
+        { id: 629, text: "Neutral", value: 3.0, reverse_coded_value: 3.0 },
+        { id: 630, text: "Like it", value: 4.0, reverse_coded_value: 2.0 },
+        { id: 631, text: "Love it", value: 5.0, reverse_coded_value: 1.0 }
+      ]
     }
   },
   computed: {
     progressPercentage() {
       return (this.currentQuestion / Math.ceil(this.activities.length / 6)) * 100;
+    },
+    jobTypesProgressPercentage() {
+      return ((this.currentJobTypeIndex + 1) / this.jobTypes.length) * 100;
     },
     isQuestionRanked() {
       const start = (this.currentQuestion - 1) * 6;
@@ -183,6 +261,12 @@ export default {
     },
     isLastQuestion() {
       return this.currentQuestion === Math.ceil(this.activities.length / 6);
+    },
+    isLastJobType() {
+      return this.currentJobTypeIndex === this.jobTypes.length - 1;
+    },
+    currentJobType() {
+      return this.jobTypes[this.currentJobTypeIndex];
     }
   },
   watch: {
@@ -203,6 +287,10 @@ export default {
       this.currentActivities = this.activities.slice(start, end);
       this.questionInteracted = false;
     },
+    loadCurrentJobTypeOptions() {
+      this.currentJobTypeOptions = [...this.jobTypeOptions];
+      this.selectedJobTypeOption = null;
+    },
     onDragStart() {
       this.questionInteracted = true;
       this.removeIncompletePoint(this.currentQuestion);
@@ -211,6 +299,10 @@ export default {
       this.drag = false;
       this.storeUserResponse();
     },
+    onJobTypeOptionChange() {
+      this.questionInteracted = true;
+      this.storeJobTypeResponse();
+    },
     nextQuestion() {
       if (this.currentQuestion < Math.ceil(this.activities.length / 6)) {
         this.storeUserResponse();
@@ -218,24 +310,21 @@ export default {
         this.loadCurrentActivities();
       }
     },
+    showJobTypesSelection() {
+      this.showJobTypes = true;
+      this.loadCurrentJobTypeOptions();
+    },
     submitTest() {
-      this.storeUserResponse();
-      if (this.incompletePoints.length > 0) {
+      if (this.rankedJobTypes.length < this.jobTypes.length) {
         this.showIncompleteModal = true;
       } else {
         this.performSubmit();
       }
     },
-    closeIncompleteModal() {
-      this.showIncompleteModal = false;
-    },
-    confirmSubmit() {
-      this.showIncompleteModal = false;
-      this.performSubmit();
-    },
     performSubmit() {
       const form = useForm({
-        responses: this.rankedActivities
+        responses: this.rankedActivities,
+        jobTypes: this.rankedJobTypes
       });
 
       form.post(route('test.submit-answer'), {
@@ -285,8 +374,13 @@ export default {
       this.rankedActivities = [...this.rankedActivities, ...rankedActivities];
 
       this.userResponses[this.currentQuestion - 1] = [...this.currentActivities];
-      console.log('User responses:', this.userResponses);
-      console.log('Ranked activities:', this.rankedActivities);
+    },
+    storeJobTypeResponse() {
+      if (this.selectedJobTypeOption) {
+        const jobType = this.currentJobType;
+        this.rankedJobTypes = this.rankedJobTypes.filter(jt => jt.id !== jobType.id);
+        this.rankedJobTypes.push({ id: jobType.id, optionId: this.selectedJobTypeOption.text, score: this.selectedJobTypeOption.value });
+      }
     },
     updateActivities(newActivities) {
       const start = (this.currentQuestion - 1) * 6;
@@ -314,6 +408,25 @@ export default {
     },
     toggleOverview() {
       this.showOverview = !this.showOverview;
+    },
+    nextJobType() {
+      if (this.currentJobTypeIndex < this.jobTypes.length - 1) {
+        this.currentJobTypeIndex++;
+        this.loadCurrentJobTypeOptions();
+      }
+    },
+    previousJobType() {
+      if (this.currentJobTypeIndex > 0) {
+        this.currentJobTypeIndex--;
+        this.loadCurrentJobTypeOptions();
+      }
+    },
+    closeIncompleteModal() {
+      this.showIncompleteModal = false;
+    },
+    confirmSubmit() {
+      this.showIncompleteModal = false;
+      this.performSubmit();
     },
     __
   }
@@ -376,9 +489,28 @@ export default {
   cursor: pointer;
 }
 
-.test-statement__option__category {
-  font-size: 14px;
-  color: #888;
-  margin-top: 5px;
+.job-type-text {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.job-type-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.job-type-option {
+  display: flex;
+  align-items: center;
+}
+
+.job-type-option input[type="radio"] {
+  margin-right: 10px;
+}
+
+.job-type-option label {
+  cursor: pointer;
 }
 </style>

@@ -13,7 +13,7 @@ use App\Http\Controllers\dashboard\DashboardController;
 use App\Http\Controllers\test\TestController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\test\TestController_test;
 use Inertia\Inertia;
 use App\Http\Controllers\LanguageController;
 
@@ -89,8 +89,8 @@ Route::get('/test-preview', function () {
     return Inertia::render('Test/TestPreview2');
 })->name('test-preview');
 
-Route::get('/test', [TestController::class, 'index'])->name('test');
-Route::post('/test', [TestController::class, 'submitAnswer'])->name('test.submit-answer');
+Route::get('/test', [TestController_test::class, 'index'])->name('test');
+Route::post('/test', [TestController_test::class, 'submitAnswer'])->name('test.submit-answer');
 
 Route::post('language/', LanguageController::class)->name('language.switch');
 

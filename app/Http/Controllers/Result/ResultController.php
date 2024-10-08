@@ -39,27 +39,29 @@ class ResultController extends Controller
         $decodedJobs = json_decode($closestJobs[0], true, 512, JSON_THROW_ON_ERROR);
 
         $jobsCollection = collect($decodedJobs);
-        $jobIds = $jobsCollection->pluck('job_info_id');
+        $jobIds = $jobsCollection->pluck('job_id');
         $jobIdsArray = $jobIds->toArray();
         $jobs = JobInfo::whereIn('id', $jobIds)
             ->select('id', $nameColumn . ' as name', 'slug', 'image')
             ->get();
 
-        // Merge job information with distances and calculate ratings
-        $jobsWithDistances = $jobs->map(function ($job) use ($jobsCollection) {
-            $jobData = $jobsCollection->firstWhere('job_info_id', $job->id);
-            $distance = $jobData['distance'];
-            $rating = 5 - min(round($distance * 60), 1.5);
+            ds($jobs->toArray());
 
-            return [
-                'id' => $job->id,
-                'name' => $job->name,
-                'slug' => $job->slug,
-                'image' => $job->image,
-                'distance' => $distance,
-                'rating' => $rating
-            ];
-        })->sortBy('distance')->values();
+        // Merge job information with distances and calculate ratings
+        // $jobsWithDistances = $jobs->map(function ($job) use ($jobsCollection) {
+        //     $jobData = $jobsCollection->firstWhere('job_info', $job->id);
+        //     $distance = $jobData['distance'];
+        //     $rating = 5 - min(round($distance * 60), 1.5);
+
+        //     return [
+        //         'id' => $job->id,
+        //         'name' => $job->name,
+        //         'slug' => $job->slug,
+        //         'image' => $job->image,
+        //         'distance' => $distance,
+        //         'rating' => $rating
+        //     ];
+        // })->sortBy('distance')->values();
 
         $Archetype = DB::table('persona')->where('name', '=', "Mentor")->first();
 
@@ -126,7 +128,7 @@ class ResultController extends Controller
             return Inertia::render('Result/Results', [
                 'userId' => $firstScore->uuid,
                 'scores' => $topTwoResults,
-                'jobs' => $jobsWithDistances,
+                'jobs' => $jobs,
                 'Archetype' => $Archetype,
                 'archetypeDiscovery' => $archetypeDiscovery,
                 'ArchetypeJobs' => $archetypeCareers,
