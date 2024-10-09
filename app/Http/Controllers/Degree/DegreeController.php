@@ -82,7 +82,7 @@ class DegreeController extends Controller
     public function howToObtain(string $id): Response
     {
         $locale = app()->getLocale();
-        
+
         $degree = Degree::with(['degreeFormationMatches.formation.etablissement']) // Eager load formations and their etablissement
             ->where('slug', $id)
             ->firstOrFail();
@@ -99,6 +99,7 @@ class DegreeController extends Controller
                     'name' => $locale === 'fr' ? $match->formation_name_fr : $match->formation_name,
                     'similarity_score' => $match->similarity_score,
                     'etablissement' => $match->formation->etablissement, // Include etablissement data
+                    'libelle' => $match->formation->diplomeLibelleFr
                 ];
             }),
         ]);

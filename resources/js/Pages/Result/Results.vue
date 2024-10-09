@@ -1,16 +1,16 @@
 <template>
-     <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css">
+    <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css">
 
-        <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/user-results.3aa4bb301b9f.css">
+    <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/user-results.3aa4bb301b9f.css">
     <app-layout  preserveScroll>
-        <div class="DashboardPage">        
+        <div class="DashboardPage">
                 <section class="section">
-                
+
             </section>
             <Folder :archetype="Archetype"
                             :archetypeJobs="ArchetypeJobs"
                             :archetypeDiscovery="archetypeDiscovery"
-                            :userId="userId" /> 
+                            :userId="userId" />
 
 
 

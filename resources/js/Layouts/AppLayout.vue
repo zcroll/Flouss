@@ -75,9 +75,9 @@ const socialLinks = [
                                         <NavLink :href="route('degrees.index')" :active="route().current('degrees.index')" class="btn_link text-white hover:text-green-400 transition duration-150 ease-in-out">
                                             {{ __('navigation.degrees') }}
                                         </NavLink>
-                                        <NavLink 
-                                            v-if="isOver10Days" 
-                                            :href="route('activities')" 
+                                        <NavLink
+                                            v-if="isOver10Days"
+                                            :href="route('activities')"
                                             :active="route().current('activities')"
                                             class="btn_link text-white hover:text-green-400 transition duration-150 ease-in-out"
                                         >
@@ -89,7 +89,7 @@ const socialLinks = [
 
                                 <div class="hidden sm:flex sm:items-center sm:ml-6">
                                     <!-- Language Selector -->
-                                    <LanguageSelector :languages="$page.props.languages" :selectedLanguage="$page.props.language" />
+                                    <LanguageSelector  :languages="$page.props.languages" :selectedLanguage="$page.props.language" />
 
                                     <!-- Teams Dropdown -->
                                     <div class="ml-3 relative" v-if="$page.props.jetstream.hasTeamFeatures">

@@ -16,8 +16,11 @@ class JobFilterController extends Controller
         $descriptionColumn = $locale === 'fr' ? 'description_fr' : 'description';
 
         $query = JobInfo::query();
+        $query->orderBy('tranche', 'asc');
 
         $filters = [];
+
+        
 
         if ($search = $request->input('q')) {
             $filters['q'] = $search;
