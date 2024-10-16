@@ -1,4 +1,5 @@
-   mysql-connector-python
-   numpy
-   scikit-learn
-   python-dotenv
+mariadb
+pandas
+random
+sys
+json

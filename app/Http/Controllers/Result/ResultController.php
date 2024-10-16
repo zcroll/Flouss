@@ -39,7 +39,7 @@ class ResultController extends Controller
         $decodedJobs = json_decode($closestJobs[0], true, 512, JSON_THROW_ON_ERROR);
 
         $jobsCollection = collect($decodedJobs);
-        $jobIds = $jobsCollection->pluck('job_id');
+        $jobIds = $jobsCollection->pluck('id');
         $jobIdsArray = $jobIds->toArray();
         $jobs = JobInfo::whereIn('id', $jobIds)
             ->select('id', $nameColumn . ' as name', 'slug', 'image')

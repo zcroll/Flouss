@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use App\Models\HollandCodeItem;
+
 trait CalculatesScores
 {
     private const MAX_SCORE = 5;
@@ -9,49 +11,44 @@ trait CalculatesScores
     public function calculateHollandScores(array $responses): array
     {
         $scores = [];
+        $itemCounts = [];
 
         foreach ($responses as $response) {
-            if ($response['type'] !== 'holland_codes') {
+            if ($response['type'] !== 'answered' || $response['category'] !== 'Hollands codes') {
                 continue;
             }
 
-            $category = $response['category'];
-            $answer = $response['answer'];
-
-            if (!isset($scores[$category])) {
-                $scores[$category] = [];
+            $item = HollandCodeItem::find($response['itemId']);
+            if (!$item) {
+                continue;
             }
 
-            $scores[$category][] = $this->convertResponseToScore($answer);
+            $trait = $item->type;
+            $score = $response['answer'];
+
+            if (!isset($scores[$trait])) {
+                $scores[$trait] = 0;
+                $itemCounts[$trait] = 0;
+            }
+
+            $scores[$trait] += $score;
+            $itemCounts[$trait]++;
         }
 
-        return $this->calculateAverageScores($scores);
+        return $this->normalizeScores($scores, $itemCounts);
     }
 
-    protected function convertResponseToScore($response): int
+    private function normalizeScores(array $scores, array $itemCounts): array
     {
-        return match ($response) {
-            'love' => 5,
-            'like' => 4,
-            'neutral' => 3,
-            'dislike' => 2,
-            'hate' => 1,
-            default => 0,
-        };
-    }
+        $normalizedScores = [];
 
-    private function calculateAverageScores(array $scores): array
-    {
-        $averageScores = [];
-
-        foreach ($scores as $category => $responses) {
-            $totalScore = array_sum($responses);
-            $responseCount = count($responses);
-            $averageScore = $responseCount > 0 ? $totalScore / $responseCount : 0;
+        foreach ($scores as $trait => $totalScore) {
+            $count = $itemCounts[$trait];
+            $averageScore = $count > 0 ? $totalScore / $count : 0;
             $normalizedScore = $averageScore / self::MAX_SCORE;
-            $averageScores[$category] = round($normalizedScore, 2);
+            $normalizedScores[$trait] = round($normalizedScore, 2);
         }
 
-        return $averageScores;
+        return $normalizedScores;
     }
 }

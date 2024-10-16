@@ -9,7 +9,7 @@ use App\Models\JobInfo;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
-
+ 
 class CareerController extends Controller
 {
     public function index(string $job): Response

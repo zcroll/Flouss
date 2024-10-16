@@ -59,7 +59,7 @@ class TestController_test extends Controller
         ]);
     }
 
-    public function submitAnswer(Request $request)
+    public function submitAnswer(Request $request): \Illuminate\Http\RedirectResponse
     {
         $responses = $request->input('responses');
         $jobTypes = $request->input('jobTypes');
@@ -77,7 +77,7 @@ class TestController_test extends Controller
             $formattedResponses[$response['category']]['score'] += $response['score'] / 100;
             $formattedResponses[$response['category']]['responses'][] = [
                 'id' => $response['id'],
-                'score' => $response['score'] 
+                'score' => $response['score']
             ];
         }
 

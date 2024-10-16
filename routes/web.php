@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\test\TestController_test;
 use Inertia\Inertia;
 use App\Http\Controllers\LanguageController;
-
+use App\Http\Controllers\test\MainTestController;
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -113,3 +113,8 @@ Route::get('/compability', function () {
     return Inertia::render('testin_uis/compability');
 })->name('testin_uis.compability');
 
+
+
+Route::get('/main-test', [MainTestController::class, 'index'])->name('main-test');
+Route::post('/main-test/store-holland-code', [MainTestController::class, 'storeHollandCodeResponse'])->name('store-holland-code-response');
+Route::post('/main-test/store-basic-interest', [MainTestController::class, 'storeBasicInterestResponse'])->name('store-basic-interest-response');

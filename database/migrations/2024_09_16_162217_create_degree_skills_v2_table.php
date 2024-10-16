@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasTable('theproject2.degree_skills_v2')) {
-        Schema::create('theproject2.degree_skills_v2', function (Blueprint $table) {
+        if (!Schema::hasTable('degree_skills_v2')) {
+        Schema::create('degree_skills_v2', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('degree_id');
             $table->string('skill_title');
             $table->text('skill_description');
             $table->timestamps();
 
-            $table->foreign('degree_id')->references('id')->on('theproject2.degrees')->onDelete('cascade');
+            $table->foreign('degree_id')->references('id')->on('degrees')->onDelete('cascade');
         });
     }
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('theproject2.degree_skills_v2');
+        Schema::dropIfExists('degree_skills_v2');
     }
 };
