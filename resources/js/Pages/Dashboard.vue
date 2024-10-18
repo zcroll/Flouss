@@ -23,7 +23,7 @@
                                         :href="'/test-preview'"
                                         class="rounded-full bg-purple-100 px-3 py-1.5 font-medium text-purple-600 hover:bg-purple-200"
                                     >
-                                        {{ __('dashboard.aptitude_assessment') }}  
+                                        {{ __('dashboard.aptitude_assessment') }}
                                     </Link>
                                 </div>
 
@@ -45,7 +45,7 @@
                                 </p>
 
                                 <div class="flex justify-end">
-                                    <Link :href="hasResult ? '/results' : '/test-preview'">
+                                    <Link :href="hasResult ? '/results' : '/main-test'">
                                         <PrimaryButton
                                             class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded"
                                         >

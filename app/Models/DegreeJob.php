@@ -7,17 +7,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DegreeJob extends Model
 {
-    protected $table = 'degree_jobs';
+    protected $table = 'degree_jobs_relation';
 
     protected $fillable = [
+        'job_id',
         'degree_id',
-        'job_title',
-        'job_title_fr',
-        'job_description',
     ];
 
     public function degree(): BelongsTo
     {
         return $this->belongsTo(Degree::class);
+    }
+
+    public function jobInfo(): BelongsTo
+    {
+        return $this->belongsTo(JobInfo::class, 'job_id');
     }
 }

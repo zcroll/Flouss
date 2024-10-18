@@ -9,7 +9,7 @@ use App\Models\JobInfo;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
- 
+
 class CareerController extends Controller
 {
     public function index(string $job): Response
@@ -17,7 +17,7 @@ class CareerController extends Controller
         $locale = app()->getLocale();
         $nameColumn = $locale === 'fr' ? 'name_fr' : 'name';
         $descriptionColumn = $locale === 'fr' ? 'description_fr' : 'description';
-        
+
         $occupation = JobInfo::with(['jobInfoDetail', 'jobInfoDuties', 'jobInfoTypes', 'workplaces'])
             ->where('slug', $job)
             ->firstOrFail();
@@ -68,7 +68,7 @@ class CareerController extends Controller
                 'name' => $locale === 'fr' ? $occupation->name_fr : $occupation->name,
                 'slug' => $occupation->slug,
                 'image' => $occupation->image,
-            ],    
+            ],
             'workEnvironments' => $occupation->workEnvironments->map(function ($environment) use ($nameColumn, $descriptionColumn) {
                 return [
                     'name' => $environment->$nameColumn,
@@ -114,19 +114,21 @@ class CareerController extends Controller
             'jobSteps',
             'jobCertifications',
             'jobAssociations',
-            'jobDegrees',
             'howToBecome',
         ])->where('slug', $job)->firstOrFail();
 
-        $degrees = $occupation->jobDegrees->map(function ($jobDegree) {
-            $degree = Degree::where('name', $jobDegree->degree_title)->first();
-            return [
-                'title' => $jobDegree->degree_title,
-                'image' => $degree ? $degree->image : null,
-                'slug' => $degree ? $degree->slug : null,
-                'name' => $degree ? $degree->name : null,
-            ];
-        });
+        $degrees = DegreeJob::where('job_id', $occupation->id)
+            ->with('degree')
+            ->get()
+            ->map(function ($jobDegree) {
+                $degree = $jobDegree->degree;
+                return [
+                    'title' => $degree->name,
+                    'image' => $degree->image,
+                    'slug' => $degree->slug,
+                    'name' => $degree->name,
+                ];
+            });
 
         ds($occupation->jobSteps->isEmpty());
 
@@ -142,7 +144,6 @@ class CareerController extends Controller
             'jobDegrees' => $degrees,
             'howToBecome' => $occupation->howToBecome,
             'disableStepsLink' => $occupation->jobSteps->isEmpty(),
-       
         ]);
     }
 }

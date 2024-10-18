@@ -6,12 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class JobDegree extends Model
 {
-    protected $table = 'job_degrees';
+  protected $table = 'job_degree_relations';
 
-    protected $fillable = ['job_info_id', 'degree_title'];
+  protected $fillable = [
+      'job_id',
+      'degree_id',
+  ];
 
-    public function jobInfo()
-    {
-        return $this->belongsTo(JobInfo::class);
-    }
+  public function degree(): BelongsTo
+  {
+      return $this->belongsTo(Degree::class);
+  }
+
+  public function jobInfo(): BelongsTo
+  {
+      return $this->belongsTo(JobInfo::class, 'job_id');
+  }
+
 }

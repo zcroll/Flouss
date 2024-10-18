@@ -19,11 +19,11 @@
         :personality="occupation.personality || 'N/A'"
         :satisfaction="occupation.satisfaction || 'N/A'"
       >
-        <div class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white rounded-3xl shadow-2xl">
-        
+        <div class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white rounded-3xl shadow ">
+
 
           <section id="step-1" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0">
-            
+
             <h2 class="custom-heading mb-8" itemProp="name">Steps to become a {{ occupation.name }}</h2>
             <div v-if="howToBecome.steps && howToBecome.steps.length > 0" class="space-y-4 mb-8">
               <ul class="list-custom">
@@ -38,7 +38,7 @@
           </section>
 
           <section id="step-2" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0">
-            
+
             <h2 class="custom-heading mb-8" itemProp="name">Degrees</h2>
             <div v-if="jobDegrees && jobDegrees.length > 0" class="space-y-4 mb-8">
               <div>
@@ -57,7 +57,7 @@
           </section>
 
           <section id="step-3" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0">
-            
+
             <h2 class="custom-heading mb-8" itemProp="name">Certifications</h2>
             <div v-if="howToBecome.certifications && howToBecome.certifications.length > 0" class="space-y-4 mb-8">
               <ul class="list-custom">

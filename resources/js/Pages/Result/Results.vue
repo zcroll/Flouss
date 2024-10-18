@@ -14,7 +14,7 @@
 
 
 
-           <div class="flex flex-col lg:flex-row"> 
+           <div class="flex flex-col lg:flex-row">
                  <div class="w-full lg:w-4/4 space-y-20"> -->
                     <!-- <div v-if="Object.keys(jobs).length > 0 " class="text-left">
                         <h1 class="ml-1 text-4xl font-serif text-gray-100 mt-10 ">{{ __('results.your_compatibility_results') }}</h1>
@@ -59,7 +59,9 @@
                             />
                             <div class="HorizontalCard-wrap">
                                 <div :id="`HorizontalCard-${job.slug}`" class="HorizontalCard-name">
-                                    <a :href="job.link" class="HorizontalCard-name-link">{{ job.name }}</a>
+                                  <Link :href="`/career/${job.slug}`" class="HorizontalCard-name-link" tabindex="0" aria-label="Click here to view your career details.">
+                                    {{ job.name }}
+                                  </Link>
                                 </div>
                             </div>
                             <svg class="mr-3" width="50px" height="50px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -67,7 +69,7 @@
                             </svg>
                         </div>
                     </div>
-                    <Model v-if="selectedJob" :job="selectedJob" @close="selectedJob = null" />
+<!--                    <Model v-if="selectedJob" :job="selectedJob" @close="selectedJob = null" />-->
                     <Archetype
                             v-if="showArchetypeModel"
                             :archetype="Archetype"
