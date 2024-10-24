@@ -10,13 +10,14 @@ use App\Http\Controllers\Assessment\JobMatcherController;
 use App\Http\Controllers\Assessment\JobFieldController;
 use App\Http\Controllers\Degree\DegreeController;
 use App\Http\Controllers\dashboard\DashboardController;
-use App\Http\Controllers\test\TestController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\test\TestController_test;
 use Inertia\Inertia;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\test\MainTestController;
+use App\Http\Controllers\Assessment\DataProcessingController;
+
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -111,3 +112,4 @@ Route::post('/test', [TestController_test::class, 'submitAnswer'])->name('test.s
 Route::post('language/', LanguageController::class)->name('language.switch');
 
 
+Route::get('/test-data', [DataProcessingController::class, 'index'])->name('test-data');

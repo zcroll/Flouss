@@ -143,7 +143,6 @@
 import {Link} from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
-import {defineProps} from 'vue';
 import __ from '@/lang';
 
 const props = defineProps({

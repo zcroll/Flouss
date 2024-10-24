@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class HollandCodeSet extends Model
 {
-    protected $table = 'bigdata.holland_code_sets';
+    protected $table = 'holland_code_sets';
 
     protected $fillable = [
         'type',

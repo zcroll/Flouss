@@ -11,7 +11,7 @@ class BasicInterest extends Model
      *
      * @var string
      */
-    protected $table = 'bigdata.basic_interests';
+    protected $table = 'basic_interests';
 
     /**
      * The primary key associated with the table.

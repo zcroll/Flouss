@@ -33,19 +33,22 @@ class ResultController extends Controller
         }
 
         $firstScore = $scores->first();
+        ds(['firstScore'=>$firstScore]);
 
         $Archetype = $firstScore->Archetype;
         $closestJobs = collect($firstScore->jobs);
+
         $decodedJobs = json_decode($closestJobs[0], true, 512, JSON_THROW_ON_ERROR);
 
         $jobsCollection = collect($decodedJobs);
-        $jobIds = $jobsCollection->pluck('id');
-        $jobIdsArray = $jobIds->toArray();
+        ds(['jobsCollection' => $jobsCollection]);
+
+        $jobIds = $jobsCollection->values();
         $jobs = JobInfo::whereIn('id', $jobIds)
             ->select('id', $nameColumn . ' as name', 'slug', 'image')
             ->get();
 
-            ds($jobs->toArray());
+        ds($jobs->toArray());
 
         // Merge job information with distances and calculate ratings
         // $jobsWithDistances = $jobs->map(function ($job) use ($jobsCollection) {

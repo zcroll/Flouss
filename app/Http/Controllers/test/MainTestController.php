@@ -10,6 +10,7 @@ use App\Models\Result;
 use App\Http\Requests\MainTest\StoreResponseRequest;
 use App\Traits\CalculatesScores;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Log;
@@ -119,28 +120,8 @@ class MainTestController extends Controller
 
         $currentItem = $basicInterests[$currentItemIndex];
 
-        $categoryScores = [];
-        foreach ($responses as $response) {
-            $category = $response['category'];
-            $answer = $response['answer'];
 
-            if (!isset($categoryScores[$category])) {
-                $categoryScores[$category] = 0;
-            }
-
-            $categoryScores[$category] += $answer;
-        }
-
-        arsort($categoryScores);
-        $topCategories = array_slice($categoryScores, 0, 3, true);
-
-        $result = [];
-        foreach ($topCategories as $category => $score) {
-            $categoryId = BasicInterest::where('category', $category)->value('id');
-            $result[] = $categoryId;
-        }
-
-        ds($result);
+        ds($responses);
 
         return to_route('main-test');
 
@@ -194,66 +175,44 @@ class MainTestController extends Controller
 
     }
 
-    private function processResults()
+ private function processResults()
     {
         $hollandCodeResponses = Session::get('holland_code_responses', []);
         $basicInterestResponses = Session::get('basic_interest_responses', []);
 
+          $formattedResponses = [];
+          foreach ($basicInterestResponses as $response) {
+              $category = $response['category'];
+              $answer = $response['answer'];
+
+            $normalizedAnswer = $answer / 5;
+
+            $formattedResponses[$category] = $normalizedAnswer;
+        }
+
+        // Sort the formatted responses
+        asort($formattedResponses);
+        ds($formattedResponses);
+
+
+
         $hollandScores = $this->calculateHollandScores($hollandCodeResponses);
         $archetype =  $this->getArchetypeAndTopScores($hollandScores);
-        ds(['archetype'=>$archetype]);
+        $topMatchingJobs = $this->findTopJobs($formattedResponses, 30);
 
-        $categoryScores = [];
-        foreach ($basicInterestResponses as $response) {
-            $category = $response['category'];
-            $answer = $response['answer'];
+        ds(['archetype'=>$archetype, 'topMatchingJobs'=>$topMatchingJobs]);
 
-            if (!isset($categoryScores[$category])) {
-                $categoryScores[$category] = 0;
-            }
 
-            $categoryScores[$category] += $answer;
-        }
+        // ddd('hello');
 
-        arsort($categoryScores);
-        $topCategories = array_slice($categoryScores, 0, 3, true);
 
-        $basic_interest_ids = [];
-        foreach ($topCategories as $category => $score) {
-            $categoryId = BasicInterest::where('category', $category)->value('id');
-            $basic_interest_ids[] = $categoryId;
-        }
 
-        $scriptPath = app_path('/python/test.py');
-
-        $process = new Process([
-            'python3',
-            $scriptPath,
-            json_encode($basic_interest_ids),
-            json_encode($hollandScores)
-        ]);
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            Log::error('Python script execution failed', [
-                'error' => $process->getErrorOutput(),
-                'command' => $process->getCommandLine(),
-                'working_directory' => $process->getWorkingDirectory(),
-            ]);
-            throw new ProcessFailedException($process);
-        }
-
-        $output = $process->getOutput();
-
-        Log::info('Python script output', ['output' => $output]);
-
-        $decodedOutput = json_decode($output, true);
 
         try {
             Result::create([
                 'user_id' => auth()->id(),
                 'scores' => json_encode($hollandScores, JSON_THROW_ON_ERROR),
-                'jobs' => json_encode($decodedOutput, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT),
+                'jobs' => json_encode($topMatchingJobs, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT),
                 'highestTwoScores' => $archetype['topTraits'],
                 'Archetype' => $archetype['archetypes'],
             ]);
@@ -267,5 +226,85 @@ class MainTestController extends Controller
 
 
 
+    }
+
+    private function findTopJobs(array $userInterestScores, int $topN = 30): array
+    {
+        try {
+            // Determine the top 4 interests based on scores
+            arsort($userInterestScores);
+            $topInterests = array_slice($userInterestScores, 0, 4, true);
+
+            // Assign weights to the top interests
+            $weights = [];
+            $weightValues = [1.0, 0.75, 0.5, 0.25];
+            $index = 0;
+            foreach ($topInterests as $interest => $score) {
+                $weights[$interest] = $weightValues[$index];
+                $index++;
+            }
+
+            // Fetch relevant job requirements from the database
+            $results = DB::table('job_requirement as jr')
+                ->join('job_infos as ji', 'jr.job_id', '=', 'ji.id')
+                ->where('ji.education_level', 'High School')
+                ->whereNotNull('ji.education_level')
+                ->select('ji.name', 'jr.scale_name')
+                ->get();
+
+            $jobScores = [];
+            $jobInterests = [];
+
+            foreach ($results as $row) {
+                $scaleName = $row->scale_name;
+                $jobName = $row->name;
+
+                if (isset($weights[$scaleName])) {
+                    $weight = $weights[$scaleName];
+
+                    if (isset($jobScores[$jobName])) {
+                        $jobScores[$jobName] += $weight;
+                        $jobInterests[$jobName][] = $scaleName;
+                    } else {
+                        $jobScores[$jobName] = $weight;
+                        $jobInterests[$jobName] = [$scaleName];
+                    }
+                }
+            }
+
+            arsort($jobScores);
+
+            $topJobs = array_slice($jobScores, 0, $topN, true);
+
+            // Ensure the first 12 jobs are the closest to the top scores
+            $top12 = array_slice($topJobs, 0, 12, true);
+            $remainingJobs = array_slice($topJobs, 12, null, true);
+
+            $finalJobList = array_keys($top12);
+
+            // Add remaining jobs
+            $finalJobList = array_merge($finalJobList, array_keys($remainingJobs));
+
+            // If less than topN, handle accordingly (optional)
+            if (count($finalJobList) < $topN) {
+                // Fetch additional jobs if needed
+                $additionalJobsNeeded = $topN - count($finalJobList);
+                $additionalJobs = DB::table('job_infos')
+                    ->where('education_level', 'High School')
+                    ->whereNotIn('name', $finalJobList)
+                    ->limit($additionalJobsNeeded)
+                    ->pluck('id')
+                    ->toArray();
+
+                $finalJobList = array_merge($finalJobList, $additionalJobs);
+            }
+
+            return $finalJobList;
+
+        } catch (\Exception $e) {
+            // Log the error for debugging
+            Log::error('Error finding top jobs: ' . $e->getMessage());
+            return [];
+        }
     }
 }
