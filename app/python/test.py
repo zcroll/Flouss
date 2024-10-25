@@ -1,152 +1,176 @@
 import mariadb
-import pandas as pd
+from typing import Dict, List, Tuple
+from dataclasses import dataclass
+import itertools
 import sys
 import json
+import os
 
-def get_database_connection():
-    """
-    Establishes and returns a connection to the MariaDB database.
-    """
-    try:
-        return mariadb.connect(
-            host='localhost',
-            user='root',
-            password='new_password',
-            database='bigdata',
-        )
-    except mariadb.Error as e:
-        print(json.dumps({"error": f"Error connecting to MariaDB: {e}"}))
-        sys.exit(1)
+@dataclass
+class JobMatch:
+    job_id: int
+    job_title: str
+    primary_fields: Tuple[str, str]
+    description: str
+    education_level: str
 
-def fetch_job_requirements(connection, basic_interest_ids):
-    """
-    Fetches job requirements that match the given basic_interest_ids.
-    
-    Args:
-        connection (mariadb.connection): Database connection.
-        basic_interest_ids (list): List of basic_interest_id integers.
+    def to_dict(self):
+        return {
+            'job_id': self.job_id,
+            'job_title': self.job_title,
+            'primary_fields': self.primary_fields,
+            'description': self.description,
+            'education_level': self.education_level
+        }
+
+class JobMatcher:
+    def __init__(self, db_config: Dict, interest_scores: Dict[str, int]):
+        """Initialize database connection and prepare interest scores"""
+        self.conn = mariadb.connect(**db_config)
+        self.cursor = self.conn.cursor(dictionary=True)
+        self.interest_scores = interest_scores
+
+    def get_jobs_by_fields(self, fields: Tuple[str, str], limit: int = 30) -> List[Dict]:
+        """Fetch jobs that combine both fields in the tuple."""
+        field1, field2 = fields
+        query = """
+        SELECT DISTINCT ji.id as job_id, ji.name as job_title, ji.education_level
+        FROM job_requirement jr1
+        JOIN job_requirement jr2 ON jr1.job_id = jr2.job_id
+        JOIN job_infos ji ON ji.id = jr1.job_id
+        WHERE jr1.scale_name = ? AND jr2.scale_name = ?
+        LIMIT ?
+        """
+        self.cursor.execute(query, (field1, field2, limit))
+        return self.cursor.fetchall()
+
+    def find_matching_jobs(self) -> Dict[str, any]:
+        """Find and rank matching jobs based on optimized combination rules"""
+        final_matches = []
+        combination_productivity = {}
+        remaining_slots = 30
+        used_job_ids = set()
         
-    Returns:
-        pd.DataFrame: DataFrame containing job_info_id, category, and basic_interest_id.
-    """
-    cursor = connection.cursor(dictionary=True)
-    format_strings = ','.join(['?'] * len(basic_interest_ids))
-    sql = f"""
-        SELECT job_info_id, category, basic_interest_id
-        FROM job_requirement
-        WHERE basic_interest_id IN ({format_strings})
-    """
-    cursor.execute(sql, basic_interest_ids)
-    result = cursor.fetchall()
-    cursor.close()
-    return pd.DataFrame(result)
-
-def fetch_job_info(connection, job_info_ids):
-    """
-    Fetches job information (e.g., name) for the given job_info_ids.
-    
-    Args:
-        connection (mariadb.connection): Database connection.
-        job_info_ids (list): List of job_info_id integers.
+        # Step 1: Analyze highest scoring fields (score 5)
+        top_fields = [field for field, score in self.interest_scores.items() if score == 5]
+        top_pairs = list(itertools.combinations(top_fields, 2))
         
-    Returns:
-        pd.DataFrame: DataFrame containing id and name.
-    """
-    cursor = connection.cursor(dictionary=True)
-    format_strings = ','.join(['?'] * len(job_info_ids))
-    sql = f"""
-        SELECT id, name
-        FROM job_infos
-        WHERE id IN ({format_strings})
-    """
-    cursor.execute(sql, job_info_ids)
-    result = cursor.fetchall()
-    cursor.close()
-    return pd.DataFrame(result)
-
-def fetch_trait_info(connection, job_info_ids):
-    """
-    Fetches trait information for the given job_info_ids.
-    
-    Args:
-        connection (mariadb.connection): Database connection.
-        job_info_ids (list): List of job_info_id integers.
+        # Find the most productive pair from top fields
+        most_productive_pair = None
+        max_jobs = 0
+        top_pair_jobs = []
         
-    Returns:
-        pd.DataFrame: DataFrame containing job_id, archetype, trait_name, trait_score, and trait_type.
-    """
-    cursor = connection.cursor(dictionary=True)
-    format_strings = ','.join(['?'] * len(job_info_ids))
-    sql = f"""
-        SELECT job_id, archetype, trait_name, trait_score, trait_type
-        FROM archetype_personality_traits
-        WHERE job_id IN ({format_strings})
-    """
-    cursor.execute(sql, job_info_ids)
-    result = cursor.fetchall()
-    cursor.close()
-    return pd.DataFrame(result)
+        for pair in top_pairs:
+            jobs = self.get_jobs_by_fields(pair)
+            num_jobs = len(jobs)
+            if num_jobs > max_jobs:
+                max_jobs = num_jobs
+                most_productive_pair = pair
+                top_pair_jobs = jobs
+        
+        # Add jobs from most productive top pair
+        for job in top_pair_jobs:
+            if remaining_slots > 0 and job['job_id'] not in used_job_ids:
+                description = f"This role combines expertise in {most_productive_pair[0]} and {most_productive_pair[1]}"
+                final_matches.append(JobMatch(
+                    job_id=job['job_id'],
+                    job_title=job['job_title'],
+                    primary_fields=most_productive_pair,
+                    description=description,
+                    education_level=job['education_level']
+                ))
+                used_job_ids.add(job['job_id'])
+                remaining_slots -= 1
+        
+        # Step 2: Combine with next level (score 4)
+        if most_productive_pair:
+            score_4_fields = [field for field, score in self.interest_scores.items() if score == 4]
+            best_secondary_pair = None
+            max_secondary_jobs = 0
+            best_secondary_jobs = []
+            
+            # Try combinations with each field from the most productive pair
+            for top_field in most_productive_pair:
+                for score_4_field in score_4_fields:
+                    pair = (top_field, score_4_field)
+                    jobs = self.get_jobs_by_fields(pair)
+                    num_jobs = len(jobs)
+                    if num_jobs > max_secondary_jobs:
+                        max_secondary_jobs = num_jobs
+                        best_secondary_pair = pair
+                        best_secondary_jobs = jobs
+            
+            # Add jobs from best secondary combination
+            for job in best_secondary_jobs:
+                if remaining_slots > 0 and job['job_id'] not in used_job_ids:
+                    description = f"This role combines expertise in {best_secondary_pair[0]} and {best_secondary_pair[1]}"
+                    final_matches.append(JobMatch(
+                        job_id=job['job_id'],
+                        job_title=job['job_title'],
+                        primary_fields=best_secondary_pair,
+                        description=description,
+                        education_level=job['education_level']
+                    ))
+                    used_job_ids.add(job['job_id'])
+                    remaining_slots -= 1
+        
+        return {
+            "most_productive_combinations": [
+                (most_productive_pair, max_jobs),
+                (best_secondary_pair, max_secondary_jobs)
+            ] if most_productive_pair and best_secondary_pair else [],
+            "job_matches": final_matches,
+            "combination_analysis": {
+                most_productive_pair: max_jobs,
+                best_secondary_pair: max_secondary_jobs
+            } if most_productive_pair and best_secondary_pair else {}
+        }
+
+    def close(self):
+        """Close database connection"""
+        self.cursor.close()
+        self.conn.close()
 
 def main():
     try:
-        # Get input data from command line arguments
-        basic_interest_ids = json.loads(sys.argv[1])
-        holland_scores = json.loads(sys.argv[2])
-
-        # Connect to the database
-        connection = get_database_connection()
-
-        # Fetch job requirements that match the basic_interest_ids
-        job_requirements_df = fetch_job_requirements(connection, basic_interest_ids)
-
-        if job_requirements_df.empty:
-            print(json.dumps({"error": "No jobs match the criteria with the given basic interests."}))
-            return
-
-        # Get unique job_info_ids
-        job_info_ids = job_requirements_df['job_info_id'].unique().tolist()
-
-        # Fetch job information for the matched jobs
-        job_info_df = fetch_job_info(connection, job_info_ids)
-
-        # Fetch trait information for the matched jobs
-        trait_info_df = fetch_trait_info(connection, job_info_ids)
+        # Get interest scores from command line argument
+        interest_scores = json.loads(sys.argv[1])
         
-        # Assign the Holland scores to the DataFrame
-        trait_info_df['holland_score'] = trait_info_df['trait_name'].map(holland_scores)
-        
-        # Calculate the composite score for each job
-        highest_trait = max(holland_scores, key=holland_scores.get)
-        trait_info_df['composite_score'] = trait_info_df.apply(
-            lambda row: 0.7 * row['holland_score'] if row['trait_name'] == highest_trait else 0.3 * row['holland_score'],
-            axis=1
-        )
-        
-        # Group by job_id and calculate the total composite score
-        job_scores = trait_info_df.groupby('job_id')['composite_score'].sum().reset_index()
-        
-        # Sort jobs by composite score in descending order and get the top 22 jobs
-        top_jobs = job_scores.nlargest(22, 'composite_score')
-        
-        # Merge job information with top jobs
-        top_job_info = pd.merge(top_jobs, job_info_df, left_on='job_id', right_on='id')
-        
-        # Prepare the output
-        output = []
-        for _, row in top_job_info.iterrows():
-            output.append({
-                "id": int(row['id']),
-                "name": row['name'],
-                "match_percentage": round(row['composite_score'] * 100, 2)
-            })
-        
-        print(json.dumps(output))
+        # Validate interest scores
+        if not all(isinstance(score, int) and 1 <= score <= 5 
+                  for score in interest_scores.values()):
+            raise ValueError("Invalid interest scores. Scores must be integers between 1 and 5")
+        # Get database config from Laravel .env
+        db_config = {
+            'host': os.getenv('DB_HOST', 'localhost'),
+            'user': os.getenv('DB_USERNAME', 'root'), 
+            'password': os.getenv('DB_PASSWORD', ''),
+            'database': os.getenv('DB_DATABASE', 'laravel')
+        }
 
+        matcher = JobMatcher(db_config, interest_scores)
+        results = matcher.find_matching_jobs()
+        
+        # Convert results to JSON-serializable format
+        response = {
+            'job_matches': [match.to_dict() for match in results['job_matches']],
+            'most_productive_combinations': results['most_productive_combinations'],
+            'combination_analysis': {
+                str(k): v for k, v in results['combination_analysis'].items()
+            } if results['combination_analysis'] else {},
+            'total_matches': len(results['job_matches'])
+        }
+        
+        print(json.dumps(response))
+        
     except Exception as e:
-        print(json.dumps({"error": str(e)}))
+        print(json.dumps({
+            'error': str(e)
+        }))
+        sys.exit(1)
     finally:
-        if 'connection' in locals():
-            connection.close()
+        if 'matcher' in locals():
+            matcher.close()
 
 if __name__ == "__main__":
     main()

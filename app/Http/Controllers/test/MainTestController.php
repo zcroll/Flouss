@@ -119,9 +119,21 @@ class MainTestController extends Controller
         Session::put('current_item_index', $currentItemIndex);
 
         $currentItem = $basicInterests[$currentItemIndex];
+ 
 
+       
+        $formattedResponses = [];
+        foreach ($responses as $response) {
+            $category = $response['category'];
+            $answer = $response['answer'];
 
-        ds($responses);
+          $normalizedAnswer = $answer ;
+
+          $formattedResponses[$category] = $normalizedAnswer;
+      }
+
+      ds($formattedResponses);
+
 
         return to_route('main-test');
 
@@ -185,20 +197,18 @@ class MainTestController extends Controller
               $category = $response['category'];
               $answer = $response['answer'];
 
-            $normalizedAnswer = $answer / 5;
+            $normalizedAnswer = $answer ;
 
             $formattedResponses[$category] = $normalizedAnswer;
         }
 
-        // Sort the formatted responses
-        asort($formattedResponses);
         ds($formattedResponses);
 
 
 
         $hollandScores = $this->calculateHollandScores($hollandCodeResponses);
         $archetype =  $this->getArchetypeAndTopScores($hollandScores);
-        $topMatchingJobs = $this->findTopJobs($formattedResponses, 30);
+        $topMatchingJobs = $this->matchJobs($formattedResponses);
 
         ds(['archetype'=>$archetype, 'topMatchingJobs'=>$topMatchingJobs]);
 
@@ -228,83 +238,28 @@ class MainTestController extends Controller
 
     }
 
-    private function findTopJobs(array $userInterestScores, int $topN = 30): array
+
+
+
+    private function matchJobs($interest_scores)
     {
+        $scriptPath = app_path('/python/test.py');
+        $process = new Process(['python3', $scriptPath, json_encode($interest_scores)]);
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            Log::error('Python script execution failed', ['error' => $process->getErrorOutput()]);
+            throw new ProcessFailedException($process);
+        }
+
+        $output = $process->getOutput();
         try {
-            // Determine the top 4 interests based on scores
-            arsort($userInterestScores);
-            $topInterests = array_slice($userInterestScores, 0, 4, true);
-
-            // Assign weights to the top interests
-            $weights = [];
-            $weightValues = [1.0, 0.75, 0.5, 0.25];
-            $index = 0;
-            foreach ($topInterests as $interest => $score) {
-                $weights[$interest] = $weightValues[$index];
-                $index++;
-            }
-
-            // Fetch relevant job requirements from the database
-            $results = DB::table('job_requirement as jr')
-                ->join('job_infos as ji', 'jr.job_id', '=', 'ji.id')
-                ->where('ji.education_level', 'High School')
-                ->whereNotNull('ji.education_level')
-                ->select('ji.name', 'jr.scale_name')
-                ->get();
-
-            $jobScores = [];
-            $jobInterests = [];
-
-            foreach ($results as $row) {
-                $scaleName = $row->scale_name;
-                $jobName = $row->name;
-
-                if (isset($weights[$scaleName])) {
-                    $weight = $weights[$scaleName];
-
-                    if (isset($jobScores[$jobName])) {
-                        $jobScores[$jobName] += $weight;
-                        $jobInterests[$jobName][] = $scaleName;
-                    } else {
-                        $jobScores[$jobName] = $weight;
-                        $jobInterests[$jobName] = [$scaleName];
-                    }
-                }
-            }
-
-            arsort($jobScores);
-
-            $topJobs = array_slice($jobScores, 0, $topN, true);
-
-            // Ensure the first 12 jobs are the closest to the top scores
-            $top12 = array_slice($topJobs, 0, 12, true);
-            $remainingJobs = array_slice($topJobs, 12, null, true);
-
-            $finalJobList = array_keys($top12);
-
-            // Add remaining jobs
-            $finalJobList = array_merge($finalJobList, array_keys($remainingJobs));
-
-            // If less than topN, handle accordingly (optional)
-            if (count($finalJobList) < $topN) {
-                // Fetch additional jobs if needed
-                $additionalJobsNeeded = $topN - count($finalJobList);
-                $additionalJobs = DB::table('job_infos')
-                    ->where('education_level', 'High School')
-                    ->whereNotIn('name', $finalJobList)
-                    ->limit($additionalJobsNeeded)
-                    ->pluck('id')
-                    ->toArray();
-
-                $finalJobList = array_merge($finalJobList, $additionalJobs);
-            }
-
-            return $finalJobList;
-
-        } catch (\Exception $e) {
-            // Log the error for debugging
-            Log::error('Error finding top jobs: ' . $e->getMessage());
-            return [];
+            return json_decode($output, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            Log::error('Failed to decode JSON from Python script', ['error' => $e->getMessage(), 'output' => $output]);
+            throw new \RuntimeException('Failed to process job matching results');
         }
     }
+
+    
 }

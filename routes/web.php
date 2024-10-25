@@ -16,7 +16,7 @@ use App\Http\Controllers\test\TestController_test;
 use Inertia\Inertia;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\test\MainTestController;
-use App\Http\Controllers\Assessment\DataProcessingController;
+
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -112,4 +112,4 @@ Route::post('/test', [TestController_test::class, 'submitAnswer'])->name('test.s
 Route::post('language/', LanguageController::class)->name('language.switch');
 
 
-Route::get('/test-data', [DataProcessingController::class, 'index'])->name('test-data');
+Route::get('/test-data', [JobMatcherController::class, 'matchJobs'])->name('test-data');

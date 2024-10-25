@@ -5,68 +5,95 @@ use App\Http\Controllers\Controller;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 
 class JobMatcherController extends Controller
 {
-    public function matchJobs()
+    public function matchJobs(Request $request)
     {
-        // Define the pool of basic interest IDs
-        $basic_interest_ids_pool = [
-            4295, 4297, 4300, 4301, 4303, 4305, 4307, 4308, 4309, 4310, 4311, 4313, 4314,
-            4316, 4317, 4318, 4319, 4320, 4321, 4323, 4325, 4326, 4327, 4328, 4329,
-            4331, 4332,
+        // // Validate the request
+        // $validated = $request->validate([
+        //     'interest_scores' => 'required|array',
+        //     'interest_scores.*' => 'required|integer|min:1|max:5'
+        // ]);
+
+        // $interest_scores = $validated['interest_scores'];
+
+
+         $interest_scores = [
+            "Finance" => 2,
+            "Athletics" => 2,
+            "Flying" => 4,
+            "Law" => 2,
+            "Healthcare service" => 2,
+            "Physical science" => 1,
+            "Nature and agriculture" => 4,
+            "Professional advising" => 3,
+            "Creative arts" => 2,
+            "Culinary arts" => 4,
+            "Social sciences" => 3,
+            "Beauty & style" => 2,
+            "Working with animals" => 1,
+            "Creative writing & journalism" => 3,
+            "Life science" => 2,
+            "Green industry" => 3,
+            "Politics" => 4,
+            "Engineering" => 4,
+            "Sales" => 2,
+            "Protective services" => 3,
+            "Skilled trades" => 4,
+            "Office clerical work" => 2,
+            "Mathematics" => 5,
+            "Military" => 3,
+            "Information technology" => 5,
+            "Music" => 2
         ];
-
-        // Randomly select three keys from the pool
-        $random_keys = array_rand($basic_interest_ids_pool, 3);
-
-        // Extract the actual basic_interest_ids using the random keys
-        $basic_interest_ids = [
-            $basic_interest_ids_pool[$random_keys[0]],
-            $basic_interest_ids_pool[$random_keys[1]],
-            $basic_interest_ids_pool[$random_keys[2]],
-        ];
-        $holland_scores = [
-            'Realistic' => round(mt_rand() / mt_getrandmax(), 2),
-            'Investigative' => round(mt_rand() / mt_getrandmax(), 2),
-            'Artistic' => round(mt_rand() / mt_getrandmax(), 2),
-            'Social' => round(mt_rand() / mt_getrandmax(), 2),
-            'Enterprising' => round(mt_rand() / mt_getrandmax(), 2),
-            'Conventional' => round(mt_rand() / mt_getrandmax(), 2),
-        ];
-
-        ds(['holland_scores' => $holland_scores]);
-
-        // Assign scores based on holland_scores to traits
-        $scores = $holland_scores;
 
         $scriptPath = app_path('/python/test.py');
 
-        // Pass basic_interest_ids and scores to the Python script
+        // Pass interest_scores to the Python script
         $process = new Process([
             'python3',
             $scriptPath,
-            json_encode($basic_interest_ids),
-            json_encode($scores)
+            json_encode($interest_scores),
         ]);
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            Log::error('Python script execution failed', [
-                'error' => $process->getErrorOutput(),
-                'command' => $process->getCommandLine(),
-                'working_directory' => $process->getWorkingDirectory(),
-            ]);
-            throw new ProcessFailedException($process);
-        }
-
-        $output = $process->getOutput();
         
-        // Log the output of the Python script
-        Log::info('Python script output', ['output' => $output]);
+        try {
+            $process->run();
 
-        $decodedOutput = json_decode($output, true);
+            if (!$process->isSuccessful()) {
+                Log::error('Python script execution failed', [
+                    'error' => $process->getErrorOutput(),
+                    'command' => $process->getCommandLine(),
+                    'working_directory' => $process->getWorkingDirectory(),
+                ]);
+                throw new ProcessFailedException($process);
+            }
 
-        return response()->json($decodedOutput);
+            $output = $process->getOutput();
+            Log::info('Python script output', ['output' => $output]);
+
+            $decodedOutput = json_decode($output, true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new \Exception('Failed to decode Python script output');
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $decodedOutput
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Job matching failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to process job matching'
+            ], 500);
+        }
     }
 }
