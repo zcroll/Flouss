@@ -1,8 +1,7 @@
 <template>
-        <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css">
-        
-        <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/assessments.ba16abcb0f5b.css">
-    
+
+        <link rel="stylesheet" href="/css/assessment.css">
+
   <section class="Roadmap" data-testid="roadmap">
     <div class="assessment-with-progress">
       <SidebarMainTest />
@@ -84,8 +83,8 @@ export default {
       itemId: props.currentItem.id,
       type: 'answered',
       answer: null,
-      category: props.testStage === 'holland_codes' 
-        ? props.hollandCodeData[props.currentSetIndex].title 
+      category: props.testStage === 'holland_codes'
+        ? props.hollandCodeData[props.currentSetIndex].title
         : props.currentItem.category,
       testStage: props.testStage,
     });
@@ -111,8 +110,8 @@ export default {
     };
 
     const submitAnswer = () => {
-      const routeName = props.testStage === 'holland_codes' 
-        ? 'store-holland-code-response' 
+      const routeName = props.testStage === 'holland_codes'
+        ? 'store-holland-code-response'
         : 'store-basic-interest-response';
 
       router.post(route(routeName), form, {
