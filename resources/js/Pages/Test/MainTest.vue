@@ -1,10 +1,11 @@
 <template>
+        <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css">
 
-        <link rel="stylesheet" href="/css/assessment.css">
+        <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/assessments.ba16abcb0f5b.css">
 
   <section class="Roadmap" data-testid="roadmap">
     <div class="assessment-with-progress">
-      <SidebarMainTest />
+      <SidebarMainTest :progress="progress" :testStage="testStage" />
       <div class="assessment Roadmap__inner">
         <form class="Assessment" tabindex="-1" data-testid="assessment-test" @submit.prevent="submitAnswer">
           <div class="Assessment__ItemSetLeadIn Assessment__ItemSetLeadIn--spacer" aria-hidden="true"></div>
@@ -58,7 +59,7 @@
 </template>
 
 <script>
-import { ref, computed, watch } from 'vue';
+import {  computed, watch } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import SidebarMainTest from "@/Pages/Test/SidebarMainTest.vue";
 import { router } from '@inertiajs/vue3';
@@ -77,6 +78,7 @@ export default {
     message: String,
     responseCount: Number,
     testStage: String,
+    progress: Number,
   },
   setup(props, { emit }) {
     const form = useForm({
@@ -153,6 +155,10 @@ export default {
         ? props.hollandCodeData[props.currentSetIndex].title
         : newItem.category;
       form.testStage = props.testStage;
+    });
+
+    watch(() => props.progress, (newProgress) => {
+      console.log('Progress updated:', newProgress);
     });
 
     return {

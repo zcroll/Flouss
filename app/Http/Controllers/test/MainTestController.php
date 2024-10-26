@@ -55,6 +55,8 @@ class MainTestController extends Controller
             ? $hollandCodeSets[$currentSetIndex]['items'][$currentItemIndex]
             : $basicInterests[$currentItemIndex];
 
+        $progress = $this->calculateProgress($testStage, $currentSetIndex, $currentItemIndex, $hollandCodeSets, $basicInterests);
+
         return Inertia::render('Test/MainTest', [
             'hollandCodeData' => $hollandCodeSets,
             'basicInterests' => $basicInterests,
@@ -65,6 +67,7 @@ class MainTestController extends Controller
             'totalItems' => $testStage === 'holland_codes' ? count($hollandCodeSets[$currentSetIndex]['items']) : count($basicInterests),
             'responses' => $responses,
             'testStage' => $testStage,
+            'progress' => $progress,
         ]);
     }
 
@@ -261,5 +264,28 @@ class MainTestController extends Controller
         }
     }
 
-    
+    private function calculateProgress($testStage, $currentSetIndex, $currentItemIndex, $hollandCodeSets, $basicInterests)
+    {
+        $totalHollandCodeItems = array_sum(array_map(function ($set) {
+            return count($set['items']);
+        }, $hollandCodeSets));
+
+        $totalBasicInterestItems = count($basicInterests);
+
+        $completedHollandCodeItems = 0;
+        for ($i = 0; $i < $currentSetIndex; $i++) {
+            $completedHollandCodeItems += count($hollandCodeSets[$i]['items']);
+        }
+        $completedHollandCodeItems += $currentItemIndex;
+
+        if ($testStage === 'holland_codes') {
+            $progress = round(($completedHollandCodeItems / $totalHollandCodeItems) * 100);
+        } else {
+            $completedBasicInterestItems = $currentItemIndex;
+            $progress = round((($totalHollandCodeItems + $completedBasicInterestItems) / ($totalHollandCodeItems + $totalBasicInterestItems)) * 100);
+        }
+
+        return $progress;
+    }
+
 }
