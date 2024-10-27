@@ -2,7 +2,7 @@
     <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css">
 
     <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/user-results.3aa4bb301b9f.css">
-    <app-layout  preserveScroll>
+    <!-- <app-layout  preserveScroll> -->
         <div class="DashboardPage">
                 <section class="section">
 
@@ -80,8 +80,9 @@
                         />
                 </div>
             </div>
+            <DataShare />
         </div>
-    </app-layout>
+    <!-- </app-layout> -->
 </template>
 
 <script>
@@ -92,6 +93,7 @@ import UpNext from "@/Components/UpNext.vue";
 import Archetype from "@/Components/Archetype.vue";
 import Model from "@/Components/Result/Model.vue";
 import Folder from "@/Components/Result/Folder.vue";
+import DataShare from "@/Components/Result/DataShare.vue";
 import __ from '@/lang';
 
 export default defineComponent({
@@ -102,6 +104,7 @@ export default defineComponent({
         Link,
         Model,
         Folder,
+        DataShare,
     },
     props: {
         scores: {
@@ -181,17 +184,5 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-body {
-    font-family: "Inter", sans-serif;
-}
 
-h1, h2, h3 {
-    font-family: "Poppins", sans-serif;
-}
 
-p {
-    font-family: "Inter", sans-serif;
-}
-
-</style>

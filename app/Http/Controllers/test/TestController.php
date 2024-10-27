@@ -1,183 +1,215 @@
 <?php
+
 namespace App\Http\Controllers\test;
 
 use App\Http\Controllers\Controller;
-use App\Models\Question;
-use App\Models\Result;
-use App\Traits\ArchetypeFinder;
-use App\Traits\CalculatesScores;
+use App\Http\Resources\Test\ItemSetResource;
+use App\Models\ItemSet;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\DB;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\Process;
-use Illuminate\Support\Facades\Session;
 
 class TestController extends Controller
 {
-    use CalculatesScores, ArchetypeFinder;
+    private $testSteps = [
+        1 => [
+            'id' => 1,
+            'title' => 'Personality Archetype',
+            'time' => 10,
+            'description' => ['Discover your personality type and work preferences'],
+            'route' => 'personality-archetype'
+        ],
+        2 => [
+            'id' => 2, 
+            'title' => 'Career Matches',
+            'time' => 5,
+            'description' => ['See which careers match your personality'],
+            'route' => 'career-matches'
+        ],
+        11 => [
+            'id' => 11,
+            'title' => 'Degree Matches',
+            'time' => 5,
+            'description' => ['Find degrees that align with your career goals'],
+            'route' => 'degree-matches'
+        ],
+        10 => [
+            'id' => 10,
+            'title' => 'Final Results',
+            'time' => 5,
+            'description' => ['Review your complete assessment results'],
+            'route' => 'final-results'
+        ]
+    ];
 
     public function index()
     {
-        $activities = Session::get('activities');
-        $currentIndex = Session::get('current_index', 0);
-        $responses = Session::get('responses', []);
+        $steps = collect($this->testSteps)->map(function($step) {
+            return array_merge($step, [
+                'status' => $this->getStepStatus($step['id']),
+                'progress' => $this->calculateProgress($step['id'])
+            ]);
+        });
 
-        // Check if the user already has a result
-        $userId = auth()->id();
-        $existingResult = Result::where('user_id', $userId)->first();
+        return Inertia::render('Test/MainTest', [
+            'steps' => $steps,
+            'currentStep' => $this->getCurrentStep(),
+            'totalTime' => $steps->sum('time'),
+        ]);
+    }
+    public function personalityArchetype()
+    {
+        $itemSet = ItemSet::with(['items.optionSet.options'])
+            ->where('id', 1)
+            ->firstOrFail();
 
-        if ($existingResult) {
-            return to_route('dashboard');
-        }
 
-        if (!$activities) {
-            $activities = $this->initializeActivities();
-            Session::put('activities', $activities);
-        }
+        return $itemSet;
 
-        if ($currentIndex >= count($activities)) {
-            return $this->processResults($responses);
-        }
+      
+    }
 
-        $formattedActivities = array_map(function ($activity) {
-            return [
-                'id' => $activity['id'],
-                'name' => $activity['name'],
-                'category' => $activity['category'],
-            ];
-        }, $activities);
-
-        ds(['activities' => $formattedActivities]);
-
-        return Inertia::render('Test/ActivityProgress', [
-            'activities' => $formattedActivities,
-            'totalQuestions' => count($activities),
-            'currentIndex' => $currentIndex,
+    public function careerMatches()
+    {
+        return Inertia::render('Test/MainTest', [
+            'testStage' => 'career_matches',
+            'progress' => $this->calculateProgress(2)
         ]);
     }
 
-    public function submitAnswer(Request $request)
+    public function degreeMatches()
     {
-        $responses = $request->input('responses');
-        
-        $formattedResponses = [];
-        foreach ($responses as $response) {
-            if (!isset($formattedResponses[$response['category']])) {
-                $formattedResponses[$response['category']] = [
-                    'score' => 0,
-                    'responses' => []
-                ];
+        return Inertia::render('Test/MainTest', [
+            'testStage' => 'degree_matches', 
+            'progress' => $this->calculateProgress(11)
+        ]);
+    }
+
+    public function finalResults()
+    {
+        return Inertia::render('Test/MainTest', [
+            'testStage' => 'final_results',
+            'progress' => $this->calculateProgress(10)
+        ]);
+    }
+
+    private function getStepStatus($stepId)
+    {
+        $completedSteps = session('completed_steps', []);
+        $currentStep = session('current_step', 1);
+
+        if (in_array($stepId, $completedSteps)) {
+            return 'completed';
+        }
+
+        if ($stepId === $currentStep) {
+            return 'inprogress';
+        }
+
+        return 'notstarted';
+    }
+
+    private function calculateProgress($stepId)
+    {
+        $progress = session("step_{$stepId}_progress", 0.0);
+        return (float) $progress;
+    }
+
+    private function getCurrentStep()
+    {
+        return session('current_step', 1);
+    }
+
+    public function updateProgress(Request $request)
+    {
+        $validated = $request->validate([
+            'step_id' => 'required|integer',
+            'progress' => 'required|numeric|min:0|max:100',
+        ]);
+
+        $stepId = $validated['step_id'];
+        $progress = $validated['progress'];
+
+        // Store progress in session
+        session(["step_{$stepId}_progress" => $progress]);
+
+        if ($progress >= 100) {
+            $completedSteps = session('completed_steps', []);
+            $completedSteps[] = $stepId;
+            session(['completed_steps' => array_unique($completedSteps)]);
+
+            // Move to next step
+            $nextStep = $this->getNextStep($stepId);
+            if ($nextStep) {
+                session(['current_step' => $nextStep]);
             }
-            $formattedResponses[$response['category']]['score'] += $response['score'] / 100;
-            $formattedResponses[$response['category']]['responses'][] = [
-                'id' => $response['id'],
-                'score' => $response['score'] 
-            ];
         }
 
-        ds(['formattedResponses' => $formattedResponses]);
-
-        $result = $this->processResults($formattedResponses);
-
-        return to_route('results')->with('closestJobs', $result);
-
+       return to_route('test.index');
     }
 
-    
-    private function processResults($groupedResponses)
+    private function getNextStep($currentStepId)
     {
-        $hollandScores = $this->calculateHollandScores($groupedResponses);
-        $archetype = $this->getArchetypeAndTopScores($hollandScores);
-        // $closestJobs = $this->matchJobs($hollandScores);
-        $closestJobs = [];
-        $result = $this->saveResult($closestJobs, $hollandScores, $archetype);
-
-        return $result;
-    }
-
-    private function matchJobs($hollandScores)
-    {
-        $scriptPath = app_path('/python/test.py');
-        $process = new Process(['python3', $scriptPath, json_encode($hollandScores)]);
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            Log::error('Python script execution failed', ['error' => $process->getErrorOutput()]);
-            throw new ProcessFailedException($process);
+        $stepSequence = array_keys($this->testSteps);
+        $currentIndex = array_search($currentStepId, $stepSequence);
+        
+        if ($currentIndex !== false && isset($stepSequence[$currentIndex + 1])) {
+            return $stepSequence[$currentIndex + 1];
         }
 
-        $output = $process->getOutput();
-        try {
-            return json_decode($output, true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
-            Log::error('Failed to decode JSON from Python script', ['error' => $e->getMessage(), 'output' => $output]);
-            throw new \RuntimeException('Failed to process job matching results');
-        }
+        return null;
     }
 
-    private function saveResult($closestJobs, $scores, $archetype)
+    public function storeAnswer(Request $request)
     {
-        try {
-            return Result::create([
-                'user_id' => auth()->id(),
-                'scores' => json_encode($scores, JSON_THROW_ON_ERROR),
-                'jobs' => json_encode($closestJobs, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT),
-                'highestTwoScores' => $archetype['topTraits'],
-                'Archetype' => $archetype['archetypes'],
-            ]);
-        } catch (\JsonException $e) {
-            Log::error('Failed to encode scores or jobs for database storage', ['error' => $e->getMessage()]);
-            throw new \RuntimeException('Failed to save assessment results');
-        }
-    }
+        $validated = $request->validate([
+            'itemId' => 'required|integer',
+            'type' => 'required|string|in:answered,skipped',
+            'answer' => 'nullable|numeric',
+            'testStage' => 'required|string'
+        ]);
 
-    private function initializeActivities(): array
-    {
-        return $this->fetchActivitiesByType('holland_codes');
-    }
-
-    private function fetchActivitiesByType(string $type): array
-    {
-        $activities = Question::where('type', $type)->get();
-
-        return $activities->map(function ($activity) {
-            return [
-                'category' => $activity->trait_category,
-                'id' => $activity->id,
-                'type' => $activity->type,
-                'name' => $activity->question_text
-            ];
-        })->toArray();
-    }
-
-    private function groupResponsesByType($responses)
-    {
-        $groupedResponses = [];
-        foreach ($responses as $type => $responseData) {
-            $groupedResponses[$type] = $responseData['responses'];
-        }
-        return $groupedResponses;
-    }
-
-    private function calculateHollandScores($groupedResponses)
-    {
-        $scores = [
-            'Realistic' => 0,
-            'Investigative' => 0,
-            'Artistic' => 0,
-            'Social' => 0,
-            'Enterprising' => 0,
-            'Conventional' => 0
+        // Get existing answers from session or initialize empty array
+        $answers = session()->get('test_answers', []);
+        
+        $answers[$validated['itemId']] = [
+            'type' => $validated['type'],
+            'answer' => $validated['answer'],
+            'timestamp' => now()->timestamp
         ];
 
-        foreach ($groupedResponses as $type => $responseData) {
-            $scores[$type] = $responseData['score'];
+        // Store answers back in session
+        session()->put('test_answers', $answers);
+
+        // Calculate progress
+        $itemSet = ItemSet::with(['items'])->where('id', 1)->first();
+        $totalItems = $itemSet->items->count();
+        $answeredItems = count($answers);
+        $progress = ($answeredItems / $totalItems) * 100;
+
+        // Update progress in session
+        session(["step_1_progress" => $progress]);
+
+        // Get next unanswered question
+        $nextItem = $itemSet->items()
+            ->whereNotIn('id', array_keys($answers))
+            ->first();
+
+        if ($nextItem) {
+            return response()->json([
+                'success' => true,
+                'nextItem' => $nextItem->load('optionSet.options'),
+                'progress' => $progress
+            ]);
         }
 
-        Log::info('Calculated Holland Scores:', ['scores' => $scores]);
+        // If no more questions, mark step as completed
+        if ($progress >= 100) {
+            $completedSteps = session('completed_steps', []);
+            $completedSteps[] = 1; // 1 is the ID for personality archetype step
+            session(['completed_steps' => array_unique($completedSteps)]);
+            session(['current_step' => 2]); // Move to next step
+        }
 
-        return $scores;
+      return to_route('test.index');
     }
 }

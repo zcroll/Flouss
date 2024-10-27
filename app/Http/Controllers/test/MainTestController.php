@@ -47,6 +47,10 @@ class MainTestController extends Controller
             Session::put('current_item_index', $currentItemIndex);
         }
 
+        if ($testStage === 'basic_interests' && $currentItemIndex < count($basicInterests)) {
+            Session::put('show_welcome_back', true);
+        }
+
         if ($testStage === 'basic_interests' && $currentItemIndex >= count($basicInterests)) {
             return $this->processResults($responses);
         }
@@ -271,21 +275,87 @@ class MainTestController extends Controller
         }, $hollandCodeSets));
 
         $totalBasicInterestItems = count($basicInterests);
+        $totalItems = $totalHollandCodeItems + $totalBasicInterestItems;
 
+        // Calculate completed Holland Code items
         $completedHollandCodeItems = 0;
-        for ($i = 0; $i < $currentSetIndex; $i++) {
-            $completedHollandCodeItems += count($hollandCodeSets[$i]['items']);
-        }
-        $completedHollandCodeItems += $currentItemIndex;
-
         if ($testStage === 'holland_codes') {
-            $progress = round(($completedHollandCodeItems / $totalHollandCodeItems) * 100);
+            // For holland_codes, only count up to current position
+            for ($i = 0; $i < $currentSetIndex; $i++) {
+                $completedHollandCodeItems += count($hollandCodeSets[$i]['items']);
+            }
+            $completedHollandCodeItems += $currentItemIndex;
         } else {
-            $completedBasicInterestItems = $currentItemIndex;
-            $progress = round((($totalHollandCodeItems + $completedBasicInterestItems) / ($totalHollandCodeItems + $totalBasicInterestItems)) * 100);
+            // If we're in basic_interests, count all holland code items
+            $completedHollandCodeItems = $totalHollandCodeItems;
         }
 
-        return $progress;
+        // Calculate completed Basic Interest items
+        $completedBasicInterestItems = 0;
+        if ($testStage === 'basic_interests') {
+            $completedBasicInterestItems = $currentItemIndex;
+        }
+
+        // Calculate total completed items
+        $totalCompletedItems = $completedHollandCodeItems + $completedBasicInterestItems;
+
+        // Calculate progress percentage
+        $progress = round(($totalCompletedItems / $totalItems) * 100);
+
+        // Ensure progress stays within 0-100 range
+        return max(0, min(100, $progress));
     }
 
+    // Add this new method to handle going back
+    public function goBack()
+    {
+        $currentSetIndex = Session::get('current_set_index', 0);
+        $currentItemIndex = Session::get('current_item_index', 0);
+        $testStage = Session::get('test_stage', 'holland_codes');
+        
+        // If we're at the start of basic interests, go back to holland codes
+        if ($testStage === 'basic_interests' && $currentItemIndex === 0) {
+            $testStage = 'holland_codes';
+            $hollandCodeSets = Session::get('holland_code_sets');
+            $currentSetIndex = count($hollandCodeSets) - 1;
+            $currentItemIndex = count($hollandCodeSets[$currentSetIndex]['items']) - 1;
+            
+            // Remove the last basic interest response
+            $responses = Session::get('basic_interest_responses', []);
+            array_pop($responses);
+            Session::put('basic_interest_responses', $responses);
+        }
+        // If we're in basic interests
+        else if ($testStage === 'basic_interests') {
+            $currentItemIndex--;
+            
+            // Remove the last response
+            $responses = Session::get('basic_interest_responses', []);
+            array_pop($responses);
+            Session::put('basic_interest_responses', $responses);
+        }
+        // If we're in holland codes
+        else {
+            if ($currentItemIndex === 0) {
+                if ($currentSetIndex > 0) {
+                    $currentSetIndex--;
+                    $hollandCodeSets = Session::get('holland_code_sets');
+                    $currentItemIndex = count($hollandCodeSets[$currentSetIndex]['items']) - 1;
+                }
+            } else {
+                $currentItemIndex--;
+            }
+            
+            // Remove the last response
+            $responses = Session::get('holland_code_responses', []);
+            array_pop($responses);
+            Session::put('holland_code_responses', $responses);
+        }
+        
+        Session::put('test_stage', $testStage);
+        Session::put('current_set_index', $currentSetIndex);
+        Session::put('current_item_index', $currentItemIndex);
+        
+        return to_route('main-test');
+    }
 }

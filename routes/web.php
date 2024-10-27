@@ -16,6 +16,8 @@ use App\Http\Controllers\test\TestController_test;
 use Inertia\Inertia;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\test\MainTestController;
+use App\Http\Controllers\test\TestController;
+use App\Http\Controllers\test\WelcomeBackController;
 
 
 Route::get('/', function () {
@@ -67,6 +69,7 @@ Route::middleware([
         Route::get('/main-test', [MainTestController::class, 'index'])->name('main-test');
         Route::post('/main-test/store-holland-code', [MainTestController::class, 'storeHollandCodeResponse'])->name('store-holland-code-response');
         Route::post('/main-test/store-basic-interest', [MainTestController::class, 'storeBasicInterestResponse'])->name('store-basic-interest-response');
+        Route::post('/test/go-back', [MainTestController::class, 'goBack'])->name('test.go-back');
 
         Route::get('/degree/{degreeSlug}', [DegreeController::class, 'index'])->name('degree.index');
 
@@ -84,8 +87,7 @@ Route::middleware([
         Route::get('/jobs', [JobFilterController::class, 'index'])->name('jobs.index');
 
 
-    });
-});
+    });});
 
 
 
@@ -106,10 +108,31 @@ Route::get('/test-preview', function () {
     return Inertia::render('Test/TestPreview2');
 })->name('test-preview');
 
-Route::get('/test', [TestController_test::class, 'index'])->name('test');
-Route::post('/test', [TestController_test::class, 'submitAnswer'])->name('test.submit-answer');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/test', [TestController::class, 'index'])->name('test.index');
+    Route::post('/test/progress', [TestController::class, 'updateProgress'])->name('test.progress');
+});
 
 Route::post('language/', LanguageController::class)->name('language.switch');
 
 
 Route::get('/test-data', [JobMatcherController::class, 'matchJobs'])->name('test-data');
+
+
+
+Route::get('/test', [TestController::class, 'index'])->name('test.index');
+
+Route::get('/personality-archetype', [TestController::class, 'personalityArchetype'])->name('personality-archetype');
+Route::get('/career-matches', [TestController::class, 'careerMatches']);
+Route::get('/degree-matches', [TestController::class, 'degreeMatches']);
+Route::get('/final-results', [TestController::class, 'finalResults']);
+Route::post('/store-answer', [TestController::class, 'storeAnswer'])->name('store-answer');
+
+
+
+Route::get('/testt', function () {
+    return Inertia::render('Result/Test');
+})->name('testt');
+
+Route::get('/welcome-back/show', [WelcomeBackController::class, 'showWelcomeBack'])->name('welcome-back.show');
+Route::post('/welcome-back/set-shown', [WelcomeBackController::class, 'setWelcomeBackShown'])->name('welcome-back.set-shown');

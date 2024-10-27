@@ -1,9 +1,9 @@
 <template>
-    <link
+    <!-- <link
         rel="stylesheet"
         media="all"
         href="/css/landingPage/index.css"
-    />
+    /> -->
 
     <header class="relative overflow-x-auto min-h-[200px]">
         <div class="header-content mt-20 mb-1">
@@ -21,11 +21,7 @@
                         </p>
                     </div>
                     <div class="w-full lg:w-1/4 text-right">
-                        <!-- <p class="text-xs text-white/50 font-sofia-pro-regular mb-4 hidden lg:block">
-                            <span class="inline-block w-4 h-4 bg-[url('https://cdn3.careerhunter.io/assets/sprites/small_icons_01-6bcc3606a70b883b3aac6954e60c3487e99faacba6fa7fa27f577aa7cfc7cfb0.svg')] bg-[-502px_-14px] mr-1.5 -mb-0.5"></span>
-                            <span class="font-sofia-pro-bold">1 of 6 tests complete.</span>
-                            Finish all to reveal your career matches.
-                        </p> -->
+                 
                     </div>
                 </div>
 
