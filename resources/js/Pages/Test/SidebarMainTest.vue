@@ -15,13 +15,13 @@
               :status="milestones[0]?.status || 'not-started'" 
               :title="milestones[0]?.name || 'Your personality archetype'" 
               :time="milestones[0]?.time || '~ 3 mins'"
-              :progress="milestones[0]?.progress || 0" 
+              :progress="progress.hollandCode" 
             />
             <Milestone 
               :status="milestones[1]?.status || 'not-started'" 
               :title="milestones[1]?.name || 'Your career matches'" 
               :time="milestones[1]?.time || '~ 3 mins'"
-              :progress="milestones[1]?.progress || 0"
+              :progress="progress.basicInterest"
             />
             <Milestone 
               :status="milestones[2]?.status || 'not-started'" 
@@ -81,7 +81,7 @@ export default {
     MinimizedProgress,
   },
   props: {
-    progress: Number,
+    progress: Object,
     testStage: String,
   },
   setup(props) {
@@ -129,14 +129,13 @@ export default {
           time: '~ 3 mins',
           status: props.testStage === 'basic_interests' ? 'complete' : 
                  props.testStage === 'holland_codes' ? 'in-progress' : 'not-started',
-          progress: props.testStage === 'holland_codes' ? props.progress : 
-                   props.testStage === 'basic_interests' ? 100 : 0,
+          progress: props.progress.hollandCode,
         },
         {
           name: 'Your career matches',
           time: '~ 3 mins',
           status: props.testStage === 'basic_interests' ? 'in-progress' : 'not-started',
-          progress: props.testStage === 'basic_interests' ? props.progress : 0,
+          progress: props.progress.basicInterest,
         },
         {
           name: 'Your degree matches',

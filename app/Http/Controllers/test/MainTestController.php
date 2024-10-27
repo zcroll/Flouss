@@ -59,7 +59,22 @@ class MainTestController extends Controller
             ? $hollandCodeSets[$currentSetIndex]['items'][$currentItemIndex]
             : $basicInterests[$currentItemIndex];
 
-        $progress = $this->calculateProgress($testStage, $currentSetIndex, $currentItemIndex, $hollandCodeSets, $basicInterests);
+        $hollandCodeResponses = Session::get('holland_code_responses', []);
+        $basicInterestResponses = Session::get('basic_interest_responses', []);
+
+        $totalHollandCodeItems = array_sum(array_map(function ($set) {
+            return count($set['items']);
+        }, $hollandCodeSets));
+        
+        $totalBasicInterestItems = count($basicInterests);
+        
+        $hollandCodeProgress = count($hollandCodeResponses) / $totalHollandCodeItems * 100;
+        $basicInterestProgress = count($basicInterestResponses) / $totalBasicInterestItems * 100;
+        
+        $progress = [
+            'hollandCode' => round($hollandCodeProgress),
+            'basicInterest' => round($basicInterestProgress),
+        ];
 
         return Inertia::render('Test/MainTest', [
             'hollandCodeData' => $hollandCodeSets,
