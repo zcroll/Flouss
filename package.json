@@ -25,6 +25,7 @@
         "@fortawesome/vue-fontawesome": "^3.0.8",
         "@headlessui/vue": "^1.7.23",
         "@heroicons/vue": "^2.1.5",
+        "@lottiefiles/lottie-player": "^2.0.4",
         "@mdi/js": "^7.4.47",
         "@vue/server-renderer": "^3.5.9",
         "chart.js": "^4.4.4",

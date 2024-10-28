@@ -136,3 +136,13 @@ Route::get('/testt', function () {
 
 Route::get('/welcome-back/show', [WelcomeBackController::class, 'showWelcomeBack'])->name('welcome-back.show');
 Route::post('/welcome-back/set-shown', [WelcomeBackController::class, 'setWelcomeBackShown'])->name('welcome-back.set-shown');
+
+
+
+Route::get('/im', function () {
+  return Inertia::render('im');
+})->name('im');
+
+Route::get('/career-test', function () {
+  return Inertia::render('Career-Test');
+});
