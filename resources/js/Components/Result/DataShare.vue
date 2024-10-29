@@ -1,5 +1,5 @@
 <template>
-  <div class="DashboardPage__sharing">
+  <div class="DashboardPage__sharing ">
     <div class="DashboardPage__sharing__wrap">
       <h2 class="DashboardPage__sharing__title">
         Share your results<br />with #discoverYou

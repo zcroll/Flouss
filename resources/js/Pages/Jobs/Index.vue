@@ -1,24 +1,22 @@
-<style src="public/css/vueMultiselect.css"></style>
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>
+
 <template>
+      <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/listings-page.c5491ea6c00f.css">
   <AppLayout
+
+
     :head-title="__('jobs.head_title')"
     :head-sub-title="__('jobs.head_subtitle')"
     :show-search="true"
     name="Jobs"
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <div class="breadcrumbs-nav breadcrumbs-nav--tests">
-                  <Link :href="route('jobs.index')">{{ __('navigation.jobs') }}</Link>
-                  <div class="small-icon arrow-breadcrumbs"></div>
-                  <span>List</span>
-                  <div class="small-icon arrow-breadcrumbs"></div>
-                  <span>Page {{ jobs.meta.current_page }}</span>
-        </div>
+      
 
       <div class="flex flex-col lg:flex-row gap-6">
         <!-- Filter sidebar -->
         <div class="w-full lg:w-1/4">
-          <div class="bg-transparent shadow-sm  p-4  ">
+          <div class="bg-transparent shadow-sm p-4">
             <h2 class="text-lg font-semibold text-gray-100 mb-3">{{ __('jobs.filters') }}</h2>
 
             <div class="mb-3">
@@ -50,7 +48,7 @@
             <div class="mb-3">
               <label class="block text-sm font-medium text-gray-100 mb-1">{{ __('jobs.sort_by') }}</label>
               <select
-                :v-model="selectedSort"
+                v-model="selectedSort"
                 class="w-full px-3 py-1.5 text-gray-400 text-sm border bg-gray-800 rounded-md shadow-sm border-[#fb6303]"
                 @change="applyFilters"
               >
@@ -71,18 +69,16 @@
 
         <!-- Main content -->
         <div class="w-full lg:w-4/4">
-          <div v-if="jobs.data.length > 0" class="space-y-3">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
-                <div v-for="job in jobs.data" :key="job.id" class="bg-white shadow-sm rounded-xl overflow-hidden transition-all duration-300 hover:shadow-md border border-gray-200">
-                  <Link :href="`/career/${job.slug}`" class="block">
-                    <div class="flex flex-col h-full">
-                      <div class="flex justify-center pt-4">
-                        <img :src="job.image" :alt="job.name" class="w-20 h-20 object-cover rounded-full ">
-                      </div>
-                      <div class="p-4 flex-grow">
-                        <h2 class="text-lg font-semibold text-gray-800 mb-2 text-center">{{ job.name }}</h2>
-                        <div class="flex justify-center mb-2">
+          <div class="Listings__Results" role="feed" aria-busy="false" aria-live="assertive" aria-atomic="true">
+            <div class="Listings__Results__section">
+              <div v-if="jobs.data.length > 0">
+                <article v-for="(job, index) in jobs.data" :key="job.id" :aria-setsize="jobs.meta.total" :aria-posinset="index + 1">
+                  <div class="Box Listings__ResultItem Listings__ResultItem--has-thumbnail Listings__ResultItemCareer">
+                    <img :src="job.image" :alt="`image for ${job.name}`" class="w-20 h-20 object-cover rounded-full">
+                    <div class="Listings__ResultItem__main">
+                      <h3>{{ job.name }}</h3>
+                      <div class="stars">
+                        <div class="Stars" :aria-label="`${job.rating} out of 5`">
                           <template v-for="star in 5" :key="star">
                             <svg
                               :class="star <= job.rating ? 'text-yellow-400' : 'text-gray-300'"
@@ -95,37 +91,52 @@
                             </svg>
                           </template>
                         </div>
-                        <p class="text-sm text-center">
-                          <span class="pr-3 text-sm text-sky-800 font-medium blur-sm">hidden</span>MAD
-                        </p>
                       </div>
                     </div>
-                  </Link>
-                </div>
+                    <div class="Listings__ResultItem__stat">
+                      <h4>Salary:</h4>
+                      <p>
+                        <span class="pr-3 text-sm text-sky-800 font-medium blur-sm">hidden</span>MAD
+                      </p>
+                    </div>
+                    <div class="Listings__ResultItem__icon">
+                      <svg aria-hidden="true" focusable="false" data-prefix="fal" data-icon="chevron-right" class="svg-inline--fa fa-chevron-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                        <path fill="currentColor" d="M85.14 475.8c-3.438-3.141-5.156-7.438-5.156-11.75c0-3.891 1.406-7.781 4.25-10.86l181.1-197.1L84.23 58.86c-6-6.5-5.625-16.64 .9062-22.61c6.5-6 16.59-5.594 22.59 .8906l192 208c5.688 6.156 5.688 15.56 0 21.72l-192 208C101.7 481.3 91.64 481.8 85.14 475.8z"></path>
+                      </svg>
+                    </div>
+                    <Link :href="`/career/${job.slug}`" class="Listings__ResultItem__link-overlay">
+                      <span class="sr-only">{{ job.name }}</span>
+                    </Link>
+                  </div>
+                </article>
+              </div>
+              <div v-else class="text-center py-8">
+                <p class="text-lg text-gray-600 mb-4">{{ __('jobs.no_jobs_found') }}</p>
+                <button
+                  @click="resetFilters"
+                  class="px-4 py-2 bg-[#4db554] text-white rounded-md hover:bg-gray-700 transition-colors duration-300"
+                >
+                  {{ __('jobs.reset_filters') }}
+                </button>
               </div>
             </div>
           </div>
-          <div v-else class="text-center py-8">
-            <p class="text-lg text-gray-600 mb-4">{{ __('jobs.no_jobs_found') }}</p>
-            <button
-              @click="resetFilters"
-              class="px-4 py-2 bg-[#4db554] text-white rounded-md hover:bg-gray-700 transition-colors duration-300"
-            >
-              {{ __('jobs.reset_filters') }}
-            </button>
-          </div>
 
-          <div v-if="jobs.data.length > 0" class="mt-6">
-            <Pagination
-              :links="jobs.links"
-              :meta="{
-                current_page: jobs.meta.current_page,
-                from: jobs.meta.from,
-                to: jobs.meta.to,
-                total: jobs.meta.total
-              }"
-            />
-          </div>
+          <WhenVisible
+            :once="false"
+            :params="{
+              data: {
+                page: page + 1,
+                ...props.filters,
+              },
+              only: ['jobs'],
+              preserveUrl: true,
+            }"
+          >
+            <div class="mt-6 text-center">
+              <span class="text-gray-500">{{ __('jobs.loading') }}...</span>
+            </div>
+          </WhenVisible>
         </div>
       </div>
     </div>
@@ -133,13 +144,13 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue';
-import { router,Link } from '@inertiajs/vue3';
+import { ref, watch, onMounted, onUnmounted } from 'vue';
+import { router, Link, usePage } from '@inertiajs/vue3';
 import AppLayout from "@/Layouts/AppLayout.vue";
 import VueMultiselect from 'vue-multiselect';
 import debounce from 'lodash/debounce';
 import Pagination from '@/Components/Pagination.vue';
-
+import { WhenVisible } from '@inertiajs/vue3';
 
 const props = defineProps({
   jobs: Object,
@@ -159,19 +170,45 @@ const educationLevelOptions = [
   { value: "No Education", label: "No Education" }
 ];
 
-
-
 const debouncedSearch = debounce(() => {
   applyFilters();
 }, 300);
 
 function formatSalary(salary) {
-     return Math.floor(salary).toFixed(2);
-   }
+  return Math.floor(salary).toFixed(2);
+}
 
 watch(searchQuery, (value) => {
   debouncedSearch();
 });
+
+const jobs = ref(props.jobs);
+const page = ref(1);
+const isLoading = ref(false);
+const hasMorePages = ref(true);
+
+const loadMore = () => {
+  if (isLoading.value || !hasMorePages.value) return;
+
+  isLoading.value = true;
+  page.value++;
+
+  router.reload({
+    data: {
+      page: page.value,
+      ...props.filters,
+    },
+    preserveState: true,
+    preserveScroll: true,
+    replace: true,
+    only: ['jobs'],
+    onSuccess: (page) => {
+      jobs.value.data = [...jobs.value.data, ...page.props.jobs.data];
+      hasMorePages.value = page.props.jobs.meta.current_page < page.props.jobs.meta.last_page;
+      isLoading.value = false;
+    },
+  });
+};
 
 const applyFilters = () => {
   const params = {};
@@ -179,10 +216,17 @@ const applyFilters = () => {
   if (selectedEducationLevels.value.length > 0) params.education = selectedEducationLevels.value.map(level => level.value);
   if (selectedSort.value) params.sort = selectedSort.value;
 
-  router.get('/jobs', params, {
+  router.reload({
+    data: params,
     preserveState: true,
     preserveScroll: true,
     replace: true,
+    only: ['jobs'],
+    onSuccess: () => {
+      jobs.value = usePage().props.jobs;
+      page.value = 1;
+      hasMorePages.value = true;
+    },
   });
 };
 
@@ -195,30 +239,27 @@ const resetFilters = () => {
 
 onMounted(() => {
   searchQuery.value = props.filters.q || '';
+  window.addEventListener('scroll', handleScroll);
 });
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll);
+});
+
+const handleScroll = () => {
+  const scrollPosition = window.innerHeight + window.pageYOffset;
+  const triggerPosition = document.documentElement.offsetHeight - 200;
+
+  if (scrollPosition >= triggerPosition) {
+    loadMore();
+  }
+};
 
 watch([selectedEducationLevels, selectedSort], () => {
   applyFilters();
 }, { deep: true });
 </script>
 
-<style scoped>
-.blur-sm {
-  filter: blur(4px);
-}
-
-.trait-type{
-    box-sizing: border-box;
-    background-color: transparent;
-    text-decoration: none;
-    transition:
-        color 0.2s ease-in-out, border-bottom 0.2s ease-in-out;
-    border-bottom: 0px;
-    font-weight: 300;
-    font-family:
-        aktiv-grotesk, "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-</style>
 
 
 

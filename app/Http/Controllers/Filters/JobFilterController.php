@@ -47,33 +47,33 @@ class JobFilterController extends Controller
             }
         }
 
-        $jobs = $query->paginate(12)->appends($filters);
+        $jobs = $query->paginate(12);
 
         return Inertia::render('Jobs/Index', [
-            'jobs' => [
-                'data' => $jobs->map(function ($job) use ($locale, $nameColumn, $descriptionColumn) {
-                    return [
-                        'id' => $job->id,
-                        'name' => $job->$nameColumn,
-                        'image'=>$job->image,
-                        'slug' => $job->slug,
-                        'description' => $job->$descriptionColumn,
-                        'salary' => $job->salary,
-                        'satisfaction' => $job->satisfaction,
-                    ];
-                }),
-                'links' => $jobs->linkCollection()->toArray(),
-                'meta' => [
-                    'current_page' => $jobs->currentPage(),
-                    'from' => $jobs->firstItem(),
-                    'last_page' => $jobs->lastPage(),
-                    'links' => $jobs->linkCollection()->toArray(),
-                    'path' => $jobs->path(),
-                    'per_page' => $jobs->perPage(),
-                    'to' => $jobs->lastItem(),
-                    'total' => $jobs->total(),
-                ],
-            ],
+            'jobs' => Inertia::merge(function () use ($jobs, $locale, $nameColumn, $descriptionColumn) {
+                return [
+                    'data' => $jobs->map(function ($job) use ($locale, $nameColumn, $descriptionColumn) {
+                        return [
+                            'id' => $job->id,
+                            'name' => $job->$nameColumn,
+                            'image' => $job->image,
+                            'slug' => $job->slug,
+                            'description' => $job->$descriptionColumn,
+                            'salary' => $job->salary,
+                            'satisfaction' => $job->satisfaction,
+                        ];
+                    }),
+                    'meta' => [
+                        'current_page' => $jobs->currentPage(),
+                        'last_page' => $jobs->lastPage(),
+                        'links' => $jobs->linkCollection()->toArray(),
+                        'path' => $jobs->path(),
+                        'per_page' => $jobs->perPage(),
+                        'to' => $jobs->lastItem(),
+                        'total' => $jobs->total(),
+                    ],
+                ];
+            }),
             'filters' => $filters
         ]);
     }

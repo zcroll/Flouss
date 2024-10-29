@@ -1,209 +1,337 @@
-<style src="public/css/vueMultiselect.css"></style>
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>
+
 <template>
-  <AppLayout :head-title="__('degrees.explore_degrees')" :head-sub-title="__('degrees.find_academic_paths')" :show-div="false" name="Degrees">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <div class="breadcrumbs-nav breadcrumbs-nav--tests">
-                  <Link :href="route('degrees.index')">{{ __('navigation.degrees') }}</Link>
-                  <div class="small-icon arrow-breadcrumbs"></div>
-                  <span>List</span>
-                  <div class="small-icon arrow-breadcrumbs"></div>
-                  <span>Page {{ degrees.meta.current_page }}</span>
-        </div>
+    <link
+        rel="stylesheet"
+        href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/listings-page.c5491ea6c00f.css"
+    />
+    <AppLayout
+        :head-title="__('degrees.explore_degrees')"
+        :head-sub-title="__('degrees.find_academic_paths')"
+        :show-search="true"
+        name="Degrees"
+    >
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="flex flex-col lg:flex-row gap-6">
+                <!-- Filter sidebar -->
+                <div class="w-full lg:w-1/4">
+                    <div class="bg-transparent shadow-sm p-4">
+                        <h2 class="text-lg font-semibold text-gray-100 mb-3">
+                            {{ __("degrees.filters") }}
+                        </h2>
 
-      <div class="flex flex-col lg:flex-row gap-6">
-        
-        <!-- Filter sidebar -->
-        <div class="w-full lg:w-1/4">
-          
-          <div class="bg-transparent shadow-sm p-4">
-            <h2 class="text-lg font-semibold text-gray-100 mb-3">{{ __('degrees.filters') }}</h2>
-
-            <div class="mb-3">
-              <label for="search" class="block text-sm font-medium text-gray-100 mb-1">{{ __('degrees.search') }}</label>
-              <input
-                id="search"
-                v-model="searchQuery"
-                class="w-full px-3 py-1.5 text-gray-400 text-sm border bg-gray-800 rounded-md shadow-sm  focus:ring-[#fb6302] focus:border-[#fb6302]"
-                type="text"
-                :placeholder="__('degrees.search_degrees')"
-                @input="debouncedSearch"
-              />
-            </div>
-
-            <div class="mb-3">
-              <label class="block text-sm font-medium text-gray-100 mb-1">{{ __('degrees.degree_levels') }}</label>
-              <VueMultiselect
-                v-model="selectedDegreeLevels"
-                :options="degreeLevelOptions"
-                :multiple="true"
-                :close-on-select="false"
-                :placeholder="__('degrees.select_degree_levels')"
-                label="label"
-                track-by="value"
-                class="multiselect"
-              />
-            </div>
-            <div class="mb-3">
-              <label class="block text-sm font-medium text-gray-100 mb-1">{{ __('degrees.sort_by') }}</label>
-              <select
-                :v-model="selectedSort"
-                class="w-full px-3 py-1.5 text-gray-400 text-sm border bg-gray-800 rounded-md border-[#fb6302] focus:ring-[#fb6302] focus:border-[#fb6302] shadow-sm "
-                @change="applyFilters"
-              >
-                <option value="">{{ __('degrees.select_sorting_option') }}</option>
-                <option value="salary_desc">{{ __('degrees.highest_salary') }}</option>
-                <option value="satisfaction_desc">{{ __('degrees.highest_satisfaction') }}</option>
-              </select>
-            </div>
-
-            <button
-              @click="resetFilters"
-              class="mt-3 w-full px-4 py-2 bg-[#fb6302] font-black text-gray-100 rounded-md hover:bg-gray-800 hover:text-white transition-colors duration-300"
-            >
-              {{ __('degrees.reset_filters') }}
-            </button>
-          </div>
-        </div>
-
-        <!-- Main content -->
-        <div class="w-full lg:w-4/4">
-          <div v-if="degrees.data.length > 0" class="space-y-3">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
-                <div v-for="degree in degrees.data" :key="degree.id" class="bg-white shadow-sm rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-md border border-gray-200">
-                  <Link :href="`/degree/${degree.slug}`" class="block">
-                    <div class="flex flex-col h-full">
-                      <div class="flex justify-center pt-4">
-                        <img :src="degree.image" :alt="degree.name" class="w-20 h-20 object-cover rounded-full">
-                      </div>
-                      <div class="p-4 flex-grow">
-                        <h2 class="text-lg font-semibold text-gray-800 mb-2 text-center">{{ degree.name }}</h2>
-                        <div class="flex justify-center mb-2">
-                          <template v-for="star in 5" :key="star">
-                            <svg
-                              :class="star <= degree.rating ? 'text-yellow-400' : 'text-gray-300'"
-                              class="h-5 w-5 flex-shrink-0"
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
+                        <div class="mb-3">
+                            <label
+                                for="search"
+                                class="block text-sm font-medium text-gray-100 mb-1"
+                                >{{ __("degrees.search") }}</label
                             >
-                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                          </template>
+                            <input
+                                id="search"
+                                v-model="searchQuery"
+                                type="text"
+                                :placeholder="__('degrees.search_degrees')"
+                                class="w-full px-3 py-1.5 text-gray-400 text-sm border bg-gray-800 rounded-md shadow-sm focus:ring-[#fb6303] focus:border-[#fb6303]"
+                                @input="debouncedSearch"
+                            />
                         </div>
-                        <p class="text-sm text-center">
-                          <span class="pr-3 text-sm text-sky-800 font-medium blur-sm">{{ __('degrees.hidden') }}</span>MAD
-                        </p>
-                      </div>
-                    </div>
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div v-else class="text-center py-8">
-            <p class="text-lg text-gray-600 mb-4">{{ __('degrees.no_degrees_found') }}</p>
-            <button
-              @click="resetFilters"
-              class="px-4 py-2 bg-[#fb6302] text-white rounded-md hover:bg-gray-700 transition-colors duration-300"
-            >
-              {{ __('degrees.reset_filters') }}
-            </button>
-          </div>
 
-          <div v-if="degrees.data.length > 0" class="mt-6">
-            <Pagination
-              :links="degrees.links"
-              :meta="{
-                current_page: degrees.meta.current_page,
-                from: degrees.meta.from,
-                to: degrees.meta.to,
-                total: degrees.meta.total
-              }"
-            />
-          </div>
+                        <div class="mb-3">
+                            <label
+                                class="block text-sm font-medium text-gray-100 mb-1"
+                                >{{ __("degrees.degree_levels") }}</label
+                            >
+                            <VueMultiselect
+                                v-model="selectedDegreeLevels"
+                                :options="degreeLevelOptions"
+                                :multiple="true"
+                                :close-on-select="false"
+                                :placeholder="
+                                    __('degrees.select_degree_levels')
+                                "
+                                label="label"
+                                track-by="value"
+                                class="multiselect"
+                            />
+                        </div>
+
+                        <div class="mb-3">
+                            <label
+                                class="block text-sm font-medium text-gray-100 mb-1"
+                                >{{ __("degrees.sort_by") }}</label
+                            >
+                            <select
+                                v-model="selectedSort"
+                                class="w-full px-3 py-1.5 text-gray-400 text-sm border bg-gray-800 rounded-md shadow-sm border-[#fb6303]"
+                                @change="applyFilters"
+                            >
+                                <option value="">
+                                    {{ __("degrees.select_sorting_option") }}
+                                </option>
+                                <option value="salary_desc">
+                                    {{ __("degrees.highest_salary") }}
+                                </option>
+                                <option value="satisfaction_desc">
+                                    {{ __("degrees.highest_satisfaction") }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <button
+                            @click="resetFilters"
+                            class="mt-3 w-full px-4 py-2 bg-[#fb6303] font-black text-gray-100 rounded-md hover:bg-gray-800 hover:text-white transition-colors duration-300"
+                        >
+                            {{ __("degrees.reset_filters") }}
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Main content -->
+                <div class="w-full lg:w-4/4">
+                    <div
+                        class="Listings__Results"
+                        role="feed"
+                        aria-busy="false"
+                        aria-live="assertive"
+                        aria-atomic="true"
+                    >
+                        <div class="Listings__Results__section">
+                            <div v-if="degrees.data.length > 0">
+                                <article
+                                    v-for="(degree, index) in degrees.data"
+                                    :key="degree.id"
+                                    :aria-setsize="degrees.meta.total"
+                                    :aria-posinset="index + 1"
+                                >
+                                    <div
+                                        class="Box Listings__ResultItem Listings__ResultItem--has-thumbnail Listings__ResultItemCareer"
+                                    >
+                                        <img
+                                            :src="degree.image"
+                                            :alt="`image for ${degree.name}`"
+                                            class="w-20 h-20 object-cover rounded-full"
+                                        />
+                                        <div class="Listings__ResultItem__main">
+                                            <h3>{{ degree.name }}</h3>
+                                            <div class="stars">
+                                                <div
+                                                    class="Stars"
+                                                    :aria-label="`${degree.rating} out of 5`"
+                                                >
+                                                    <template
+                                                        v-for="star in 5"
+                                                        :key="star"
+                                                    >
+                                                        <svg
+                                                            :class="
+                                                                star <=
+                                                                degree.rating
+                                                                    ? 'text-yellow-400'
+                                                                    : 'text-gray-300'
+                                                            "
+                                                            class="h-5 w-5 flex-shrink-0"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            viewBox="0 0 20 20"
+                                                            fill="currentColor"
+                                                        >
+                                                            <path
+                                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                                                            />
+                                                        </svg>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="Listings__ResultItem__stat">
+                                            <h4>Salary:</h4>
+                                            <p>
+                                                <span
+                                                    class="pr-3 text-sm text-sky-800 font-medium blur-sm"
+                                                    >hidden</span
+                                                >MAD
+                                            </p>
+                                        </div>
+                                        <div class="Listings__ResultItem__icon">
+                                            <svg
+                                                aria-hidden="true"
+                                                focusable="false"
+                                                data-prefix="fal"
+                                                data-icon="chevron-right"
+                                                class="svg-inline--fa fa-chevron-right"
+                                                role="img"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 320 512"
+                                            >
+                                                <path
+                                                    fill="currentColor"
+                                                    d="M85.14 475.8c-3.438-3.141-5.156-7.438-5.156-11.75c0-3.891 1.406-7.781 4.25-10.86l181.1-197.1L84.23 58.86c-6-6.5-5.625-16.64 .9062-22.61c6.5-6 16.59-5.594 22.59 .8906l192 208c5.688 6.156 5.688 15.56 0 21.72l-192 208C101.7 481.3 91.64 481.8 85.14 475.8z"
+                                                ></path>
+                                            </svg>
+                                        </div>
+                                        <Link
+                                            :href="`/degree/${degree.slug}`"
+                                            class="Listings__ResultItem__link-overlay"
+                                        >
+                                            <span class="sr-only">{{
+                                                degree.name
+                                            }}</span>
+                                        </Link>
+                                    </div>
+                                </article>
+                            </div>
+                            <div v-else class="text-center py-8">
+                                <p class="text-lg text-gray-600 mb-4">
+                                    {{ __("degrees.no_degrees_found") }}
+                                </p>
+                                <button
+                                    @click="resetFilters"
+                                    class="px-4 py-2 bg-[#4db554] text-white rounded-md hover:bg-gray-700 transition-colors duration-300"
+                                >
+                                    {{ __("degrees.reset_filters") }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <WhenVisible
+                        :once="false"
+                        :params="{
+                            data: {
+                                page: page + 1,
+                                ...props.filters,
+                            },
+                            only: ['degrees'],
+                            preserveUrl: true,
+                        }"
+                    >
+                        <div class="mt-6 text-center">
+                            <span class="text-gray-500">{{ __('degrees.loading') }}...</span>
+                        </div>
+                    </WhenVisible>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </AppLayout>
+    </AppLayout>
 </template>
 
 <script setup>
-import { ref, watch, onMounted, computed } from 'vue';
-import { router, Link, usePage } from '@inertiajs/vue3';
+import { ref, watch, onMounted, onUnmounted } from "vue";
+import { router, Link } from "@inertiajs/vue3";
 import AppLayout from "@/Layouts/AppLayout.vue";
-import VueMultiselect from 'vue-multiselect';
-import debounce from 'lodash/debounce';
-import Pagination from '@/Components/Pagination.vue';
+import VueMultiselect from "vue-multiselect";
+import debounce from "lodash/debounce";
+import Pagination from "@/Components/Pagination.vue";
+import { usePage } from '@inertiajs/vue3';
+import { WhenVisible } from '@inertiajs/vue3';
 
 const props = defineProps({
-  degrees: Object,
-  filters: Object,
+    degrees: Object,
+    filters: Object,
 });
 
-const searchQuery = ref(props.filters.q || '');
-const selectedDegreeLevels = ref(props.filters.level ? props.filters.level.map(level => degreeLevelOptions.find(option => option.value === level)) : []);
-const selectedSort = ref(props.filters.sort || '');
+const searchQuery = ref(props.filters.q || "");
+const selectedDegreeLevels = ref(
+    props.filters.level
+        ? props.filters.level.map((level) =>
+              degreeLevelOptions.find((option) => option.value === level)
+          )
+        : []
+);
+const selectedSort = ref(props.filters.sort || "");
 
 const degreeLevelOptions = [
-  { value: "Associate", label: "Associate" },
-  { value: "Bachelor's", label: "Bachelor's" },
-  { value: "Master's", label: "Master's" },
-  { value: "Doctorate", label: "Doctorate" },
+    { value: "Associate", label: "Associate" },
+    { value: "Bachelor's", label: "Bachelor's" },
+    { value: "Master's", label: "Master's" },
+    { value: "Doctorate", label: "Doctorate" },
 ];
 
 const debouncedSearch = debounce(() => {
-  applyFilters();
+    applyFilters();
 }, 300);
 
 watch(searchQuery, (value) => {
-  debouncedSearch();
+    debouncedSearch();
 });
 
-const applyFilters = () => {
-  const params = {};
-  if (searchQuery.value) params.q = searchQuery.value;
-  if (selectedDegreeLevels.value.length > 0) params.level = selectedDegreeLevels.value.map(level => level.value);
-  if (selectedSort.value) params.sort = selectedSort.value;
+const degrees = ref(props.degrees);
+const page = ref(1);
+const isLoading = ref(false);
+const hasMorePages = ref(true);
 
-  router.get('/degrees', params, {
-    preserveState: true,
-    preserveScroll: true,
-    replace: true,
-  });
+const loadMore = () => {
+    if (isLoading.value || !hasMorePages.value) return;
+
+    isLoading.value = true;
+    page.value++;
+
+    router.reload({
+        data: {
+            page: page.value,
+            ...props.filters,
+        },
+        preserveState: true,
+        preserveScroll: true,
+        replace: true,
+        only: ['degrees'],
+        onSuccess: (page) => {
+            degrees.value.data = [...degrees.value.data, ...page.props.degrees.data];
+            hasMorePages.value = page.props.degrees.meta.current_page < page.props.degrees.meta.last_page;
+            isLoading.value = false;
+        },
+    });
+};
+
+const applyFilters = () => {
+    const params = {};
+    if (searchQuery.value) params.q = searchQuery.value;
+    if (selectedDegreeLevels.value.length > 0) params.level = selectedDegreeLevels.value.map(level => level.value);
+    if (selectedSort.value) params.sort = selectedSort.value;
+
+    router.reload({
+        data: params,
+        preserveState: true,
+        preserveScroll: true,
+        replace: true,
+        only: ['degrees'],
+        onSuccess: () => {
+            degrees.value = usePage().props.degrees;
+            page.value = 1;
+            hasMorePages.value = true;
+        },
+    });
 };
 
 const resetFilters = () => {
-  searchQuery.value = '';
-  selectedDegreeLevels.value = [];
-  selectedSort.value = '';
-  applyFilters();
+    searchQuery.value = "";
+    selectedDegreeLevels.value = [];
+    selectedSort.value = "";
+    applyFilters();
 };
 
 onMounted(() => {
-  searchQuery.value = props.filters.q || '';
+    searchQuery.value = props.filters.q || "";
+    window.addEventListener('scroll', handleScroll);
 });
 
-watch([selectedDegreeLevels, selectedSort], () => {
-  applyFilters();
-}, { deep: true });
+onUnmounted(() => {
+    window.removeEventListener('scroll', handleScroll);
+});
+
+watch(
+    [selectedDegreeLevels, selectedSort],
+    () => {
+        applyFilters();
+    },
+    { deep: true }
+);
+
+const handleScroll = () => {
+    const scrollPosition = window.innerHeight + window.pageYOffset;
+    const triggerPosition = document.documentElement.offsetHeight - 200;
+
+    if (scrollPosition >= triggerPosition) {
+        loadMore();
+    }
+};
 </script>
-
-<style scoped>
-.blur-sm {
-  filter: blur(4px);
-}
-
-.trait-type {
-  box-sizing: border-box;
-  background-color: transparent;
-  text-decoration: none;
-  transition:
-    color 0.2s ease-in-out,
-    border-bottom 0.2s ease-in-out;
-  border-bottom: 0px;
-  font-weight: 300;
-  font-family:
-    aktiv-grotesk, "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-</style>

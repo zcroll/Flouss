@@ -285,7 +285,6 @@ const socialLinks = [
         </footer>
     </div>
 </template>
-
 <style scoped>
 .navbar {
     position: absolute;
