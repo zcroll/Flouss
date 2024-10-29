@@ -146,3 +146,8 @@ Route::get('/im', function () {
 Route::get('/career-test', function () {
   return Inertia::render('Career-Test');
 });
+
+
+Route::get('/for-organizations', function () {
+  return Inertia::render('For-organizations');
+});

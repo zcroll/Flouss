@@ -2,6 +2,8 @@
 import { ref } from 'vue';
 import HowItWork from '@/Components/Home/Test/HowItWork.vue';
 import Final from '@/Components/Home/Test/Final.vue';
+import Header from '@/Components/Home/Navbar/Header.vue';
+import { Link } from '@inertiajs/vue3';
 const stats = ref([
   {
     heading: '500 M',
@@ -19,6 +21,7 @@ const stats = ref([
 </script>
 
 <template>
+  <Header />
   <div role="main">    <link rel="preload" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/career-test.8b297b48254d.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <section class="CareerTest__header">
     <svg class="CareerTest__header__bg" width="766" height="706" viewBox="0 0 766 706" fill="none">
@@ -33,7 +36,7 @@ const stats = ref([
       <p class="CareerTest__header__description">
         Using advanced machine learning, psychometrics, and career satisfaction data, we've reimagined what a career test can be.
       </p>
-      <a href="/members/register/deferred/" class="alans-butt--large alans-butt--grey CareerTest__header__button" data-track="mixpanel" data-target="Start the career test">Start the career test</a>
+      <Link :href="route('main-test')" class="alans-butt--large alans-butt--grey CareerTest__header__button" data-track="mixpanel" data-target="Start the career test">Start the career test</Link>
 
       <section class="CareerTest__header__stats">
         <h2 class="CareerTest__header__stats__heading">By the numbers</h2>
@@ -150,7 +153,6 @@ const stats = ref([
           <p>
             Our career test is thorough to give you the most accurate results, not just a quick, generic snapshot. Take the test on your phone, at your desk, on a commute — and come back to it anytime. You can always pick up where you leave off. 
           </p>
-          <a href="/members/register/deferred/" class="alans-butt--black alans-butt--large CareerTest__features__key-feature__button" data-track="mixpanel" data-target="Let’s get started">Find your career matches</a>
         </div>
         <div class="CareerTest__features__key-feature__preview lazyload" data-bg="https://res.cloudinary.com/hnpb47ejt/image/fetch/https://d5lqosquewn6c.cloudfront.net/static/sokanu/compiled/images/career-test/key-feature-3-blobs.e4ada8534a83.svg">
           <video class="lazyload" preload="none" src="https://d5lqosquewn6c.cloudfront.net/static/sokanu/compiled/images/career-test/pick-up-flow.76d8df8d4bbe.mp4" data-autoplay="" muted="" loop="" playsinline="">

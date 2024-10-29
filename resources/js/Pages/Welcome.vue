@@ -1,12 +1,9 @@
 <template>
     <div>
-     <!-- <NavBar   :canLogin="canLogin" :canRegister="canRegister" :laravelVersion="laravelVersion" :phpVersion="phpVersion" /> -->
-      <!-- <link rel="stylesheet" media="all" href="/css/landingPage/index.css" /> -->
 
-      <Header />
-      <HomePage/>
+      <Header  :canLogin="canLogin" :canRegister="canRegister"/>
+      <HomePage />
 
-<!--        <HowItWork />-->
       <Footer />
     </div>
 

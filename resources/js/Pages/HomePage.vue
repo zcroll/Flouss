@@ -19,9 +19,8 @@
                     <p class="home__splash__callout__p">Say hello to CareerExplorer, the world's leading career advancement platform.<br></p>
                     <div class="dynabutton">
                         <div class="dynabutton__embed w-embed">
-                            <a href="/members/register/deferred/" 
-                               class="alansbutt w-button" 
-                               data-dialog-target="dialog-sign-up">Get Started</a>
+                            <Link :href="route('main-test')"
+                               class="alansbutt w-button">Get Started</Link>
                         </div>
                     </div>
                     <a href="/career-test/" class="alanslink">Learn More About CareerExplorer</a>
@@ -37,11 +36,18 @@
 import Steps from '@/Components/Home/Steps.vue';
 import HowItWork from '@/Components/Home/HowItWork.vue';
 import Gardien from '@/Components/Home/Gardien.vue';
+import { Link } from '@inertiajs/vue3';
+
 export default {
     components: {
         Steps,
         HowItWork,
-        Gardien
+        Gardien,
+        Link
+    },
+    props: {
+        canLogin: Boolean,
+        canRegister: Boolean
     }
 }
 </script>

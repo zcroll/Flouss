@@ -1,6 +1,43 @@
+<script>
+import { Link } from '@inertiajs/vue3';
+export default {
+  components: {
+    Link
+  },
+  props: {
+    canLogin: {
+      type: Boolean,
+      required: true
+    },
+    canRegister: {
+      type: Boolean, 
+      required: true
+    }
+  },
+  data() {
+    return {
+      isSticky: false
+    }
+  },
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll)
+  },
+  beforeUnmount() {
+    window.removeEventListener('scroll', this.handleScroll)
+  },
+  methods: {
+    handleScroll() {
+      this.isSticky = window.scrollY > 0
+    }
+  }
+}
+</script>
+
+
 <template>
-    <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/webflow.4dc4432fd989.css">    <div id="globalnav-container" data-registration-modal="true">
-        <nav class="GlobalNav" role="navigation">
+    <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/webflow.4dc4432fd989.css"> 
+       <div id="globalnav-container" data-registration-modal="true">
+        <nav :class="['GlobalNav', { 'GlobalNav--sticky': isSticky }]" role="navigation">
             <a class="GlobalNav-logo--desktop w--current" data-track="mixpanel" data-target="Home" data-link-type="Header" href="/">
                 <svg class="GlobalNav-logo" version="1.1" viewBox="0 0 239 56" xmlns="http://www.w3.org/2000/svg">
                     <title>CareerExplorer</title>
@@ -19,6 +56,11 @@
                 </svg>
             </a>
             <ul class="GlobalNav-menu">
+              <li class="GlobalNav-menu-item">
+                    <a class="GlobalNav-menu-link GlobalNav-menu-link--default" data-track="mixpanel" data-target="For Organizations" data-link-type="Header" href="/for-organizations/">&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                </li>     <li class="GlobalNav-menu-item">
+                    <a class="GlobalNav-menu-link GlobalNav-menu-link--default" data-track="mixpanel" data-target="For Organizations" data-link-type="Header" href="/for-organizations/">     </a>
+                </li>
                 <li class="GlobalNav-menu-item GlobalNav-menu-item--mobile">
                     <a class="GlobalNav-menu-link GlobalNav-menu-link--default w--current" data-track="mixpanel" data-target="Home" data-link-type="Header" href="/">Home</a>
                 </li>
@@ -28,38 +70,25 @@
                 <li class="GlobalNav-menu-item">
                     <a class="GlobalNav-menu-link GlobalNav-menu-link--default" data-track="mixpanel" data-target="For Organizations" data-link-type="Header" href="/for-organizations/">For Organizations</a>
                 </li>
-                <li class="GlobalNav-menu-item">
-                    <a class="GlobalNav-menu-link GlobalNav-menu-link--default" data-track="mixpanel" data-target="Careers" data-link-type="Header" href="/careers/">Careers</a>
-                </li>
-                <li class="GlobalNav-menu-item">
-                    <a class="GlobalNav-menu-link GlobalNav-menu-link--default" data-track="mixpanel" data-target="Degrees" data-link-type="Header" href="/degrees/">Degrees</a>
-                </li>
-                <li class="GlobalNav-menu-item">
-                    <a class="GlobalNav-menu-link GlobalNav-menu-link--default" data-track="mixpanel" data-target="Community" data-link-type="Header" href="/community/">Community</a>
-                </li>
-                <li class="GlobalNav-menu-item">
-                    <a class="GlobalNav-menu-link GlobalNav-menu-link--default" data-track="mixpanel" data-target="More" data-link-type="Header" href="#">More</a>
-                    <ul class="GlobalNav-sub-menu">
-                        <li class="GlobalNav-menu-item GlobalNav-menu-item--default">
-                            <a class="GlobalNav-menu-link GlobalNav-menu-link--default" data-track="mixpanel" data-target="Jobs" data-link-type="Header" href="/jobs/">Jobs</a>
-                        </li>
-                        <li class="GlobalNav-menu-item GlobalNav-menu-item--default">
-                            <a class="GlobalNav-menu-link GlobalNav-menu-link--default" data-track="mixpanel" data-target="Blog" data-link-type="Header" href="/blog/">Blog</a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="GlobalNav-menu-item">
-                    <a href="#" class="GlobalSearch GlobalNav-menu-link" aria-label="Click to open site-wide search" data-testid="globalsearch-closed">
-                        <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="magnifying-glass" class="svg-inline--fa fa-magnifying-glass fa-lg GlobalNav-icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path fill="currentColor" d="M504.1 471l-134-134C399.1 301.5 415.1 256.8 415.1 208c0-114.9-93.13-208-208-208S-.0002 93.13-.0002 208S93.12 416 207.1 416c48.79 0 93.55-16.91 129-45.04l134 134C475.7 509.7 481.9 512 488 512s12.28-2.344 16.97-7.031C514.3 495.6 514.3 480.4 504.1 471zM48 208c0-88.22 71.78-160 160-160s160 71.78 160 160s-71.78 160-160 160S48 296.2 48 208z"></path>
-                        </svg>
-                    </a>
-                </li>
+            
+            
+               
+           
+              
             </ul>
             <div class="GlobalNav-menu-item--login">
-                <a class="GlobalNav-menu-link GlobalNav-menu-link--default" data-track="mixpanel" data-target="Log In" data-link-type="Header" data-qa-id="login-button" href="#">Log In</a>
-            </div>
-            <button class="GlobalNav-button GlobalNav-button--main alans-butt--grey">Take the <span class="hide-below-md">&nbsp;free&nbsp;</span> test</button>
+                <template v-if="$page.props.auth.user">
+                    <Link :href="route('dashboard')" class="GlobalNav-menu-link GlobalNav-menu-link--default">
+                        {{ __('navigation.dashboard') }}
+                    </Link>
+                </template>
+                <template v-else>
+                    <Link :href="route('login')" class="GlobalNav-menu-link GlobalNav-menu-link--default" data-qa-id="login-button">
+                        {{ __('navigation.log_in') }}
+                    </Link>
+                </template>
+              </div>
+                <Link :href="route('main-test')" class="GlobalNav-button GlobalNav-button--main alans-butt--grey">Take the <span class="hide-below-md">&nbsp;free&nbsp;</span> test</Link>
         </nav>
         <div class="progress-container" id="progress-bar-container">
             <div class="progress-bar" id="progress-bar"></div>
