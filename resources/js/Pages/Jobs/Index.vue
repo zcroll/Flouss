@@ -1,18 +1,57 @@
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>
 
+<style scoped>
+.loading-dots {
+  display: inline-flex;
+  align-items: center;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  margin: 0 4px;
+  background: #4db554;
+  border-radius: 50%;
+  animation: bounce 0.5s ease-in-out infinite;
+}
+
+.dot:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.dot:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
+
 <template>
       <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/listings-page.c5491ea6c00f.css">
   <AppLayout
-
-
     :head-title="__('jobs.head_title')"
-    :head-sub-title="__('jobs.head_subtitle')"
+    :head-sub-title="__('jobs.head_subtitle')" 
     :show-search="true"
     name="Jobs"
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      
-
       <div class="flex flex-col lg:flex-row gap-6">
         <!-- Filter sidebar -->
         <div class="w-full lg:w-1/4">
@@ -134,7 +173,12 @@
             }"
           >
             <div class="mt-6 text-center">
-              <span class="text-gray-500">{{ __('jobs.loading') }}...</span>
+              <div class="loading-dots">
+                <span class="text-gray-500 mr-2">{{ __('jobs.loading') }}</span>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+              </div>
             </div>
           </WhenVisible>
         </div>
@@ -155,6 +199,7 @@ import { WhenVisible } from '@inertiajs/vue3';
 const props = defineProps({
   jobs: Object,
   filters: Object,
+  language: String
 });
 
 const searchQuery = ref(props.filters.q || '');
@@ -180,6 +225,23 @@ function formatSalary(salary) {
 
 watch(searchQuery, (value) => {
   debouncedSearch();
+});
+
+watch(() => props.language, (newLanguage, oldLanguage) => {
+  if (newLanguage !== oldLanguage) {
+    // Reset filters and reload data
+    searchQuery.value = "";
+    selectedEducationLevels.value = [];
+    selectedSort.value = "";
+    page.value = 1;
+    hasMorePages.value = true;
+    
+    router.visit(window.location.pathname, {
+      preserveState: false,
+      preserveScroll: false,
+      replace: true
+    });
+  }
 });
 
 const jobs = ref(props.jobs);
@@ -216,7 +278,7 @@ const applyFilters = () => {
   if (selectedEducationLevels.value.length > 0) params.education = selectedEducationLevels.value.map(level => level.value);
   if (selectedSort.value) params.sort = selectedSort.value;
 
-  router.reload({
+  router.visit(window.location.pathname, {
     data: params,
     preserveState: true,
     preserveScroll: true,
@@ -234,7 +296,13 @@ const resetFilters = () => {
   searchQuery.value = '';
   selectedEducationLevels.value = [];
   selectedSort.value = '';
-  applyFilters();
+  
+  router.visit(window.location.pathname, {
+    preserveState: true,
+    preserveScroll: true,
+    replace: true,
+    only: ['jobs']
+  });
 };
 
 onMounted(() => {
@@ -259,7 +327,3 @@ watch([selectedEducationLevels, selectedSort], () => {
   applyFilters();
 }, { deep: true });
 </script>
-
-
-
-

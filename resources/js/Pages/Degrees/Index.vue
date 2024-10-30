@@ -1,5 +1,48 @@
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>
 
+<style scoped>
+.loading-dots {
+  display: inline-flex;
+  align-items: center;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  margin: 0 4px;
+  background: #4db554;
+  border-radius: 50%;
+  animation: bounce 0.5s ease-in-out infinite;
+}
+
+.dot:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.dot:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
+
 <template>
     <link
         rel="stylesheet"
@@ -193,19 +236,25 @@
                         </div>
                     </div>
 
+                  
                     <WhenVisible
                         :once="false"
                         :params="{
                             data: {
-                                page: page + 1,
-                                ...props.filters,
-                            },
-                            only: ['degrees'],
-                            preserveUrl: true,
+                page: page + 1,
+                ...props.filters,
+              },
+              only: ['degrees'],
+              preserveUrl: true,
                         }"
                     >
                         <div class="mt-6 text-center">
-                            <span class="text-gray-500">{{ __('degrees.loading') }}...</span>
+                            <div class="loading-dots">
+                                <span class="text-gray-500 mr-2">{{ __('degrees.loading') }}</span>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                            </div>
                         </div>
                     </WhenVisible>
                 </div>
@@ -227,6 +276,7 @@ import { WhenVisible } from '@inertiajs/vue3';
 const props = defineProps({
     degrees: Object,
     filters: Object,
+    language: String
 });
 
 const searchQuery = ref(props.filters.q || "");
@@ -252,6 +302,23 @@ const debouncedSearch = debounce(() => {
 
 watch(searchQuery, (value) => {
     debouncedSearch();
+});
+
+watch(() => props.language, (newLanguage, oldLanguage) => {
+    if (newLanguage !== oldLanguage) {
+        // Reset filters and reload data
+        searchQuery.value = "";
+        selectedDegreeLevels.value = [];
+        selectedSort.value = "";
+        page.value = 1;
+        hasMorePages.value = true;
+        
+        router.visit(window.location.pathname, {
+            preserveState: false,
+            preserveScroll: false,
+            replace: true
+        });
+    }
 });
 
 const degrees = ref(props.degrees);
@@ -288,7 +355,7 @@ const applyFilters = () => {
     if (selectedDegreeLevels.value.length > 0) params.level = selectedDegreeLevels.value.map(level => level.value);
     if (selectedSort.value) params.sort = selectedSort.value;
 
-    router.reload({
+    router.visit(window.location.pathname, {
         data: params,
         preserveState: true,
         preserveScroll: true,
@@ -306,7 +373,12 @@ const resetFilters = () => {
     searchQuery.value = "";
     selectedDegreeLevels.value = [];
     selectedSort.value = "";
-    applyFilters();
+    router.visit(window.location.pathname, {
+        preserveState: true,
+        preserveScroll: true,
+        replace: true,
+        only: ['degrees']
+    });
 };
 
 onMounted(() => {

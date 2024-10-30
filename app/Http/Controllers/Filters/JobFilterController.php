@@ -15,12 +15,16 @@ class JobFilterController extends Controller
         $nameColumn = $locale === 'fr' ? 'name_fr' : 'name';
         $descriptionColumn = $locale === 'fr' ? 'description_fr' : 'description';
 
-        $query = JobInfo::query();
-        $query->orderBy('name', 'asc');
+        $query = JobInfo::query()
+            ->when($locale === 'fr', function ($query) {
+                return $query->whereNotNull('name_fr');
+            }, function ($query) {
+                return $query->whereNotNull('name');
+            });
+
+        $query->orderBy('id', 'asc');
 
         $filters = [];
-
-
 
         if ($search = $request->input('q')) {
             $filters['q'] = $search;

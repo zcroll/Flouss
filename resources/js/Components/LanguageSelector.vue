@@ -18,7 +18,7 @@
       <li v-for="language in languages" :key="language.value">
         <a
           class="text-black duration-300 transition ease-in-out flex gap-1 flex-row items-center px-3 py-1"
-          @click.prevent="switchLanguage(language.value)"
+          @click="switchLanguage(language.value)"
           href="#"
           rel="nofollow"
         >
@@ -57,7 +57,12 @@ const getLanguageName = (languageCode) => {
 };
 
 const switchLanguage = (language) => {
-  router.post(route('language.switch', { language }));
+  router.post(route('language.switch', { language }), {}, {
+    onSuccess: () => {
+      // Reload the page after successful language switch
+      router.reload();
+    }
+  });
 };
 
 const startCloseTimer = () => {
