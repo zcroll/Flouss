@@ -1,9 +1,5 @@
 <template>
-    <!-- <link
-        rel="stylesheet"
-        media="all"
-        href="/css/landingPage/index.css"
-    /> -->
+
 
     <header class="relative overflow-x-auto min-h-[200px]">
         <div class="header-content mt-20 mb-1">
@@ -33,7 +29,7 @@
             </div>
         </div>
 
-        <div class="header-background" :style="[backgroundStyles, backgroundImage1]"></div>
+        <div class="header-background"></div>
         <slot name="navigation"></slot>
     </header>
 </template>

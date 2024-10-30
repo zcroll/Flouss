@@ -47,7 +47,8 @@ const socialLinks = [
 <template >
     <div >
         <Head :title="title" />
-        <div class="min-h-screen bg-[#0a1e2e]" >
+        <div class="min-h-screen bg-[#393939] relative">
+   
             <Header :title="headTitle" :sub-title="headSubTitle" :show="showDiv">
                 <template #navigation>
                     <nav class="absolute top-5 left-0 right-0 z-10 bg-transparent">

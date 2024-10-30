@@ -41,6 +41,11 @@
 .fade-leave-to {
   opacity: 0;
 }
+
+.sticky-filter {
+  position: sticky;
+  top: 20px;
+}
 </style>
 
 <template>
@@ -58,7 +63,7 @@
             <div class="flex flex-col lg:flex-row gap-6">
                 <!-- Filter sidebar -->
                 <div class="w-full lg:w-1/4">
-                    <div class="bg-transparent shadow-sm p-4">
+                    <div class="bg-transparent shadow-sm p-4 sticky-filter">
                         <h2 class="text-lg font-semibold text-gray-100 mb-3">
                             {{ __("degrees.filters") }}
                         </h2>
