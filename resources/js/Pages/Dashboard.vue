@@ -1,7 +1,7 @@
 <template>
     <AppLayout :head-title="__('dashboard.welcome')" :head-sub-title="__('dashboard.discover')" :show-div="false" :name-exist="true">
         <div class="py-12 sm:py-16">
-            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-8xl px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-12 gap-8">
 
                     <!-- First Row: Left (4 columns) and Right (8 columns) -->

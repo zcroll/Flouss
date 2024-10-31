@@ -19,4 +19,5 @@ return [
     'bachelors' => 'Licence',
     'masters' => 'Master',
     'doctorate' => 'Doctorat',
+    'loading' => 'En cours'
 ];

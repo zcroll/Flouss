@@ -16,4 +16,5 @@ return [
     'hidden' => 'caché',
     'head_title' => 'Perspectives de carrière',
     'head_subtitle' => 'Découvrez des opportunités qui correspondent parfaitement à votre personnalité et vos compétences.',
+    'loading' => 'En cours'
 ];

@@ -1,15 +1,15 @@
 <template>
 
 
-    <header class="relative overflow-x-auto min-h-[200px]">
-        <div class="header-content mt-20 mb-1">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <header class="relative overflow-x-auto min-h-[200px] ">
+        <div class="header-content mt-20 mb-1 ">
+            <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex flex-wrap items-center justify-between">
-                    <div class="w-full lg:w-3/4">
-                        <h1 class="text-3xl font-normal text-white font-sofia-pro-semi-bold mt-2.5 mb-4">
+                    <div class="w-full lg:w-3/4 mt-5 ">
+                        <h1 class="text-3xl font-normal text-[#0a1e2e] font-sofia-pro-semi-bold mt-5 mb-4">
                             {{ title }}
                         </h1>
-                        <p class="text-xl text-white font-sofia-pro-regular mb-4 max-w-[713px]">
+                        <p class="text-xl text-[#0a1e2e] font-sofia-pro-regular max-w-[713px]">
                             <span v-if="name" class="font-sofia-pro-bold">
                                 {{ $page.props.auth.user.name }},
                             </span>
@@ -17,7 +17,7 @@
                         </p>
                     </div>
                     <div class="w-full lg:w-1/4 text-right">
-                 
+
                     </div>
                 </div>
 

@@ -19,4 +19,5 @@ return [
     'bachelors' => 'Bachelor\'s',
     'masters' => 'Master\'s',
     'doctorate' => 'Doctorate',
+    'loading' => 'Loading'
 ];

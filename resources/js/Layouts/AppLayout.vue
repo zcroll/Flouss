@@ -47,12 +47,12 @@ const socialLinks = [
 <template >
     <div >
         <Head :title="title" />
-        <div class="min-h-screen bg-[#393939] relative">
-   
+        <div class="min-h-screen bg-[#e4e2dc] relative">
+
             <Header :title="headTitle" :sub-title="headSubTitle" :show="showDiv">
                 <template #navigation>
                     <nav class="absolute top-5 left-0 right-0 z-10 bg-transparent">
-                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
                             <div class="flex justify-between items-center w-full">
 
                             <div class="flex">
@@ -64,16 +64,16 @@ const socialLinks = [
                                 <!-- Navigation Links -->
                                 <div class="hidden sm:-my-px sm:ml-32 sm:flex items-center justify-between w-full">
                                     <div class="flex space-x-8">
-                                        <NavLink :href="route('dashboard')" :active="route().current('dashboard')" class="btn_link text-white hover:text-green-400 transition duration-150 ease-in-out">
+                                        <NavLink :href="route('dashboard')" :active="route().current('dashboard')" class="btn_link">
                                             {{ __('navigation.dashboard') }}
                                         </NavLink>
-                                        <NavLink :href="route('results')" :active="route().current('results')" class="btn_link text-white hover:text-green-400 transition duration-150 ease-in-out">
+                                        <NavLink :href="route('results')" :active="route().current('results')" class="btn_link ">
                                             {{ __('navigation.results') }}
                                         </NavLink>
-                                        <NavLink :href="route('jobs.index')" :active="route().current('jobs.index')" class="btn_link text-white hover:text-green-400 transition duration-150 ease-in-out">
+                                        <NavLink :href="route('jobs.index')" :active="route().current('jobs.index')" class="btn_link">
                                             {{ __('navigation.jobs') }}
                                         </NavLink>
-                                        <NavLink :href="route('degrees.index')" :active="route().current('degrees.index')" class="btn_link text-white hover:text-green-400 transition duration-150 ease-in-out">
+                                        <NavLink :href="route('degrees.index')" :active="route().current('degrees.index')" class="btn_link">
                                             {{ __('navigation.degrees') }}
                                         </NavLink>
                                         <NavLink

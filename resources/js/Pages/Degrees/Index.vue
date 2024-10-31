@@ -10,7 +10,7 @@
   width: 8px;
   height: 8px;
   margin: 0 4px;
-  background: #4db554;
+  background: #db492b;
   border-radius: 50%;
   animation: bounce 0.5s ease-in-out infinite;
 }
@@ -59,19 +59,19 @@
         :show-search="true"
         name="Degrees"
     >
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div class="flex flex-col lg:flex-row gap-6">
                 <!-- Filter sidebar -->
                 <div class="w-full lg:w-1/4">
                     <div class="bg-transparent shadow-sm p-4 sticky-filter">
-                        <h2 class="text-lg font-semibold text-gray-100 mb-3">
+                        <h2 class="text-lg font-semibold text-gray-900 mb-3">
                             {{ __("degrees.filters") }}
                         </h2>
 
                         <div class="mb-3">
                             <label
                                 for="search"
-                                class="block text-sm font-medium text-gray-100 mb-1"
+                                class="block text-sm font-medium text-gray-900 mb-1"
                                 >{{ __("degrees.search") }}</label
                             >
                             <input
@@ -79,14 +79,14 @@
                                 v-model="searchQuery"
                                 type="text"
                                 :placeholder="__('degrees.search_degrees')"
-                                class="w-full px-3 py-1.5 text-gray-400 text-sm border bg-gray-800 rounded-md shadow-sm focus:ring-[#fb6303] focus:border-[#fb6303]"
+                                class="w-full px-3 py-1.5 text-gray-400 text-sm border bg-gray-50 rounded-md shadow-sm focus:ring-[#db492b] focus:border-[#db492b]"
                                 @input="debouncedSearch"
                             />
                         </div>
 
                         <div class="mb-3">
                             <label
-                                class="block text-sm font-medium text-gray-100 mb-1"
+                                class="block text-sm font-medium text-gray-900 mb-1"
                                 >{{ __("degrees.degree_levels") }}</label
                             >
                             <VueMultiselect
@@ -105,12 +105,12 @@
 
                         <div class="mb-3">
                             <label
-                                class="block text-sm font-medium text-gray-100 mb-1"
+                                class="block text-sm font-medium text-gray-000 mb-1"
                                 >{{ __("degrees.sort_by") }}</label
                             >
                             <select
                                 v-model="selectedSort"
-                                class="w-full px-3 py-1.5 text-gray-400 text-sm border bg-gray-800 rounded-md shadow-sm border-[#fb6303]"
+                                class="w-full px-3 py-1.5 text-gray-400 text-sm border bg-gray-50 rounded-md shadow-sm border-[#db492b]"
                                 @change="applyFilters"
                             >
                                 <option value="">
@@ -127,7 +127,7 @@
 
                         <button
                             @click="resetFilters"
-                            class="mt-3 w-full px-4 py-2 bg-[#fb6303] font-black text-gray-100 rounded-md hover:bg-gray-800 hover:text-white transition-colors duration-300"
+                            class="mt-3 w-full px-4 py-2 bg-[#db492b] font-black text-[#e4e2dc] rounded-md hover:bg-gray-50 hover:text-white transition-colors duration-300"
                         >
                             {{ __("degrees.reset_filters") }}
                         </button>
@@ -241,7 +241,7 @@
                         </div>
                     </div>
 
-                  
+
                     <WhenVisible
                         :once="false"
                         :params="{
@@ -255,7 +255,7 @@
                     >
                         <div class="mt-6 text-center">
                             <div class="loading-dots">
-                                <span class="text-gray-500 mr-2">{{ __('degrees.loading') }}</span>
+                                <span class="text-gray-900 mr-2">{{ __('degrees.loading') }}</span>
                                 <div class="dot"></div>
                                 <div class="dot"></div>
                                 <div class="dot"></div>
@@ -317,7 +317,7 @@ watch(() => props.language, (newLanguage, oldLanguage) => {
         selectedSort.value = "";
         page.value = 1;
         hasMorePages.value = true;
-        
+
         router.visit(window.location.pathname, {
             preserveState: false,
             preserveScroll: false,

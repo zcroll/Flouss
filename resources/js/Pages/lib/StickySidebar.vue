@@ -6,12 +6,7 @@
 
         <!-- Sticky Sidebar -->
         <div class="w-full lg:w-1/3 mb-8 lg:mb-0 lg:pl-8">
-            <div class="sticky top-4 text-white  rounded-3xl p-6 overflow-hidden"
-                 :class="[
-                    type === 'career' ? 'bg-gradient-to-br from-[#132535] via-[#172f44] to-[#18354f]' :
-                    type === 'degree' ? 'bg-gradient-to-br from-[#132535] via-[#172f44] to-[#18354f]' :
-                    'bg-gradient-to-br from-green-500 via-teal-500 to-blue-500'
-                 ]">
+            <div class="sticky top-4 text-white  rounded-2xl p-6 overflow-hidden bg-[#353535]" >
                 <div class="relative z-10">
                     <!-- Main Content for Large Screens -->
                     <div v-if="!isSmallScreen" class="rounded-3xl">

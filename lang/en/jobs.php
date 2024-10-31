@@ -16,4 +16,5 @@ return [
     'hidden' => 'hidden',
     'head_title' => 'Career Insights',
     'head_subtitle' => 'Unlock opportunities that perfectly match your personality and skills.',
+    'loading' => 'Loading'
 ];

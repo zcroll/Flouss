@@ -5,9 +5,9 @@ import { Link } from '@inertiajs/vue3';
 <template>
     <Link :href="'/'">
         <img
-                    class="top-menu__image h-10"
+                    class="top-menu__image h-20"
                     alt="CareerHunter"
-                    src="/logo_copy.webp"
+                    src="/logo_auth.webp"
                 />
     </Link>
 </template>
