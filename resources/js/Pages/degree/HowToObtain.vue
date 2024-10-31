@@ -2,6 +2,7 @@
   <AppLayout>
     <!-- Page Header -->
     <template #header>
+    
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">
         How to Obtain a {{ degree.name }} Degree
       </h2>
@@ -15,6 +16,14 @@
       type="degree"
     >
       <div class="py-5 bg-gray-50 rounded-3xl">
+        <nav class="flex items-center space-x-2 text-sm text-gray-600">
+                    <Link :href="route('degree.howToObtain', { id: degree.slug })">{{ __('stickybar.howToObtain') }}</Link>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                    </svg>
+                    <span class="text-gray-400">{{degree.name}}</span>
+                  </nav>
+
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
           <div class="p-6">
             <!-- Section Title -->
@@ -93,6 +102,7 @@
 
 <script>
 import { defineComponent, computed } from 'vue'
+import { Link } from '@inertiajs/vue3'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import StickySidebar from '@/Pages/lib/StickySidebar.vue'
 
@@ -100,6 +110,7 @@ export default defineComponent({
   components: {
     AppLayout,
     StickySidebar,
+    Link,
   },
   props: {
     degree: Object,
