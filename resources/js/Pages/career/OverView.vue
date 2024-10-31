@@ -1,14 +1,8 @@
 <template>
     <AppLayout>
 
-        <div class="container mx-auto">
-        <div class="breadcrumbs-nav breadcrumbs-nav--tests">
-                 <Link :href="route('jobs.index')">{{ __('navigation.jobs') }}</Link>
-                 <div class="small-icon arrow-breadcrumbs"></div>
-                 <Link :href="route('career', { id: occupation.slug })">{{ __('stickybar.overview') }}</Link>
-                 <div class="small-icon arrow-breadcrumbs"></div>
-                 <span>{{occupation.name}}</span> 
-        </div>
+        <div class="layout--sidebar__body__main">
+  >
 
         <StickySidebar
             :slug="occupation.slug"
@@ -24,7 +18,17 @@
             <div class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white rounded-3xl shadow-2xl">
 
 
-
+              <nav class="flex items-center space-x-2 text-sm text-gray-600">
+            <Link :href="route('jobs.index')" class="hover:text-blue-600 transition-colors">{{ __('navigation.jobs') }}</Link>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+            </svg>
+            <Link :href="route('career', { id: occupation.slug })" class="hover:text-blue-600 transition-colors">{{ __('stickybar.overview') }}</Link>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+            </svg>
+            <span class="text-gray-400">{{occupation.name}}</span>
+          </nav>
                 <!-- Main Role Description Section -->
                 <section class="space-y-8">
                     <h2 class="custom-heading">{{ __('career.what_is_a') }} {{occupation.name}} ?</h2>

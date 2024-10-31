@@ -83,12 +83,21 @@ class CareerController extends Controller
     public function personality(string $job): Response
     {
         $locale = app()->getLocale();
-        $careerNameColumn = $locale === 'fr' ? 'career_name_fr' : 'career_name';
-        $descriptionColumn = $locale === 'fr' ? 'description_fr' : 'description';
 
-        $occupation = JobInfo::with(['personalityTraits', 'personalityDetails'])
-            ->where('slug', $job)
-            ->firstOrFail();
+        $occupation = JobInfo::where('slug', $job)->firstOrFail();
+
+        $personalityTraits = DB::table('personality_traits')->where('job_id', $occupation->id)->get();
+        
+
+        ds([ 'personalityTraits' => $personalityTraits ]);
+        $personalityDetails = DB::table('personality_details')->where('job_id', $occupation->id)->get()->map(function ($detail) {
+            return [
+                'career_name' => $detail->career_name,
+                'description' => $detail->description,
+                'trait_type' => $detail->trait_type,
+            ];
+        });
+        ds([ 'personalityDetails' => $personalityDetails ]);
 
         return Inertia::render('career/personality', [
             'occupation' => [
@@ -96,13 +105,8 @@ class CareerController extends Controller
                 'slug' => $occupation->slug,
                 'image' => $occupation->image,
             ],
-            'personalityTraits' => $occupation->personalityTraits,
-            'personalityDetails' => $occupation->personalityDetails->map(function ($detail) use ($careerNameColumn, $descriptionColumn) {
-                return [
-                    'career_name' => $detail->$careerNameColumn,
-                    'description' => $detail->$descriptionColumn,
-                ];
-            }),
+            'personalityTraits' => $personalityTraits,
+            'personalityDetails' => $personalityDetails,
         ]);
     }
 

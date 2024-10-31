@@ -6,7 +6,8 @@
       <lottie-player 
         autoplay
         loop
-        style="width:400px"
+      
+        style="width:600px"
         :src="animationDataPath"
         speed="1"
         debug

@@ -171,11 +171,5 @@ const getSecondBoxContent = computed(() => {
 </script>
 
 <style scoped>
-.active {
-    @apply bg-white bg-opacity-30 font-bold;
-}
 
-.disabled-link {
-    @apply opacity-50 cursor-not-allowed;
-}
 </style>
