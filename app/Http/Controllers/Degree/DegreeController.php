@@ -23,7 +23,13 @@ class DegreeController extends Controller
             ->firstOrFail();
 
         return Inertia::render('degree/Overview', [
-            'degree' => $degree,
+            'degree' => [
+                'name' => $degree->name,
+                'slug' => $degree->slug,
+                'image' => $degree->image,
+                'degree_level' => $degree->degree_level,
+                'satisfaction' => $degree->satisfaction,
+            ],
             'degreeDescription' => [
                 'main_description' => $degree->degreeDescription ? $degree->degreeDescription->$mainDescriptionColumn : null,
                 'secondary_description' => $degree->degreeDescription ? $degree->degreeDescription->$secondaryDescriptionColumn : null,
@@ -51,7 +57,11 @@ class DegreeController extends Controller
             ->firstOrFail();
 
         return Inertia::render('degree/Skills', [
-            'degree' => $degree,
+            'degree' => [
+                'name' => $degree->name,
+                'slug' => $degree->slug,
+                'image' => $degree->image,
+            ],
             'degreeSkills' => $degree->degreeSkills->map(function ($skill) use ($locale) {
                 return [
                     'skill_description' => $locale === 'fr' ? $skill->skill_description_fr : $skill->skill_description,
@@ -69,7 +79,11 @@ class DegreeController extends Controller
             ->firstOrFail();
 
         return Inertia::render('degree/Jobs', [
-            'degree' => $degree,
+            'degree' => [
+                'name' => $degree->name,
+                'slug' => $degree->slug,
+                'image' => $degree->image,
+            ],
             'degreeJobs' => $degree->degreeJobs->map(function ($job) use ($locale) {
                 return [
                     'job_title' => $locale === 'fr' ? $job->job_title_fr : $job->job_title,
@@ -79,17 +93,17 @@ class DegreeController extends Controller
         ]);
     }
 
-    public function howToObtain(string $id): Response
+    public function howToObtain(string $slug): Response
     {
         $locale = app()->getLocale();
 
         $degree = Degree::with(['degreeFormationMatches.formation.etablissement']) // Eager load formations and their etablissement
-            ->where('slug', $id)
+            ->where('slug', $slug)
             ->firstOrFail();
 
         return Inertia::render('degree/HowToObtain', [
             'degree' => [
-                'name' => $locale === 'fr' ? $degree->name_fr : $degree->name,
+                'name' => $degree->name,
                 'slug' => $degree->slug,
                 'image' => $degree->image,
             ],
