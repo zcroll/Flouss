@@ -15,17 +15,22 @@
       >
       <link type="text/css" rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/careers.098b42e5fd20.css">
       <div class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white rounded-3xl shadow-2xl">
-          <nav class="flex items-center space-x-2 text-sm text-gray-600">
-            <Link :href="route('jobs.index')" class="hover:text-blue-600 transition-colors">{{ __('navigation.jobs') }}</Link>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-            </svg>
-            <Link :href="route('career', { id: occupation.slug })" class="hover:text-blue-600 transition-colors">{{ __('stickybar.personality') }}</Link>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-            </svg>
-            <span class="text-gray-400">{{occupation.name}}</span>
-          </nav>
+        <nav class="flex items-center space-x-2 text-sm text-gray-600 mb-8">
+                <Link :href="route('dashboard')" class="hover:text-blue-600 transition-colors">{{ __('Home') }}</Link>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                </svg>
+                <Link :href="route('jobs.index')" class="hover:text-blue-600 transition-colors">{{ __('Jobs') }}</Link>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                </svg>
+                <Link :href="route('career', { id: occupation.slug })" class="hover:text-blue-600 transition-colors">{{ occupation.name }}</Link>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                </svg>
+                <span class="text-gray-400">{{ __('Personality') }}</span>
+            </nav>
+
           <section>
             <p class="lead text-gray-700 mb-8" tabindex="0">
               We surveyed {{occupation.name.toLowerCase()}}s to learn what personality traits and interests make them unique. Here are the results.

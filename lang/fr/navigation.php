@@ -18,6 +18,11 @@ return [
     'log_out' => 'Déconnexion',
     'log_in' => 'Se connecter',
     'register' => 'S\'inscrire',
-    'test' => 'Test',
-    'how_it_works' => 'Comment ça marche',
+    'Organization' => 'Organisations',
+    'Career_Test' => 'Test de Carrière',
+    'take_test' => 'Passez le test gratuit',
+    'splash_callout' => 'Dites bonjour à Gen.Z, la principale plateforme d\'avancement académique et professionnel au monde.',
+    'unlock_future' => 'Déverrouillez le futur qui est en vous',
+    'get_started' => 'Commencer',
+    'learn_more' => 'En savoir plus sur Gen.Z',
 ];

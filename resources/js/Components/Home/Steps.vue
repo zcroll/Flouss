@@ -2,34 +2,38 @@
   <section id="steps" class="home__steps wf-section">
     <div class="home__steps__container">
       <h2 class="home__steps__h2">
-        Described as <span class="home__steps__h2__span">“shockingly accurate,”</span> we’ve helped millions of people find their ideal careers.<br>
+        {{ __('steps.description') }}<br>
       </h2>
       <div class="home__steps__grid">
         <div class="step">
           <h3 class="step__heading">
-            <span class="step__header__span">01</span> Assessment
+            <span class="step__header__span">01</span> {{ __('steps.assessment') }}
           </h3>
           <p class="step__p">
-            Reflect upon your past experiences and future goals, and learn what makes you unique.
+            {{ __('steps.assessment_description') }}
           </p>
         </div>
         <div class="step">
           <h3 class="step__heading">
-            <span class="step__header__span">02</span> Matches
+            <span class="step__header__span">02</span> {{ __('steps.matches') }}
           </h3>
           <p class="step__p">
-            Find the path that's right for you based on your strengths, interests, and personality.<br>
+            {{ __('steps.matches_description') }}<br>
           </p>
         </div>
         <div class="step">
           <h3 class="step__heading">
-            <span class="step__header__span">03</span> Library
+            <span class="step__header__span">03</span> {{ __('steps.library') }}
           </h3>
           <p class="step__p">
-            Explore over 1,000 careers and degrees. Learn who thrives in them and why.<br>
+            {{ __('steps.library_description') }}<br>
           </p>
         </div>
       </div>
     </div>
   </section>
 </template>
+
+<script>
+import __ from '@/lang';
+</script>

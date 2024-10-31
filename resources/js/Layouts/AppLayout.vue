@@ -47,7 +47,7 @@ const socialLinks = [
 <template >
     <div >
         <Head :title="title" />
-        <div class="min-h-screen bg-[#e4e2dc] relative">
+        <div class="min-h-screen relative" style="background-image: linear-gradient(#e4e2dc, #c4bcac);">
 
             <Header :title="headTitle" :sub-title="headSubTitle" :show="showDiv">
                 <template #navigation>

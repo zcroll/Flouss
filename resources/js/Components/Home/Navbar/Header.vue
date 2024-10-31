@@ -10,7 +10,7 @@ export default {
       required: true
     },
     canRegister: {
-      type: Boolean, 
+      type: Boolean,
       required: true
     }
   },
@@ -35,12 +35,12 @@ export default {
 
 
 <template>
-    <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/webflow.4dc4432fd989.css"> 
+    <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/webflow.4dc4432fd989.css">
        <div id="globalnav-container" data-registration-modal="true">
         <nav :class="['GlobalNav', { 'GlobalNav--sticky': isSticky }]" role="navigation">
             <a class="GlobalNav-logo--desktop w--current" data-track="mixpanel" data-target="Home" data-link-type="Header" href="/">
                 <svg class="GlobalNav-logo" version="1.1" viewBox="0 0 239 56" xmlns="http://www.w3.org/2000/svg">
-                    <title>CareerExplorer</title>
+                    <title>Gen.Z</title>
                     <g id="Final(WithSokanu)--default" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                         <g id="Finalized-Logo---Black-and-White--default" transform="translate(-18.000000, -29.000000)" fill="currentColor">
                             <g id="Logo--default" transform="translate(18.000000, 29.000000)">
@@ -62,19 +62,19 @@ export default {
                     <a class="GlobalNav-menu-link GlobalNav-menu-link--default" data-track="mixpanel" data-target="For Organizations" data-link-type="Header" href="/for-organizations/">     </a>
                 </li>
                 <li class="GlobalNav-menu-item GlobalNav-menu-item--mobile">
-                    <a class="GlobalNav-menu-link GlobalNav-menu-link--default w--current" data-track="mixpanel" data-target="Home" data-link-type="Header" href="/">Home</a>
+                    <a class="GlobalNav-menu-link GlobalNav-menu-link--default w--current" data-track="mixpanel" data-target="Home" data-link-type="Header" href="/">{{ __('navigation.home') }}</a>
                 </li>
                 <li class="GlobalNav-menu-item">
-                    <a class="GlobalNav-menu-link GlobalNav-menu-link--default" data-track="mixpanel" data-target="Career Test" data-link-type="Header" href="/career-test/">Career Test</a>
+                    <a class="GlobalNav-menu-link GlobalNav-menu-link--default" data-track="mixpanel" data-target="Career Test" data-link-type="Header" href="/career-test/">{{ __('navigation.Career_Test') }}</a>
                 </li>
                 <li class="GlobalNav-menu-item">
-                    <a class="GlobalNav-menu-link GlobalNav-menu-link--default" data-track="mixpanel" data-target="For Organizations" data-link-type="Header" href="/for-organizations/">For Organizations</a>
+                    <a class="GlobalNav-menu-link GlobalNav-menu-link--default" data-track="mixpanel" data-target="For Organizations" data-link-type="Header" href="/for-organizations/">{{ __('navigation.Organization') }}</a>
                 </li>
-            
-            
-               
-           
-              
+
+
+
+
+
             </ul>
             <div class="GlobalNav-menu-item--login">
                 <template v-if="$page.props.auth.user">
@@ -88,7 +88,7 @@ export default {
                     </Link>
                 </template>
               </div>
-                <Link :href="route('main-test')" class="GlobalNav-button GlobalNav-button--main alans-butt--grey">Take the <span class="hide-below-md">&nbsp;free&nbsp;</span> test</Link>
+                <Link :href="route('main-test')" class="GlobalNav-button GlobalNav-button--main alans-butt--grey">{{ __('navigation.take_test') }}</Link>
         </nav>
         <div class="progress-container" id="progress-bar-container">
             <div class="progress-bar" id="progress-bar"></div>

@@ -3,11 +3,11 @@
     <section id="content" class="home__splash wf-section">
         <div class="home__splashinner">
             <div class="home__splash__image">
-                <img src="https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/5ebd8f835171252525f449e0_5e7b93af68aaa819e1033dee_hopme-phone%20(1).png" 
+                <img src="/home_list_jobs_phone.png" 
                      alt="Mockup of the career test assessment" 
                      loading="lazy" 
-                     class="home__splash__image__img">
-                <img src="https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/5ebd900138e2fcf93c9453af_5e7b93afd4a2af6597564b30_home-bg-p-1080.jpeg" 
+                     class="home__splash__image__img" >
+                <img src="woman_home.jpeg" 
                      alt="Unlock the future you" 
                      loading="eager" 
                      id="hero-preload" 
@@ -15,15 +15,14 @@
             </div>
             <div class="home__splash__callout">
                 <div class="home__spash__callout__inner">
-                    <h1 class="home__splash__callout__h1">Unlock the future you</h1>
-                    <p class="home__splash__callout__p">Say hello to CareerExplorer, the world's leading career advancement platform.<br></p>
+                    <h1 class="home__splash__callout__h1">{{ __('navigation.unlock_future') }}</h1>
+                    <p class="home__splash__callout__p">{{ __('navigation.splash_callout') }}<br></p>
                     <div class="dynabutton">
                         <div class="dynabutton__embed w-embed">
-                            <Link :href="route('main-test')"
-                               class="alansbutt w-button">Get Started</Link>
+                            <Link :href="route('main-test')" class="alansbutt w-button">{{ __('navigation.get_started') }}</Link>
                         </div>
                     </div>
-                    <a href="/career-test/" class="alanslink">Learn More About CareerExplorer</a>
+                    <a href="/career-test/" class="alanslink">{{ __('navigation.learn_more') }}</a>
                 </div>
             </div>
         </div>

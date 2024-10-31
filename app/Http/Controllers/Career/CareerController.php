@@ -14,6 +14,7 @@ class CareerController extends Controller
 {
     public function index(string $job): Response
     {
+
         $locale = app()->getLocale();
         $nameColumn = $locale === 'fr' ? 'name_fr' : 'name';
         $descriptionColumn = $locale === 'fr' ? 'description_fr' : 'description';

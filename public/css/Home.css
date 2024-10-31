@@ -3077,14 +3077,14 @@ textarea.w-select {
   position: absolute;
   top: 0%;
   bottom: 0%;
-  left: 0%;
+  left: -10%;
   right: 0%;
 }
 .home__splash__image__img {
   z-index: 2;
-  width: 35%;
+  width: 70%;
   max-width: none;
-  margin-left: 20vw;
+  margin-left: 25vw;
   position: relative;
   top: 0%;
   bottom: auto;

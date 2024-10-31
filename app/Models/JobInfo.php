@@ -110,4 +110,15 @@ class JobInfo extends Model
     {
         return $this->hasMany(JobDegree::class);
     }
+
+
+    public function getPath()
+    {
+        return cache()->rememberForever('category.path.' . $this->id, function () {
+            return Arr::join(
+                $this->ancestorsAndSelf($this->id)->map(fn ($ancestor) => $ancestor->slug)->toArray(),
+                '/'
+            );
+        });
+    }
 }
