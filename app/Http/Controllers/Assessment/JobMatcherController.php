@@ -21,7 +21,7 @@ class JobMatcherController extends Controller
 
 
          $interest_scores = [
-            "Finance" => 2,
+            "Finance" => 5,
             "Athletics" => 2,
             "Flying" => 4,
             "Law" => 2,
@@ -45,7 +45,7 @@ class JobMatcherController extends Controller
             "Office clerical work" => 2,
             "Mathematics" => 5,
             "Military" => 3,
-            "Information technology" => 5,
+            "Information technology" => 1,
             "Music" => 2
         ];
 
