@@ -266,41 +266,86 @@ class MainTestController extends Controller
     private function matchJobs($interest_scores)
     {
         try {
-            // Get Python script path
+            // Log the start of the process
+            Log::info('Starting job matching process', [
+                'interest_scores' => $interest_scores
+            ]);
+
+            // Get and validate paths
             $scriptPath = base_path('app/python/test.py');
-            
-            // Get Python executable path (using the wrapper script)
             $pythonWrapper = base_path('app/python/run_script.sh');
-            
-            // Make sure the wrapper is executable
-            chmod($pythonWrapper, 0755);
-            
-            // Create and run the process
-            $process = new Process([
+
+            // Log paths
+            Log::info('Script paths', [
+                'scriptPath' => $scriptPath,
+                'wrapperPath' => $pythonWrapper,
+                'exists_script' => file_exists($scriptPath),
+                'exists_wrapper' => file_exists($pythonWrapper)
+            ]);
+
+            // Verify files exist
+            if (!file_exists($scriptPath)) {
+                throw new \RuntimeException("Python script not found at: $scriptPath");
+            }
+            if (!file_exists($pythonWrapper)) {
+                throw new \RuntimeException("Wrapper script not found at: $pythonWrapper");
+            }
+
+            // Make wrapper executable
+            if (!is_executable($pythonWrapper)) {
+                chmod($pythonWrapper, 0755);
+                Log::info('Made wrapper script executable');
+            }
+
+            // Prepare command
+            $command = [
                 $pythonWrapper,
                 $scriptPath,
                 json_encode($interest_scores)
+            ];
+
+            // Log command
+            Log::info('Preparing to execute command', [
+                'command' => $command,
+                'working_dir' => dirname($scriptPath)
             ]);
-            
-            // Set timeout and environment variables
+
+            // Create process
+            $process = new Process($command);
+            $process->setWorkingDirectory(dirname($scriptPath));
             $process->setTimeout(60);
-            $process->setEnv([
+            
+            // Set environment variables
+            $env = [
                 'PYTHONPATH' => '/home/u723210868/python_packages',
                 'DB_HOST' => env('DB_HOST'),
                 'DB_USERNAME' => env('DB_USERNAME'),
                 'DB_PASSWORD' => env('DB_PASSWORD'),
-                'DB_DATABASE' => env('DB_DATABASE')
-            ]);
-            
-            // Run the process
-            $process->run();
+                'DB_DATABASE' => env('DB_DATABASE'),
+                'PATH' => getenv('PATH')
+            ];
+            $process->setEnv($env);
 
-            // Check for errors
+            // Log environment
+            Log::info('Process environment', [
+                'env' => array_keys($env),
+                'python_packages_dir' => is_dir('/home/u723210868/python_packages')
+            ]);
+
+            // Run the process with real-time output logging
+            $process->run(function ($type, $buffer) {
+                if (Process::ERR === $type) {
+                    Log::error('Python script error output', ['buffer' => $buffer]);
+                } else {
+                    Log::info('Python script output', ['buffer' => $buffer]);
+                }
+            });
+
+            // Check for execution errors
             if (!$process->isSuccessful()) {
                 Log::error('Python script execution failed', [
-                    'error' => $process->getErrorOutput(),
-                    'command' => $process->getCommandLine(),
-                    'working_dir' => $process->getWorkingDirectory()
+                    'exit_code' => $process->getExitCode(),
+                    'error_output' => $process->getErrorOutput()
                 ]);
                 throw new ProcessFailedException($process);
             }
