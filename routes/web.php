@@ -18,6 +18,8 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\test\MainTestController;
 use App\Http\Controllers\test\TestController;
 use App\Http\Controllers\test\WelcomeBackController;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TestMail;
 
 
 Route::get('/', function () {
@@ -151,3 +153,8 @@ Route::get('/career-test', function () {
 Route::get('/for-organizations', function () {
   return Inertia::render('For-organizations');
 });
+
+// Route::get('/test-email', function() {
+//     Mail::to('zcrroll@gmail.com')->send(new TestMail());
+//     return 'Test email sent!';
+// });
