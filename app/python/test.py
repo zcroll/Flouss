@@ -47,83 +47,161 @@ class JobMatcher:
     def find_matching_jobs(self) -> Dict[str, any]:
         """Find and rank matching jobs based on optimized combination rules"""
         final_matches = []
-        combination_productivity = {}
-        remaining_slots = 30
-        used_job_ids = set()
+        data_cache = {}
+        duplicate_tracker = set()
         
-        # Step 1: Analyze highest scoring fields (score 5)
-        top_fields = [field for field, score in self.interest_scores.items() if score == 5]
-        top_pairs = list(itertools.combinations(top_fields, 2))
+        # Get interests by score
+        interests_by_score = {}
+        for interest, score in self.interest_scores.items():
+            if score not in interests_by_score:
+                interests_by_score[score] = []
+            interests_by_score[score].append(interest)
         
-        # Find the most productive pair from top fields
-        most_productive_pair = None
-        max_jobs = 0
-        top_pair_jobs = []
+        scores = sorted(interests_by_score.keys(), reverse=True)
+        high_score_interests = interests_by_score[scores[0]]
+        second_highest_interests = interests_by_score[scores[1]] if len(scores) > 1 else []
+        third_highest_interests = interests_by_score[scores[2]] if len(scores) > 2 else []
+        fourth_highest_interests = interests_by_score[scores[3]] if len(scores) > 3 else []
         
-        for pair in top_pairs:
-            jobs = self.get_jobs_by_fields(pair)
-            num_jobs = len(jobs)
-            if num_jobs > max_jobs:
-                max_jobs = num_jobs
-                most_productive_pair = pair
-                top_pair_jobs = jobs
-        
-        # Add jobs from most productive top pair
-        for job in top_pair_jobs:
-            if remaining_slots > 0 and job['job_id'] not in used_job_ids:
-                description = f"This role combines expertise in {most_productive_pair[0]} and {most_productive_pair[1]}"
-                final_matches.append(JobMatch(
-                    job_id=job['job_id'],
-                    job_title=job['job_title'],
-                    primary_fields=most_productive_pair,
-                    description=description,
-                    education_level=job['education_level']
-                ))
-                used_job_ids.add(job['job_id'])
-                remaining_slots -= 1
-        
-        # Step 2: Combine with next level (score 4)
-        if most_productive_pair:
-            score_4_fields = [field for field, score in self.interest_scores.items() if score == 4]
-            best_secondary_pair = None
-            max_secondary_jobs = 0
-            best_secondary_jobs = []
-            
-            # Try combinations with each field from the most productive pair
-            for top_field in most_productive_pair:
-                for score_4_field in score_4_fields:
-                    pair = (top_field, score_4_field)
+        # Phase 1: Primary Data Selection with Duplicates and Education Level Exclusion
+        if len(high_score_interests) > 3:
+            pairs = list(itertools.combinations(high_score_interests, 2))
+            for pair in pairs:
+                if pair not in data_cache:
                     jobs = self.get_jobs_by_fields(pair)
-                    num_jobs = len(jobs)
-                    if num_jobs > max_secondary_jobs:
-                        max_secondary_jobs = num_jobs
-                        best_secondary_pair = pair
-                        best_secondary_jobs = jobs
+                    filtered_jobs = [job for job in jobs if job['education_level'] not in ['high school', 'associate']]
+                    data_cache[pair] = filtered_jobs
+                
+                final_matches.extend(data_cache[pair])
+                duplicate_tracker.update(job['job_id'] for job in data_cache[pair])
+        
+        elif len(high_score_interests) == 2:
+            pair = tuple(high_score_interests)
+            if pair not in data_cache:
+                jobs = self.get_jobs_by_fields(pair)
+                filtered_jobs = [job for job in jobs if job['education_level'] not in ['high school', 'associate']]
+                data_cache[pair] = filtered_jobs
             
-            # Add jobs from best secondary combination
-            for job in best_secondary_jobs:
-                if remaining_slots > 0 and job['job_id'] not in used_job_ids:
-                    description = f"This role combines expertise in {best_secondary_pair[0]} and {best_secondary_pair[1]}"
-                    final_matches.append(JobMatch(
-                        job_id=job['job_id'],
-                        job_title=job['job_title'],
-                        primary_fields=best_secondary_pair,
-                        description=description,
-                        education_level=job['education_level']
-                    ))
-                    used_job_ids.add(job['job_id'])
-                    remaining_slots -= 1
+            final_matches.extend(data_cache[pair])
+            duplicate_tracker.update(job['job_id'] for job in data_cache[pair])
+        
+        elif len(high_score_interests) == 1:
+            pairs = [(high_score_interests[0], interest) for interest in second_highest_interests[:3]]
+            for pair in pairs:
+                if pair not in data_cache:
+                    jobs = self.get_jobs_by_fields(pair)
+                    filtered_jobs = [job for job in jobs if job['education_level'] not in ['high school', 'associate']]
+                    data_cache[pair] = filtered_jobs
+            
+            sorted_pairs = sorted(pairs, key=lambda p: len(data_cache[p]), reverse=True)
+            final_matches.extend(data_cache[sorted_pairs[0]])
+            final_matches.extend(data_cache[sorted_pairs[1]])
+            final_matches.extend(data_cache[sorted_pairs[2]])
+            duplicate_tracker.update(job['job_id'] for pair in sorted_pairs for job in data_cache[pair])
+        
+        if len(final_matches) >= 30:
+            final_matches = final_matches[:30]
+        else:
+            for pair in data_cache:
+                final_matches.extend(job for job in data_cache[pair] if job['job_id'] not in duplicate_tracker)
+                duplicate_tracker.update(job['job_id'] for job in data_cache[pair])
+                if len(final_matches) >= 30:
+                    final_matches = final_matches[:30]
+                    break
+        
+        # Phase 2: Supplementary Data Selection with Fallback
+        if len(final_matches) < 30:
+            pairs = [(interest1, interest2) 
+                     for interest1 in high_score_interests 
+                     for interest2 in second_highest_interests]
+            
+            for pair in pairs:
+                if pair not in data_cache:
+                    jobs = self.get_jobs_by_fields(pair)
+                    filtered_jobs = [job for job in jobs if job['education_level'] not in ['high school', 'associate']]
+                    data_cache[pair] = filtered_jobs
+            
+            sorted_pairs = sorted(pairs, key=lambda p: len(data_cache[p]), reverse=True)
+            for pair in sorted_pairs:
+                final_matches.extend(data_cache[pair])
+                duplicate_tracker.update(job['job_id'] for job in data_cache[pair])
+                if len(final_matches) >= 30:
+                    final_matches = final_matches[:30]
+                    break
+            
+            if len(final_matches) < 30:
+                for pair in sorted_pairs:
+                    final_matches.extend(job for job in data_cache[pair] if job['job_id'] not in duplicate_tracker)
+                    duplicate_tracker.update(job['job_id'] for job in data_cache[pair])
+                    if len(final_matches) >= 30:
+                        final_matches = final_matches[:30]
+                        break
+        
+        # Phase 3: Tertiary Data Selection with Fallback
+        if len(final_matches) < 30:
+            pairs = [(interest1, interest2)
+                     for interest1 in high_score_interests
+                     for interest2 in third_highest_interests]
+            
+            for pair in pairs:
+                if pair not in data_cache:
+                    jobs = self.get_jobs_by_fields(pair)
+                    filtered_jobs = [job for job in jobs if job['education_level'] not in ['high school', 'associate']]
+                    data_cache[pair] = filtered_jobs
+            
+            sorted_pairs = sorted(pairs, key=lambda p: len(data_cache[p]), reverse=True)
+            for pair in sorted_pairs:
+                final_matches.extend(data_cache[pair])
+                duplicate_tracker.update(job['job_id'] for job in data_cache[pair])
+                if len(final_matches) >= 30:
+                    final_matches = final_matches[:30]
+                    break
+            
+            if len(final_matches) < 30:
+                for pair in sorted_pairs:
+                    final_matches.extend(job for job in data_cache[pair] if job['job_id'] not in duplicate_tracker)
+                    duplicate_tracker.update(job['job_id'] for job in data_cache[pair])
+                    if len(final_matches) >= 30:
+                        final_matches = final_matches[:30]
+                        break
+        
+        # Phase 4: Quaternary Data Selection with Fallback
+        if len(final_matches) < 30:
+            pairs = [(interest1, interest2)
+                     for interest1 in high_score_interests
+                     for interest2 in fourth_highest_interests]
+            
+            for pair in pairs:
+                if pair not in data_cache:
+                    jobs = self.get_jobs_by_fields(pair)
+                    filtered_jobs = [job for job in jobs if job['education_level'] not in ['high school', 'associate']]
+                    data_cache[pair] = filtered_jobs
+            
+            sorted_pairs = sorted(pairs, key=lambda p: len(data_cache[p]), reverse=True)
+            for pair in sorted_pairs:
+                final_matches.extend(data_cache[pair])
+                duplicate_tracker.update(job['job_id'] for job in data_cache[pair])
+                if len(final_matches) >= 30:
+                    final_matches = final_matches[:30]
+                    break
+            
+            if len(final_matches) < 30:
+                for pair in sorted_pairs:
+                    final_matches.extend(job for job in data_cache[pair] if job['job_id'] not in duplicate_tracker)
+                    duplicate_tracker.update(job['job_id'] for job in data_cache[pair])
+                    if len(final_matches) >= 30:
+                        final_matches = final_matches[:30]
+                        break
         
         return {
-            "most_productive_combinations": [
-                (most_productive_pair, max_jobs),
-                (best_secondary_pair, max_secondary_jobs)
-            ] if most_productive_pair and best_secondary_pair else [],
-            "job_matches": final_matches,
-            "combination_analysis": {
-                most_productive_pair: max_jobs,
-                best_secondary_pair: max_secondary_jobs
-            } if most_productive_pair and best_secondary_pair else {}
+            "job_matches": [JobMatch(
+                job_id=job['job_id'],
+                job_title=job['job_title'],
+                primary_fields=pair,
+                description=f"This role combines expertise in {pair[0]} and {pair[1]}",
+                education_level=job['education_level']
+            ) for job in final_matches],
+            "total_matches": len(final_matches)
         }
 
     def close(self):
@@ -154,11 +232,7 @@ def main():
         # Convert results to JSON-serializable format
         response = {
             'job_matches': [match.to_dict() for match in results['job_matches']],
-            'most_productive_combinations': results['most_productive_combinations'],
-            'combination_analysis': {
-                str(k): v for k, v in results['combination_analysis'].items()
-            } if results['combination_analysis'] else {},
-            'total_matches': len(results['job_matches'])
+            'total_matches': results['total_matches']
         }
         
         print(json.dumps(response))
