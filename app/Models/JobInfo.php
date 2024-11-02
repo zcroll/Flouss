@@ -82,7 +82,7 @@ class JobInfo extends Model
     }
 
     public function degreeJobs()
-    {
+    { 
         return $this->hasMany(DegreeJob::class, 'job_title', 'name');
     }
 

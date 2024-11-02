@@ -265,21 +265,122 @@ class MainTestController extends Controller
 
     private function matchJobs($interest_scores)
     {
-        $scriptPath = app_path('/python/test.py');
-        $process = new Process(['python3', $scriptPath, json_encode($interest_scores)]);
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            Log::error('Python script execution failed', ['error' => $process->getErrorOutput()]);
-            throw new ProcessFailedException($process);
-        }
-
-        $output = $process->getOutput();
         try {
-            return json_decode($output, true, 512, JSON_THROW_ON_ERROR);
+            // Log the start of the process
+            Log::info('Starting job matching process', [
+                'interest_scores' => $interest_scores
+            ]);
+
+            // Get and validate paths
+            $scriptPath = base_path('app/python/test.py');
+            $pythonWrapper = base_path('app/python/run_script.sh');
+
+            // Log paths
+            Log::info('Script paths', [
+                'scriptPath' => $scriptPath,
+                'wrapperPath' => $pythonWrapper,
+                'exists_script' => file_exists($scriptPath),
+                'exists_wrapper' => file_exists($pythonWrapper)
+            ]);
+
+            // Verify files exist
+            if (!file_exists($scriptPath)) {
+                throw new \RuntimeException("Python script not found at: $scriptPath");
+            }
+            if (!file_exists($pythonWrapper)) {
+                throw new \RuntimeException("Wrapper script not found at: $pythonWrapper");
+            }
+
+            // Make wrapper executable
+            if (!is_executable($pythonWrapper)) {
+                chmod($pythonWrapper, 0755);
+                Log::info('Made wrapper script executable');
+            }
+
+            // Prepare command
+            $command = [
+                $pythonWrapper,
+                $scriptPath,
+                json_encode($interest_scores)
+            ];
+
+            // Log command
+            Log::info('Preparing to execute command', [
+                'command' => $command,
+                'working_dir' => dirname($scriptPath)
+            ]);
+
+            // Create process
+            $process = new Process($command);
+            $process->setWorkingDirectory(dirname($scriptPath));
+            $process->setTimeout(60);
+            
+            // Set environment variables
+            $env = [
+                'PYTHONPATH' => '/home/u723210868/python_packages',
+                'DB_HOST' => env('DB_HOST'),
+                'DB_USERNAME' => env('DB_USERNAME'),
+                'DB_PASSWORD' => env('DB_PASSWORD'),
+                'DB_DATABASE' => env('DB_DATABASE'),
+                'PATH' => getenv('PATH')
+            ];
+            $process->setEnv($env);
+
+            // Log environment
+            Log::info('Process environment', [
+                'env' => array_keys($env),
+                'python_packages_dir' => is_dir('/home/u723210868/python_packages')
+            ]);
+
+            // Run the process with real-time output logging
+            $process->run(function ($type, $buffer) {
+                if (Process::ERR === $type) {
+                    Log::error('Python script error output', ['buffer' => $buffer]);
+                } else {
+                    Log::info('Python script output', ['buffer' => $buffer]);
+                }
+            });
+
+            // Check for execution errors
+            if (!$process->isSuccessful()) {
+                Log::error('Python script execution failed', [
+                    'exit_code' => $process->getExitCode(),
+                    'error_output' => $process->getErrorOutput()
+                ]);
+                throw new ProcessFailedException($process);
+            }
+
+            // Get and decode output
+            $output = $process->getOutput();
+            $result = json_decode($output, true, 512, JSON_THROW_ON_ERROR);
+            
+            // Validate result structure
+            if (!isset($result['job_matches']) || !isset($result['total_matches'])) {
+                throw new \RuntimeException('Invalid response format from Python script');
+            }
+            
+            return $result;
+
+        } catch (ProcessFailedException $e) {
+            Log::error('Process execution failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            throw new \RuntimeException('Failed to execute job matching process');
+            
         } catch (\JsonException $e) {
-            Log::error('Failed to decode JSON from Python script', ['error' => $e->getMessage(), 'output' => $output]);
-            throw new \RuntimeException('Failed to process job matching results');
+            Log::error('JSON parsing failed', [
+                'error' => $e->getMessage(),
+                'output' => $output ?? null
+            ]);
+            throw new \RuntimeException('Failed to parse job matching results');
+            
+        } catch (\Exception $e) {
+            Log::error('Unexpected error in job matching', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            throw new \RuntimeException('An unexpected error occurred during job matching');
         }
     }
 
