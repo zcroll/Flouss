@@ -1,73 +1,17 @@
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>
 
-<style scoped>
-.loading-dots {
-  display: inline-flex;
-  align-items: center;
-}
-
-.dot {
-  width: 8px;
-  height: 8px;
-  margin: 0 4px;
-  background: #db492b;
-  border-radius: 50%;
-  animation: bounce 0.5s ease-in-out infinite;
-}
-
-.dot:nth-child(2) {
-  animation-delay: 0.1s;
-}
-
-.dot:nth-child(3) {
-  animation-delay: 0.2s;
-}
-
-@keyframes bounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.sticky-filter {
-  position: sticky;
-  top: 20px;
-}
-</style>
 
 <template>
-    <link
-        rel="stylesheet"
-        href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/listings-page.c5491ea6c00f.css"
-    />
+    <link rel="stylesheet" href="/css/listing_page.css">
     <AppLayout
-        :head-title="__('degrees.explore_degrees')"
-        :head-sub-title="__('degrees.find_academic_paths')"
-        :show-search="true"
+
         name="Degrees"
     >
-        <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div class="flex flex-col lg:flex-row gap-6">
                 <!-- Filter sidebar -->
-                <div class="w-full lg:w-1/4">
-                    <div class="bg-transparent shadow-sm p-4 sticky-filter">
-                        <h2 class="text-lg font-semibold text-gray-900 mb-3">
-                            {{ __("degrees.filters") }}
-                        </h2>
-
+                <div class="w-full lg:w-2/4">
+                    <div class=" border-[4px] rounded-3xl p-5 shadow-sm sticky-filter">
                         <div class="mb-3">
                             <label
                                 for="search"
@@ -255,7 +199,6 @@
                     >
                         <div class="mt-6 text-center">
                             <div class="loading-dots">
-                                <span class="text-gray-900 mr-2">{{ __('degrees.loading') }}</span>
                                 <div class="dot"></div>
                                 <div class="dot"></div>
                                 <div class="dot"></div>

@@ -3,70 +3,17 @@
 </style>
 
 
-
-<style scoped>
-.loading-dots {
-  display: inline-flex;
-  align-items: center;
-}
-
-.dot {
-  width: 8px;
-  height: 8px;
-  margin: 0 4px;
-  background: #db492b;
-  border-radius: 50%;
-  animation: bounce 0.5s ease-in-out infinite;
-}
-
-.dot:nth-child(2) {
-  animation-delay: 0.1s;
-}
-
-.dot:nth-child(3) {
-  animation-delay: 0.2s;
-}
-
-@keyframes bounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.sticky-filter {
-  position: sticky;
-  top: 20px;
-}
-</style>
-
 <template>
-      <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/listings-page.c5491ea6c00f.css">
+      <link rel="stylesheet" href="/css/listing_page.css">
   <AppLayout
-    :head-title="__('jobs.head_title')"
-    :head-sub-title="__('jobs.head_subtitle')"
-    :show-search="true"
+
     name="Jobs"
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div class="flex flex-col lg:flex-row gap-6">
         <!-- Filter sidebar -->
-        <div class="w-full lg:w-1/4">
-          <div class="bg-transparent shadow-sm p-4 sticky-filter">
-            <h2 class="text-lg font-semibold text-gray-900 mb-3">{{ __('jobs.filters') }}</h2>
-
+        <div class="w-full lg:w-2/4">
+          <div class=" border-[4px] rounded-3xl p-5 shadow-sm sticky-filter">
             <div class="mb-3">
               <label for="search" class="block text-sm font-medium text-gray-000 mb-1">{{ __('jobs.search') }}</label>
               <input
@@ -74,7 +21,7 @@
                 v-model="searchQuery"
                 type="text"
                 :placeholder="__('jobs.search_jobs')"
-                class="w-full px-3 py-1.5 text-gray-900 text-sm border bg-gray-50 rounded-md shadow-sm focus:ring-[#fb6303] focus:border-[#fb6303]"
+                class="w-full px-3 py-1.5 text-gray-900 text-sm bg-gray-50 rounded-md shadow-sm focus:ring-[#fb6303] focus:border-[#fb6303]"
                 @input="debouncedSearch"
               />
             </div>
@@ -199,7 +146,8 @@
         </div>
       </div>
     </div>
-  </AppLayout>
+  </AppLayout
+    >
 </template>
 
 <script setup>

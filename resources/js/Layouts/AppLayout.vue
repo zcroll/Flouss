@@ -49,7 +49,7 @@ const socialLinks = [
         <Head :title="title" />
         <div class="min-h-screen relative" style="background-image: linear-gradient(#e4e2dc, #c4bcac);">
 
-            <Header :title="headTitle" :sub-title="headSubTitle" :show="showDiv">
+            <Header>
                 <template #navigation>
                     <nav class="absolute top-5 left-0 right-0 z-10 bg-transparent">
                         <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">

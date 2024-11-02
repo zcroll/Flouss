@@ -10,7 +10,7 @@
     </label>
     <ul
       v-show="showDropdown"
-      class="bg-white flex flex-col gap-2 p-2 rounded-xl shadow text-black absolute z-10 w-28 end-1"
+      class="bg-white flex flex-col gap-2 p-2 rounded-xl shadow text-black absolute z-10 w-20 end-1"
       tabindex="0"
       @mouseenter="cancelCloseTimer"
       @mouseleave="startCloseTimer"
@@ -53,7 +53,7 @@ const getFlagSrc = (languageCode) => {
 };
 
 const getLanguageName = (languageCode) => {
-  return languageCode === 'en' ? 'English' : 'Français';
+  return languageCode === 'en' ? 'En' : 'Fr';
 };
 
 const switchLanguage = (language) => {
