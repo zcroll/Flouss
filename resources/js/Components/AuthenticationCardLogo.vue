@@ -7,7 +7,7 @@ import { Link } from '@inertiajs/vue3';
         <img
                     class="top-menu__image h-20"
                     alt="CareerHunter"
-                    src="/logo_auth.webp"
+                    src="/logo_no_background2.png"
                 />
     </Link>
 </template>
