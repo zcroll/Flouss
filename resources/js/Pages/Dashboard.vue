@@ -48,7 +48,7 @@
                                         </div>
                                         <div class="flex flex-1 items-center justify-between truncate rounded-r-md border-b border-r border-t border-gray-200 bg-white">
                                             <div class="flex-1 truncate px-4 py-2 text-sm">
-                                                <Link :href="`/job/${job.slug}`" class="font-medium text-gray-900 hover:text-gray-600">
+                                                <Link :href="`/career/${job.slug}`" class="font-medium text-gray-900 hover:text-gray-600">
                                                     {{ job.name }}
                                                 </Link>
                                             </div>
