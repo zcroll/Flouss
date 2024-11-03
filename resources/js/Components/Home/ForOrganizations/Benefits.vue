@@ -17,13 +17,9 @@
           >
           <div class="lrgrid__image__video">
             <div class="html-embed-4">
-              <video 
-                preload="auto"
-                muted
-                loop
-                playsinline
+              <img 
                 class="lazyload lazyloaded"
-              ></video>
+              ></img>
             </div>
             <img 
               class="lrgrid__image__abs"
@@ -139,7 +135,7 @@ export default {
       },
       images: {
         topVector: 'https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/609d955e1e795c1b9a4e3500_top%20vector%20container.png',
-        mobileView: 'https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/609d9902e937705f98464e3f_mobile%20view%20container%20(1).png',
+        mobileView: '/landingPage/organization/results_mobile.png',
         bottomVector: 'https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/609d955f26a48585ba636929_bottom%20vector%20container.png',
         mid: 'https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/609db85847919360ccd94e92_mid.png',
         top: 'https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/609db858326fae24dca5130d_top.png',
@@ -157,8 +153,8 @@ export default {
           https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/609d955e1e795c1b9a4e3500_top%20vector%20container.png 1168w
         `,
         mobileView: `
-          https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/609d9902e937705f98464e3f_mobile%20view%20container%20(1)-p-500.png 500w,
-          https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/609d9902e937705f98464e3f_mobile%20view%20container%20(1).png 584w
+          /landingPage/organization/results_mobile.png 500w,
+          /landingPage/organization/results_mobile.png 584w
         `,
         bottomVector: `
           https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/609d955f26a48585ba636929_bottom%20vector%20container-p-500.png 500w,

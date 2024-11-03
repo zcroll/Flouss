@@ -69,8 +69,8 @@ const stats = ref([
     </div>
 
     <div class="CareerTest__header__images">
-      <div class="CareerTest__header__images__desktop" style="background-image: url(/list_jobs_desktop.png)"></div>
-      <div class="CareerTest__header__images__mobile" style="background-image: url(/test_answer.png)"></div>
+      <div class="CareerTest__header__images__desktop" style="background-image: url(/landingPage/carrerTest/list_jobs_desktop.png)"></div>
+      <div class="CareerTest__header__images__mobile" style="background-image: url(/landingPage/carrerTest/test_answer.png)"></div>
     </div>
     </section>
     <section class="CareerTest__features lazyloaded" data-bg="https://res.cloudinary.com/hnpb47ejt/image/fetch/https://d5lqosquewn6c.cloudfront.net/static/sokanu/compiled/images/career-test/blobs-features.5e6a32f66cd7.svg" style="background-image: url(&quot;https://res.cloudinary.com/hnpb47ejt/image/fetch/https://d5lqosquewn6c.cloudfront.net/static/sokanu/compiled/images/career-test/blobs-features.5e6a32f66cd7.svg&quot;);">

@@ -100,11 +100,11 @@ export default {
           title: 'Apply your brand assets',
           desc: 'Create a unique URL that leads to your custom landing page, co-branded with your logo and a personalized message to students.',
           img: {
-            src: 'https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/60a305d49e07cd4562f1350f_custom%20URL%20-%20device.png',
+            src: '/landingPage/organization/admin_brand.png',
             sizes: '(max-width: 479px) 80vw, (max-width: 991px) 450px, 49vw',
             width: '584',
             alt: 'Apply your brand assets',
-            srcset: 'https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/60a305d49e07cd4562f1350f_custom%20URL%20-%20device-p-500.png 500w, https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/60a305d49e07cd4562f1350f_custom%20URL%20-%20device-p-800.png 800w, https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/60a305d49e07cd4562f1350f_custom%20URL%20-%20device-p-1080.png 1080w, https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/60a305d49e07cd4562f1350f_custom%20URL%20-%20device.png 1168w'
+            srcset: '/landingPage/organization/admin_brand.png 500w, /landingPage/organization/admin_brand.png 800w, /landingPage/organization/admin_brand.png 1080w, /landingPage/organization/admin_brand.png 1168w'
           }
         },
         {
@@ -114,11 +114,11 @@ export default {
           title: 'View your students\' activity',
           desc: 'Use the Administrator\'s Dashboard to view individual student information and progress.',
           img: {
-            src: 'https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/60a305e7855f6e198cb0e459_admin%20dashboard%20-%20device.png',
+            src: '/landingPage/organization/admin_member\'s_activity.png',
             sizes: '(max-width: 479px) 80vw, (max-width: 991px) 450px, 49vw',
             width: '584',
             alt: 'View your students\' activity',
-            srcset: 'https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/60a305e7855f6e198cb0e459_admin%20dashboard%20-%20device-p-500.png 500w, https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/60a305e7855f6e198cb0e459_admin%20dashboard%20-%20device-p-800.png 800w, https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/60a305e7855f6e198cb0e459_admin%20dashboard%20-%20device-p-1080.png 1080w, https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/60a305e7855f6e198cb0e459_admin%20dashboard%20-%20device.png 1168w'
+            srcset: '/landingPage/organization/admin_member\'s_activity.png 500w, /landingPage/organization/admin_member\'s_activity.png 800w, /landingPage/organization/admin_member\'s_activity.png 1080w, /landingPage/organization/admin_member\'s_activity.png 1168w'
           }
         },
         {
@@ -128,11 +128,11 @@ export default {
           title: 'Keep track of broader trends',
           desc: 'Review aggregate data to track participation rates across your organization.',
           img: {
-            src: 'https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/60a306039e07cd0cb8f1354d_asset.png',
+            src: '/landingPage/organization/admin_.trends.png',
             sizes: '(max-width: 479px) 80vw, (max-width: 991px) 450px, 49vw',
             width: '584',
             alt: 'Keep track of broader trends',
-            srcset: 'https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/60a306039e07cd0cb8f1354d_asset-p-500.png 500w, https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/60a306039e07cd0cb8f1354d_asset-p-800.png 800w, https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/60a306039e07cd0cb8f1354d_asset-p-1080.png 1080w, https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/60a306039e07cd0cb8f1354d_asset.png 1168w'
+            srcset: '/landingPage/organization/admin_.trends.png 500w, /landingPage/organization/admin_.trends.png 800w, /landingPage/organization/admin_.trends.png 1080w, /landingPage/organization/admin_.trends.png 1168w'
           }
         }
       ]

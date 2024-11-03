@@ -3,11 +3,11 @@
     <section id="content" class="home__splash wf-section">
         <div class="home__splashinner">
             <div class="home__splash__image">
-                <img src="/home_list_jobs_phone.png" 
+                <img src="/landingPage/home/home_list_jobs_phone.png" 
                      alt="Mockup of the career test assessment" 
                      loading="lazy" 
                      class="home__splash__image__img" >
-                <img src="woman_home.jpeg" 
+                <img src="/landingPage/home/woman_home.jpeg" 
                      alt="Unlock the future you" 
                      loading="eager" 
                      id="hero-preload" 

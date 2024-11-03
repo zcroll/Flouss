@@ -39,16 +39,7 @@ export default {
        <div id="globalnav-container" data-registration-modal="true">
         <nav :class="['GlobalNav', { 'GlobalNav--sticky': isSticky }]" role="navigation">
             <a class="GlobalNav-logo--desktop w--current" data-track="mixpanel" data-target="Home" data-link-type="Header" href="/">
-                <svg class="GlobalNav-logo" version="1.1" viewBox="0 0 239 56" xmlns="http://www.w3.org/2000/svg">
-                    <title>Gen.Z</title>
-                    <g id="Final(WithSokanu)--default" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                        <g id="Finalized-Logo---Black-and-White--default" transform="translate(-18.000000, -29.000000)" fill="currentColor">
-                            <g id="Logo--default" transform="translate(18.000000, 29.000000)">
-                                <path d="M24.1475074,8.064 C22.8813327,2.9669434 18.8525948,3.90798505e-14 13.0205171,3.90798505e-14 C6.30595404,3.90798505e-14 0.320400637,4.71667925 0.320400637,13.6175094 C0.320400637,22.5183396 6.30595404,27.2350189 13.0205171,27.2350189 C18.8525948,27.2350189 22.8813327,24.2680755 24.1475074,19.1710189 L19.6583424,18.0298868 C18.6223812,20.730566 16.7423035,22.6704906 13.0205171,22.6704906 C8.87667248,22.6704906 5.38509967,19.7796226 5.38509967,13.6175094 C5.38509967,7.45539623 8.87667248,4.5645283 13.0205171,4.5645283 C16.7423035,4.5645283 18.6223812,6.50445283 19.6583424,9.20513208 L24.1475074,8.064 Z" id="Career--default" fill-opacity="0.7" fill-rule="nonzero"></path>
-                            </g>
-                        </g>
-                    </g>
-                </svg>
+              <img src="/logo_no_background.png" alt="Gen.Z" class="h-20" />
             </a>
             <a class="GlobalNav-menu-button" href="#" data-track="mixpanel" data-target="Toggle Menu" data-link-type="Header" aria-label="Open Menu">
                 <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="bars" class="svg-inline--fa fa-bars GlobalNav-menu-hamburger" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
@@ -59,7 +50,7 @@ export default {
               <li class="GlobalNav-menu-item">
                     <a class="GlobalNav-menu-link GlobalNav-menu-link--default" data-track="mixpanel" data-target="For Organizations" data-link-type="Header" href="/for-organizations/">&nbsp;&nbsp;&nbsp;&nbsp;</a>
                 </li>     <li class="GlobalNav-menu-item">
-                    <a class="GlobalNav-menu-link GlobalNav-menu-link--default" data-track="mixpanel" data-target="For Organizations" data-link-type="Header" href="/for-organizations/">     </a>
+                    <a class="GlobalNav-menu-link GlobalNav-menu-link--default" data-track="mixpanel" data-target="For Organizations" data-link-type="Header" href="/">Home </a>
                 </li>
                 <li class="GlobalNav-menu-item GlobalNav-menu-item--mobile">
                     <a class="GlobalNav-menu-link GlobalNav-menu-link--default w--current" data-track="mixpanel" data-target="Home" data-link-type="Header" href="/">{{ __('navigation.home') }}</a>
