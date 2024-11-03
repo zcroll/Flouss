@@ -154,9 +154,5 @@ Route::get('/for-organizations', function () {
   return Inertia::render('For-organizations');
 });
 
-// Route::get('/test-email', function() {
-//     Mail::to('zcrroll@gmail.com')->send(new TestMail());
-//     return 'Test email sent!';
-// });
 
 
