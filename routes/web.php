@@ -20,6 +20,7 @@ use App\Http\Controllers\test\TestController;
 use App\Http\Controllers\test\WelcomeBackController;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TestMail;
+use App\Http\Controllers\FavoriteController;
 
 
 Route::get('/', function () {
@@ -39,6 +40,8 @@ Route::middleware([
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::middleware('auth')->group(function () {
+        Route::post('/favorites', [FavoriteController::class, 'store'])->name('favorites.store');
+        Route::delete('/favorites/{favorite}', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
         Route::controller(ActivityProgressController::class)->group(function () {
             Route::get('/activities', 'index')->name('activity.index');
             Route::post('/activities', 'submitAnswer')->name('activity.submit-answer');
@@ -57,10 +60,7 @@ Route::middleware([
             Route::get('/results/{id}/personality', 'personality')->name('personality');
         });
 
-        Route::get('/find-closest-job', [JobMatcherController::class, 'matchJobs']);
 
-        // Add the new route for JobFieldController
-        Route::get('/job-fields', [JobFieldController::class, 'index'])->name('job.fields');
 
 
 
@@ -158,3 +158,5 @@ Route::get('/for-organizations', function () {
 //     Mail::to('zcrroll@gmail.com')->send(new TestMail());
 //     return 'Test email sent!';
 // });
+
+

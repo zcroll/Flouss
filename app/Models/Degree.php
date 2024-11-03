@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-
+use App\Models\Favorite;
 class Degree extends Model
 {
     // use HasFactory;
@@ -61,6 +61,19 @@ class Degree extends Model
     public function degreeFormationMatches(): HasMany
     {
         return $this->hasMany(DegreeFormationMatch::class);
+    }
+
+    public function favorites()
+    {
+        return $this->morphMany(Favorite::class, 'favoritable');
+    }
+
+    public function isFavorite(): bool
+    {
+        if (!auth()->check()) {
+            return false;
+        }
+        return $this->favorites()->where('user_id', auth()->id())->exists();
     }
 }
 

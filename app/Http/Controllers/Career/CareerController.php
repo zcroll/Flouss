@@ -25,9 +25,11 @@ class CareerController extends Controller
 
         return Inertia::render('career/OverView', [
             'occupation' => [
+                'id' => $occupation->id,
                 'name' => $locale === 'fr' ? $occupation->name_fr : $occupation->name,
                 'slug' => $occupation->slug,
                 'image' => $occupation->image,
+                'is_favorited' => $occupation->isFavorite(),
             ],
             'jobInfoDetail' => $occupation->jobInfoDetail->map(function ($detail) use ($locale) {
                 return [
@@ -66,9 +68,11 @@ class CareerController extends Controller
 
         return Inertia::render('career/workEnvironments', [
             'occupation' => [
+                'id' => $occupation->id,
                 'name' => $locale === 'fr' ? $occupation->name_fr : $occupation->name,
                 'slug' => $occupation->slug,
                 'image' => $occupation->image,
+                'is_favorited' => $occupation->isFavorite(),
             ],
             'workEnvironments' => $occupation->workEnvironments->map(function ($environment) use ($nameColumn, $descriptionColumn) {
                 return [
@@ -102,9 +106,11 @@ class CareerController extends Controller
 
         return Inertia::render('career/personality', [
             'occupation' => [
+                'id' => $occupation->id,
                 'name' => $locale === 'fr' ? $occupation->name_fr : $occupation->name,
                 'slug' => $occupation->slug,
                 'image' => $occupation->image,
+                'is_favorited' => $occupation->isFavorite(),
             ],
             'personalityTraits' => $personalityTraits,
             'personalityDetails' => $personalityDetails,
@@ -139,9 +145,11 @@ class CareerController extends Controller
 
         return Inertia::render('career/HowToBecome', [
             'occupation' => [
+                'id' => $occupation->id,
                 'name' => $locale === 'fr' ? $occupation->name_fr : $occupation->name,
                 'slug' => $occupation->slug,
                 'image' => $occupation->image,
+                'is_favorited' => $occupation->isFavorite(),
             ],
             'jobSteps' => $occupation->jobSteps,
             'jobCertifications' => $occupation->jobCertifications,
@@ -149,6 +157,19 @@ class CareerController extends Controller
             'jobDegrees' => $degrees,
             'howToBecome' => $occupation->howToBecome,
             'disableStepsLink' => $occupation->jobSteps->isEmpty(),
+        ]);
+    }
+
+    public function show($slug)
+    {
+        $career = JobInfo::where('slug', $slug)
+            ->with(['jobInfoDuties', 'workEnvironments', /* other relationships */])
+            ->first();
+        
+        $career->is_favorite = $career->isFavorite();
+
+        return Inertia::render('career/Show', [
+            'career' => $career
         ]);
     }
 }

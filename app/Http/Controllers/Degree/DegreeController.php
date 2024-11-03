@@ -24,11 +24,13 @@ class DegreeController extends Controller
 
         return Inertia::render('degree/Overview', [
             'degree' => [
+                'id' => $degree->id,
                 'name' => $degree->name,
                 'slug' => $degree->slug,
                 'image' => $degree->image,
                 'degree_level' => $degree->degree_level,
                 'satisfaction' => $degree->satisfaction,
+                'is_favorited' => $degree->isFavorite(),
             ],
             'degreeDescription' => [
                 'main_description' => $degree->degreeDescription ? $degree->degreeDescription->$mainDescriptionColumn : null,
@@ -58,6 +60,7 @@ class DegreeController extends Controller
 
         return Inertia::render('degree/Skills', [
             'degree' => [
+                'id' => $degree->id,
                 'name' => $degree->name,
                 'slug' => $degree->slug,
                 'image' => $degree->image,
@@ -80,6 +83,7 @@ class DegreeController extends Controller
 
         return Inertia::render('degree/Jobs', [
             'degree' => [
+                'id' => $degree->id,
                 'name' => $degree->name,
                 'slug' => $degree->slug,
                 'image' => $degree->image,
@@ -103,6 +107,7 @@ class DegreeController extends Controller
 
         return Inertia::render('degree/HowToObtain', [
             'degree' => [
+                'id' => $degree->id,
                 'name' => $degree->name,
                 'slug' => $degree->slug,
                 'image' => $degree->image,
