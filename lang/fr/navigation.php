@@ -15,8 +15,8 @@ return [
     'manage_account' => 'Gérer le compte',
     'profile' => 'Profil',
     'api_tokens' => 'Jetons API',
-    'log_out' => 'Déconnexion',
-    'log_in' => 'Se connecter',
+    'log_out' => 'Déconnexion',  
+    'log_in' => 'Se connecter',      
     'register' => 'S\'inscrire',
     'Organization' => 'Organisations',
     'Career_Test' => 'Test de Carrière',
@@ -26,3 +26,4 @@ return [
     'get_started' => 'Commencer',
     'learn_more' => 'En savoir plus sur Gen.Z',
 ];
+                    

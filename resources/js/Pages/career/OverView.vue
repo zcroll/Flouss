@@ -12,6 +12,8 @@
             :salary="occupation.salary"
             :personality="occupation.personality || 'N/A'"
             :satisfaction="occupation.satisfaction || 'N/A'"
+            :id="occupation.id"
+
         >
 
 

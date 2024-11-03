@@ -111,14 +111,16 @@ class JobInfo extends Model
         return $this->hasMany(JobDegree::class);
     }
 
-
-    public function getPath()
+    public function favorites()
     {
-        return cache()->rememberForever('category.path.' . $this->id, function () {
-            return Arr::join(
-                $this->ancestorsAndSelf($this->id)->map(fn ($ancestor) => $ancestor->slug)->toArray(),
-                '/'
-            );
-        });
+        return $this->morphMany(Favorite::class, 'favoritable');
+    }
+
+    public function isFavorite(): bool
+    {
+        if (!auth()->check()) {
+            return false;
+        }
+        return $this->favorites()->where('user_id', auth()->id())->exists();
     }
 }
