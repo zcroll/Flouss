@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Career;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Career\JobInfoResource;
+use App\Http\Resources\Career\JobInfoDetailResource;
+use App\Http\Resources\Career\WorkEnvironmentResource;
 use App\Models\Degree;
 use App\Models\DegreeJob;
 use App\Models\JobInfo;
@@ -14,41 +17,28 @@ class CareerController extends Controller
 {
     public function index(string $job): Response
     {
-
-        $locale = app()->getLocale();
-        $nameColumn = $locale === 'fr' ? 'name_fr' : 'name';
-        $descriptionColumn = $locale === 'fr' ? 'description_fr' : 'description';
-
         $occupation = JobInfo::with(['jobInfoDetail', 'jobInfoDuties', 'jobInfoTypes', 'workplaces'])
             ->where('slug', $job)
             ->firstOrFail();
 
         return Inertia::render('career/OverView', [
-            'occupation' => [
-                'id' => $occupation->id,
-                'name' => $locale === 'fr' ? $occupation->name_fr : $occupation->name,
-                'slug' => $occupation->slug,
-                'image' => $occupation->image,
-                'is_favorited' => $occupation->isFavorite(),
-            ],
-            'jobInfoDetail' => $occupation->jobInfoDetail->map(function ($detail) use ($locale) {
-                return [
-                    'role_description_main' => $locale === 'fr' ? $detail->role_description_main_fr : $detail->role_description_main,
-                    'role_description_secondary' => $locale === 'fr' ? $detail->role_description_secondary_fr : $detail->role_description_secondary,
-                ];
-            }),
-            'jobInfoDuties' => $occupation->jobInfoDuties->map(function ($duty) use ($locale) {
+            'occupation' => new JobInfoResource($occupation),
+            'jobInfoDetail' => JobInfoDetailResource::collection($occupation->jobInfoDetail),
+            'jobInfoDuties' => $occupation->jobInfoDuties->map(function ($duty) {
+                $locale = app()->getLocale();
                 return [
                     'duty_description' => $locale === 'fr' ? $duty->duty_description_fr : $duty->duty_description,
                 ];
             }),
-            'jobInfoTypes' => $occupation->jobInfoTypes->map(function ($type) use ($locale) {
+            'jobInfoTypes' => $occupation->jobInfoTypes->map(function ($type) {
+                $locale = app()->getLocale();
                 return [
                     'type_name' => $locale === 'fr' ? $type->type_name_fr : $type->type_name,
                     'type_description' => $locale === 'fr' ? $type->type_description_fr : $type->type_description,
                 ];
             }),
-            'workplaces' => $occupation->workplaces->map(function ($workplace) use ($locale) {
+            'workplaces' => $occupation->workplaces->map(function ($workplace) {
+                $locale = app()->getLocale();
                 return [
                     'content' => $locale === 'fr' ? $workplace->content_fr : $workplace->content,
                 ];
@@ -58,30 +48,13 @@ class CareerController extends Controller
 
     public function workEnvironments(string $job): Response
     {
-        $locale = app()->getLocale();
-        $nameColumn = $locale === 'fr' ? 'name_fr' : 'name';
-        $descriptionColumn = $locale === 'fr' ? 'description_fr' : 'description';
-
         $occupation = JobInfo::with('workEnvironments')
             ->where('slug', $job)
             ->firstOrFail();
 
         return Inertia::render('career/workEnvironments', [
-            'occupation' => [
-                'id' => $occupation->id,
-                'name' => $locale === 'fr' ? $occupation->name_fr : $occupation->name,
-                'slug' => $occupation->slug,
-                'image' => $occupation->image,
-                'is_favorited' => $occupation->isFavorite(),
-            ],
-            'workEnvironments' => $occupation->workEnvironments->map(function ($environment) use ($nameColumn, $descriptionColumn) {
-                return [
-                    'name' => $environment->$nameColumn,
-                    'category' => $environment->category,
-                    'score' => $environment->score,
-                    'description' => $environment->$descriptionColumn,
-                ];
-            }),
+            'occupation' => new JobInfoResource($occupation),
+            'workEnvironments' => WorkEnvironmentResource::collection($occupation->workEnvironments),
         ]);
     }
 

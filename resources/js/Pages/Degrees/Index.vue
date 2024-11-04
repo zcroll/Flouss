@@ -1,17 +1,15 @@
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>
 
-
 <template>
-    <link rel="stylesheet" href="/css/listing_page.css">
-    <AppLayout
-
-        name="Degrees"
-    >
+    <link rel="stylesheet" href="/css/listing_page.css" />
+    <AppLayout name="Degrees">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div class="flex flex-col lg:flex-row gap-6">
                 <!-- Filter sidebar -->
                 <div class="w-full lg:w-2/4">
-                    <div class=" border-[4px] rounded-3xl p-5 shadow-sm sticky-filter">
+                    <div
+                        class="border-[4px] rounded-3xl p-5 shadow-sm sticky-filter"
+                    >
                         <div class="mb-3">
                             <label
                                 for="search"
@@ -185,16 +183,15 @@
                         </div>
                     </div>
 
-
                     <WhenVisible
                         :once="false"
                         :params="{
                             data: {
-                page: page + 1,
-                ...props.filters,
-              },
-              only: ['degrees'],
-              preserveUrl: true,
+                                page: page + 1,
+                                ...props.filters,
+                            },
+                            only: ['degrees'],
+                            preserveUrl: true,
                         }"
                     >
                         <div class="mt-6 text-center">
@@ -218,13 +215,13 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import VueMultiselect from "vue-multiselect";
 import debounce from "lodash/debounce";
 import Pagination from "@/Components/Pagination.vue";
-import { usePage } from '@inertiajs/vue3';
-import { WhenVisible } from '@inertiajs/vue3';
+import { usePage } from "@inertiajs/vue3";
+import { WhenVisible } from "@inertiajs/vue3";
 
 const props = defineProps({
     degrees: Object,
     filters: Object,
-    language: String
+    language: String,
 });
 
 const searchQuery = ref(props.filters.q || "");
@@ -252,22 +249,25 @@ watch(searchQuery, (value) => {
     debouncedSearch();
 });
 
-watch(() => props.language, (newLanguage, oldLanguage) => {
-    if (newLanguage !== oldLanguage) {
-        // Reset filters and reload data
-        searchQuery.value = "";
-        selectedDegreeLevels.value = [];
-        selectedSort.value = "";
-        page.value = 1;
-        hasMorePages.value = true;
+watch(
+    () => props.language,
+    (newLanguage, oldLanguage) => {
+        if (newLanguage !== oldLanguage) {
+            // Reset filters and reload data
+            searchQuery.value = "";
+            selectedDegreeLevels.value = [];
+            selectedSort.value = "";
+            page.value = 1;
+            hasMorePages.value = true;
 
-        router.visit(window.location.pathname, {
-            preserveState: false,
-            preserveScroll: false,
-            replace: true
-        });
+            router.visit(window.location.pathname, {
+                preserveState: false,
+                preserveScroll: false,
+                replace: true,
+            });
+        }
     }
-});
+);
 
 const degrees = ref(props.degrees);
 const page = ref(1);
@@ -288,10 +288,15 @@ const loadMore = () => {
         preserveState: true,
         preserveScroll: true,
         replace: true,
-        only: ['degrees'],
+        only: ["degrees"],
         onSuccess: (page) => {
-            degrees.value.data = [...degrees.value.data, ...page.props.degrees.data];
-            hasMorePages.value = page.props.degrees.meta.current_page < page.props.degrees.meta.last_page;
+            degrees.value.data = [
+                ...degrees.value.data,
+                ...page.props.degrees.data,
+            ];
+            hasMorePages.value =
+                page.props.degrees.meta.current_page <
+                page.props.degrees.meta.last_page;
             isLoading.value = false;
         },
     });
@@ -300,7 +305,8 @@ const loadMore = () => {
 const applyFilters = () => {
     const params = {};
     if (searchQuery.value) params.q = searchQuery.value;
-    if (selectedDegreeLevels.value.length > 0) params.level = selectedDegreeLevels.value.map(level => level.value);
+    if (selectedDegreeLevels.value.length > 0)
+        params.level = selectedDegreeLevels.value.map((level) => level.value);
     if (selectedSort.value) params.sort = selectedSort.value;
 
     router.visit(window.location.pathname, {
@@ -308,7 +314,7 @@ const applyFilters = () => {
         preserveState: true,
         preserveScroll: true,
         replace: true,
-        only: ['degrees'],
+        only: ["degrees"],
         onSuccess: () => {
             degrees.value = usePage().props.degrees;
             page.value = 1;
@@ -325,17 +331,17 @@ const resetFilters = () => {
         preserveState: true,
         preserveScroll: true,
         replace: true,
-        only: ['degrees']
+        only: ["degrees"],
     });
 };
 
 onMounted(() => {
     searchQuery.value = props.filters.q || "";
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
 });
 
 onUnmounted(() => {
-    window.removeEventListener('scroll', handleScroll);
+    window.removeEventListener("scroll", handleScroll);
 });
 
 watch(

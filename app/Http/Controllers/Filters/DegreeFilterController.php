@@ -66,7 +66,6 @@ class DegreeFilterController extends Controller
                             'name' => $degree->$nameColumn,
                             'image' => $degree->image,
                             'slug' => $degree->slug,
-                            'salary' => $degree->salary,
                             'satisfaction' => $degree->satisfaction,
                         ];
                     }),
@@ -82,12 +81,8 @@ class DegreeFilterController extends Controller
                 ];
             }),
             'filters' => $filters,
-            'reload' => $request->has('reload')
         ]);
     }
 
-    public function filter(Request $request)
-    {
-        // This method is no longer needed as filtering is handled in the index method
-    }
+   
 }

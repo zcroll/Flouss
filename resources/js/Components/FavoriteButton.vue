@@ -19,49 +19,41 @@
     </button>
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue'
-import axios from 'axios'
+import { router } from '@inertiajs/vue3'
 
-export default {
-    props: {
-        modelId: {
-            type: Number,
-            required: true
-        },
-        modelType: {
-            type: String,
-            required: true,
-            validator: value => ['career', 'degree'].includes(value)
-        },
-        initialIsFavorited: {
-            type: Boolean,
-            default: false
-        },
-        showLabel: {
-            type: Boolean,
-            default: true
-        }
+const props = defineProps({
+    modelId: {
+        type: Number,
+        required: true
     },
-    setup(props) {
-        const isFavorited = ref(props.initialIsFavorited)
+    modelType: {
+        type: String,
+        required: true,
+        validator: value => ['career', 'degree'].includes(value)
+    },
+    initialIsFavorited: {
+        type: Boolean,
+        default: false
+    },
+    showLabel: {
+        type: Boolean,
+        default: true
+    }
+})
 
-        const toggleFavorite = async () => {
-            try {
-                await axios.post('/favorites', {
-                    favoritable_id: props.modelId,
-                    favoritable_type: props.modelType
-                })
-                isFavorited.value = !isFavorited.value
-            } catch (error) {
-                console.error('Error toggling favorite:', error)
-            }
-        }
+const isFavorited = ref(props.initialIsFavorited)
 
-        return {
-            isFavorited,
-            toggleFavorite
-        }
+const toggleFavorite = async () => {
+    try {
+        await router.post('/favorites', {
+            favoritable_id: props.modelId,
+            favoritable_type: props.modelType
+        })
+        isFavorited.value = !isFavorited.value
+    } catch (error) {
+        console.error('Error toggling favorite:', error)
     }
 }
-</script> 
+</script>
