@@ -23,8 +23,8 @@
             <section class="section">
                 <div class="section-head">
                     <div>
-                        <h2 class="section-head__title" tabindex="0">
-                            Your top careers
+                        <h2 class="section-head__title text-gray-900" tabindex="0">
+                            {{ __('results.top_careers') }}
                         </h2>
                     </div>
                     <span style="display: flex; gap: 8px"
@@ -57,7 +57,7 @@
                                         ></path>
                                     </g></svg></span
                             ><span class="DashboardPage__button__copy"
-                                >Share</span
+                                >{{ __('results.share') }}</span
                             ></button
                         ><a
                             data-track="mixpanel"
@@ -67,7 +67,7 @@
                             href="/careers/"
                             data-on-page-nav="false"
                             data-on-page-nav-offset="0"
-                            ><span>View All careers</span></a
+                            ><span>{{ __('results.View_All_careers') }}</span></a
                         ></span
                     >
                 </div>

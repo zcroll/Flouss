@@ -21,4 +21,9 @@ return [
     'quick_look_campus' => 'Quick look at Campus',
     'nurture_passion' => 'Schools and universities where you can nurture your passion.',
     'explore_schools' => 'Explore Schools',
+    'orientation_process' => 'Orientation is a Process, not a Decision.',
+'liked_jobs' => 'Liked Jobs',
+'liked_formations' => 'Liked Formations',
+'orientation_ai_assistant' => 'Your Orientation AI Assistant',
+'best_decision' => 'Make the Best Decision For a Bright Future.',
 ];

@@ -10,5 +10,8 @@ return [
     "comming_soon" => "Bientôt disponible",
     "read_more" => "En savoir plus",
     "your_score" => "Votre Score",
+    "top_careers" => "Vos meilleures carrières",
+    "share" => "Partager",
+    "View_All_careers" => "Voir toutes les carrières"
 
 ];

@@ -21,4 +21,9 @@ return [
     'quick_look_campus' => 'Un aperçu rapide du campus',
     'nurture_passion' => 'Les écoles et universités où vous pouvez nourrir votre passion.',
     'explore_schools' => 'Explorer les écoles',
+    'orientation_process' => 'L\'orientation est un processus, pas une décision.',
+'liked_jobs' => 'Emplois Aimés',
+'liked_formations' => 'Formations Aimées',
+'orientation_ai_assistant' => 'Votre Assistant IA d\'Orientation',
+'best_decision' => 'Prenez la Meilleure Décision Pour un Avenir Radieux.',
 ];

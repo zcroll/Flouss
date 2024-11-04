@@ -10,4 +10,7 @@ return [
     "comming_soon" => "Coming Soon",
     "read_more" => "Read More",
     "your_score" => "Your Score",
+    "top_careers" => "Your top careers",
+    "share" => "Share",
+    "View_All_careers" => "View All careers"
 ];

@@ -1,8 +1,8 @@
 <template>
     <AppLayout :name-exist="true">
         <div class="mx-auto max-w-full px-4 lg:max-w-7xl lg:px-8 pb-40">
-            <h2 class="text-center text-base/7 font-semibold text-indigo-600">Orientation is a Process, not a Decision .</h2>
-            <p class="mx-auto mt-2 max-w-lg text-balance text-center text-4xl font-semibold tracking-tight text-gray-950 sm:text-5xl">welcome {{ $page.props.auth.user.name }} !</p>
+            <h2 class="text-center text-base/7 font-semibold text-indigo-600">{{ __('dashboard.orientation_process') }}</h2>
+            <p class="mx-auto mt-2 max-w-lg text-balance text-center text-4xl font-semibold tracking-tight text-gray-950 sm:text-5xl">{{ __('dashboard.welcome') }} {{ $page.props.auth.user.name }} !</p>
             <div class="mt-10 grid gap-4 sm:mt-16 lg:grid-cols-3 lg:grid-rows-2">
                 <div class="relative lg:row-span-2">
                     <div class="absolute inset-px rounded-lg bg-white lg:rounded-l-[2rem]" />
@@ -37,7 +37,7 @@
                     <div class="absolute inset-px rounded-lg bg-white max-lg:rounded-t-[2rem]" />
                     <div class="relative flex h-full flex-col overflow-hidden rounded-[calc(theme(borderRadius.lg)+1px)] max-lg:rounded-t-[calc(2rem+1px)]">
                         <div class="px-4 pt-8 sm:px-10 sm:pt-10">
-                            <p class="text-lg font-medium tracking-tight text-gray-950 max-lg:text-center">Liked Jobs</p>
+                            <p class="text-lg font-medium tracking-tight text-gray-950 max-lg:text-center">{{ __('dashboard.liked_jobs') }}</p>
 
                             <!-- Scrollable Row Section for Liked Jobs -->
                             <div class="mt-4 max-h-52 overflow-y-auto">
@@ -70,7 +70,7 @@
                     <div class="absolute inset-px rounded-lg bg-white" />
                     <div class="relative flex h-full flex-col overflow-hidden rounded-[calc(theme(borderRadius.lg)+1px)]">
                         <div class="px-4 pt-8 sm:px-10 sm:pt-10">
-                            <p class="text-lg font-medium tracking-tight text-gray-950 max-lg:text-center">Liked Formations</p>
+                            <p class="text-lg font-medium tracking-tight text-gray-950 max-lg:text-center">{{ __('dashboard.liked_formations') }}</p>
 
                             <!-- Scrollable Row Section for Liked Formations -->
                             <div class="mt-4 max-h-52 overflow-y-auto">
@@ -103,8 +103,8 @@
                     <div class="absolute inset-px rounded-lg max-lg:rounded-b-[2rem] lg:rounded-r-[2rem]" style="background-image:url(https://res.cloudinary.com/hnpb47ejt/image/upload/v1591305946/rm6cdoxhlhtormnrlamm)" />
                     <div class="relative flex h-full flex-col overflow-hidden rounded-[calc(theme(borderRadius.lg)+1px)] max-lg:rounded-b-[calc(2rem+1px)] lg:rounded-r-[calc(2rem+1px)]">
                         <div class="px-4 pb-3 pt-8 sm:px-10 sm:pb-0 sm:pt-10">
-                            <p class="mt-2 text-3xl font-medium tracking-tight text-gray-50 max-lg:text-center">Your Orientation AI Assistant</p>
-                            <p class="mt-2 max-w-lg text-sm/6 text-gray-100 max-lg:text-center">Make the Best Décision For a Bright Future.</p>
+                            <p class="mt-2 text-3xl font-medium tracking-tight text-gray-50 max-lg:text-center">{{ __('dashboard.orientation_ai_assistant') }}</p>
+                            <p class="mt-2 max-w-lg text-sm/6 text-gray-100 max-lg:text-center">{{ __('dashboard.best_decision') }}</p>
                         </div>
                         <div class="relative min-h-[30rem] w-full grow">
                             <div class="absolute bottom-0 left-10 right-0 top-10 overflow-hidden rounded-tl-xl bg-gray-900 shadow-2xl">
