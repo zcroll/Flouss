@@ -19,14 +19,14 @@
                data-w-id="77c9ae79-3fb1-a629-2d1d-1b9d0a9d8c20" 
                style="opacity: 1; transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg); transform-style: preserve-3d;">
             <h1 class="productive-heading-07 override">
-              CareerExplorer for Organizations<br>
+              {{ __('CareerExplorer for Organizations') }}<br>
             </h1>
             <div class="mehero__text__floating">
               <p class="productive-heading-04">
-                Empower your students with comprehensive career discovery tools.<br>
+                {{ __('Empower your students with comprehensive career discovery tools.') }}<br>
               </p>
               <p class="body-short-02">
-                A self-serve platform for universities, high schools, independent educational consultants, career counselors, non-profits, and other organizations.
+                {{ __('A self-serve platform for universities, high schools, independent educational consultants, career counselors, non-profits, and other organizations.') }}
               </p>
             </div>
           </div>
@@ -56,6 +56,7 @@ import Header from '@/Components/Home/Navbar/Header.vue';
 import WorldClass from '@/Components/Home/ForOrganizations/WorldClass.vue';
 import Benefits from '@/Components/Home/ForOrganizations/Benefits.vue';
 import Experience from '@/Components/Home/ForOrganizations/Experience.vue';
+import __ from '@/lang';
 const handleOrbs = () => {
   const w = document.getElementById("welcome");
   const orbs = document.getElementById("orbs");

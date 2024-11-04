@@ -1,10 +1,10 @@
 <template>
     <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css">
-        
+
         <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/user-results.3aa4bb301b9f.css"></link>
 
     <div class="DashboardPage__reports">
-      <div class="DashboardPage__report" style="background-image: url('./circles-5444818_1920.png'); background-size: cover; background-position: center;">
+      <div class="DashboardPage__report" style="background-image: url('/results_folder/circles-5444818_1920.png'); background-size: cover; background-position: center;">
         <div class="DashboardPage__report__book" >
           <div class="ReportBook ReportBook--trait">
             <div class="ReportBook__content">
@@ -23,7 +23,7 @@
                     version="1.1"
                     viewBox="0 0 239 56"
                     xmlns="http://www.w3.org/2000/svg"
-                 
+
                   >
                     <title >
                         lorer
@@ -44,8 +44,8 @@
                           id="Logo--default"
                           transform="translate(18.000000, 29.000000)"
                         >
-                          
-                          
+
+
                         </g>
                       </g>
                     </g>
@@ -58,9 +58,9 @@
           Learn what makes you unique and how you compare to the rest of the
           world.
         </p>
-        
+
       </div>
-      <div class="DashboardPage__report" style="background-image: url('./sunrise-6587391_1920.png'); background-size: cover; background-position: center;">
+      <div class="DashboardPage__report" style="background-image: url('/results_folder/sunrise-6587391_1920.png'); background-size: cover; background-position: center;">
         <div class="DashboardPage__report__book" >
           <div class="ReportBook ReportBook--personality">
             <div class="ReportBook__content">
@@ -78,7 +78,7 @@
                     version="1.1"
                     viewBox="0 0 239 56"
                     xmlns="http://www.w3.org/2000/svg"
-                 
+
                   >
                     <title >
                         lorer
@@ -99,7 +99,7 @@
                           id="Logo--default"
                           transform="translate(18.000000, 29.000000)"
                         >
-                        
+
                         </g>
                       </g>
                     </g>
@@ -123,7 +123,7 @@
       </div>
     </div>
   </template>
-  
+
   <script>
   import { Link } from '@inertiajs/vue3';
 
@@ -133,7 +133,7 @@
       Link
     },
     props: {
-     
+
         userId: {
             type: Number,
             required: true
@@ -142,9 +142,8 @@
             type: Object,
             required: true
         },
-        
+
     }
 
   }
   </script>
-  

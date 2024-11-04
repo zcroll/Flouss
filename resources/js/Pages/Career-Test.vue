@@ -4,6 +4,7 @@ import HowItWork from '@/Components/Home/Test/HowItWork.vue';
 import Final from '@/Components/Home/Test/Final.vue';
 import Header from '@/Components/Home/Navbar/Header.vue';
 import { Link } from '@inertiajs/vue3';
+import __ from '@/lang';
 const stats = ref([
   {
     heading: '500 M',

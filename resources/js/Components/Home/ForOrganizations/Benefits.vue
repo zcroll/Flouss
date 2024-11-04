@@ -44,10 +44,10 @@
         </div>
         <div class="lrgrid__text">
           <h2 class="productive-heading-06 override">
-            Interactivity promotes <br>student engagement
+            {{ __('Interactivity promotes student engagement') }}
           </h2>
           <p class="body-short-02">
-            Our seamless, mobile-first assessment results in higher completion rates and student engagement, directing even more students to your career center.
+            {{ __('Our seamless, mobile-first assessment results in higher completion rates and student engagement, directing even more students to your career center.') }}
           </p>
         </div>
       </div>
@@ -69,10 +69,10 @@
         </div>
         <div class="lrgrid__text">
           <h2 class="productive-heading-06 override">
-            Discoveries make career exploration inspiring and enjoyable
+            {{ __('Discoveries make career exploration inspiring and enjoyable') }}
           </h2>
           <p class="body-short-02">
-            As they're completing the assessment, students get previews of their matches and the qualities that make them different from others.
+            {{ __('As they\'re completing the assessment, students get previews of their matches and the qualities that make them different from others.') }}
           </p>
         </div>
       </div>
@@ -112,10 +112,10 @@
         </div>
         <div class="lrgrid__text">
           <h2 class="productive-heading-06 override">
-            Intuitive user experience empowers students to explore independently
+            {{ __('Intuitive user experience empowers students to explore independently') }}
           </h2>
           <p class="body-short-02">
-            Students come prepared for counseling sessions, saving counselors time and fostering better learning outcomes.
+            {{ __('Students come prepared for counseling sessions, saving counselors time and fostering better learning outcomes.') }}
           </p>
         </div>
       </div>

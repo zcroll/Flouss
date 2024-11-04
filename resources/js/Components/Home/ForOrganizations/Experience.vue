@@ -9,7 +9,7 @@
       <div class="scrollframeorg">
         <div class="scrollframeorg__nav">
           <div class="scrollframeorg__nav__container">
-            <h2 class="productive-heading-01 uppercase">CREATE A CUSTOM EXPERIENCE FOR YOUR ORGANIZATION</h2>
+            <h2 class="productive-heading-01 uppercase">{{ __('experience.create_custom_experience') }}</h2>
             <div class="scrollframeorg__nav__progress">
               <div class="scrollframeorg__nav__progress-container">
                 <div class="scrollframeorg__nav__progress-bar">
@@ -22,8 +22,8 @@
               <li v-for="(item, index) in navItems" :key="index" class="scrollframeorg__nav__list-item">
                 <div class="scrollframeorg__nav__list-num">{{ item.num }}</div>
                 <a :href="item.href" class="scrollframeorg__nav__list-link w-inline-block" :class="{'w--current': activeIndex === index}">
-                  <div class="scrollframeorg__nav__list-label">{{ item.label }}</div>
-                  <p class="body-short-02 scrollframeorg__nav__list-desc">{{ item.desc }}</p>
+                  <div class="scrollframeorg__nav__list-label">{{ __(item.label) }}</div>
+                  <p class="body-short-02 scrollframeorg__nav__list-desc">{{ __(item.desc) }}</p>
                 </a>
               </li>
             </ul>
@@ -32,10 +32,10 @@
         <div class="scrollframeorg__content">
           <div v-for="(content, index) in contentItems" :key="index" :id="content.id" class="scrollframeorg__content__block" :class="content.class">
             <div class="scrollframeorg__content-mobile" :style="{opacity: activeIndex === index ? 1 : 0, transition: 'opacity 2s ease'}">
-              <h2 v-if="index === 0" class="productive-heading-01 uppercase">CREATE A CUSTOM EXPERIENCE FOR YOUR ORGANIZATION</h2>
+              <h2 v-if="index === 0" class="productive-heading-01 uppercase">{{ __('experience.create_custom_experience') }}</h2>
               <div class="productive-heading-04 tint">{{ content.num }}</div>
-              <h2 class="productive-heading-04">{{ content.title }}</h2>
-              <p class="body-short-02 tint">{{ content.desc }}</p>
+              <h2 class="productive-heading-04">{{ __(content.title) }}</h2>
+              <p class="body-short-02 tint">{{ __(content.desc) }}</p>
             </div>
             <div class="worldclass__grid__item" style="display: flex; justify-content: center; align-items: center;">
               <img 
@@ -77,33 +77,33 @@ export default {
         {
           num: '01',
           href: '#org-it-1',
-          label: 'Apply your brand assets',
-          desc: 'Create a unique URL that leads to your custom landing page, co-branded with your logo and a personalized message to students.'
+          label: 'experience.apply_brand_assets',
+          desc: 'experience.apply_brand_assets_desc'
         },
         {
           num: '02',
           href: '#org-it-2',
-          label: 'View your members\' activity',
-          desc: 'Use the Administrator\'s Dashboard to view individual student information and progress.'
+          label: 'experience.view_members_activity',
+          desc: 'experience.view_members_activity_desc'
         },
         {
           num: '03',
           href: '#org-it-3',
-          label: 'Keep track of broader trends',
-          desc: 'Review aggregate data to track participation rates across your organization.'
+          label: 'experience.track_broader_trends',
+          desc: 'experience.track_broader_trends_desc'
         }
       ],
       contentItems: [
         {
           id: 'org-it-1',
           num: '01',
-          title: 'Apply your brand assets',
-          desc: 'Create a unique URL that leads to your custom landing page, co-branded with your logo and a personalized message to students.',
+          title: 'experience.apply_brand_assets',
+          desc: 'experience.apply_brand_assets_desc',
           img: {
             src: '/landingPage/organization/admin_brand.png',
             sizes: '(max-width: 479px) 80vw, (max-width: 991px) 450px, 49vw',
             width: '584',
-            alt: 'Apply your brand assets',
+            alt: 'experience.apply_brand_assets',
             srcset: '/landingPage/organization/admin_brand.png 500w, /landingPage/organization/admin_brand.png 800w, /landingPage/organization/admin_brand.png 1080w, /landingPage/organization/admin_brand.png 1168w'
           }
         },
@@ -111,13 +111,13 @@ export default {
           id: 'org-it-2',
           class: 'scrollframeorg__content__block--2',
           num: '02', 
-          title: 'View your students\' activity',
-          desc: 'Use the Administrator\'s Dashboard to view individual student information and progress.',
+          title: 'experience.view_members_activity',
+          desc: 'experience.view_members_activity_desc',
           img: {
             src: '/landingPage/organization/admin_member\'s_activity.png',
             sizes: '(max-width: 479px) 80vw, (max-width: 991px) 450px, 49vw',
             width: '584',
-            alt: 'View your students\' activity',
+            alt: 'experience.view_members_activity',
             srcset: '/landingPage/organization/admin_member\'s_activity.png 500w, /landingPage/organization/admin_member\'s_activity.png 800w, /landingPage/organization/admin_member\'s_activity.png 1080w, /landingPage/organization/admin_member\'s_activity.png 1168w'
           }
         },
@@ -125,13 +125,13 @@ export default {
           id: 'org-it-3',
           class: 'scrollframeorg__content__block--3',
           num: '03',
-          title: 'Keep track of broader trends',
-          desc: 'Review aggregate data to track participation rates across your organization.',
+          title: 'experience.track_broader_trends',
+          desc: 'experience.track_broader_trends_desc',
           img: {
             src: '/landingPage/organization/admin_.trends.png',
             sizes: '(max-width: 479px) 80vw, (max-width: 991px) 450px, 49vw',
             width: '584',
-            alt: 'Keep track of broader trends',
+            alt: 'experience.track_broader_trends',
             srcset: '/landingPage/organization/admin_.trends.png 500w, /landingPage/organization/admin_.trends.png 800w, /landingPage/organization/admin_.trends.png 1080w, /landingPage/organization/admin_.trends.png 1168w'
           }
         }
