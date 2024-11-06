@@ -7,6 +7,7 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import Header from "@/Components/Header.vue";
+import Footer from "@/Components/Footer.vue";
 import LanguageSelector from '@/Components/LanguageSelector.vue';
 import __ from '@/lang';
 
@@ -16,6 +17,7 @@ const props = defineProps({
     headTitle: String,
     headSubTitle: String,
     showDiv: Boolean,
+
 
 });
 
@@ -51,14 +53,14 @@ const socialLinks = [
 
             <Header>
                 <template #navigation>
-                    <nav class="absolute top-5 left-0 right-0 z-10 bg-transparent">
+                    <nav class=" top-0 left-0 right-0 z-10 fixed" style="background: linear-gradient(0deg, #00000000 0%, #0c0a09 3%);">
                         <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
                             <div class="flex justify-between items-center w-full">
 
                             <div class="flex">
                                         <div class="flex-shrink-0">
                                 <Link :href="route('dashboard')">
-                                    <ApplicationMark class="block h-8 w-15" />
+                                    <ApplicationMark class="block" />
                                 </Link>
                                         </div>
                                 <!-- Navigation Links -->
@@ -76,14 +78,7 @@ const socialLinks = [
                                         <NavLink :href="route('degrees.index')" :active="route().current('degrees.index')" class="btn_link">
                                             {{ __('navigation.degrees') }}
                                         </NavLink>
-                                        <NavLink
-                                            v-if="isOver10Days"
-                                            :href="route('activities')"
-                                            :active="route().current('activities')"
-                                            class="btn_link text-white hover:text-green-400 transition duration-150 ease-in-out"
-                                        >
-                                            {{ __('navigation.career_test') }}
-                                        </NavLink>
+
                                     </div>
                                 </div>
                             </div>
@@ -268,22 +263,7 @@ const socialLinks = [
         </div>
 
         <!-- Footer -->
-        <footer class="bg-black">
-            <div class="mx-auto max-w-7xl overflow-hidden px-6 py-20 sm:py-24 lg:px-8">
-                <nav class="-mb-6 columns-2 sm:flex sm:justify-center sm:space-x-12" aria-label="Footer">
-                    <div v-for="item in navigation" :key="item.name" class="pb-6">
-                        <a :href="item.href" class="text-sm leading-6 text-gray-200 hover:text-gray-200">{{ item.name }}</a>
-                    </div>
-                </nav>
-                <div class="mt-10 flex justify-center space-x-10">
-                    <a v-for="item in socialLinks" :key="item.name" :href="item.href" class="text-gray-200 hover:text-gray-200">
-                        <span class="sr-only">{{ item.name }}</span>
-                        <component :is="item.icon" class="h-6 w-6" aria-hidden="true" />
-                    </a>
-                </div>
-                <p class="mt-10 text-center text-xs leading-5 text-gray-200">&copy; 2024 Your Company, Inc. All rights reserved.</p>
-            </div>
-        </footer>
+            <Footer />
     </div>
 </template>
 <style scoped>

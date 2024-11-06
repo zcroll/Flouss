@@ -12,7 +12,7 @@
                         <component :is="item.icon" class="h-6 w-6" aria-hidden="true" />
                     </a>
                 </div>
-                <p class="mt-10 text-center text-xs leading-5 text-gray-200">&copy; 2024 Your Company, Inc. All rights reserved.</p>
+                <p class="mt-10 text-center text-xs leading-5 text-gray-200">&copy; Gen.z, Inc. All rights reserved.</p>
             </div>
         </footer>
 </template>
@@ -27,4 +27,6 @@ const navigation = [
 const socialLinks = [
     // ... (keep your existing social links)
 ];
+
+
 </script>

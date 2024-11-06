@@ -1,8 +1,8 @@
 <template>
-  <!-- <AppLayout> -->
+  <AppLayout>
   <div>
     <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css">
-    <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/shared-discovery.4d94d358083a.css"> 
+    <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/shared-discovery.4d94d358083a.css">
     <div class="SharedDiscoveryPage__wrap">
       <div id="shared-discovery-container">
         <div class="SharedDiscoveryPage">
@@ -51,7 +51,7 @@
                 <div class="Discovery__sidebar__content">
                   <h3 class="">Your magic 🤩💫</h3>
                   <p class="">Are you {{ ArchetypeData.name.charAt(0).toLowerCase() === 'a' || ArchetypeData.name.charAt(0).toLowerCase() === 'e' || ArchetypeData.name.charAt(0).toLowerCase() === 'i' || ArchetypeData.name.charAt(0).toLowerCase() === 'o' || ArchetypeData.name.charAt(0).toLowerCase() === 'u' ? 'an' : 'a' }} {{ ArchetypeData.name }} {{ArchetypeData.personality_paragraph}}.</p>
-                
+
                 </div>
               </div>
             </div>
@@ -67,12 +67,12 @@
               </div>
             </div>
           </section>
-          
+
         </div>
       </div>
     </div>
   </div>
-  <!-- </AppLayout> -->
+  </AppLayout>
 </template>
 
 <script>

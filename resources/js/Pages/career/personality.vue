@@ -1,12 +1,12 @@
 <template>
   <AppLayout>
     <!-- <link rel="preload" href="https://use.typekit.net/wpm5wyy.css" as="style" onload="this.onload=null;this.rel='stylesheet'"> -->
-    
+
     <div class="layout--sidebar__body__main">
-      
+
       <StickySidebar
       :slug="occupation.slug"
-      :title="occupation.name" 
+      :title="occupation.name"
       :image="occupation.image"
       type="career"
       :salary="occupation.salary"
@@ -14,22 +14,22 @@
       :satisfaction="occupation.satisfaction || 'N/A'"
       :id="occupation.id"
       >
-      <link type="text/css" rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/careers.098b42e5fd20.css">
+      <link type="text/css" rel="stylesheet" href="/css/career_personnality.css">
       <div class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white rounded-3xl shadow-2xl">
         <nav class="flex items-center space-x-2 text-sm text-gray-600 mb-8">
-                <Link :href="route('dashboard')" class="hover:text-blue-600 transition-colors">{{ __('Home') }}</Link>
+                <Link :href="route('dashboard')" class="text-[#53777a] font-medium border-b-2 border-[#53777a] transition-all duration-200 ease-in-out hover:text-blue-600 hover:border-blue-600">{{ __('Home') }}</Link>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
                 </svg>
-                <Link :href="route('jobs.index')" class="hover:text-blue-600 transition-colors">{{ __('Jobs') }}</Link>
+                <Link :href="route('jobs.index')" class="text-[#53777a] font-medium border-b-2 border-[#53777a] transition-all duration-200 ease-in-out hover:text-blue-600 hover:border-blue-600">{{ __('Jobs') }}</Link>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
                 </svg>
-                <Link :href="route('career', { id: occupation.slug })" class="hover:text-blue-600 transition-colors">{{ occupation.name }}</Link>
+                <Link :href="route('career', { id: occupation.slug })" class="text-[#53777a] font-medium border-b-2 border-[#53777a] transition-all duration-200 ease-in-out hover:text-blue-600 hover:border-blue-600">{{ occupation.name }}</Link>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
                 </svg>
-                <span class="text-gray-400">{{ __('Personality') }}</span>
+                <span class="text-gray-400 font-medium border-b-2 border-gray-400 transition-all duration-200 ease-in-out hover:text-blue-600 hover:border-blue-600">{{ __('Personality') }}</span>
             </nav>
 
           <section>
@@ -70,7 +70,7 @@
                   <span class="sr-only" :id="`${trait.id}-personalitygraph-scale-desc`" >
                     {{getTraitDefinition(formatTraitName(trait.trait_name))}}
                   </span>
-                  <figure class="PersonalityGraphs__scale__graph" 
+                  <figure class="PersonalityGraphs__scale__graph"
                           tabindex="0"
                           :aria-labelledby="`${trait.id}-personalitygraph-scale-label`"
                           :aria-describedby="`${trait.id}-personalitygraph-scale-desc`">
@@ -79,9 +79,9 @@
                     </span>
                   </figure>
                   <div class="PersonalityGraphs__scale__toggle" >
-                    <svg aria-hidden="true" focusable="false" data-prefix="fas" :data-icon="activeDefinition === trait.id ? 'chevron-up' : 'chevron-down'" 
+                    <svg aria-hidden="true" focusable="false" data-prefix="fas" :data-icon="activeDefinition === trait.id ? 'chevron-up' : 'chevron-down'"
                          class="svg-inline--fa fa-chevron-down fa-sm" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                      <path fill="currentColor" :d="activeDefinition === trait.id ? 
+                      <path fill="currentColor" :d="activeDefinition === trait.id ?
                         'M416 352c-8.188 0-16.38-3.125-22.62-9.375L224 173.3l-169.4 169.4c-12.5 12.5-32.75 12.5-45.25 0s-12.5-32.75 0-45.25l192-192c12.5-12.5 32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25C432.4 348.9 424.2 352 416 352z' :
                         'M224 416c-8.188 0-16.38-3.125-22.62-9.375l-192-192c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L224 338.8l169.4-169.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-192 192C240.4 412.9 232.2 416 224 416z'">
                       </path>
@@ -113,7 +113,7 @@
                   <span class="sr-only" :id="`${trait.scale_id}-personalitygraph-scale-desc`">
                     {{trait.definition}}
                   </span>
-                  <figure class="PersonalityGraphs__scale__graph" 
+                  <figure class="PersonalityGraphs__scale__graph"
                           tabindex="0"
                           :aria-labelledby="`${trait.scale_id}-personalitygraph-scale-label`"
                           :aria-describedby="`${trait.scale_id}-personalitygraph-scale-desc`">
@@ -122,9 +122,9 @@
                     </span>
                   </figure>
                   <div class="PersonalityGraphs__scale__toggle">
-                    <svg aria-hidden="true" focusable="false" data-prefix="fas" :data-icon="activeDefinition === trait.scale_id ? 'chevron-up' : 'chevron-down'" 
+                    <svg aria-hidden="true" focusable="false" data-prefix="fas" :data-icon="activeDefinition === trait.scale_id ? 'chevron-up' : 'chevron-down'"
                          class="svg-inline--fa fa-chevron-down fa-sm" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                      <path fill="currentColor" :d="activeDefinition === trait.scale_id ? 
+                      <path fill="currentColor" :d="activeDefinition === trait.scale_id ?
                         'M416 352c-8.188 0-16.38-3.125-22.62-9.375L224 173.3l-169.4 169.4c-12.5 12.5-32.75 12.5-45.25 0s-12.5-32.75 0-45.25l192-192c12.5-12.5 32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25C432.4 348.9 424.2 352 416 352z' :
                         'M224 416c-8.188 0-16.38-3.125-22.62-9.375l-192-192c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L224 338.8l169.4-169.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-192 192C240.4 412.9 232.2 416 224 416z'">
                       </path>
@@ -138,7 +138,7 @@
             </div>
           </section>
 
-         
+
         </div>
       </StickySidebar>
     </div>
@@ -250,588 +250,7 @@ const getTraitDefinition = (traitName) => {
     'Enterprising': 'Enterprising people are energetic, ambitious and sociable. They enjoy leading, persuading others and taking risks. They prefer competitive business activities and leadership roles.',
     'Conventional': 'Conventional people are careful, structured and detail-oriented. They enjoy working with data, numbers and records. They prefer following established procedures and working in structured environments.'
   };
-  
+
   return definitions[traitName] || '';
 };
 </script>
-
-<style scoped>
-.standard-link {
-  font-family: "aktiv-grotesk","Helvetica Neue",Helvetica,Arial,sans-serif !important;
-  color: #53777a;
-  font-weight: 500;
-  border-bottom: 2px solid #53777a;
-  transition: color 0.2s ease-in-out, border-bottom 0.2s ease-in-out;
-}
-
-.standard-link:hover {
-  color: #53777a;
-  border-bottom: 2px solid #53777a;
-}
-html {
-  box-sizing: border-box;
-  overflow-x: hidden;
-  color: rgb(36, 36, 36);
-  font-family: "aktiv-grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  line-height: 1.6;
-  font-size: 16px;
-}
-
-body {
-  box-sizing: border-box;
-  margin: 0px;
-}
-
-.layout--sidebar__body__main {
-  box-sizing: "border-box";
-  display: "block";
-  grid-column: "1";
-}
-.svg-inline--fa{display:var(--fa-display, inline-block);height:1em;overflow:visible;vertical-align:-.125em}
-article {
-  box-sizing: "border-box";
-  display: "block";
-}
-
-section {
-  box-sizing: "border-box";
-  display: "block";
-}
-
-.lead {
-  box-sizing: "border-box";
-  margin-block: "1.5em";
-  font-size: "1.55rem";
-  margin-bottom: "0px";
-  line-height: 1.3;
-  letter-spacing: "-0.4px";
-  font-family: '"aktiv-grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif';
-}
-
-#table-of-contents-container {
-  box-sizing: "border-box";
-  display: "block";
-}
-
-#table-of-contents {
-  box-sizing: "border-box";
-  border-radius: "10px";
-  margin: "1rem 0px 0px";
-  width: "100%";
-  background-color: rgb(248, 248, 241);
-  color: rgb(36, 36, 36);
-  position: "relative";
-  padding: "37px 42px";
-}
-
-#table-of-contents h3 {
-  box-sizing: "border-box";
-  margin: "0px 0px 10px";
-  font-weight: 300;
-  padding-top: "0px";
-  letter-spacing: "-0.3px";
-  font-size: "32px";
-  line-height: "36px";
-  margin-bottom: "30px";
-  font-family: '"aktiv-grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif';
-}
-
-#table-of-contents ol {
-  box-sizing: "border-box";
-  margin-block: "1.5em";
-  padding: "0px";
-  overflow: "hidden";
-  transition: "0.35s";
-  margin: "0px 0px 8px";
-  font-size: "16px";
-  line-height: "26px";
-  list-style-type: "none";
-  counter-reset: "elementcounter 0";
-  padding-left: "0px";
-  margin-left: "0px";
-  font-weight: 300;
-  letter-spacing: "-0.3px";
-  font-family: '"aktiv-grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif';
-}
-
-#table-of-contents li {
-  box-sizing: "border-box";
-  list-style: "none";
-  position: "relative";
-  padding-left: "0px";
-  letter-spacing: "-0.3px";
-  font-size: "24px";
-  line-height: "39px";
-  margin-bottom: "0px";
-}
-
-#table-of-contents a {
-  box-sizing: "border-box";
-  background-color: "transparent";
-  text-decoration: "none";
-  transition: "color 0.2s ease-in-out, border-bottom 0.2s ease-in-out";
-  border-bottom: "0px";
-  color: rgb(36, 36, 36);
-  font-weight: 300;
-  font-family: '"aktiv-grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif';
-}
-
-br {
-  box-sizing: "border-box";
-}
-
-#holland-codes {
-  box-sizing: "border-box";
-  display: "block";
-}
-
-.info {
-  box-sizing: "border-box";
-  color: rgba(36, 36, 36, 0.7);
-  font-size: "16px";
-  font-weight: 800;
-  cursor: "pointer";
-}
-
-.info__icon {
-  box-sizing: "border-box";
-}
-
-.svg-inline--fa {
-  display: "var(--fa-display, inline-block)";
-  height: "1em";
-  vertical-align: "-0.125em";
-  overflow: "visible";
-  box-sizing: "content-box";
-}
-
-#holland-codes h2 {
-  box-sizing: "border-box";
-  line-height: 1.16;
-  letter-spacing: "-0.7px";
-  font-weight: 300;
-  font-size: "1.55em";
-  margin-bottom: "0px";
-  padding-top: "0px";
-  margin-top: "0px";
-}
-
-#holland-codes em {
-  box-sizing: "border-box";
-}
-
-#holland-codes p {
-  box-sizing: "border-box";
-  margin-block: "1.5em";
-  letter-spacing: "-0.01em";
-  font-size: "1rem";
-  line-height: "1.6em";
-  font-family: '"pt-serif", serif';
-}
-
-#holland-codes strong {
-  box-sizing: "border-box";
-  font-weight: "bolder";
-  font-family: '"aktiv-grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif';
-}
-
-#holland-codes a {
-  box-sizing: "border-box";
-  background-color: "transparent";
-  text-decoration: "none";
-  border-bottom: "2px solid rgb(83, 119, 122)";
-  transition: "color 0.2s ease-in-out, border-bottom 0.2s ease-in-out";
-  color: rgb(83, 119, 122);
-  font-weight: 500;
-  font-family: '"aktiv-grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif';
-}
-
-#personality-holland-codes-container {
-  box-sizing: "border-box";
-}
-
-.PersonalityGraphs {
-  box-sizing: "border-box";
-}
-
-.Box {
-  box-sizing: "border-box";
-  text-decoration: "none";
-  border-radius: "7px";
-  background-color: rgb(255, 255, 255);
-  box-shadow: rgba(0, 0, 0, 0.11) 0px 0px 12px 0px;
-  display: "block";
-  margin-bottom: "24px";
-  padding: "20px 16px";
-  transition: "color 0.2s ease-in-out, border-bottom 0.2s ease-in-out";
-  font-weight: 500;
-  border-bottom: "medium";
-  color: rgb(34, 34, 34);
-  font-family: '"aktiv-grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif';
-}
-
-.PersonalityGraphs__scale {
-  box-sizing: "border-box";
-  display: "flex";
-  align-items: "center";
-}
-
-.PersonalityGraphs__scale__name {
-  box-sizing: "border-box";
-  flex: "0 1 0%";
-  font-weight: 300;
-  hyphens: "auto";
-  line-height: 1.2;
-  font-size: "18px";
-  min-width: "195px";
-}
-
-.sr-only {
-  box-sizing: "border-box";
-  padding: "0px";
-  margin: "-1px";
-  white-space: "nowrap";
-  border-width: "0px";
-  clip: "rect(0px, 0px, 0px, 0px)";
-  overflow: "hidden";
-  position: "absolute";
-  left: "-10000px";
-  width: "1px";
-  height: "1px";
-}
-
-.PersonalityGraphs__scale__graph {
-  box-sizing: "border-box";
-  display: "block";
-  margin: "0px";
-  flex: "1 1 0%";
-}
-
-.BarMeter--gradient-dusk {
-  box-sizing: "border-box";
-  background: "transparent";
-  border: "0px transparent";
-  display: "inline-block";
-  position: "relative";
-  box-shadow: "none";
-  width: "100%";
-  max-width: "100%";
-}
-
-.BarMeter__meter {
-  box-sizing: "border-box";
-  border-radius: "12.5px";
-  display: "block";
-  min-width: "65px";
-  max-width: "100%";
-  position: "absolute";
-  top: "0px";
-  height: "34px";
-  box-shadow: rgba(22, 22, 22, 0.25) 0px 2px 12px 0px;
-  background-color: "transparent";
-  background-image: "linear-gradient(-90deg, rgb(222, 176, 85) 0%, rgb(163, 111, 178) 50%, rgb(70, 44, 103) 100%)";
-  background-size: "120%";
-  transition: "width 0.68s linear, min-width 0.68s linear";
-}
-
-.PersonalityGraphs__scale__toggle {
-  box-sizing: "border-box";
-  color: rgb(177, 177, 177);
-  padding-left: "16px";
-}
-
-.fa-chevron-down {
-  display: "var(--fa-display, inline-block)";
-  height: "1em";
-  font-size: "0.875em";
-  line-height: "0.07143em";
-  vertical-align: "-0.07143em";
-  overflow: "visible";
-  box-sizing: "content-box";
-}
-
-.fa-chevron-down path {
-  box-sizing: "border-box";
-}
-
-
-/* ... (rest of the styles, following the same pattern) ... */
-
-.UpNextCard__art {
-  border-style: none;
-  width: 100%;
-  max-height: fit-content;
-  box-sizing: border-box;
-}
-
-.Feedback__submit {
-  box-sizing: border-box;
-}
-
-.CareerSectionFeedback {
-  box-sizing: border-box;
-  padding: "8px 0px";
-  cssFloat: "right";
-  position: "relative";
-}
-
-.CareerSectionFeedback-text {
-  box-sizing: border-box;
-  font-weight: 400;
-  font-size: "16px";
-  margin-right: "8px";
-}
-
-.CareerSectionFeedback-button {
-  box-sizing: border-box;
-  margin: "0px";
-  overflow: "visible";
-  text-transform: "none";
-  appearance: "button";
-  border-radius: "8px";
-  transition: "0.4s";
-  position: "relative";
-  display: "inline-flex";
-  flex-direction: "row";
-  justify-content: "center";
-  font-size: "16px";
-  font-weight: 500;
-  line-height: 1.2;
-  text-align: "center";
-  cursor: "pointer";
-  border: "1px solid rgb(177, 177, 177)";
-  background-color: "white";
-  color: rgb(36, 36, 36);
-  padding: "8px 4px";
-  margin-right: "8px";
-  vertical-align: "middle";
-  font-family: '"aktiv-grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif';
-}
-
-.CareerSectionFeedback-button__icon {
-  display: "var(--fa-display, inline-block)";
-  height: "1em";
-  vertical-align: "-0.125em";
-  margin: "0px 5px";
-  font-size: "1.1em";
-  overflow: "visible";
-  box-sizing: "content-box";
-}
-
-.fa-duotone-group {
-  box-sizing: "border-box";
-}
-
-.fa-secondary {
-  box-sizing: "border-box";
-  fill: "var(--fa-secondary-color, currentColor)";
-  opacity: "var(--fa-secondary-opacity, 0.4)";
-}
-
-.fa-primary {
-  box-sizing: "border-box";
-  fill: "var(--fa-primary-color, currentColor)";
-  opacity: "var(--fa-primary-opacity, 1)";
-}
-
-.up-next {
-  box-sizing: "border-box";
-  display: "block";
-}
-
-#up-next__title {
-  box-sizing: "border-box";
-  line-height: 1.16;
-  letter-spacing: "-0.7px";
-  font-weight: 300;
-  font-size: "1.55em";
-  margin-bottom: "0px";
-  padding-top: "calc(1.5em + 0.5rem)";
-}
-
-#up-next-container {
-  box-sizing: "border-box";
-}
-
-.UpNextCard {
-  box-sizing: "border-box";
-  overflow: "hidden";
-  transition: "transform 0.5s, box-shadow 0.5s";
-  margin: "1em 0px 3em";
-  border-radius: "24px";
-  position: "relative";
-  color: rgb(255, 255, 255);
-  flex-direction: "row";
-  grid-template-columns: "66% max-content";
-  grid-template-rows: "auto";
-  display: "flex";
-  background-color: rgb(22, 22, 22);
-  box-shadow: rgba(22, 22, 22, 0.2) 0px 12px 56px 0px, rgba(0, 0, 0, 0.15) 0px 12px 24px 0px;
-}
-
-.UpNextCard__copy {
-  box-sizing: "border-box";
-  flex: "2 1 0%";
-  min-width: "66%";
-  display: "flex";
-  flex-direction: "column";
-  justify-content: "center";
-  padding: "48px 12px 48px 44px";
-}
-
-.UpNextCard__title {
-  box-sizing: "border-box";
-  letter-spacing: "-0.5px";
-  font-weight: 300;
-  color: rgb(255, 255, 255);
-  padding-top: "0px";
-  margin: "0px 0px 40px";
-  font-size: "36px";
-  line-height: "41px";
-  margin-top: "0px";
-  margin-bottom: "40px";
-}
-
-.UpNextCard__description {
-  box-sizing: "border-box";
-  margin-block: "1.5em";
-  letter-spacing: "-0.3px";
-  color: rgb(255, 255, 255);
-  margin-bottom: "16px";
-  display: "-webkit-box";
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: "hidden";
-  font-size: "16px";
-  line-height: "32px";
-  margin-top: "0px";
-  max-height: "63px";
-  font-family: '"aktiv-grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif';
-}
-
-.UpNextCard__cta {
-  box-sizing: "border-box";
-  background-color: "transparent";
-  text-decoration: "none";
-  font-size: "14px";
-  line-height: "16px";
-  letter-spacing: "1px";
-  text-transform: "uppercase";
-  display: "inline";
-  margin-top: "30px";
-  transition: "color 0.2s ease-in-out, border-bottom 0.2s ease-in-out";
-  font-weight: 500;
-  border-bottom: "1px solid white";
-  color: rgb(255, 255, 255);
-  font-family: '"aktiv-grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif';
-}
-
-#back-top-container {
-  box-sizing: "border-box";
-  height: "0px";
-  text-align: "right";
-  position: "sticky";
-  bottom: "10vh";
-  width: "calc(100% + 64px)";
-  margin-bottom: "60px";
-}
-
-.back-to-top {
-  box-sizing: "border-box";
-}
-
-.BackToTop {
-  box-sizing: "border-box";
-  text-decoration: "none";
-  border-radius: "50%";
-  width: "44px";
-  height: "44px";
-  margin-right: "1px";
-  background-color: rgb(242, 242, 242);
-  cursor: "pointer";
-  margin-left: "auto";
-  text-transform: "uppercase";
-  font-size: "10px";
-  display: "flex";
-  flex-direction: "column";
-  align-items: "center";
-  justify-content: "center";
-  text-align: "center";
-  transition: "color 0.2s ease-in-out, border-bottom 0.2s ease-in-out";
-  color: rgb(83, 119, 122);
-  font-weight: 500;
-  border-bottom: "0px";
-  font-family: '"aktiv-grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif';
-}
-
-.fa-chevron-up {
-  display: "var(--fa-display, inline-block)";
-  height: "1em";
-  vertical-align: "-0.125em";
-  font-size: "2em";
-  margin-bottom: "-8px";
-  color: rgb(177, 177, 177);
-  overflow: "visible";
-  box-sizing: "content-box";
-}
-
-.fa-chevron-up path {
-  box-sizing: "border-box";
-}
-
-.fa-circle-question {
-  display: "var(--fa-display, inline-block)";
-  height: "1em";
-  vertical-align: "-0.125em";
-  overflow: "visible";
-  box-sizing: "content-box";
-}
-
-.fa-circle-question path {
-  box-sizing: "border-box";
-}
-
-.BarMeter__meter:nth-child(1) {
-  width: 71%;
-}
-
-.BarMeter__meter:nth-child(2) {
-  width: 51%;
-}
-
-.BarMeter__meter:nth-child(3) {
-  width: 41%;
-}
-
-.BarMeter__meter:nth-child(4) {
-  width: 36%;
-}
-
-.BarMeter__meter:nth-child(5) {
-  width: 24%;
-}
-
-.BarMeter__meter:nth-child(6) {
-  width: 17%;
-}
-
-.BarMeter__meter:nth-child(7) {
-  width: 66%;
-}
-
-.BarMeter__meter:nth-child(8) {
-  width: 59%;
-}
-
-.BarMeter__meter:nth-child(9) {
-  width: 44%;
-}
-
-.BarMeter__meter:nth-child(10) {
-  width: 42%;
-}
-
-.BarMeter__meter:nth-child(11) {
-  width: 37%;
-}
-</style>

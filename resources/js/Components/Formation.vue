@@ -1,6 +1,6 @@
 <template>
   <ul role="list" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-1">
-    <li v-for="formation in formations" :key="formation.id" class="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow">
+    <li v-for="formation in formations" :key="formation.id" class="col-span-1 divide-y divide-gray-200 rounded-lg bg-gray-100 shadow">
       <div class="flex w-full items-center justify-between space-x-6 p-6">
         <div class="flex-1">
           <div class="flex items-center space-x-3">

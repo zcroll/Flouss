@@ -1,7 +1,7 @@
 <template>
               <img
                     alt="CareerHunter"
-                    src="/logo.svg"
-                    class="h-auto w-20"
+                    src="/logo_no_background.png"
+                    class="h-auto w-16 mt-2"
                 />
 </template>

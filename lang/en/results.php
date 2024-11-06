@@ -12,5 +12,10 @@ return [
     "your_score" => "Your Score",
     "top_careers" => "Your top careers",
     "share" => "Share",
-    "View_All_careers" => "View All careers"
+    "View_All_careers" => "View All careers",
+    'share_results_title' => 'Share your results',
+    'share_results_subtitle' => 'with #GénérationOrientée',
+    'share_message' => 'I completed the Gen.Z test and my top career matches are Research Chef, Food Critic, Forensic Pathologist, Cybercrime Investigator, Cryptographer and more. Find out yours at Gen.Z!',
+    'preview_image_alt' => 'Preview of shared page',
+    'coming_soon' => 'Coming Soon',
 ];

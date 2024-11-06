@@ -205,6 +205,13 @@
                 </div>
             </div>
         </div>
+        <button
+            @click="scrollToTop"
+            class="back-to-top"
+            v-if="showBackToTop"
+        >
+            Back to Top
+        </button>
     </AppLayout>
 </template>
 
@@ -359,5 +366,32 @@ const handleScroll = () => {
     if (scrollPosition >= triggerPosition) {
         loadMore();
     }
+
+    // Show the back to top button when scrolled down
+    showBackToTop.value = window.pageYOffset > 300;
 };
+
+const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+const showBackToTop = ref(false);
 </script>
+
+<style scoped>
+.back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #db492b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    z-index: 1000;
+}
+.back-to-top:hover {
+    background-color: #c43e2b;
+}
+</style>

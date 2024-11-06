@@ -35,7 +35,7 @@ export default {
 
 
 <template>
-    <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/webflow.4dc4432fd989.css">
+    <link rel="stylesheet" href="/css/header.css">
        <div id="globalnav-container" data-registration-modal="true">
         <nav :class="['GlobalNav', { 'GlobalNav--sticky': isSticky }]" role="navigation">
             <a class="GlobalNav-logo--desktop w--current" data-track="mixpanel" data-target="Home" data-link-type="Header" href="/">

@@ -2,7 +2,7 @@
   <AppLayout preserveScroll :head-title="`Hello ${$page.props.auth.user.name}`">
       <div class="w-full min-h-screen py-10 px-5 font-sans">
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            
+
               <div class="lg:col-span-2 bg-white shadow-lg rounded-2xl p-10">
         <header class="flex justify-between items-center mb-8">
           <h1 class="text-3xl font-light tracking-wide text-gray-800">{{ ArchetypeData.name }}'s Personality Report</h1>
@@ -35,7 +35,7 @@
           </p>
 
           <div class="mt-16">
-            
+
             <!-- Replace this with your actual chart component -->
           </div>
 
@@ -84,7 +84,7 @@
           </div>
         </div>
 
-   
+
 
       </div>
               <div class="lg:col-span-1">
@@ -101,7 +101,7 @@
                 </div>
               </div>
     </div>
-  </div>
+    </div>
 
   </AppLayout>
 </template>

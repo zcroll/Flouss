@@ -7,7 +7,7 @@
         <!-- Sticky Sidebar -->
         <div class="w-full lg:w-1/3 mb-8 lg:mb-0 lg:pl-8">
             <div
-                class="sticky top-4 text-white rounded-2xl p-6 overflow-hidden bg-[#353535]"
+                class="sticky top-[120px] text-white rounded-2xl p-6 overflow-hidden bg-[#353535]"
             >
                 <div class="relative z-10">
                     <!-- Main Content for Large Screens -->
@@ -37,7 +37,7 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-3 gap-4 mb-6">
+<!--                        <div class="grid grid-cols-3 gap-4 mb-6">
                             <div
                                 class="bg-white bg-opacity-20 rounded-lg text-center p-4 backdrop-filter backdrop-blur-lg"
                             >
@@ -70,7 +70,7 @@
                                 </h4>
                                 <p class="text-sm">{{ satisfaction }}</p>
                             </div>
-                        </div>
+                        </div>-->
                         <ul class="space-y-4">
                             <li v-for="(link, index) in links" :key="index">
                                 <Link
