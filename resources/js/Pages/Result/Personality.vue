@@ -72,7 +72,7 @@
             <span class="ml-3 text-base font-medium tracking-tight">Detailed Insights</span>
           </h2>
 
-          <div class="mt-8">
+          <div v-if="Insights && Insights.length > 0" class="mt-8">
             <div v-for="(category, index) in groupedInsights" :key="index" class="mt-8">
               <h3 class="font-display text-3xl font-bold tracking-tight text-slate-900">{{ category.category }}</h3>
               <ol role="list" class="mt-8 divide-y divide-slate-300/30 rounded-2xl bg-slate-50 px-6 py-3 text-base tracking-tight sm:px-8 sm:py-7">
@@ -128,15 +128,17 @@ export default {
   computed: {
     groupedInsights() {
       const grouped = {};
-      this.Insights.forEach((insight) => {
-        if (!grouped[insight.insight_category]) {
-          grouped[insight.insight_category] = {
-            category: insight.insight_category,
-            insights: [],
-          };
-        }
-        grouped[insight.insight_category].insights.push(insight.insight);
-      });
+      if (this.Insights) {
+        this.Insights.forEach((insight) => {
+          if (!grouped[insight.insight_category]) {
+            grouped[insight.insight_category] = {
+              category: insight.insight_category,
+              insights: [],
+            };
+          }
+          grouped[insight.insight_category].insights.push(insight.insight);
+        });
+      }
       return Object.values(grouped);
     }
   },

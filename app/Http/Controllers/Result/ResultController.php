@@ -87,7 +87,6 @@ class ResultController extends Controller
 
         return to_route('dashboard');
     }
-
     public function personality($id): \Inertia\Response
     {
         $locale = app()->getLocale();
@@ -104,33 +103,42 @@ class ResultController extends Controller
 
         $firstScore = $scores->first();
         ds($firstScore->scores);
-        $Archetype = $firstScore->Archetype;
-        $ArchetypeData = DB::table('persona')->where('name', '=', "mentor")->first();
+        
+        // Get archetype from the Archetype column
+        $archetype = null;
+        if (!empty($firstScore->Archetype)) {
+            $archetype = $firstScore->Archetype; // Already a string from the database
+        }
+        ds(['archetypetest'=>$archetype[0]]);
+
+
+
+        $ArchetypeData = DB::table('persona')->where('name', '=',$archetype[0])->first();
+        ds(['ArchetypeData'=>$ArchetypeData]);
 
         // Fetch insights grouped by category
-        $insights = Insight::where('persona_id', $ArchetypeData->id)
+        $insights = $ArchetypeData ? Insight::where('persona_id', $ArchetypeData->id)
             ->select('insight_category_slug', $insightColumn)
             ->get()
             ->groupBy('insight_category_slug')
             ->map(function ($group) use ($insightColumn) {
                 return $group->pluck($insightColumn);
-            });
-
+            }) : collect([]);
 
 
         // Transform the grouped insights into the desired format
 
 
-        $archetypeDiscovery = DB::table('archetype_discoveries')->where('slug', '=', "anchor")->first();
+        $archetypeDiscovery = DB::table('archetype_discoveries')->where('slug', '=', strtolower($archetype[0]))->first();
+
+        ds(['archetypeDiscovery'=>$archetypeDiscovery]);
         // Update the query to use the new model
-           ds(['archetypeDiscovery'=>$archetypeDiscovery]);
-           ds(['ArchetypeData'=>$ArchetypeData]);
-           ds(['insights'=>$insights->toArray()]);
+     
         return Inertia::render('Result/StrategistDescription', [
-            "ArchetypeData" => $ArchetypeData,
-            'firstScore' => $firstScore->scores,
-            'Insights' => $insights,
-            'archetypeDiscovery' => $archetypeDiscovery,
+            "ArchetypeData" => $ArchetypeData ?? [],
+            'firstScore' => $firstScore->scores ?? [],
+            'Insights' => $insights ?? [],
+            'archetypeDiscovery' => $archetypeDiscovery ?? [],
         ]);
     }
 }

@@ -11,7 +11,7 @@
             :style="{ backgroundImage: `url(${archetypeDiscovery.image_url})` }"
           >
             <h1 class="Discovery__title">
-              I am {{ ArchetypeData.name.charAt(0).toLowerCase() === 'a' || ArchetypeData.name.charAt(0).toLowerCase() === 'e' || ArchetypeData.name.charAt(0).toLowerCase() === 'i' || ArchetypeData.name.charAt(0).toLowerCase() === 'o' || ArchetypeData.name.charAt(0).toLowerCase() === 'u' ? 'an' : 'a' }} <span class="">{{ ArchetypeData.name }}</span>
+              I am {{ archetypeDiscovery.slug.charAt(0).toLowerCase() === 'a' || archetypeDiscovery.slug.charAt(0).toLowerCase() === 'e' || archetypeDiscovery.slug.charAt(0).toLowerCase() === 'i' || archetypeDiscovery.slug.charAt(0).toLowerCase() === 'o' || archetypeDiscovery.slug.charAt(0).toLowerCase() === 'u' ? 'an' : 'a' }} <span class="">{{ archetypeDiscovery.slug }}</span>
             </h1>
             <p class="Discovery__rationale">{{ archetypeDiscovery.rationale }}</p>
           </div>
@@ -50,7 +50,7 @@
                 <img :src="'https://res.cloudinary.com/hnpb47ejt/image/upload/q_auto,f_auto,w_480/v1568404399/ux8i7elvayqifan41pj8'" alt="CareerExplorer Assessment" class="">
                 <div class="Discovery__sidebar__content">
                   <h3 class="">Your magic 🤩💫</h3>
-                  <p class="">Are you {{ ArchetypeData.name.charAt(0).toLowerCase() === 'a' || ArchetypeData.name.charAt(0).toLowerCase() === 'e' || ArchetypeData.name.charAt(0).toLowerCase() === 'i' || ArchetypeData.name.charAt(0).toLowerCase() === 'o' || ArchetypeData.name.charAt(0).toLowerCase() === 'u' ? 'an' : 'a' }} {{ ArchetypeData.name }} {{ArchetypeData.personality_paragraph}}.</p>
+                  <!-- <p class="">Are you {{ ArchetypeData.name.charAt(0).toLowerCase() === 'a' || ArchetypeData.name.charAt(0).toLowerCase() === 'e' || ArchetypeData.name.charAt(0).toLowerCase() === 'i' || ArchetypeData.name.charAt(0).toLowerCase() === 'o' || ArchetypeData.name.charAt(0).toLowerCase() === 'u' ? 'an' : 'a' }} {{ ArchetypeData.name }} {{ArchetypeData.personality_paragraph}}.</p> -->
 
                 </div>
               </div>
