@@ -16,7 +16,6 @@ class FavoriteController extends Controller
             'favoritable_type' => 'required|in:career,degree'
         ]);
 
-        // Convert favoritable_type to model class name
         $type = $request->favoritable_type === 'career' ? 'App\Models\JobInfo' : 'App\Models\Degree';
 
         $favorite = Favorite::where([
@@ -30,10 +29,16 @@ class FavoriteController extends Controller
             return back()->with('success', 'Removed from favorites');
         }
 
-        Favorite::create([
+        $favorite = Favorite::create([
             'user_id' => auth()->id(),
             'favoritable_id' => $request->favoritable_id,
             'favoritable_type' => $type,
+        ]);
+
+        \Log::info('Favorite created', [
+            'user_id' => $favorite->user_id,
+            'favoritable_id' => $favorite->favoritable_id,
+            'favoritable_type' => $favorite->favoritable_type
         ]);
 
         return back()->with('success', 'Added to favorites');
@@ -51,17 +56,5 @@ class FavoriteController extends Controller
     }
 
     // Test method to verify isFavorite() logic
-    public function test()
-    {
-        $degree = Degree::find(2);
-        $isFavorite = $degree->isFavorite();
-        ds($isFavorite);
-        
-        ds([
-            'degree_id' => $degree->id,
-            'is_favorite' => $isFavorite,
-            'user_id' => auth()->id(),
-            'favorites_count' => $degree->favorites()->count()
-        ]);
-    }
+   
 } 

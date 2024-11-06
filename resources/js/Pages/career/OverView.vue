@@ -13,6 +13,7 @@
             :personality="occupation.personality || 'N/A'"
             :satisfaction="occupation.satisfaction || 'N/A'"
             :id="occupation.id"
+            :isFavorited="occupation.is_favorited"
 
         >
 

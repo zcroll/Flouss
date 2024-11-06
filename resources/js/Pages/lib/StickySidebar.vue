@@ -33,44 +33,12 @@
                                     :initial-is-favorited="isFavorited"
                                     :show-label="true"
                                     class="favorite-button"
+                                    :key="id"
                                 />
                             </div>
                         </div>
 
-<!--                        <div class="grid grid-cols-3 gap-4 mb-6">
-                            <div
-                                class="bg-white bg-opacity-20 rounded-lg text-center p-4 backdrop-filter backdrop-blur-lg"
-                            >
-                                <h4 class="text-lg font-bold">
-                                    {{
-                                        __(
-                                            `stickybar.${getFirstBoxTitle.toLowerCase()}`
-                                        )
-                                    }}
-                                </h4>
-                                <p class="text-sm">{{ getFirstBoxContent }}</p>
-                            </div>
-                            <div
-                                class="bg-white bg-opacity-20 rounded-lg text-center p-4 backdrop-filter backdrop-blur-lg"
-                            >
-                                <h4 class="text-lg font-bold">
-                                    {{
-                                        __(
-                                            `stickybar.${getSecondBoxTitle.toLowerCase()}`
-                                        )
-                                    }}
-                                </h4>
-                                <p class="text-sm">{{ getSecondBoxContent }}</p>
-                            </div>
-                            <div
-                                class="bg-white bg-opacity-20 rounded-lg text-center p-4 backdrop-filter backdrop-blur-lg"
-                            >
-                                <h4 class="text-lg font-bold">
-                                    {{ __("stickybar.satisfaction") }}
-                                </h4>
-                                <p class="text-sm">{{ satisfaction }}</p>
-                            </div>
-                        </div>-->
+
                         <ul class="space-y-4">
                             <li v-for="(link, index) in links" :key="index">
                                 <Link
@@ -149,7 +117,7 @@
 
 <script setup>
 import { Link, router } from '@inertiajs/vue3';
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import __ from '@/lang';
 import FavoriteButton from '@/Components/FavoriteButton.vue';
 
@@ -173,9 +141,16 @@ const props = defineProps({
     disableStepsLink: Boolean,
     isFavorited: {
         type: Boolean,
-        default: false
     }
 });
+
+// Watch isFavorited prop changes
+watch(() => props.isFavorited, (newValue) => {
+    console.log('isFavorited changed:', newValue);
+});
+
+// Log initial value
+console.log('Initial isFavorited:', props.isFavorited);
 
 const isSmallScreen = ref(false);
 

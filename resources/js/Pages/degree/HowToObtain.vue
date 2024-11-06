@@ -14,6 +14,7 @@
       :image="degree.image"
       :id="degree.id"
       type="degree"
+      :isFavorited="degree.is_favorited"
     >
       <div class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white rounded-3xl shadow-2xl">
         <nav class="flex items-center space-x-2 text-sm mb-8 font-['aktiv-grotesk','Helvetica_Neue',Helvetica,Arial,sans-serif]">

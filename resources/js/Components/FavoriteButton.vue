@@ -15,12 +15,12 @@
                   stroke-width="2" 
                   d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
         </svg>
-        <span v-if="showLabel">{{ isFavorited ? 'Remove from favorites' : 'Add to favorites' }}</span>
+        <span v-if="showLabel">{{ isFavorited && 'Remove from favorites' || 'Add to favorites' }}</span>
     </button>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { router } from '@inertiajs/vue3'
 
 const props = defineProps({
@@ -45,9 +45,14 @@ const props = defineProps({
 
 const isFavorited = ref(props.initialIsFavorited)
 
+// Watch for changes in initialIsFavorited prop
+watch(() => props.initialIsFavorited, (newValue) => {
+    isFavorited.value = newValue
+})
+
 const toggleFavorite = async () => {
     try {
-        await router.post('/favorites', {
+         router.post('/favorites', {
             favoritable_id: props.modelId,
             favoritable_type: props.modelType
         })

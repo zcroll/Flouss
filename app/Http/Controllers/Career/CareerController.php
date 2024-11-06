@@ -21,6 +21,10 @@ class CareerController extends Controller
             ->where('slug', $job)
             ->firstOrFail();
 
+        $isFavorited = auth()->check() ? 
+            $occupation->favorites()->where('user_id', auth()->id())->exists() : 
+            false;
+
         return Inertia::render('career/OverView', [
             'occupation' => new JobInfoResource($occupation),
             'jobInfoDetail' => JobInfoDetailResource::collection($occupation->jobInfoDetail),
@@ -43,6 +47,7 @@ class CareerController extends Controller
                     'content' => $locale === 'fr' ? $workplace->content_fr : $workplace->content,
                 ];
             }),
+            'is_favorited' => $isFavorited,
         ]);
     }
 
@@ -52,9 +57,14 @@ class CareerController extends Controller
             ->where('slug', $job)
             ->firstOrFail();
 
+        $isFavorited = auth()->check() ? 
+            $occupation->favorites()->where('user_id', auth()->id())->exists() : 
+            false;
+
         return Inertia::render('career/workEnvironments', [
             'occupation' => new JobInfoResource($occupation),
             'workEnvironments' => WorkEnvironmentResource::collection($occupation->workEnvironments),
+            'is_favorited' => $isFavorited,
         ]);
     }
 
@@ -64,9 +74,12 @@ class CareerController extends Controller
 
         $occupation = JobInfo::where('slug', $job)->firstOrFail();
 
+        $isFavorited = auth()->check() ? 
+            $occupation->favorites()->where('user_id', auth()->id())->exists() : 
+            false;
+
         $personalityTraits = DB::table('personality_traits')->where('job_id', $occupation->id)->get();
         
-
         ds([ 'personalityTraits' => $personalityTraits ]);
         $personalityDetails = DB::table('personality_details')->where('job_id', $occupation->id)->get()->map(function ($detail) {
             return [
@@ -83,7 +96,7 @@ class CareerController extends Controller
                 'name' => $locale === 'fr' ? $occupation->name_fr : $occupation->name,
                 'slug' => $occupation->slug,
                 'image' => $occupation->image,
-                'is_favorited' => $occupation->isFavorite(),
+                'is_favorited' => $isFavorited,
             ],
             'personalityTraits' => $personalityTraits,
             'personalityDetails' => $personalityDetails,
@@ -100,6 +113,10 @@ class CareerController extends Controller
             'jobAssociations',
             'howToBecome',
         ])->where('slug', $job)->firstOrFail();
+
+        $isFavorited = auth()->check() ? 
+            $occupation->favorites()->where('user_id', auth()->id())->exists() : 
+            false;
 
         $degrees = DegreeJob::where('job_id', $occupation->id)
             ->with('degree')
@@ -122,7 +139,7 @@ class CareerController extends Controller
                 'name' => $locale === 'fr' ? $occupation->name_fr : $occupation->name,
                 'slug' => $occupation->slug,
                 'image' => $occupation->image,
-                'is_favorited' => $occupation->isFavorite(),
+                'is_favorited' => $isFavorited,
             ],
             'jobSteps' => $occupation->jobSteps,
             'jobCertifications' => $occupation->jobCertifications,
@@ -136,13 +153,15 @@ class CareerController extends Controller
     public function show($slug)
     {
         $career = JobInfo::where('slug', $slug)
-            ->with(['jobInfoDuties', 'workEnvironments', /* other relationships */])
-            ->first();
+            ->with(['jobInfoDuties', 'workEnvironments'])
+            ->firstOrFail();
         
-        $career->is_favorite = $career->isFavorite();
+        $isFavorited = auth()->check() ? 
+            $career->favorites()->where('user_id', auth()->id())->exists() : 
+            false;
 
         return Inertia::render('career/Show', [
-            'career' => $career
+            'career' => array_merge($career->toArray(), ['is_favorited' => $isFavorited])
         ]);
     }
 }

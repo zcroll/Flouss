@@ -22,6 +22,14 @@ class DegreeController extends Controller
             ->where('slug', $slug)
             ->firstOrFail();
 
+        // Check if user is authenticated and if they favorited this degree
+        $isFavorited = auth()->check() ? 
+            $degree->favorites()->where('user_id', auth()->id())->exists() : 
+            false;
+
+
+        ds($isFavorited);
+
         return Inertia::render('degree/Overview', [
             'degree' => [
                 'id' => $degree->id,
@@ -30,7 +38,7 @@ class DegreeController extends Controller
                 'image' => $degree->image,
                 'degree_level' => $degree->degree_level,
                 'satisfaction' => $degree->satisfaction,
-                'is_favorited' => $degree->isFavorite(),
+                'is_favorited' => $isFavorited,
             ],
             'degreeDescription' => [
                 'main_description' => $degree->degreeDescription ? $degree->degreeDescription->$mainDescriptionColumn : null,
@@ -58,12 +66,17 @@ class DegreeController extends Controller
             ->where('slug', $slug)
             ->firstOrFail();
 
+        $isFavorited = auth()->check() ? 
+            $degree->favorites()->where('user_id', auth()->id())->exists() : 
+            false;
+
         return Inertia::render('degree/Skills', [
             'degree' => [
                 'id' => $degree->id,
                 'name' => $degree->name,
                 'slug' => $degree->slug,
                 'image' => $degree->image,
+                'is_favorited' => $isFavorited,
             ],
             'degreeSkills' => $degree->degreeSkills->map(function ($skill) use ($locale) {
                 return [
@@ -81,12 +94,19 @@ class DegreeController extends Controller
             ->where('slug', $slug)
             ->firstOrFail();
 
+        $isFavorited = auth()->check() ? 
+            $degree->favorites()->where('user_id', auth()->id())->exists() : 
+            false;
+
+        ds($isFavorited);
+
         return Inertia::render('degree/Jobs', [
             'degree' => [
                 'id' => $degree->id,
                 'name' => $degree->name,
                 'slug' => $degree->slug,
                 'image' => $degree->image,
+                'is_favorited' => $isFavorited,
             ],
             'degreeJobs' => $degree->degreeJobs->map(function ($job) use ($locale) {
                 return [
@@ -101,9 +121,13 @@ class DegreeController extends Controller
     {
         $locale = app()->getLocale();
 
-        $degree = Degree::with(['degreeFormationMatches.formation.etablissement']) // Eager load formations and their etablissement
+        $degree = Degree::with(['degreeFormationMatches.formation.etablissement'])
             ->where('slug', $slug)
             ->firstOrFail();
+
+        $isFavorited = auth()->check() ? 
+            $degree->favorites()->where('user_id', auth()->id())->exists() : 
+            false;
 
         return Inertia::render('degree/HowToObtain', [
             'degree' => [
@@ -111,16 +135,18 @@ class DegreeController extends Controller
                 'name' => $degree->name,
                 'slug' => $degree->slug,
                 'image' => $degree->image,
+                'is_favorited' => $isFavorited,
             ],
             'formations' => $degree->degreeFormationMatches->map(function ($match) use ($locale) {
                 return [
                     'id' => $match->formation_id,
                     'name' => $locale === 'fr' ? $match->formation_name_fr : $match->formation_name,
                     'similarity_score' => $match->similarity_score,
-                    'etablissement' => $match->formation->etablissement, // Include etablissement data
+                    'etablissement' => $match->formation->etablissement,
                     'libelle' => $match->formation->diplomeLibelleFr
                 ];
             }),
         ]);
     }
 }
+

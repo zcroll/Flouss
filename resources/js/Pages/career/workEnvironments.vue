@@ -13,7 +13,7 @@
             :personality="occupation.personality || 'N/A'"
             :satisfaction="occupation.satisfaction || 'N/A'"
             :id="occupation.id"
-
+            :isFavorited="occupation.is_favorited"
         >
 
             <div class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white rounded-3xl shadow-2xl">
