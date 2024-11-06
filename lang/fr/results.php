@@ -14,8 +14,10 @@ return [
     "share" => "Partager",
     "View_All_careers" => "Voir toutes les carrières",
     'share_results_title' => 'Partagez vos résultats',
-    'share_results_subtitle' => 'avec #GénérationOrientée',
+    'share_results_subtitle' => '#GénérationOrientée',
     'share_message' => 'J\'ai complété le test Gen.Z et mes meilleures correspondances de carrière sont Chef de recherche, Critique gastronomique, Pathologiste judiciaire, Enquêteur en cybercriminalité, Cryptographe et plus encore. Découvrez le vôtre sur Gen.Z!',
     'preview_image_alt' => 'Aperçu de la page partagée',
     'coming_soon' => 'Bientôt disponible',
+    "See_more_matches" => "Plus de correspondances",
+    "view_report" => "VOIR LE RAPPORT"
 ];

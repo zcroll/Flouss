@@ -18,4 +18,6 @@ return [
     'share_message' => 'I completed the Gen.Z test and my top career matches are Research Chef, Food Critic, Forensic Pathologist, Cybercrime Investigator, Cryptographer and more. Find out yours at Gen.Z!',
     'preview_image_alt' => 'Preview of shared page',
     'coming_soon' => 'Coming Soon',
+    "See_more_matches" => "See more matches",
+    "view_report" => "VIEW THE REPPORT"
 ];

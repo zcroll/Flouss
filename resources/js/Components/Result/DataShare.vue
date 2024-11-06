@@ -2,13 +2,13 @@
   <div class="DashboardPage__sharing ">
     <div class="DashboardPage__sharing__wrap">
       <h2 class="DashboardPage__sharing__title">
-        {{ __('share_results_title') }}<br />{{ __('share_results_subtitle') }}
+        {{ __('results.share_results_title') }}<br />{{ __('results.share_results_subtitle') }}
       </h2>
       <ul class="DashboardPage__sharing__list">
         <li class="DashboardPage__sharing__item">
           <a
             class="DashboardPage__sharing__link"
-            href="https://www.facebook.com/sharer/sharer.php?t={{ __('share_message') }}&u=https%3A%2F%2Fwww.gennz.site%2Fassessments%2Fa39b4eb9-bea7-47ab-85a4-212adad78843%2Fresults%2F%3Fshare%3D309d43c8-2242-471e-986b-7b06982ec4d3"
+            href="https://www.facebook.com/sharer/sharer.php?t={{ __('results.share_message') }}&u=https%3A%2F%2Fwww.gennz.site%2Fassessments%2Fa39b4eb9-bea7-47ab-85a4-212adad78843%2Fresults%2F%3Fshare%3D309d43c8-2242-471e-986b-7b06982ec4d3"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Share to Facebook"
@@ -40,10 +40,10 @@
         <img
           class="DashboardPage__sharing__preview__image ls-is-cached lazyloaded"
           data-src="/results_folder/share_results.png"
-          alt="{{ __('preview_image_alt') }}"
+          alt="{{ __('results.preview_image_alt') }}"
           src="/results_folder/share_results.png"
         />
-        <label class="DashboardPage__sharing__preview__label">{{ __('coming_soon') }}</label>
+        <label class="DashboardPage__sharing__preview__label">{{ __('results.coming_soon') }}</label>
       </a>
     </div>
   </div>
