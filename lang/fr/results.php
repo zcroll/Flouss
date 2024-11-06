@@ -19,5 +19,10 @@ return [
     'preview_image_alt' => 'Aperçu de la page partagée',
     'coming_soon' => 'Bientôt disponible',
     "See_more_matches" => "Plus de correspondances",
-    "view_report" => "VOIR LE RAPPORT"
+    "view_report" => "VOIR LE RAPPORT",
+    'Things_you\'re_good_at' => 'Où vous excellez',
+    'Things_you_can_watch_out_for' => 'Où faire attention',
+    'Science' => 'La Science',
+    'Your_scores' => 'Vos scores',
+    'Insights' => 'Aperçus',
 ];

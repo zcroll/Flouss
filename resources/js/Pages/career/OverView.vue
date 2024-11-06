@@ -114,6 +114,7 @@
                 <!-- <section class="mt-12 space-y-4 text-center">
                     <p class="text-xl text-gray-600">Interested in learning more about this career? Explore our <a href="#" class="text-blue-600 hover:text-blue-500 underline">Career Guide</a>.</p>
                 </section> -->
+                <BackToTop />
             </div>
 
 
@@ -129,6 +130,7 @@ import {defineProps} from 'vue';
 import StickySidebar from "@/Pages/lib/StickySidebar.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link } from '@inertiajs/vue3';
+import BackToTop from "@/Components/BackToTop.vue";
 defineProps({
     occupation: {
         type: Object,

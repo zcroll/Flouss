@@ -19,5 +19,10 @@ return [
     'preview_image_alt' => 'Preview of shared page',
     'coming_soon' => 'Coming Soon',
     "See_more_matches" => "See more matches",
-    "view_report" => "VIEW THE REPPORT"
+    "view_report" => "VIEW THE REPPORT",
+    'Things_you\'re_good_at' => 'Things you\'re good at',
+    'Things_you_can_watch_out_for' => 'Things you can watch out for',
+    'Science' => 'The Science',
+    'Your_scores' => 'Your scores',
+    'Insights' => 'Insights',
 ];

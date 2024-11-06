@@ -84,6 +84,7 @@
             <Formation :formations="filteredFormations" />
           </div>
         </div>
+          <BackToTop />
       </div>
     </StickySidebar>
   </AppLayout>
@@ -95,9 +96,11 @@ import { Link } from '@inertiajs/vue3'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import StickySidebar from '@/Pages/lib/StickySidebar.vue'
 import Formation from '@/Components/Formation.vue'
+import BackToTop from "@/Components/BackToTop.vue";
 
 export default defineComponent({
   components: {
+      BackToTop,
     AppLayout,
     StickySidebar,
     Link,

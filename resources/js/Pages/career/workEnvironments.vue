@@ -2,8 +2,8 @@
     <AppLayout>
         <div class="layout--sidebar__body__main">
 
-       
-        
+
+
         <StickySidebar
             :slug="occupation.slug"
             :title="occupation.name"
@@ -97,6 +97,7 @@
                         </figure>
                     </div>
                 </div>
+                <BackToTop />
             </div>
         </StickySidebar>
     </div>
@@ -110,6 +111,7 @@ import { ref, computed } from 'vue';
 import StickySidebar from "@/Pages/lib/StickySidebar.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link } from '@inertiajs/vue3';
+import BackToTop from "@/Components/BackToTop.vue";
 
 const props = defineProps({
     occupation: {

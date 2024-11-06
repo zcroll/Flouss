@@ -168,6 +168,7 @@
                                 {{ job.job_description }}
                             </p>
                         </div>
+                        <BackToTop />
                     </section>
                 </div>
             </StickySidebar>
@@ -180,6 +181,7 @@ import { defineProps } from "vue";
 import StickySidebar from "@/Pages/lib/StickySidebar.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link } from "@inertiajs/vue3";
+import BackToTop from "@/Components/BackToTop.vue";
 
 defineProps({
     degree: {

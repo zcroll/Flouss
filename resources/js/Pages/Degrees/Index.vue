@@ -202,16 +202,10 @@
                             </div>
                         </div>
                     </WhenVisible>
+                    <BackToTop />
                 </div>
             </div>
         </div>
-        <button
-            @click="scrollToTop"
-            class="back-to-top"
-            v-if="showBackToTop"
-        >
-            Back to Top
-        </button>
     </AppLayout>
 </template>
 
@@ -224,6 +218,7 @@ import debounce from "lodash/debounce";
 import Pagination from "@/Components/Pagination.vue";
 import { usePage } from "@inertiajs/vue3";
 import { WhenVisible } from "@inertiajs/vue3";
+import BackToTop from "@/Components/BackToTop.vue";
 
 const props = defineProps({
     degrees: Object,
@@ -379,19 +374,5 @@ const showBackToTop = ref(false);
 </script>
 
 <style scoped>
-.back-to-top {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: #db492b;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 15px;
-    cursor: pointer;
-    z-index: 1000;
-}
-.back-to-top:hover {
-    background-color: #c43e2b;
-}
+
 </style>

@@ -32,7 +32,7 @@
                 <span class="text-gray-400 font-medium border-b-2 border-gray-400 transition-all duration-200 ease-in-out hover:text-blue-600 hover:border-blue-600">{{ __('How to Become') }}</span>
             </nav>
 
-   
+
           <section id="step-1" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0">
 
             <h2 class="custom-heading mb-8" itemProp="name">Steps to become a {{ occupation.name }}</h2>
@@ -93,6 +93,7 @@
               </ul>
             </div>
           </section>
+            <BackToTop />
         </div>
       </StickySidebar>
     </div>
@@ -104,9 +105,11 @@ import { defineComponent } from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import StickySidebar from '@/Pages/lib/StickySidebar.vue'
 import { Link } from '@inertiajs/vue3'
+import BackToTop from "@/Components/BackToTop.vue";
 
 export default defineComponent({
   components: {
+      BackToTop,
     AppLayout,
     StickySidebar,
     Link,

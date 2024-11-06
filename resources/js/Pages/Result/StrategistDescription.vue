@@ -20,14 +20,14 @@
             <div class="Discovery__related">
               <p class="Discovery__related__lil-subheading">{{ archetypeDiscovery.verbose_description_header }}</p>
               <p class="Discovery__related__description">{{ archetypeDiscovery.verbose_description }}</p>
-              <h3 class="Discovery__related__subheading">Things they're good at</h3>
+              <h3 class="Discovery__related__subheading">{{ __("results.Things_you're_good_at")}}</h3>
               <p class="Discovery__related__description">{{ archetypeDiscovery.strengths_body }}</p>
-              <h3 class="Discovery__related__subheading">Things they can watch out for</h3>
+              <h3 class="Discovery__related__subheading">{{ __("results.Things_you_can_watch_out_for")}}</h3>
               <p class="Discovery__related__description">{{ archetypeDiscovery.weaknesses_body }}</p>
-              <h3 class="Discovery__related__lil-subheading">The Science</h3>
+              <h3 class="Discovery__related__lil-subheading">{{ __("results.Science")}}</h3>
               <p class="Discovery__related__description">{{ archetypeDiscovery.scales_descriptor }}</p>
               <div class="Discovery__related__content Discovery__related__content--scales">
-                <h3 class="Discovery__related__lil-subheading" tabindex="0" aria-label="Below you will find a list of scores detailing where you match-up to chosen traits.">Their scores:</h3>
+                <h3 class="Discovery__related__lil-subheading" tabindex="0" aria-label="Below you will find a list of scores detailing where you match-up to chosen traits.">{{ __("results.Your_scores")}}:</h3>
                 <div class="PersonalityGraphs">
                   <a v-for="scale in JSON.parse(archetypeDiscovery.scales)" :key="scale.scale_id" href="#" class="Box">
                     <div class="PersonalityGraphs__scale">
@@ -77,6 +77,7 @@
 
 <script>
 import AppLayout from '@/Layouts/AppLayout.vue';
+import __ from "@/lang";
 export default {
   props: {
     Insights: {

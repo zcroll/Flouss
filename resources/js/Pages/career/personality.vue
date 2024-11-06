@@ -137,6 +137,7 @@
                 </div>
               </a>
             </div>
+              <BackToTop />
           </section>
 
 
@@ -151,6 +152,7 @@ import { ref, computed } from 'vue';
 import StickySidebar from "@/Pages/lib/StickySidebar.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link } from '@inertiajs/vue3';
+import BackToTop from "@/Components/BackToTop.vue";
 
 const props = defineProps({
   occupation: {
