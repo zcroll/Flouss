@@ -56,7 +56,7 @@ const navigation = [
 
                             <div class="flex">
                                         <div class="flex-shrink-0">
-                                <Link :href="route('dashboard')">
+                                <Link :href="route('home')">
                                     <ApplicationMark class="block" />
                                 </Link>
                                         </div>
