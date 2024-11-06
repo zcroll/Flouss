@@ -41,9 +41,6 @@ const navigation = [
     // Add more navigation items as needed
 ];
 
-const socialLinks = [
-    // ... (keep your existing social links)
-];
 </script>
 
 <template >

@@ -9,7 +9,7 @@
         href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/user-results.3aa4bb301b9f.css"
     />
 
-    <AppLayout>
+    <AppLayout title="Results">
         <div class="DashboardPage">
             <section class="section">
                 <Folder
