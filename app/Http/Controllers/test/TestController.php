@@ -43,18 +43,7 @@ class TestController extends Controller
 
     public function index()
     {
-        $steps = collect($this->testSteps)->map(function($step) {
-            return array_merge($step, [
-                'status' => $this->getStepStatus($step['id']),
-                'progress' => $this->calculateProgress($step['id'])
-            ]);
-        });
-
-        return Inertia::render('Test/MainTest', [
-            'steps' => $steps,
-            'currentStep' => $this->getCurrentStep(),
-            'totalTime' => $steps->sum('time'),
-        ]);
+       
     }
     public function personalityArchetype()
     {

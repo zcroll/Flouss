@@ -348,6 +348,7 @@ class MainTestController extends Controller
             $responses = Session::get('basic_interest_responses', []);
             array_pop($responses);
             Session::put('basic_interest_responses', $responses);
+            
         }
         // If we're in holland codes
         else {

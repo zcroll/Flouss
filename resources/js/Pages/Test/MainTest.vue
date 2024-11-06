@@ -1,4 +1,3 @@
-
 <template>
   <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css">
 
@@ -106,7 +105,7 @@ responses: Array,
 message: String,
 responseCount: Number,
 testStage: String,
-progress: Number,
+progress: Object,
 },
 setup(props, { emit }) {
 const page = usePage();

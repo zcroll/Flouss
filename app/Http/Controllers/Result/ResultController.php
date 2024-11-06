@@ -35,31 +35,40 @@ class ResultController extends Controller
         $firstScore = $scores->first();
         ds(['firstScore'=>$firstScore]);
 
-        $closestJobs = collect($firstScore->jobs);
-        ds(['closestJobs'=>$closestJobs]);
+        // Get archetype from the Archetype column
+        $archetype = null;
+        if (!empty($firstScore->Archetype)) {
+            $archetype = $firstScore->Archetype; // Already a string from the database
+        }
+        ds(['archetypewww'=>$archetype]);
 
-        $decodedJobs = json_decode($closestJobs[0], true, 512, JSON_THROW_ON_ERROR);
+        // Handle jobs data
+        $jobs = null;
+        if (!empty($firstScore->jobs)) {
+            $decodedJobs = json_decode($firstScore->jobs, true, 512, JSON_THROW_ON_ERROR);
+            
+            if (isset($decodedJobs['job_matches'])) {
+                $jobsCollection = collect($decodedJobs['job_matches']);
+                ds(['jobsCollection' => $jobsCollection]);
 
-        $jobsCollection = collect($decodedJobs['job_matches']);
-        ds(['jobsCollection' => $jobsCollection]);
+                $jobIds = $jobsCollection->pluck('job_id')->toArray();
 
-        $jobIds = $jobsCollection->pluck('job_id')->toArray();
+                $jobs = JobInfo::whereIn('id', $jobIds)
+                    ->select('id', $nameColumn . ' as name', 'slug', 'image')
+                    ->get();
 
-        $jobs = JobInfo::whereIn('id', $jobIds)
-            ->select('id', $nameColumn . ' as name', 'slug', 'image')
-            ->get();
-
-        ds($jobs->toArray());
-
-
-
-        $Archetype = DB::table('persona')->where('name', '=', "Mentor")->first();
-
-        $archetypeDiscovery = DB::table('archetype_discoveries')->where('slug', '=', "Mentor")->first();
-
-
+                ds($jobs->toArray());
+            }
+        }
 
 
+        $Archetype = DB::table('persona')->where('name', '=', $archetype[0])->first();
+
+        $archetypeDiscovery = DB::table('archetype_discoveries')->where('slug', '=', $archetype[0])->first();
+
+
+
+                
 
 
 
@@ -70,10 +79,11 @@ class ResultController extends Controller
             return Inertia::render('Result/Results', [
                 'userId' => $firstScore->uuid,
                 'jobs' => $jobs,
-                'Archetype' => $Archetype,
+                'Archetype' => $archetypeDiscovery,
                 'archetypeDiscovery' => $archetypeDiscovery,
             ]);
         }
+
 
         return to_route('dashboard');
     }
