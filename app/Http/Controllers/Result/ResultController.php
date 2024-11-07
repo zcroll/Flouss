@@ -62,9 +62,9 @@ class ResultController extends Controller
         }
 
 
-        $Archetype = DB::table('persona')->where('name', '=', $archetype[0])->first();
+        $Archetype = DB::table('persona')->where('name', '=', 'Mentor')->first();
 
-        $archetypeDiscovery = DB::table('archetype_discoveries')->where('slug', '=', $archetype[0])->first();
+        $archetypeDiscovery = DB::table('archetype_discoveries')->where('slug', '=', 'Mentor')->first();
 
 
 

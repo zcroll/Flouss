@@ -14,6 +14,7 @@ class WelcomeBackController extends Controller
         return response()->json([
             'showWelcomeBack' => $showWelcomeBack
         ]);
+
     }
     
     public function setWelcomeBackShown()

@@ -25,6 +25,7 @@ class MainTestController extends Controller
     public function index()
     {
         $userId = auth()->id();
+        ds(['userId'=>$userId]);
         $existingResult = Result::where('user_id', $userId)->first();
 
         if ($existingResult) {

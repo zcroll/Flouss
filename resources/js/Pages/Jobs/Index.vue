@@ -143,7 +143,7 @@
               </div>
             </div>
           </WhenVisible>
-          <BackToTop />
+          <!-- <BackToTop /> -->
         </div>
       </div>
     </div>
@@ -157,7 +157,7 @@ import { router, Link, usePage } from '@inertiajs/vue3';
 import AppLayout from "@/Layouts/AppLayout.vue";
 import VueMultiselect from 'vue-multiselect';
 import debounce from 'lodash/debounce';
-import BackToTop from '@/Components/BackToTop.vue';
+// import BackToTop from '@/Components/BackToTop.vue';
 import { WhenVisible } from '@inertiajs/vue3';
 
 const props = defineProps({
