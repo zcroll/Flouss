@@ -33,7 +33,7 @@
                         @click="goBack">
                   <svg aria-hidden="true" focusable="false" data-prefix="fal" data-icon="chevron-up" class="svg-inline--fa fa-chevron-up fa-fw " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M443.8 330.8C440.6 334.3 436.3 336 432 336c-3.891 0-7.781-1.406-10.86-4.25L224 149.8l-197.1 181.1c-6.5 6-16.64 5.625-22.61-.9062c-6-6.5-5.594-16.59 .8906-22.59l208-192c6.156-5.688 15.56-5.688 21.72 0l208 192C449.3 314.3 449.8 324.3 443.8 330.8z"></path></svg>
                 </button>
-                <form @submit.prevent="submitAnswer">
+                <form @submit.prevent="submitAnswer" ref="formRef">
                     <h4 v-if="currentItemIndex === 0" aria-hidden="true">{{ testStage === 'holland_codes' ? 'Would you like to...' : 'Would you enjoy...' }}</h4>
                     <h3 aria-hidden="true">{{ testStage === 'holland_codes' ? currentItem.text : currentItem.category }}</h3>
                     <h5 v-if="testStage === 'basic_interests'" aria-hidden="true"><p>{{ currentItem.question }}</p></h5>
@@ -91,6 +91,8 @@ import { router } from '@inertiajs/vue3';
 import WelcomeBack from "@/Components/Test/WelcomeBack.vue";
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
+import anime from 'animejs/lib/anime.es.js';
+
 export default {
 components: { SidebarMainTest, WelcomeBack },
 props: {
@@ -132,6 +134,40 @@ const prefix = props.testStage === 'holland_codes' ? 'Would you like to' : 'Woul
 const questionText = props.currentItem.text || props.currentItem.question;
 return `${prefix} ${questionText}? Use the number keys to select one of the following; 1: Hate it. 2: Dislike it. 3: Neutral. 4: Like it. 5: Love it. To skip this question, press the down arrow. To go back to the previous question, press the up arrow.`;
 });
+const formRef = ref(null);
+
+const animateTransition = (direction, callback) => {
+  const animations = {
+    next: {
+      start: { translateY: [0, '-100%'], scale: [1, 0.98], opacity: [1, 0] },
+      end: { translateY: ['100%', 0], scale: [0.98, 1], opacity: [0, 1] }
+    },
+    back: {
+      start: { translateY: [0, '100%'], scale: [1, 0.98], opacity: [1, 0] }, 
+      end: { translateY: ['-100%', 0], scale: [0.98, 1], opacity: [0, 1] }
+    }
+  };
+
+  const timing = {
+    duration: 400,
+    easing: 'cubicBezier(.4,0,.2,1)'
+  };
+
+  anime({
+    targets: formRef.value,
+    ...animations[direction].start,
+    ...timing,
+    complete: () => {
+      callback();
+      anime({
+        targets: formRef.value,
+        ...animations[direction].end,
+        ...timing
+      });
+    }
+  });
+};
+
 const goBack = () => {
   router.post(route('test.go-back'), {
     _token: page.props.csrf_token
@@ -139,72 +175,66 @@ const goBack = () => {
     preserveState: true,
     preserveScroll: true,
     onSuccess: (page) => {
-      if (page.props.testStage) {
-        emit('update:testStage', page.props.testStage);
-      }
+      if (page.props.testStage) emit('update:testStage', page.props.testStage);
       if (page.props.currentItem) {
         emit('update:currentItem', page.props.currentItem);
-        // Set the previous answer if it exists
         form.answer = previousAnswers.value[page.props.currentItem.id] || null;
       }
-      if (page.props.currentSetIndex !== undefined) {
-        emit('update:currentSetIndex', page.props.currentSetIndex);
-      }
-      if (page.props.currentItemIndex !== undefined) {
-        emit('update:currentItemIndex', page.props.currentItemIndex);
-      }
+      if (page.props.currentSetIndex !== undefined) emit('update:currentSetIndex', page.props.currentSetIndex);
+      if (page.props.currentItemIndex !== undefined) emit('update:currentItemIndex', page.props.currentItemIndex);
+      
       form.itemId = props.currentItem.id;
       form.category = props.testStage === 'holland_codes'
         ? props.hollandCodeData[props.currentSetIndex].title
         : props.currentItem.category;
       form.testStage = props.testStage;
       form._token = page.props.csrf_token;
+
+      animateTransition('back', () => {});
     }
   });
 };
+
 const skipQuestion = () => {
-form.type = 'skipped';
-form.answer = null;
-submitAnswer();
+  form.type = 'skipped';
+  form.answer = null;
+  submitAnswer();
 };
+
 const submitAnswer = () => {
-const routeName = props.testStage === 'holland_codes'
-  ? 'store-holland-code-response'
-  : 'store-basic-interest-response';
-// Store the answer before submitting
-if (form.answer !== null) {
-  previousAnswers.value[form.itemId] = form.answer;
-}
-router.post(route(routeName), form, {
-  preserveState: true,
-  preserveScroll: true,
-  onSuccess: (page) => {
-    console.log('Response successfully submitted');
-    if (page.props.testStage) {
-      emit('update:testStage', page.props.testStage);
-    }
-    if (page.props.currentItem) {
-      emit('update:currentItem', page.props.currentItem);
-    }
-    if (page.props.currentSetIndex !== undefined) {
-      emit('update:currentSetIndex', page.props.currentSetIndex);
-    }
-    if (page.props.currentItemIndex !== undefined) {
-      emit('update:currentItemIndex', page.props.currentItemIndex);
-    }
-    form.reset();
-    form.itemId = props.currentItem.id;
-    form.category = props.testStage === 'holland_codes'
-      ? props.hollandCodeData[props.currentSetIndex].title
-      : props.currentItem.category;
-    form.testStage = props.testStage;
-    form._token = page.props.csrf_token;
-  },
-  onError: (errors) => {
-    console.error('Error submitting response', errors);
-  },
-});
+  const routeName = props.testStage === 'holland_codes'
+    ? 'store-holland-code-response'
+    : 'store-basic-interest-response';
+
+  if (form.answer !== null) {
+    previousAnswers.value[form.itemId] = form.answer;
+  }
+
+  router.post(route(routeName), form, {
+    preserveState: true,
+    preserveScroll: true,
+    onSuccess: (page) => {
+      if (page.props.testStage) emit('update:testStage', page.props.testStage);
+      if (page.props.currentItem) emit('update:currentItem', page.props.currentItem);
+      if (page.props.currentSetIndex !== undefined) emit('update:currentSetIndex', page.props.currentSetIndex);
+      if (page.props.currentItemIndex !== undefined) emit('update:currentItemIndex', page.props.currentItemIndex);
+
+      form.reset();
+      form.itemId = props.currentItem.id;
+      form.category = props.testStage === 'holland_codes'
+        ? props.hollandCodeData[props.currentSetIndex].title
+        : props.currentItem.category;
+      form.testStage = props.testStage;
+      form._token = page.props.csrf_token;
+
+      animateTransition('next', () => {});
+    },
+    onError: (errors) => {
+      console.error('Error submitting response', errors);
+    },
+  });
 };
+
 watch(() => props.currentItem, (newItem) => {
 form.reset();
 form.itemId = newItem.id;
@@ -213,12 +243,13 @@ form.category = props.testStage === 'holland_codes'
   : newItem.category;
 form.testStage = props.testStage;
 form._token = page.props.csrf_token;
-// Set the previous answer if it exists
 form.answer = previousAnswers.value[newItem.id] || null;
 });
+
 watch(() => props.progress, (newProgress) => {
 console.log('Progress updated:', newProgress);
 });
+
 const showWelcomeBack = ref(false);
 const checkWelcomeBack = async () => {
   const response = await axios.get(route('welcome-back.show'));
@@ -240,7 +271,8 @@ ariaLabel,
 goBack,
 showWelcomeBack,
 continueTest,
-previousAnswers
+previousAnswers,
+formRef
 };
 },
 };

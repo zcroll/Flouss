@@ -29,6 +29,7 @@
         "@lottiefiles/lottie-player": "^2.0.4",
         "@mdi/js": "^7.4.47",
         "@vue/server-renderer": "^3.5.9",
+        "animejs": "^3.2.2",
         "chart.js": "^4.4.4",
         "d3": "^7.9.0",
         "gsap": "^3.12.5",

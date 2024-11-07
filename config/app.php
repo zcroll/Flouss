@@ -83,14 +83,14 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'fr',
     'available_locales' => [
         'en',
         'fr'
     ],
-    'fallback_locale' => Locale::English->value,
+    'fallback_locale' => Locale::French->value,
 
-    'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
+    'faker_locale' => env('APP_FAKER_LOCALE', 'fr_FR'),
 
     /*
     |--------------------------------------------------------------------------
