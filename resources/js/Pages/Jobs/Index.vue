@@ -143,7 +143,7 @@
               </div>
             </div>
           </WhenVisible>
-          <!-- <BackToTop /> -->
+          <BackToTop />
         </div>
       </div>
     </div>
