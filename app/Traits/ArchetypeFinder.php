@@ -4,32 +4,7 @@ namespace App\Traits;
 
 trait ArchetypeFinder
 {
-//    protected array $archetypes = [
-//        "Advocate" => ["Social", "Investigative"],
-//        "Anchor" => ["Conventional", "Social"],
-//        "Architect" => ["Investigative", "Realistic"],
-//        "Builder" => ["Realistic", "Conventional"],
-//        "Caregiver" => ["Social", "Artistic"],
-//        "Composer" => ["Artistic", "Conventional"],
-//        "Creator" => ["Realistic", "Artistic"],
-//        "Designer" => ["Artistic", "Realistic"],
-//        "Enthusiast" => ["Investigative", "Artistic"],
-//        "Explorer" => ["Investigative", "Social"],
-//        "Groundbreaker" => ["Investigative", "Enterprising"],
-//        "Guardian" => ["Social", "Conventional"],
-//        "Humanitarian" => ["Enterprising", "Social"],
-//        "Innovator" => ["Realistic", "Investigative"],
-//        "Inventor" => ["Realistic", "Enterprising"],
-//        "Kingpin" => ["Enterprising", "Conventional"],
-//        "Luminary" => ["Artistic", "Social"],
-//        "Maverick" => ["Enterprising", "Artistic"],
-//        "Mentor" => ["Social", "Enterprising"],
-//        "Protector" => ["Social", "Realistic"],
-//        "Researcher" => ["Conventional", "Investigative"],
-//        "Scholar" => ["Investigative", "Conventional"],
-//        "Supporter" => ["Realistic", "Social"],
-//        "Visionary" => ["Artistic", "Enterprising"],
-//    ];
+
     protected $archetypes = [
         "Advocate" => ["Social", "Investigative"],
         "Architect" => ["Investigative", "Realistic"],
@@ -57,10 +32,10 @@ trait ArchetypeFinder
         "Philosopher" => ["Artistic", "Investigative"],
         "Mastermind" => ["Enterprising", "Investigative"],
         "Captain" => ["Enterprising", "Realistic"],
-        "Technician" => ["conventional", "Realistic"],
-        "Anchor" => ["conventional", "Social"],
-        "Producer" => ["conventional", "Artistic"],
-        "Strategist" => ["conventional", "Enterprising"],
+        "Technician" => ["Conventional", "Realistic"],
+        "Anchor" => ["Conventional", "Social"],
+        "Producer" => ["Conventional", "Artistic"],
+        "Strategist" => ["Conventional", "Enterprising"],
     ];
 
     public function getArchetypeAndTopScores($traits): array

@@ -21,6 +21,9 @@ class CareerController extends Controller
             ->where('slug', $job)
             ->firstOrFail();
 
+
+            
+
         $isFavorited = auth()->check() ? 
             $occupation->favorites()->where('user_id', auth()->id())->exists() : 
             false;
@@ -34,7 +37,7 @@ class CareerController extends Controller
                     'duty_description' => $locale === 'fr' ? $duty->duty_description_fr : $duty->duty_description,
                 ];
             }),
-            'jobInfoTypes' => $occupation->jobInfoTypes->map(function ($type) {
+            'jobInfoTypes' => $occupation->jobInfoTypes->unique('type_name')->map(function ($type) {
                 $locale = app()->getLocale();
                 return [
                     'type_name' => $locale === 'fr' ? $type->type_name_fr : $type->type_name,
@@ -50,7 +53,6 @@ class CareerController extends Controller
             'is_favorited' => $isFavorited,
         ]);
     }
-
     public function workEnvironments(string $job): Response
     {
         $occupation = JobInfo::with('workEnvironments')
@@ -63,7 +65,7 @@ class CareerController extends Controller
 
         return Inertia::render('career/workEnvironments', [
             'occupation' => new JobInfoResource($occupation),
-            'workEnvironments' => WorkEnvironmentResource::collection($occupation->workEnvironments),
+            'workEnvironments' => WorkEnvironmentResource::collection($occupation->workEnvironments->unique('name')),
             'is_favorited' => $isFavorited,
         ]);
     }

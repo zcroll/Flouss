@@ -2,22 +2,21 @@
 namespace App\Http\Controllers\Assessment;
 
 use App\Http\Controllers\Controller;
+use App\Traits\ArchetypeFinder;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 
+
 class JobMatcherController extends Controller
 {
+    use ArchetypeFinder ;
+
+
     public function matchJobs(Request $request)
     {
-        // // Validate the request
-        // $validated = $request->validate([
-        //     'interest_scores' => 'required|array',
-        //     'interest_scores.*' => 'required|integer|min:1|max:5'
-        // ]);
 
-        // $interest_scores = $validated['interest_scores'];
 
 
          $interest_scores = [
@@ -49,51 +48,67 @@ class JobMatcherController extends Controller
             "Music" => 2
         ];
 
-        $scriptPath = app_path('/python/test.py');
+        $score = [
+            'Realistic' => round(mt_rand(0, 100) / 100, 2),
+            'Investigative' => round(mt_rand(0, 100) / 100, 2),
+            'Artistic' => round(mt_rand(0, 100) / 100, 2),
+            'Social' => round(mt_rand(0, 100) / 100, 2),
+            'Enterprising' => round(mt_rand(0, 100) / 100, 2),
+            'Conventional' => round(mt_rand(0, 100) / 100, 2)
+        ];
 
-        // Pass interest_scores to the Python script
-        $process = new Process([
-            'python3',
-            $scriptPath,
-            json_encode($interest_scores),
-        ]);
-        
-        try {
-            $process->run();
 
-            if (!$process->isSuccessful()) {
-                Log::error('Python script execution failed', [
-                    'error' => $process->getErrorOutput(),
-                    'command' => $process->getCommandLine(),
-                    'working_directory' => $process->getWorkingDirectory(),
-                ]);
-                throw new ProcessFailedException($process);
-            }
 
-            $output = $process->getOutput();
-            Log::info('Python script output', ['output' => $output]);
+         $jobs = $this->getArchetypeAndTopScores($score);
+         ds($jobs);
 
-            $decodedOutput = json_decode($output, true);
 
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new \Exception('Failed to decode Python script output');
-            }
-
-            return response()->json([
-                'status' => 'success',
-                'data' => $decodedOutput
-            ]);
-
-        } catch (\Exception $e) {
-            Log::error('Job matching failed', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Failed to process job matching'
-            ], 500);
-        }
+//
+//        $scriptPath = app_path('/python/test.py');
+//
+//        // Pass interest_scores to the Python script
+//        $process = new Process([
+//            'python3',
+//            $scriptPath,
+//            json_encode($interest_scores),
+//        ]);
+//
+//        try {
+//            $process->run();
+//
+//            if (!$process->isSuccessful()) {
+//                Log::error('Python script execution failed', [
+//                    'error' => $process->getErrorOutput(),
+//                    'command' => $process->getCommandLine(),
+//                    'working_directory' => $process->getWorkingDirectory(),
+//                ]);
+//                throw new ProcessFailedException($process);
+//            }
+//
+//            $output = $process->getOutput();
+//            Log::info('Python script output', ['output' => $output]);
+//
+//            $decodedOutput = json_decode($output, true);
+//
+//            if (json_last_error() !== JSON_ERROR_NONE) {
+//                throw new \Exception('Failed to decode Python script output');
+//            }
+//
+//            return response()->json([
+//                'status' => 'success',
+//                'data' => $decodedOutput
+//            ]);
+//
+//        } catch (\Exception $e) {
+//            Log::error('Job matching failed', [
+//                'error' => $e->getMessage(),
+//                'trace' => $e->getTraceAsString()
+//            ]);
+//
+//            return response()->json([
+//                'status' => 'error',
+//                'message' => 'Failed to process job matching'
+//            ], 500);
+//        }
     }
 }

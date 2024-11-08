@@ -119,6 +119,8 @@ class MainTestController extends Controller
         Session::put('current_item_index', $currentItemIndex);
 
         $currentItem = $hollandCodeSets[$currentSetIndex]['items'][$currentItemIndex];
+        $archetype =  $this->getArchetypeAndTopScores($hollandScores);
+        ds($archetype);
         return to_route('main-test');
     }
 
@@ -231,6 +233,7 @@ class MainTestController extends Controller
 
         $hollandScores = $this->calculateHollandScores($hollandCodeResponses);
         $archetype =  $this->getArchetypeAndTopScores($hollandScores);
+        
         $topMatchingJobs = $this->matchJobs($formattedResponses);
 
         ds(['archetype'=>$archetype, 'topMatchingJobs'=>$topMatchingJobs]);
