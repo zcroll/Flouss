@@ -9,6 +9,7 @@
         "@inertiajs/vue3": "^2.0.0-beta.2",
         "@tailwindcss/forms": "^0.5.7",
         "@tailwindcss/typography": "^0.5.10",
+        "@types/animejs": "^3.1.12",
         "@vitejs/plugin-vue": "^5.0.0",
         "autoprefixer": "^10.4.16",
         "axios": "^1.7.7",

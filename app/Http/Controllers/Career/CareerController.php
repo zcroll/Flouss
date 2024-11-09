@@ -57,7 +57,7 @@ class CareerController extends Controller
     {
         $occupation = JobInfo::with('workEnvironments')
             ->where('slug', $job)
-            ->firstOrFail();
+            ->firstOrFail(); 
 
         $isFavorited = auth()->check() ? 
             $occupation->favorites()->where('user_id', auth()->id())->exists() : 
