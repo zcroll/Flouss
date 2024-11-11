@@ -155,3 +155,6 @@ Route::get('/for-organizations', function () {
 });
 
 
+Route::get('/ruller', function () {
+  return Inertia::render('ruller');
+});

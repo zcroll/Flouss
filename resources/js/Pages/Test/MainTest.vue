@@ -14,7 +14,8 @@
     <div class="Assessment__scroll-container">
       <div>
         <div class="Assessment__Item--forward-appear-done Assessment__Item--forward-enter-done">
-          <div class="Assessment__Item Assessment__RadioItem Assessment__RadioItem--active"
+          <NextStep v-if="showNextStep" @continue="hideNextStep" />
+          <div v-else class="Assessment__Item Assessment__RadioItem Assessment__RadioItem--active"
                :data-item-index="currentItemIndex"
                :data-itemset-index="currentSetIndex"
                :id="'item-' + currentItem.id"
@@ -92,9 +93,10 @@ import WelcomeBack from "@/Components/Test/WelcomeBack.vue";
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import anime from 'animejs/lib/anime.es.js';
+import NextStep from "@/Components/Test/NextStep.vue";
 
 export default {
-components: { SidebarMainTest, WelcomeBack },
+components: { SidebarMainTest, WelcomeBack, NextStep },
 props: {
 hollandCodeData: Array,
 basicInterests: Array,
@@ -259,6 +261,19 @@ const continueTest = async () => {
   await axios.post(route('welcome-back.set-shown'));
   showWelcomeBack.value = false;
 };
+
+const showNextStep = ref(false);
+
+const hideNextStep = () => {
+  showNextStep.value = false;
+};
+
+watch(() => props.testStage, (newStage) => {
+  if (newStage === 'basic_interests' && props.currentItemIndex === 0) {
+    showNextStep.value = true;
+  }
+});
+
 onMounted(() => {
   checkWelcomeBack();
 });
@@ -272,7 +287,9 @@ goBack,
 showWelcomeBack,
 continueTest,
 previousAnswers,
-formRef
+formRef,
+showNextStep,
+hideNextStep
 };
 },
 };
