@@ -27,7 +27,7 @@
             <div class="time-cursor color-red" style="transform: translateY(-24px) translateX(0px) translateZ(0px);">
               <input value="">
             </div>
-          </div> 
+          </div>
           <div class="timeline">
             <div class="info-loop-complete info info-large info-right info-top" data-delay="0">
               <div class="info-bar" style="transform: scaleY(1);"></div>
@@ -45,7 +45,7 @@
               <div class="animation-band animation-delay"></div>
               <div class="info-change-begin info info-left info-bottom" data-delay="100">
                 <div class="info-bar" style="transform: scaleY(1);"></div>
-                
+
                 <figcaption class="feature-caption" style="opacity: 1; transform: translateY(0px);">BAC+2 Complete
                 </figcaption>
               </div>
@@ -367,4 +367,4 @@ export default {
   }
 };
 </script>
-<style scoped></style>
+
