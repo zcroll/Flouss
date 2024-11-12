@@ -311,6 +311,10 @@ a.main-cta:hover {
   padding-top: 96px;
   padding-bottom: 96px;
   transition: opacity .25s ease;
+  margin: 40px 40px 0px 40px;
+  padding-bottom: 30px;
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
 }
 
 @media (min-width: 740px) {
@@ -685,10 +689,10 @@ a.feature-icon:hover img {
   z-index: 2;
   top: -29px;
   left: -22px;
-  width: 48px;
+  width: 70px;
   height: 48px;
   background-image: linear-gradient(-180deg, #FFFFFF 3%, #DBD6D0 100%);
-  border-radius: 50%;
+  border-radius: 20px;
   cursor: grab;
 }
 
@@ -700,12 +704,12 @@ a.feature-icon:hover img {
   pointer-events: none;
   position: relative;
   z-index: 1;
-  width: 48px;
+  width: 70px;
   height: 48px;
   color: currentColor;
   font-weight: 600;
   background-color: transparent;
-  border-radius: 50%;
+  border-radius: 20px;
   text-align: center;
   font-size: 15px;
   transform: translateZ(0);

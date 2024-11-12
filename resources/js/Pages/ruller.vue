@@ -13,305 +13,40 @@
 
     <div class="grid-container large-grid">
 
-      <div class="feature-description">
+      <!-- <div class="feature-description">
         <h1 class="feature-title">Controls and callbacks</h1>
         <h2 class="feature-subtitle">
           Timing is everything.
         </h2>
-      </div>
+      </div> -->
 
       <div class="feature-animation">
 
         <div class="time-control" style="transform: translateX(0px);">
           <div class="ruller">
             <div class="time-cursor color-red" style="transform: translateY(-24px) translateX(0px) translateZ(0px);">
-              <input value="0">
+              <input value="">
             </div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-            <div class="line" style="transform: translateY(0px);"></div>
-          </div>
+          </div> 
           <div class="timeline">
+            <div class="info-loop-complete info info-large info-right info-top" data-delay="0">
+              <div class="info-bar" style="transform: scaleY(1);"></div>
+              <figcaption class="feature-caption" style="opacity: 1; transform: translateY(0px);">Technologies Agroalimentaires
+              </figcaption>
+            </div>
             <div class="info-loop-begin info info-large info-left info-bottom" data-delay="0">
               <div class="info-bar" style="transform: scaleY(1);"></div>
-              <figcaption class="feature-caption" style="opacity: 1; transform: translateY(0px);">animation begin
+              <figcaption class="feature-caption" style="opacity: 1; transform: translateY(0px);">FST
               </figcaption>
-              <figcaption class="feature-caption" style="opacity: 1; transform: translateY(0px);">loop 1 begin
+              <figcaption class="feature-caption" style="opacity: 1; transform: translateY(0px);">2 Ans
               </figcaption>
             </div>
             <div class="animation">
               <div class="animation-band animation-delay"></div>
               <div class="info-change-begin info info-left info-bottom" data-delay="100">
                 <div class="info-bar" style="transform: scaleY(1);"></div>
-                <figcaption class="feature-caption" style="opacity: 1; transform: translateY(0px);">change begin
+                
+                <figcaption class="feature-caption" style="opacity: 1; transform: translateY(0px);">BAC+2 Complete
                 </figcaption>
               </div>
               <div class="animation-band animation-change"></div>
@@ -432,9 +167,9 @@ export default {
       var timeCursorEl = document.querySelector('.time-cursor');
       var timeEl = document.querySelector('.time-cursor input');
       var infoEls = document.querySelectorAll('.info');
-      var controlAnimationCanMove = false;
+      var controlAnimationCanMove = true;
 
-      var numberOfElements = 100;
+      var numberOfElements = 50;
       for (let i = 0; i <= numberOfElements; i++) {
         var dotEl = document.createElement('div');
         dotEl.classList.add('line');
@@ -463,23 +198,44 @@ export default {
       function dragElement(el, events) {
         function getPointer(e) {
           var x = 'clientX';
-          var y = 'clientY';
           var evt = e.touches ? e.touches[0] : e;
-          return { x: evt[x], y: evt[y] };
+          return { x: evt[x] };
         }
 
-        var drag = { x: 0, y: 0, deltaX: 0, deltaY: 0, active: true, events: events || {} };
+        var drag = { x: 0, deltaX: 0, active: true, events: events || {} };
         var originalX = 0;
-        var originalY = 0;
         var pointerX = 0;
-        var pointerY = 0;
 
         function move(e) {
           if (drag.active) return;
           drag.deltaX = pointerX - getPointer(e).x;
-          drag.deltaY = pointerY - getPointer(e).y;
           drag.x = originalX - drag.deltaX;
-          drag.y = originalY - drag.deltaY;
+
+          var currentTime = time.start + pxToTime(-drag.deltaX);
+          var progress = (currentTime / timelineAnimation.duration) * 100;
+
+          if (drag.x <= -5 || drag.x >= 1090) {
+            if (drag.x <= 0) {
+              drag.x = 0;
+              progress = 2024;
+            }
+            if (drag.x >= 1080) {
+              drag.x = 1080;
+              progress = 2029;
+            }
+
+            timeEl.value = Math.round(progress);
+            timeCursorEl.style.transform = `translateY(-24px) translateX(${drag.x}px) translateZ(0px)`;
+
+            drag.active = true;
+            if (drag.events.release) drag.events.release(drag);
+            document.removeEventListener('mousemove', move, false);
+            document.removeEventListener('mouseup', release, false);
+            document.removeEventListener('touchmove', move, false);
+            document.removeEventListener('touchend', release, false);
+            return;
+          }
+
           if (drag.events.move) drag.events.move(drag);
         }
 
@@ -497,9 +253,7 @@ export default {
           e.preventDefault();
           drag.active = false;
           pointerX = getPointer(e).x;
-          pointerY = getPointer(e).y;
           originalX = drag.x;
-          originalY = drag.y;
           if (drag.events.begin) drag.events.begin(drag);
           document.addEventListener('mousemove', move, false);
           document.addEventListener('mouseup', release, false);
@@ -520,11 +274,11 @@ export default {
           controlAnimationCanMove = false;
         },
         move: function (e) {
-          var currentTime = time.start + pxToTime(-e.deltaX);
+          var currentTime = time.start + pxToTime(-drag.deltaX);
           timelineAnimation.seek(currentTime);
-          var progress = (currentTime / timelineAnimation.duration) * 100;
+          var progress = Math.round(2024 + (currentTime / timelineAnimation.duration) * (2029 - 2024));
           timeEl.value = Math.round(progress);
-          timeCursorEl.style.transform = `translateY(-24px) translateX(${progress * 10.8}px) translateZ(0px)`;
+          timeCursorEl.style.transform = `translateY(-10px) translateX(${drag.x}px) translateZ(0px)`;
         },
         release: function (e) {
           controlAnimationCanMove = true;
@@ -559,7 +313,7 @@ export default {
         }, -80)
         .add({
           targets: timeEl,
-          value: [0, 100],
+          value: [2024, 2030],
           duration: 1500,
           round: 1,
           easing: 'linear'
