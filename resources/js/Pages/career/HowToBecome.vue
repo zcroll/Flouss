@@ -1,7 +1,6 @@
 <template>
   <AppLayout>
     <div class="layout--sidebar__body__main">
-      <!-- Breadcrumbs Navigation -->
 
 
       <StickySidebar

@@ -97,7 +97,7 @@
                                         class="Box Listings__ResultItem Listings__ResultItem--has-thumbnail Listings__ResultItemCareer"
                                     >
                                         <img
-                                            :src="degree.image"
+                                            :src="`/degrees_images/${degree.slug}.jpg`"
                                             :alt="`image for ${degree.name}`"
                                             class="w-20 h-20 object-cover rounded-full"
                                         />
@@ -160,6 +160,7 @@
                                         </div>
                                         <Link
                                             :href="`/degree/${degree.slug}`"
+                                            prefetch
                                             class="Listings__ResultItem__link-overlay"
                                         >
                                             <span class="sr-only">{{
@@ -215,7 +216,6 @@ import { router, Link } from "@inertiajs/vue3";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import VueMultiselect from "vue-multiselect";
 import debounce from "lodash/debounce";
-import Pagination from "@/Components/Pagination.vue";
 import { usePage } from "@inertiajs/vue3";
 import { WhenVisible } from "@inertiajs/vue3";
 import BackToTop from "@/Components/BackToTop.vue";
@@ -374,5 +374,6 @@ const showBackToTop = ref(false);
 </script>
 
 <style scoped>
-
+@import '/resources/css/listing_page.css';
+@import '/resources/css/vueMultiselect.css';
 </style>

@@ -20,7 +20,7 @@ const textClasses = computed(() => {
 </script>
 
 <template>
-    <Link :href="href" :class="classes">
+    <Link :href="href" :class="classes" prefetch="mount">
         <!-- Apply the text classes dynamically to the slot content -->
         <span :class="textClasses">
       <slot />
