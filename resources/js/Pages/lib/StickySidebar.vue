@@ -1,13 +1,13 @@
 <template>
-    <div class="container mx-auto p-4 flex flex-col-reverse lg:flex-row">
+    <div class="container mx-auto mt-[-20px] flex flex-col-reverse lg:flex-row">
         <div class="w-full lg:w-2/3">
             <slot />
         </div>
 
         <!-- Sticky Sidebar -->
-        <div class="w-full lg:w-1/3 mb-8 lg:mb-0 lg:pl-8">
+        <div class="w-full lg:w-1/3 lg:mb-0 lg:pl-8 pb-5">
             <div
-                class="sticky top-[120px] text-white rounded-2xl p-6 overflow-hidden bg-[#353535]"
+                class="sticky top-[100px] text-white rounded-2xl p-6 overflow-hidden bg-[#353535]"
             >
                 <div class="relative z-10">
                     <!-- Main Content for Large Screens -->

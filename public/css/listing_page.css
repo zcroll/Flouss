@@ -180,7 +180,7 @@ svg:not(:root).svg-inline--fa,svg:not(:host).svg-inline--fa{
 }
 .svg-inline--fa{
     display:var(--fa-display, inline-block);
-    height:1em;
+    height:1rem;
     overflow:visible;
     vertical-align:-.125em
 }

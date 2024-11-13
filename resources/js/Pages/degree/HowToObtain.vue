@@ -19,7 +19,7 @@
       type="degree"
       :isFavorited="degree.is_favorited"
     >
-      <div class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white rounded-b-3xl shadow-2xl">
+      <div class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white mb-5 rounded-b-3xl shadow-2xl">
         <nav class="flex items-center space-x-2 text-sm mb-8 font-['aktiv-grotesk','Helvetica_Neue',Helvetica,Arial,sans-serif]">
           <Link :href="route('dashboard')" class="text-[#53777a] font-medium border-b-2 border-[#53777a] transition-all duration-200 ease-in-out hover:text-blue-600 hover:border-blue-600">{{ __('Home') }}</Link>
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -46,7 +46,7 @@
                     <div class="mx-auto flex max-w-7xl items-center justify-end gap-x-6 px-4 sm:px-6 lg:px-8">
                       <div class="relative inline-block text-left" ref="cityDropdown">
                         <button @click="toggleCityDropdown" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                          City
+                          Ville
                           <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                           </svg>
@@ -61,18 +61,37 @@
                         </div>
                       </div>
 
-                      <div class="relative inline-block text-left" ref="categoryDropdown">
-                        <button @click="toggleCategoryDropdown" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                          Category
+
+
+                      <div class="relative inline-block text-left" ref="niveauDropdown">
+                        <button @click="toggleNiveauDropdown" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                          Niveau
                           <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                           </svg>
                         </button>
-                        <div v-show="showCategoryDropdown" class="absolute right-0 mt-2 w-56 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 overflow-y-scroll z-50">
+                        <div v-show="showNiveauDropdown" class="absolute right-0 mt-2 w-56 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 overflow-y-scroll z-50">
                           <div class="p-2">
-                            <div v-for="category in uniqueCategories" :key="category" class="flex items-center justify-end space-x-2 p-2">
-                              <label :for="`category-${category}`" class="text-sm text-gray-600">{{ category }}</label>
-                              <input type="checkbox" :id="`category-${category}`" :value="category" v-model="selectedCategories" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                            <div v-for="niveau in uniqueNiveaux" :key="niveau" class="flex items-center justify-end space-x-2 p-2">
+                              <label :for="`niveau-${niveau}`" class="text-sm text-gray-600">{{ niveau }}</label>
+                              <input type="checkbox" :id="`niveau-${niveau}`" :value="niveau" v-model="selectedNiveaux" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="relative inline-block text-left" ref="typeDropdown">
+                        <button @click="toggleTypeDropdown" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                          Institution
+                          <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                          </svg>
+                        </button>
+                        <div v-show="showTypeDropdown" class="absolute right-0 mt-2 w-56 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 overflow-y-scroll z-50">
+                          <div class="p-2">
+                            <div v-for="type in uniqueTypes" :key="type" class="flex items-center justify-end space-x-2 p-2">
+                              <label :for="`type-${type}`" class="text-sm text-gray-600">{{ type }}</label>
+                              <input type="checkbox" :id="`type-${type}`" :value="type" v-model="selectedTypes" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
                             </div>
                           </div>
                         </div>
@@ -126,32 +145,62 @@ export default defineComponent({
     return {
       selectedCategories: [],
       selectedCities: [],
+      selectedNiveaux: [],
+      selectedTypes: [],
       open: ref(false),
       showCityDropdown: false,
       showCategoryDropdown: false,
+      showNiveauDropdown: false,
+      showTypeDropdown: false,
     };
   },
   methods: {
     toggleCityDropdown() {
       this.showCityDropdown = !this.showCityDropdown;
       this.showCategoryDropdown = false;
+      this.showNiveauDropdown = false;
+      this.showTypeDropdown = false;
     },
     toggleCategoryDropdown() {
       this.showCategoryDropdown = !this.showCategoryDropdown;
       this.showCityDropdown = false;
+      this.showNiveauDropdown = false;
+      this.showTypeDropdown = false;
+    },
+    toggleNiveauDropdown() {
+      this.showNiveauDropdown = !this.showNiveauDropdown;
+      this.showCityDropdown = false;
+      this.showCategoryDropdown = false;
+      this.showTypeDropdown = false;
+    },
+    toggleTypeDropdown() {
+      this.showTypeDropdown = !this.showTypeDropdown;
+      this.showCityDropdown = false;
+      this.showCategoryDropdown = false;
+      this.showNiveauDropdown = false;
     },
     closeDropdowns() {
       this.showCityDropdown = false;
       this.showCategoryDropdown = false;
+      this.showNiveauDropdown = false;
+      this.showTypeDropdown = false;
     },
     handleClickOutside(event) {
       const cityDropdown = this.$refs.cityDropdown;
       const categoryDropdown = this.$refs.categoryDropdown;
+      const niveauDropdown = this.$refs.niveauDropdown;
+      const typeDropdown = this.$refs.typeDropdown;
       if (cityDropdown && !cityDropdown.contains(event.target)) {
         this.showCityDropdown = false;
       }
       if (categoryDropdown && !categoryDropdown.contains(event.target)) {
         this.showCategoryDropdown = false;
+      }
+      if (niveauDropdown && !niveauDropdown.contains(event.target)) {
+        this.showNiveauDropdown = false;
+      }
+      if (typeDropdown && !typeDropdown.contains(event.target)) {
+        this.showTypeDropdown = false;
       }
     },
   },
@@ -163,16 +212,24 @@ export default defineComponent({
   },
   computed: {
     uniqueCategories() {
-      return [...new Set(this.formations.map(formation => formation.etablissement.categoryEtablissement))];
+      return [...new Set(this.formations.map(formation => formation.type_etablissement))];
     },
     uniqueVilles() {
-      return [...new Set(this.formations.map(formation => formation.etablissement.ville))];
+      return [...new Set(this.formations.map(formation => formation.ville))];
+    },
+    uniqueNiveaux() {
+      return [...new Set(this.formations.map(formation => formation.niveau))];
+    },
+    uniqueTypes() {
+      return [...new Set(this.formations.map(formation => formation.type_etablissement))];
     },
     filteredFormations() {
       return this.formations.filter(formation => {
-        const matchesCategory = this.selectedCategories.length ? this.selectedCategories.includes(formation.etablissement.categoryEtablissement) : true;
-        const matchesVille = this.selectedCities.length ? this.selectedCities.includes(formation.etablissement.ville) : true;
-        return matchesCategory && matchesVille;
+        const matchesCategory = this.selectedCategories.length ? this.selectedCategories.includes(formation.type_etablissement) : true;
+        const matchesVille = this.selectedCities.length ? this.selectedCities.includes(formation.ville) : true;
+        const matchesNiveau = this.selectedNiveaux.length ? this.selectedNiveaux.includes(formation.niveau) : true;
+        const matchesType = this.selectedTypes.length ? this.selectedTypes.includes(formation.type_etablissement) : true;
+        return matchesCategory && matchesVille && matchesNiveau && matchesType;
       });
     },
   },

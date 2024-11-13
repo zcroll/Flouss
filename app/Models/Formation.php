@@ -11,26 +11,24 @@ class Formation extends Model
 {
     use HasFactory;
 
-    protected $table = 'formation';
+    protected $table = 'courses';
 
     protected $fillable = [
-        
-        'nom', 'nomAr', 'descriptionAr', 'descriptionFr', 'diplomeLibelleAr',
-        'EtablissementFr', 'EtablissementAr', 'parcoursNomAr', 'parcoursNomFr',
-        'parcoursCode', 'priorite', 'diplomeLibelleFr', 'etablissement_id'
+        'diploma',
+        'niveau', 
+        'nom',
+        'type_etablissement',
+        'ville',
+        'discipline',
+        'region'
     ];
 
     /**
-     * Get the etablissement that owns the formation.
+     * Get the degrees related to this course with similarity scores
      */
-    public function etablissement(): BelongsTo
+    public function degrees(): BelongsToMany
     {
-        return $this->belongsTo(Etablissement::class, 'etablissement_id', 'id');
-    }
-
-    public function jobInfos(): BelongsToMany
-    {
-        return $this->belongsToMany(JobInfo::class, 'job_formation')
-                    ->withPivot('similarity_score');
+        return $this->belongsToMany(Degree::class, 'course_degree_similarity', 'course_id', 'degree_id')
+                    ->withPivot(['similarity_score', 'category', 'area_name', 'degree_name']);
     }
 }

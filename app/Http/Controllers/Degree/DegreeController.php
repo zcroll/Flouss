@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Degree;
 
 use App\Http\Controllers\Controller;
 use App\Models\Degree;
+use App\Models\Formation;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -26,7 +27,6 @@ class DegreeController extends Controller
         $isFavorited = auth()->check() ? 
             $degree->favorites()->where('user_id', auth()->id())->exists() : 
             false;
-
 
         ds($isFavorited);
 
@@ -121,13 +121,16 @@ class DegreeController extends Controller
     {
         $locale = app()->getLocale();
 
-        $degree = Degree::with(['degreeFormationMatches.formation.etablissement'])
-            ->where('slug', $slug)
-            ->firstOrFail();
+        $degree = Degree::where('slug', $slug)->firstOrFail();
 
         $isFavorited = auth()->check() ? 
             $degree->favorites()->where('user_id', auth()->id())->exists() : 
             false;
+
+        $formations = Formation::whereHas('degrees', function($query) use ($degree) {
+            $query->where('degrees.id', $degree->id)
+                  ->where('course_degree_similarity.similarity_score', '>', 0.8);
+        })->get();
 
         return Inertia::render('degree/HowToObtain', [
             'degree' => [
@@ -137,16 +140,19 @@ class DegreeController extends Controller
                 'image' => $degree->image,
                 'is_favorited' => $isFavorited,
             ],
-            'formations' => $degree->degreeFormationMatches->map(function ($match) use ($locale) {
+            'formations' => $formations->map(function ($formation) {
                 return [
-                    'id' => $match->formation_id,
-                    'name' => $locale === 'fr' ? $match->formation_name_fr : $match->formation_name,
-                    'similarity_score' => $match->similarity_score,
-                    'etablissement' => $match->formation->etablissement,
-                    'libelle' => $match->formation->diplomeLibelleFr
+                    'id' => $formation->id,
+                    'nom' => $formation->nom,
+                    'diploma' => $formation->diploma,
+                    'niveau' => $formation->niveau,
+                    'type_etablissement' => $formation->type_etablissement,
+                    'ville' => $formation->ville,
+                    'discipline' => $formation->discipline,
+                    'region' => $formation->region,
+                    'similarity_score' => $formation->degrees->first()->pivot->similarity_score
                 ];
             }),
         ]);
     }
 }
-
