@@ -292,7 +292,7 @@ watch([selectedEducationLevels, selectedSort], () => {
   applyFilters();
 }, { deep: true });
 </script>
-<style>
+<style scoped>
 @import '/resources/css/listing_page.css';
 @import '/resources/css/vueMultiselect.css';
 

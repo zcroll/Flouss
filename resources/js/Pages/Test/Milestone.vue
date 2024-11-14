@@ -57,9 +57,11 @@ export default {
     }
   }
 };
-</script>
+</script >
 
 <style scoped>
+@import '/resources/css/assessment.css';
+@import '/resources/css/global.css';
 .Journey__milestone__map {
   position: relative;
   width: 24px;

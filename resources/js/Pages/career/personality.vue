@@ -259,6 +259,6 @@ const getTraitDefinition = (traitName) => {
 
 
 
-<style>
+<style scoped>
 @import '/resources/css/career_personnality.css';
 </style>

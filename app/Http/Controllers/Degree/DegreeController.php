@@ -40,82 +40,26 @@ class DegreeController extends Controller
                 'satisfaction' => $degree->satisfaction,
                 'is_favorited' => $isFavorited,
             ],
-            'degreeDescription' => [
+            'degreeDescription' => Inertia::defer(fn () => [
                 'main_description' => $degree->degreeDescription ? $degree->degreeDescription->$mainDescriptionColumn : null,
                 'secondary_description' => $degree->degreeDescription ? $degree->degreeDescription->$secondaryDescriptionColumn : null,
-            ],
-            'degreeSkills' => $degree->degreeSkills->map(function ($skill) use ($locale) {
+            ]),
+            'degreeSkills' => Inertia::defer(fn () => $degree->degreeSkills->map(function ($skill) use ($locale) {
                 return [
                     'skill_description' => $locale === 'fr' ? $skill->skill_description_fr : $skill->skill_description,
                 ];
-            }),
-            'degreeJobs' => $degree->degreeJobs->map(function ($job) use ($jobTitleColumn, $jobDescriptionColumn) {
+            }), 'attributes'),
+            'degreeJobs' => Inertia::defer(fn () => $degree->degreeJobs->map(function ($job) use ($jobTitleColumn, $jobDescriptionColumn) {
                 return [
                     'job_title' => $job->$jobTitleColumn,
                     'job_description' => $job->$jobDescriptionColumn,
                 ];
-            }),
+            }), 'attributes'),
         ]);
     }
 
-    public function skills(string $slug): Response
-    {
-        $locale = app()->getLocale();
 
-        $degree = Degree::with('degreeSkills')
-            ->where('slug', $slug)
-            ->firstOrFail();
-
-        $isFavorited = auth()->check() ? 
-            $degree->favorites()->where('user_id', auth()->id())->exists() : 
-            false;
-
-        return Inertia::render('degree/Skills', [
-            'degree' => [
-                'id' => $degree->id,
-                'name' => $degree->name,
-                'slug' => $degree->slug,
-                'image' => $degree->image,
-                'is_favorited' => $isFavorited,
-            ],
-            'degreeSkills' => $degree->degreeSkills->map(function ($skill) use ($locale) {
-                return [
-                    'skill_description' => $locale === 'fr' ? $skill->skill_description_fr : $skill->skill_description,
-                ];
-            }),
-        ]);
-    }
-
-    public function jobs(string $slug): Response
-    {
-        $locale = app()->getLocale();
-
-        $degree = Degree::with('degreeJobs')
-            ->where('slug', $slug)
-            ->firstOrFail();
-
-        $isFavorited = auth()->check() ? 
-            $degree->favorites()->where('user_id', auth()->id())->exists() : 
-            false;
-
-        ds($isFavorited);
-
-        return Inertia::render('degree/Jobs', [
-            'degree' => [
-                'id' => $degree->id,
-                'name' => $degree->name,
-                'slug' => $degree->slug,
-                'image' => $degree->image,
-                'is_favorited' => $isFavorited,
-            ],
-            'degreeJobs' => $degree->degreeJobs->map(function ($job) use ($locale) {
-                return [
-                    'job_title' => $locale === 'fr' ? $job->job_title_fr : $job->job_title,
-                    'job_description' => $job->job_description,
-                ];
-            }),
-        ]);
-    }
+  
 
     public function howToObtain(string $slug): Response
     {

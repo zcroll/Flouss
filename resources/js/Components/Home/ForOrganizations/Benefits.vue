@@ -199,3 +199,7 @@ export default {
 }
 </script>
 
+<style scoped>
+@import '/resources/css/ForOrganizations.css';
+@import '/resources/css/global.css';
+</style>

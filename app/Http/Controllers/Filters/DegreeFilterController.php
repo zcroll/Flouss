@@ -55,7 +55,7 @@ class DegreeFilterController extends Controller
             });
         }
 
-        $degrees = $query->paginate(12);
+        $degrees = $query->paginate(8);
 
         return Inertia::render('Degrees/Index', [
             'degrees' => Inertia::merge(function () use ($degrees, $nameColumn) {
@@ -66,7 +66,6 @@ class DegreeFilterController extends Controller
                             'name' => $degree->$nameColumn,
                             'image' => $degree->image,
                             'slug' => $degree->slug,
-                            'satisfaction' => $degree->satisfaction,
                         ];
                     }),
                     'meta' => [

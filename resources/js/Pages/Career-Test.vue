@@ -66,7 +66,6 @@ onMounted(() => {
 <template>
   <Header />
   <div role="main">
-    <link rel="preload" href="/css/career-test.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <section class="CareerTest__header">
       <svg class="CareerTest__header__bg" width="766" height="706" viewBox="0 0 766 706" fill="none">
         <path opacity="0.65" fill-rule="evenodd" clip-rule="evenodd" d="M444.131 327.152C500.409 290.742 545.935 248.683 607.834 261.181C666.907 273.107 714.796 299.465 762.798 328.921C826.817 368.207 923.52 390.452 933.546 461.056C943.525 531.328 861.491 594.814 809.433 657.326C760.175 716.477 712.175 776.703 640.1 813.433C562.095 853.186 467.266 895.586 391.356 870.382C315.879 845.322 322.068 750.247 277.528 693.051C238.601 643.062 130.284 622.052 147.891 557.733C167.015 487.872 297.14 486.778 350.104 427.922C394.555 378.526 386.292 364.572 444.131 327.152Z" fill="#5E5141"/>
@@ -242,13 +241,9 @@ onMounted(() => {
   </div>
 </template>
 
-<style scoped>
-.CareerTest__header__bg {
-  will-change: transform;
-}
+<style >
+@import '/resources/css/career_test.css';
 
-.CareerTest__header__bg path {
-  transform-origin: center;
-  will-change: transform;
-}
+
+
 </style>

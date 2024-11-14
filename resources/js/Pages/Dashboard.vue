@@ -17,7 +17,7 @@
                             <p class="mt-2 max-w-lg text-sm/6 text-stone-200 max-lg:text-center">
                                 {{ hasResult ? __('dashboard.review_assessment') : __('dashboard.participate_assessment') }}
                             </p>
-                            <Link :href="hasResult ? '/results' : '/main-test'">
+                            <Link :href="hasResult ? '/results' : '/main-test'" prefetch>
                                 <PrimaryButton
                                     class="bg-stone-500 hover:bg-stone-700 text-white font-semibold py-2 px-4 rounded mt-2"
                                 >

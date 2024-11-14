@@ -294,7 +294,7 @@ hideNextStep
 </script>
 
 
-<style>
+<style scoped>
 @import '/resources/css/assessment.css';
 @import '/resources/css/global.css';
 </style>

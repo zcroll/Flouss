@@ -1,5 +1,4 @@
 <template>
-    <link rel="stylesheet" href="/css/Home.css" />
     <section id="content" class="home__splash wf-section">
         <!-- SVG background with morphing shapes -->
      
@@ -165,3 +164,7 @@ export default {
     }
 }
 </script>
+<style >
+@import '/resources/css/Home.css';
+@import '/resources/css/global.css';
+</style>

@@ -21,35 +21,32 @@ class CareerController extends Controller
             ->where('slug', $job)
             ->firstOrFail();
 
-
-            
-
         $isFavorited = auth()->check() ? 
             $occupation->favorites()->where('user_id', auth()->id())->exists() : 
             false;
 
         return Inertia::render('career/OverView', [
             'occupation' => new JobInfoResource($occupation),
-            'jobInfoDetail' => JobInfoDetailResource::collection($occupation->jobInfoDetail),
-            'jobInfoDuties' => $occupation->jobInfoDuties->map(function ($duty) {
+            'jobInfoDetail' => Inertia::defer(fn () => JobInfoDetailResource::collection($occupation->jobInfoDetail), 'jobInfoDetail'),
+            'jobInfoDuties' => Inertia::defer(fn () => $occupation->jobInfoDuties->map(function ($duty) {
                 $locale = app()->getLocale();
                 return [
                     'duty_description' => $locale === 'fr' ? $duty->duty_description_fr : $duty->duty_description,
                 ];
-            }),
-            'jobInfoTypes' => $occupation->jobInfoTypes->unique('type_name')->map(function ($type) {
+            }), 'jobInfoDuties'),
+            'jobInfoTypes' => Inertia::defer(fn () => $occupation->jobInfoTypes->unique('type_name')->map(function ($type) {
                 $locale = app()->getLocale();
                 return [
                     'type_name' => $locale === 'fr' ? $type->type_name_fr : $type->type_name,
                     'type_description' => $locale === 'fr' ? $type->type_description_fr : $type->type_description,
                 ];
-            }),
-            'workplaces' => $occupation->workplaces->map(function ($workplace) {
+            }), 'jobInfoTypes'),
+            'workplaces' => Inertia::defer(fn () => $occupation->workplaces->map(function ($workplace) {
                 $locale = app()->getLocale();
                 return [
                     'content' => $locale === 'fr' ? $workplace->content_fr : $workplace->content,
                 ];
-            }),
+            }), 'workplaces'),
             'is_favorited' => $isFavorited,
         ]);
     }
@@ -154,16 +151,20 @@ class CareerController extends Controller
 
     public function show($slug)
     {
-        $career = JobInfo::where('slug', $slug)
-            ->with(['jobInfoDuties', 'workEnvironments'])
-            ->firstOrFail();
+        $occupation = Occupation::where('slug', $slug)->firstOrFail();
         
-        $isFavorited = auth()->check() ? 
-            $career->favorites()->where('user_id', auth()->id())->exists() : 
-            false;
-
-        return Inertia::render('career/Show', [
-            'career' => array_merge($career->toArray(), ['is_favorited' => $isFavorited])
+        return Inertia::render('career/OverView', [
+            'occupation' => Inertia::defer(fn () => $occupation),
+            'jobInfoDetail' => Inertia::defer(fn () => JobInfo::where('occupation_id', $occupation->id)
+                ->where('info_type', 'detail')
+                ->get()),
+            'jobInfoDuties' => Inertia::defer(fn () => JobInfo::where('occupation_id', $occupation->id)
+                ->where('info_type', 'duties')
+                ->get()),
+            'jobInfoTypes' => Inertia::defer(fn () => JobInfo::where('occupation_id', $occupation->id)
+                ->where('info_type', 'types')
+                ->get()),
+            'workplaces' => Inertia::defer(fn () => Workplace::where('occupation_id', $occupation->id)->get()),
         ]);
     }
 }
