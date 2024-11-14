@@ -49,3 +49,6 @@
 <script>
 import __ from '@/lang';
 </script>
+<style scoped>
+@import '/resources/css/Home.css';
+</style>

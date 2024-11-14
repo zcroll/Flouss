@@ -241,7 +241,7 @@ onMounted(() => {
   </div>
 </template>
 
-<style >
+<style scoped>
 @import '/resources/css/career_test.css';
 
 

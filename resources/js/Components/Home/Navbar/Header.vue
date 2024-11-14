@@ -88,7 +88,7 @@ export default {
 </template>
 
 
-<style >
+<style scoped>
 @import '/resources/css/header.css';
-@import '/resources/css/global.css';
+/* @import '/resources/css/global.css'; */
 </style>

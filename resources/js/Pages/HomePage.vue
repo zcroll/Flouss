@@ -164,7 +164,7 @@ export default {
     }
 }
 </script>
-<style >
+<style scoped>
 @import '/resources/css/Home.css';
 @import '/resources/css/global.css';
 </style>
