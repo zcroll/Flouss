@@ -39,11 +39,15 @@
             <Deferred data="howToBecome">
               <template #fallback>
                 <div class="animate-pulse space-y-8">
-                  <div class="h-8 bg-gray-200 rounded w-1/2"></div>
-                  <div class="space-y-4">
-                    <div class="h-4 bg-gray-200 rounded"></div>
-                    <div class="h-4 bg-gray-200 rounded"></div>
-                    <div class="h-4 bg-gray-200 rounded w-5/6"></div>
+                  <div class="h-10 bg-gray-200 rounded w-1/2"></div>
+                  <div class="space-y-6">
+                    <div v-for="n in 4" :key="n" class="flex space-x-4">
+                      <div class="h-4 w-4 mt-2 bg-gray-200 rounded-full"></div>
+                      <div class="flex-1">
+                        <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                        <div class="mt-2 h-3 bg-gray-200 rounded w-1/2"></div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </template>
@@ -66,15 +70,14 @@
             <Deferred data="jobDegrees">
               <template #fallback>
                 <div class="animate-pulse space-y-8">
-                  <div class="h-8 bg-gray-200 rounded w-1/3"></div>
+                  <div class="h-10 bg-gray-200 rounded w-1/3"></div>
                   <div class="space-y-6">
-                    <div class="flex space-x-4">
+                    <div v-for="n in 3" :key="n" class="flex items-center space-x-4 p-4 border border-gray-200 rounded-3xl">
                       <div class="rounded-full bg-gray-200 h-12 w-12"></div>
-                      <div class="h-4 bg-gray-200 rounded w-1/4 mt-4"></div>
-                    </div>
-                    <div class="flex space-x-4">
-                      <div class="rounded-full bg-gray-200 h-12 w-12"></div>
-                      <div class="h-4 bg-gray-200 rounded w-1/3 mt-4"></div>
+                      <div class="flex-1">
+                        <div class="h-4 bg-gray-200 rounded w-1/3"></div>
+                        <div class="mt-2 h-3 bg-gray-200 rounded w-1/4"></div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -99,42 +102,62 @@
               </section>
             </Deferred>
 
-            <Deferred data="howToBecome">
+            <Deferred :data="['howToBecome', 'jobCertifications', 'jobAssociations']">
               <template #fallback>
-                <div class="animate-pulse space-y-8">
-                  <div class="h-8 bg-gray-200 rounded w-1/3"></div>
-                  <div class="space-y-4">
-                    <div class="h-4 bg-gray-200 rounded w-3/4"></div>
-                    <div class="h-4 bg-gray-200 rounded w-2/3"></div>
+                <div class="space-y-12">
+                  <div class="animate-pulse space-y-8">
+                    <div class="h-10 bg-gray-200 rounded w-1/3"></div>
+                    <div class="space-y-6">
+                      <div v-for="n in 3" :key="n" class="flex space-x-4">
+                        <div class="h-4 w-4 mt-2 bg-gray-200 rounded-full"></div>
+                        <div class="flex-1">
+                          <div class="h-4 bg-gray-200 rounded w-2/3"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="animate-pulse space-y-8">
+                    <div class="h-10 bg-gray-200 rounded w-1/4"></div>
+                    <div class="space-y-6">
+                      <div v-for="n in 2" :key="n" class="flex space-x-4">
+                        <div class="h-4 w-4 mt-2 bg-gray-200 rounded-full"></div>
+                        <div class="flex-1">
+                          <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </template>
 
-              <section id="step-3" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0">
-                <h2 class="custom-heading mb-8" itemProp="name">Certifications</h2>
-                <div v-if="howToBecome.certifications && howToBecome.certifications.length > 0" class="space-y-4 mb-8">
-                  <ul class="list-custom">
-                    <li v-for="(certification, index) in howToBecome.certifications" :key="index" class="text-lg py-1 text-gray-700 leading-relaxed">
-                      {{ certification.title }}
-                    </li>
-                  </ul>
-                </div>
-                <div v-else class="space-y-4 mb-8">
-                  <p class="text-lg text-gray-700">No certifications available for this occupation.</p>
-                </div>
-              </section>
+              <div class="space-y-12">
+                <section id="step-3" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0">
+                  <h2 class="custom-heading mb-8" itemProp="name">Certifications</h2>
+                  <div v-if="howToBecome.certifications && howToBecome.certifications.length > 0" class="space-y-4 mb-8">
+                    <ul class="list-custom">
+                      <li v-for="(certification, index) in howToBecome.certifications" :key="index" class="text-lg py-1 text-gray-700 leading-relaxed">
+                        {{ certification.title }}
+                      </li>
+                    </ul>
+                  </div>
+                  <div v-else class="space-y-4 mb-8">
+                    <p class="text-lg text-gray-700">No certifications available for this occupation.</p>
+                  </div>
+                </section>
 
-              <section v-if="howToBecome.associations && howToBecome.associations.length > 0" id="step-4" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0">
-                <span class="Tag">Step 4</span>
-                <h2 class="custom-heading mb-8" itemProp="name">Associations</h2>
-                <div class="space-y-4 mb-8">
-                  <ul class="list-custom">
-                    <li v-for="(association, index) in howToBecome.associations" :key="index" class="text-lg py-1text-gray-700 leading-relaxed">
-                      {{ association.title }}
-                    </li>
-                  </ul>
-                </div>
-              </section>
+                <section v-if="howToBecome.associations && howToBecome.associations.length > 0" id="step-4" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0">
+                  <span class="Tag">Step 4</span>
+                  <h2 class="custom-heading mb-8" itemProp="name">Associations</h2>
+                  <div class="space-y-4 mb-8">
+                    <ul class="list-custom">
+                      <li v-for="(association, index) in howToBecome.associations" :key="index" class="text-lg py-1text-gray-700 leading-relaxed">
+                        {{ association.title }}
+                      </li>
+                    </ul>
+                  </div>
+                </section>
+              </div>
             </Deferred>
 
             <BackToTop />

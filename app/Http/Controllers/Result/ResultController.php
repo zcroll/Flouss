@@ -42,48 +42,42 @@ class ResultController extends Controller
         }
         ds(['archetypewww'=>$archetype]);
 
-        // Handle jobs data
-        $jobs = null;
-        if (!empty($firstScore->jobs)) {
-            $decodedJobs = json_decode($firstScore->jobs, true, 512, JSON_THROW_ON_ERROR);
-            
-            if (isset($decodedJobs['job_matches'])) {
-                $jobsCollection = collect($decodedJobs['job_matches']);
-                ds(['jobsCollection' => $jobsCollection]);
-
-                $jobIds = $jobsCollection->pluck('job_id')->toArray();
-
-                $jobs = JobInfo::whereIn('id', $jobIds)
-                    ->select('id', $nameColumn . ' as name', 'slug', 'image')
-                    ->get();
-
-                ds($jobs->toArray());
-            }
-        }
-
-
-        $Archetype = DB::table('persona')->where('name', '=', $archetype[0])->first();
-
-        $archetypeDiscovery = DB::table('archetype_discoveries')->where('slug', '=', strtolower($archetype[0]))->first();
-
-
-
-                
-
-
-
-
-
-
         if ($firstScore) {
             return Inertia::render('Result/Results', [
                 'userId' => $firstScore->uuid,
-                'jobs' => $jobs,
-                'Archetype' => $archetypeDiscovery,
-                'archetypeDiscovery' => $archetypeDiscovery,
+                'jobs' => Inertia::defer(function () use ($firstScore, $nameColumn) {
+                    if (empty($firstScore->jobs)) {
+                        return null;
+                    }
+
+                    $decodedJobs = json_decode($firstScore->jobs, true, 512, JSON_THROW_ON_ERROR);
+                    if (!isset($decodedJobs['job_matches'])) {
+                        return null;
+                    }
+
+                    $jobsCollection = collect($decodedJobs['job_matches']);
+                    ds(['jobsCollection' => $jobsCollection]);
+
+                    $jobIds = $jobsCollection->pluck('job_id')->toArray();
+
+                    return JobInfo::whereIn('id', $jobIds)
+                        ->select('id', $nameColumn . ' as name', 'slug', 'image')
+                        ->get();
+                }, 'jobs'),
+                'Archetype' => Inertia::defer(function () use ($archetype) {
+                    if (empty($archetype)) {
+                        return null;
+                    }
+                    return DB::table('persona')->where('name', '=', $archetype[0])->first();
+                }, 'archetype'),
+                'archetypeDiscovery' => Inertia::defer(function () use ($archetype) {
+                    if (empty($archetype)) {
+                        return null;
+                    }
+                    return DB::table('archetype_discoveries')->where('slug', '=', strtolower($archetype[0]))->first();
+                }, 'archetype'),
             ]);
         }
-
 
         return to_route('dashboard');
     }
