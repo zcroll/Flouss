@@ -157,7 +157,8 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+@import '/resources/css/Home.css';
 .scrollframe__content {
     overflow-y: auto;
     height: 100vh;

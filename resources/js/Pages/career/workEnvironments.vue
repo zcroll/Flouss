@@ -32,73 +32,96 @@
                 </svg>
                 <span class="text-gray-400 font-medium border-b-2 border-gray-400 transition-all duration-200 ease-in-out hover:text-blue-600 hover:border-blue-600">{{ __('Work Environments') }}</span>
             </nav>
-                <h2 class="custom-heading">{{ __('career.typical_work_environments') }}</h2>
 
-                <aside id="table-of-contents-container" class="block">
-                    <div
-                        id="table-of-contents"
-                        class="table-of-contents rounded-lg my-4 w-full bg-[#f2e1d5] text-gray-900 relative p-9"
-                        role="directory"
-                        tabindex="0"
-                        title="Table of contents"
-                    >
-                        <p class="custom-heading">
-                            {{ __('career.in_this_article') }}
-                        </p>
-                        <ol v-for="(items, category, index) in groupedByCategory" :key="category" class="category-block">
-                            <!-- Category Title with Toggle -->
-                            <li
-                                class="cursor-pointer trait-type text-xl"
-                                @click="toggleSection(index)"
-                            >
-                                {{ category }} {{ openSections[index] ? '_' : '+' }}
-                            </li>
-
-                            <!-- Collapsible Content -->
-                            <transition name="slide">
-                                <ol v-show="openSections[index]" class="list-disc m-0 p-0 text-base leading-6 font-light tracking-tight">
-                                    <li
-                                        v-for="item in items"
-                                        :key="item.id"
-                                        class="relative mb-0 text-xl leading-10"
-                                    >
-                                        <a
-                                            :href="`#section-${item.id}`"
-                                            class="hover:underline block"
-                                            @click.prevent="highlightAndScroll(item.id)"
-                                        >
-                                            {{ item.name }}
-                                        </a>
-                                    </li>
-                                </ol>
-                            </transition>
-                        </ol>
-                    </div>
-                </aside>
-
-                <!-- Work Environment Section -->
-                <div>
-
-                    <div v-for="environment in workEnvironments" :key="environment.id"  class="Box block py-4 bg-transparent border-b border-white/18">
-                        <div :id="`section-${environment.id}`" class="text-gray-700 text-xl font-black leading-[25px] pr-5 rounded-xl ">
-                            {{ environment.name }}
+            <Deferred data="workEnvironments">
+                <template #fallback>
+                    <div class="animate-pulse space-y-8">
+                        <!-- Table of Contents Skeleton -->
+                        <div class="rounded-lg my-4 w-full bg-[#f2e1d5] p-9">
+                            <div class="h-8 bg-gray-200 rounded w-1/4 mb-6"></div>
+                            <div class="space-y-6">
+                                <div v-for="n in 3" :key="n" class="space-y-4">
+                                    <div class="h-6 bg-gray-200 rounded w-1/3"></div>
+                                    <div class="pl-4 space-y-3">
+                                        <div v-for="i in 3" :key="i" class="h-4 bg-gray-200 rounded w-1/2"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <p class="text-gray-700 mt-5 mb-5">{{ environment.description }}</p>
-                        <figure v-if="environment.score" class="relative">
-                            <span
-                                class="block h-[34px] rounded-full bg-gradient-to-r "
-                                :style="{ width: `${environment.score < 15 ? 11 : environment.score}%` }"
-                            >
-                                <span class="text-gray-200 font-medium text-lg leading-[32px] ml-2 absolute top-1/2 transform -translate-y-1/2">
-                                    {{ environment.score }}%
-                                </span>
-                            </span>
-                        </figure>
+                        <!-- Work Environments Skeleton -->
+                        <div class="space-y-8">
+                            <div v-for="n in 4" :key="n" class="space-y-4">
+                                <div class="h-6 bg-gray-200 rounded w-2/3"></div>
+                                <div class="h-24 bg-gray-200 rounded"></div>
+                                <div class="h-4 bg-gray-200 rounded-full w-3/4"></div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <BackToTop />
-            </div>
+                </template>
+
+                <template #default>
+                    <h2 class="custom-heading">{{ __('career.typical_work_environments') }}</h2>
+
+                    <aside id="table-of-contents-container" class="block">
+                        <div
+                            id="table-of-contents"
+                            class="table-of-contents rounded-lg my-4 w-full bg-[#f2e1d5] text-gray-900 relative p-9"
+                            role="directory"
+                            tabindex="0"
+                            title="Table of contents"
+                        >
+                            <p class="custom-heading">
+                                {{ __('career.in_this_article') }}
+                            </p>
+                            <ol v-for="(items, category, index) in groupedByCategory" :key="category" class="category-block">
+                                <!-- Category Title with Toggle -->
+                                <li
+                                    class="cursor-pointer trait-type text-xl"
+                                    @click="toggleSection(index)"
+                                >
+                                    {{ category }} {{ openSections[index] ? '_' : '+' }}
+                                </li>
+
+                                <!-- Collapsible Content -->
+                                <transition name="slide">
+                                    <ol v-show="openSections[index]" class="list-disc m-0 p-0 text-base leading-6 font-light tracking-tight">
+                                        <li
+                                            v-for="item in items"
+                                            :key="item.id"
+                                            class="relative mb-0 text-xl leading-10"
+                                        >
+                                            <a
+                                                :href="`#section-${item.id}`"
+                                                class="hover:underline block"
+                                                @click.prevent="highlightAndScroll(item.id)"
+                                            >
+                                                {{ item.name }}
+                                            </a>
+                                        </li>
+                                    </ol>
+                                </transition>
+                            </ol>
+                        </div>
+                    </aside>
+
+                    <!-- Work Environment Section -->
+                    <div>
+                        <div v-for="environment in workEnvironments" :key="environment.id" class="Box block py-4 bg-transparent border-b border-white/18">
+                            <div :id="`section-${environment.id}`" class="text-gray-700 text-xl font-black leading-[25px] pr-5 rounded-xl">
+                                {{ environment.name }}
+                            </div>
+                            <p class="text-gray-700 mt-5 mb-5">{{ environment.description }}</p>
+                            <figure v-if="environment.score" class="relative">
+                                <span class="block h-[34px] rounded-full bg-gradient-to-r" :style="getScoreStyle(environment.score)"></span>
+                            </figure>
+                        </div>
+                    </div>
+                </template>
+            </Deferred>
+
+            <BackToTop />
+        </div>
         </StickySidebar>
     </div>
     </AppLayout>
@@ -110,7 +133,7 @@
 import { ref, computed } from 'vue';
 import StickySidebar from "@/Pages/lib/StickySidebar.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
-import { Link } from '@inertiajs/vue3';
+import { Link, Deferred } from '@inertiajs/vue3';
 import BackToTop from "@/Components/BackToTop.vue";
 
 const props = defineProps({
@@ -121,35 +144,52 @@ const props = defineProps({
     workEnvironments: {
         type: Array,
         required: true,
+        default: () => [],
     },
 });
 
+const openSections = ref([]);
+
 const groupedByCategory = computed(() => {
+    if (!props.workEnvironments) return {};
+    
     return props.workEnvironments.reduce((acc, item) => {
-        (acc[item.category] = acc[item.category] || []).push(item);
+        const category = item.category || 'Other';
+        if (!acc[category]) {
+            acc[category] = [];
+        }
+        acc[category].push(item);
         return acc;
     }, {});
 });
-
-const openSections = ref(Object.keys(groupedByCategory.value).map(() => false));
 
 const toggleSection = (index) => {
     openSections.value[index] = !openSections.value[index];
 };
 
 const highlightAndScroll = (id) => {
+    // Remove highlight from all sections
+    document.querySelectorAll('.Box').forEach(box => {
+        box.classList.remove('highlight');
+    });
+
+    // Add highlight to the target section
     const element = document.getElementById(`section-${id}`);
     if (element) {
-        element.classList.add('glow-text');
-        setTimeout(() => {
-            element.classList.remove('glow-text');
-        }, 2000); // Glow effect duration
-
+        const parentBox = element.closest('.Box');
+        if (parentBox) {
+            parentBox.classList.add('highlight');
+        }
         // Smooth scroll to the element
         element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 };
 
+const getScoreStyle = (score) => {
+    return {
+        width: `${score < 15 ? 11 : score}%`,
+    };
+};
 </script>
 
 
@@ -244,5 +284,10 @@ h3.category-title {
     0 0 20px rgba(200, 161, 224, 0.8),
     0 0 30px rgba(200, 161, 224, 0.8);
 
+}
+.highlight {
+    background-color: #f7f7f7;
+    border-radius: 0.5rem;
+    padding: 1rem;
 }
 </style>

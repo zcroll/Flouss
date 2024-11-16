@@ -59,3 +59,7 @@ export default {
 }
 </script>
 
+<style >
+@import '/resources/css/ForOrganizations.css';
+@import '/resources/css/global.css';
+</style>

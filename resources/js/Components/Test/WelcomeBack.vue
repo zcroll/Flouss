@@ -112,3 +112,6 @@ export default {
   }
 }
 </script>
+<style scoped >
+@import '/resources/css/assessment.css';
+</style>

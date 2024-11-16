@@ -1,125 +1,185 @@
 <template>
   <AppLayout>
     <div class="layout--sidebar__body__main">
-      <!-- Breadcrumbs Navigation -->
+      <Deferred :data="['occupation']">
+        <template #fallback>
+          <div class="animate-pulse">
+            <div class="h-64 bg-gray-200 rounded-lg mb-4"></div>
+          </div>
+        </template>
 
-
-      <StickySidebar
-        :slug="occupation.slug"
-        :title="occupation.name"
-        :image="occupation.image"
-        type="career"
-        :salary="occupation.salary"
-        :personality="occupation.personality || 'N/A'"
-        :satisfaction="occupation.satisfaction || 'N/A'"
-        :id="occupation.id"
-        :isFavorited="occupation.is_favorited"
-      >
-        <div class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white shadow ">
-          <nav class="flex items-center space-x-2 text-sm mb-8 font-['aktiv-grotesk','Helvetica_Neue',Helvetica,Arial,sans-serif]">
-                <Link :href="route('dashboard')" class="text-[#53777a] font-medium border-b-2 border-[#53777a] transition-all duration-200 ease-in-out hover:text-blue-600 hover:border-blue-600">{{ __('Home') }}</Link>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                </svg>
-                <Link :href="route('jobs.index')" class="text-[#53777a] font-medium border-b-2 border-[#53777a] transition-all duration-200 ease-in-out hover:text-blue-600 hover:border-blue-600">{{ __('Jobs') }}</Link>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                </svg>
-                <Link :href="route('career', { id: occupation.slug })" class="text-[#53777a] font-medium border-b-2 border-[#53777a] transition-all duration-200 ease-in-out hover:text-blue-600 hover:border-blue-600">{{ occupation.name }}</Link>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                </svg>
-                <span class="text-gray-400 font-medium border-b-2 border-gray-400 transition-all duration-200 ease-in-out hover:text-blue-600 hover:border-blue-600">{{ __('How to Become') }}</span>
+        <StickySidebar
+          :slug="occupation.slug"
+          :title="occupation.name"
+          :image="occupation.image"
+          type="career"
+          :salary="occupation.salary"
+          :personality="occupation.personality || 'N/A'"
+          :satisfaction="occupation.satisfaction || 'N/A'"
+          :id="occupation.id"
+          :isFavorited="occupation.is_favorited"
+        >
+          <div class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white shadow ">
+            <nav class="flex items-center space-x-2 text-sm mb-8 font-['aktiv-grotesk','Helvetica_Neue',Helvetica,Arial,sans-serif]">
+              <Link :href="route('dashboard')" class="text-[#53777a] font-medium border-b-2 border-[#53777a] transition-all duration-200 ease-in-out hover:text-blue-600 hover:border-blue-600">{{ __('Home') }}</Link>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+              </svg>
+              <Link :href="route('jobs.index')" class="text-[#53777a] font-medium border-b-2 border-[#53777a] transition-all duration-200 ease-in-out hover:text-blue-600 hover:border-blue-600">{{ __('Jobs') }}</Link>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+              </svg>
+              <Link :href="route('career', { id: occupation.slug })" class="text-[#53777a] font-medium border-b-2 border-[#53777a] transition-all duration-200 ease-in-out hover:text-blue-600 hover:border-blue-600">{{ occupation.name }}</Link>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+              </svg>
+              <span class="text-gray-400 font-medium border-b-2 border-gray-400 transition-all duration-200 ease-in-out hover:text-blue-600 hover:border-blue-600">{{ __('How to Become') }}</span>
             </nav>
 
-
-          <section id="step-1" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0">
-
-            <h2 class="custom-heading mb-8" itemProp="name">Steps to become a {{ occupation.name }}</h2>
-            <div v-if="howToBecome.steps && howToBecome.steps.length > 0" class="space-y-4 mb-8">
-              <ul class="list-custom">
-                <li v-for="(step, index) in howToBecome.steps" :key="index" class="text-lg py-1 text-gray-700 leading-relaxed">
-                  {{ step.title }}
-                </li>
-              </ul>
-            </div>
-            <div v-else class="space-y-4 mb-8">
-              <p class="text-lg text-gray-700">No steps available for this occupation.</p>
-            </div>
-          </section>
-
-          <section id="step-2" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0">
-
-            <h2 class="custom-heading mb-8" itemProp="name">Degrees</h2>
-            <div v-if="jobDegrees && jobDegrees.length > 0" class="space-y-4 mb-8">
-              <div>
-                <li v-for="(degree, index) in jobDegrees" :key="index" class="flex border-b border-gray-200 p-5 rounded-3xl items-center space-x-4 text-lg m-5 text-gray-700 leading-relaxed">
-                  <img v-if="degree.image" :src="degree.image" :alt="degree.title" class="w-12 h-12 object-cover rounded-full">
-                  <div>
-                    <Link v-if="degree.slug" :href="route('degree.index', { slug: degree.slug })">{{ degree.title }}</Link>
-                    <span v-else>{{ degree.title }}</span>
+            <Deferred data="howToBecome">
+              <template #fallback>
+                <div class="animate-pulse space-y-8">
+                  <div class="h-10 bg-gray-200 rounded w-1/2"></div>
+                  <div class="space-y-6">
+                    <div v-for="n in 4" :key="n" class="flex space-x-4">
+                      <div class="h-4 w-4 mt-2 bg-gray-200 rounded-full"></div>
+                      <div class="flex-1">
+                        <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                        <div class="mt-2 h-3 bg-gray-200 rounded w-1/2"></div>
+                      </div>
+                    </div>
                   </div>
-                </li>
+                </div>
+              </template>
+
+              <section id="step-1" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0">
+                <h2 class="custom-heading mb-8" itemProp="name">Steps to become a {{ occupation.name }}</h2>
+                <div v-if="howToBecome.steps && howToBecome.steps.length > 0" class="space-y-4 mb-8">
+                  <ul class="list-custom">
+                    <li v-for="(step, index) in howToBecome.steps" :key="index" class="text-lg py-1 text-gray-700 leading-relaxed">
+                      {{ step.title }}
+                    </li>
+                  </ul>
+                </div>
+                <div v-else class="space-y-4 mb-8">
+                  <p class="text-lg text-gray-700">No steps available for this occupation.</p>
+                </div>
+              </section>
+            </Deferred>
+
+            <Deferred data="jobDegrees">
+              <template #fallback>
+                <div class="animate-pulse space-y-8">
+                  <div class="h-10 bg-gray-200 rounded w-1/3"></div>
+                  <div class="space-y-6">
+                    <div v-for="n in 3" :key="n" class="flex items-center space-x-4 p-4 border border-gray-200 rounded-3xl">
+                      <div class="rounded-full bg-gray-200 h-12 w-12"></div>
+                      <div class="flex-1">
+                        <div class="h-4 bg-gray-200 rounded w-1/3"></div>
+                        <div class="mt-2 h-3 bg-gray-200 rounded w-1/4"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </template>
+
+              <section id="step-2" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0">
+                <h2 class="custom-heading mb-8" itemProp="name">Degrees</h2>
+                <div v-if="jobDegrees && jobDegrees.length > 0" class="space-y-4 mb-8">
+                  <div>
+                    <li v-for="(degree, index) in jobDegrees" :key="index" class="flex border-b border-gray-200 p-5 rounded-3xl items-center space-x-4 text-lg m-5 text-gray-700 leading-relaxed">
+                      <img v-if="degree.image" :src="degree.image" :alt="degree.title" class="w-12 h-12 object-cover rounded-full">
+                      <div>
+                        <Link v-if="degree.slug" :href="route('degree.index', { slug: degree.slug })">{{ degree.title }}</Link>
+                        <span v-else>{{ degree.title }}</span>
+                      </div>
+                    </li>
+                  </div>
+                </div>
+                <div v-else class="space-y-4 mb-8">
+                  <p class="text-lg text-gray-700">No degrees available for this occupation.</p>
+                </div>
+              </section>
+            </Deferred>
+
+            <Deferred :data="['howToBecome', 'jobCertifications', 'jobAssociations']">
+              <template #fallback>
+                <div class="space-y-12">
+                  <div class="animate-pulse space-y-8">
+                    <div class="h-10 bg-gray-200 rounded w-1/3"></div>
+                    <div class="space-y-6">
+                      <div v-for="n in 3" :key="n" class="flex space-x-4">
+                        <div class="h-4 w-4 mt-2 bg-gray-200 rounded-full"></div>
+                        <div class="flex-1">
+                          <div class="h-4 bg-gray-200 rounded w-2/3"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="animate-pulse space-y-8">
+                    <div class="h-10 bg-gray-200 rounded w-1/4"></div>
+                    <div class="space-y-6">
+                      <div v-for="n in 2" :key="n" class="flex space-x-4">
+                        <div class="h-4 w-4 mt-2 bg-gray-200 rounded-full"></div>
+                        <div class="flex-1">
+                          <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </template>
+
+              <div class="space-y-12">
+                <section id="step-3" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0">
+                  <h2 class="custom-heading mb-8" itemProp="name">Certifications</h2>
+                  <div v-if="howToBecome.certifications && howToBecome.certifications.length > 0" class="space-y-4 mb-8">
+                    <ul class="list-custom">
+                      <li v-for="(certification, index) in howToBecome.certifications" :key="index" class="text-lg py-1 text-gray-700 leading-relaxed">
+                        {{ certification.title }}
+                      </li>
+                    </ul>
+                  </div>
+                  <div v-else class="space-y-4 mb-8">
+                    <p class="text-lg text-gray-700">No certifications available for this occupation.</p>
+                  </div>
+                </section>
+
+                <section v-if="howToBecome.associations && howToBecome.associations.length > 0" id="step-4" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0">
+                  <span class="Tag">Step 4</span>
+                  <h2 class="custom-heading mb-8" itemProp="name">Associations</h2>
+                  <div class="space-y-4 mb-8">
+                    <ul class="list-custom">
+                      <li v-for="(association, index) in howToBecome.associations" :key="index" class="text-lg py-1text-gray-700 leading-relaxed">
+                        {{ association.title }}
+                      </li>
+                    </ul>
+                  </div>
+                </section>
               </div>
-            </div>
-            <div v-else class="space-y-4 mb-8">
-              <p class="text-lg text-gray-700">No degrees available for this occupation.</p>
-            </div>
-          </section>
+            </Deferred>
 
-          <section id="step-3" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0">
-
-            <h2 class="custom-heading mb-8" itemProp="name">Certifications</h2>
-            <div v-if="howToBecome.certifications && howToBecome.certifications.length > 0" class="space-y-4 mb-8">
-              <ul class="list-custom">
-                <li v-for="(certification, index) in howToBecome.certifications" :key="index" class="text-lg py-1 text-gray-700 leading-relaxed">
-                  {{ certification.title }}
-                </li>
-              </ul>
-            </div>
-            <div v-else class="space-y-4 mb-8">
-              <p class="text-lg text-gray-700">No certifications available for this occupation.</p>
-            </div>
-          </section>
-
-          <section v-if="howToBecome.associations && howToBecome.associations.length > 0" id="step-4" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0">
-            <span class="Tag">Step 4</span>
-            <h2 class="custom-heading mb-8" itemProp="name">Associations</h2>
-            <div class="space-y-4 mb-8">
-              <ul class="list-custom">
-                <li v-for="(association, index) in howToBecome.associations" :key="index" class="text-lg py-1text-gray-700 leading-relaxed">
-                  {{ association.title }}
-                </li>
-              </ul>
-            </div>
-          </section>
             <BackToTop />
-        </div>
-      </StickySidebar>
+          </div>
+        </StickySidebar>
+      </Deferred>
     </div>
   </AppLayout>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
+import { defineProps } from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import StickySidebar from '@/Pages/lib/StickySidebar.vue'
-import { Link } from '@inertiajs/vue3'
+import { Link, Deferred } from '@inertiajs/vue3'
 import BackToTop from "@/Components/BackToTop.vue";
 
-export default defineComponent({
-  components: {
-      BackToTop,
-    AppLayout,
-    StickySidebar,
-    Link,
-  },
-  props: {
-    occupation: Object,
-    howToBecome: Object,
-    jobDegrees: Array,
-    disableStepsLink: Boolean,
-  }
+defineProps({
+  occupation: Object,
+  howToBecome: Object,
+  jobDegrees: Array,
+  disableStepsLink: Boolean,
 })
 </script>
 

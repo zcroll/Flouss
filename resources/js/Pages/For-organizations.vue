@@ -1,5 +1,4 @@
 <template>
-  <link rel="stylesheet" href="/css/ForOrganizations.css">
   <Header />
   <div class="landinghero wf-section">
     <div class="mehero mehero--discord">
@@ -140,6 +139,10 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+
+@import '/resources/css/ForOrganizations.css';
+
+
 .background-animation {
   position: absolute;
   top: 0;

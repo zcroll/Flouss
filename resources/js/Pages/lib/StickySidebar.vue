@@ -40,7 +40,7 @@
 
 
                         <ul class="space-y-4">
-                            <li v-for="(link, index) in links" :key="index">
+                            <li v-for="(link, index) in links" :key="index" style="list-style-type: none; padding-left: 0;">
                                 <Link
                                     :href="link.url"
                                     :class="{
@@ -221,11 +221,13 @@ const getSecondBoxContent = computed(() => {
 
 const isAnimating = ref(false);
 
-// Remove the existing saveFavorite function and favoriteButtonClasses since we're using the FavoriteButton component now
 
 </script>
 
 <style scoped>
+
+@import '/resources/css/career_personnality.css';
+
 @keyframes bounce {
     0%, 100% {
         transform: translateY(0);
@@ -242,5 +244,9 @@ const isAnimating = ref(false);
 /* Add this new style for the favorite button */
 .favorite-button {
     @apply flex items-center mt-2 transition-all duration-300;
+}
+
+li::before {
+    content: none !important;
 }
 </style>

@@ -34,5 +34,11 @@ export default {
   emits: ['continue']
 }
 </script>
+<style scoped>
+
+@import '/resources/css/assessment.css'; /* Add the path to your CSS file here */
+
+</style>
+
 
 
