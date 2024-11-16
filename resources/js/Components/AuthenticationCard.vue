@@ -4,7 +4,7 @@
             <slot name="logo" />
         </div>
 
-        <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+        <div class="w-full sm:max-w-lg mt-6 bg-white shadow-md overflow-hidden sm:rounded-lg py-12 sm:px-6 lg:px-8">
             <slot />
         </div>
     </div>
