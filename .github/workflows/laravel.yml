@@ -31,7 +31,8 @@ jobs:
       uses: s0/git-publish-subdir-action@develop
       env:
         REPO: self
-        BRANCH: main
+        BRANCH: build
         FOLDER: public
+        TARGET: /home/u723210868/public_html/gennz.site/  # Full path with your username
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         MESSAGE: "Build: ({sha}) {msg}"
