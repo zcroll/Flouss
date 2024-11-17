@@ -22,6 +22,14 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\TestMail;
 use App\Http\Controllers\FavoriteController;
 
+// Google Login Routes (place these BEFORE any auth middleware groups)
+Route::get('auth/google', [App\Http\Controllers\Auth\GoogleController::class, 'redirectToGoogle'])
+    ->name('auth.google')
+    ->middleware('guest');
+    
+Route::get('auth/google/callback', [App\Http\Controllers\Auth\GoogleController::class, 'handleGoogleCallback'])
+    ->name('auth.google.callback')
+    ->middleware('guest');
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
