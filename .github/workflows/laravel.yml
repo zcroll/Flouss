@@ -39,7 +39,10 @@ jobs:
         if [ -d ".git" ]; then
           git fetch origin
           git reset --hard origin/Gen.z
+          git pull origin Gen.z
+          cp -r * /domains/gennz.site/public/
         else
           rm -rf *
           git clone -b Gen.z https://github.com/zcroll/Flouss.git .
+          cp -r * /domains/gennz.site/public/
         fi'
