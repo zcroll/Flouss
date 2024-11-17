@@ -269,37 +269,27 @@ class MainTestController extends Controller
     private function matchJobs($interest_scores)
     {
         $scriptPath = app_path('/python/test.py');
-        $pythonPath = env('PYTHON_PATH', 'python3');
-        
-        $process = new Process([$pythonPath, $scriptPath, json_encode($interest_scores)]);
-        $process->setTimeout(60); // Increase timeout if needed
         
         try {
-            $process->run();
+            $process = new Process([
+                '/home/u723210868/python3.11',  // Updated Python path
+                $scriptPath,
+                json_encode($interest_scores)
+            ]);
             
+            $process->setTimeout(300);
+            $process->run();
+
             if (!$process->isSuccessful()) {
-                Log::error('Python script execution failed', [
-                    'error' => $process->getErrorOutput(),
-                    'command' => $process->getCommandLine(),
-                    'working_dir' => $process->getWorkingDirectory()
-                ]);
+                Log::error('Python script failed', ['error' => $process->getErrorOutput()]);
                 throw new ProcessFailedException($process);
             }
 
-            $output = $process->getOutput();
-            Log::info('Python script output', ['output' => $output]); // Add logging
-            
-            return json_decode($output, true, 512, JSON_THROW_ON_ERROR);
+            return json_decode($process->getOutput(), true);
             
         } catch (\Exception $e) {
-            Log::error('Job matching failed', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            return [
-                'error' => 'Failed to process job matching',
-                'details' => $e->getMessage()
-            ];
+            Log::error('Job matching failed', ['error' => $e->getMessage()]);
+            return ['error' => 'Failed to process job matching'];
         }
     }
 

@@ -119,7 +119,7 @@
                     </div>
                     <div class="DashboardPage__careers__buttons">
                         <button
-                            v-if="!showAllJobs"
+                            v-if="!showAllJobs && jobs && jobs.length > displayedJobs.length"
                             class="Button DashboardPage__button DashboardPage__button--careers"
                             data-on-page-nav="false"
                             data-on-page-nav-offset="0"
@@ -233,6 +233,9 @@ export default defineComponent({
     },
     computed: {
         displayedJobs() {
+            if (!this.jobs) {
+                return [];
+            }
             if (this.showAllJobs) {
                 return this.jobs;
             }
