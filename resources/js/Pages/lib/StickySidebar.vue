@@ -48,6 +48,7 @@
                                         'disabled-link': $page.url === link.url,
                                     }"
                                     :aria-disabled="$page.url === link.url"
+                                    :prefetch="['mount', 'hover']"
                                     class="block py-2 px-4 rounded-lg transition-colors duration-200 hover:bg-white hover:bg-opacity-20"
                                 >
                                     <span class="text-xl font-semibold">{{
@@ -85,6 +86,7 @@
                                     active: $page.url === link.url,
                                     'disabled-link': $page.url === link.url,
                                 }"
+                                :prefetch="['mount', 'hover']"
                                 :aria-disabled="$page.url === link.url"
                                 class="py-2 px-4 bg-white bg-opacity-20 rounded-lg text-center transition-colors duration-200 hover:bg-opacity-30"
                             >
