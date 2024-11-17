@@ -1,4 +1,4 @@
-import mariadb
+import mysql.connector
 from typing import Dict, List, Tuple
 from dataclasses import dataclass
 import itertools
@@ -26,7 +26,7 @@ class JobMatch:
 class JobMatcher:
     def __init__(self, db_config: Dict, interest_scores: Dict[str, int]):
         """Initialize database connection and prepare interest scores"""
-        self.conn = mariadb.connect(**db_config)
+        self.conn = mysql.connector.connect(**db_config)
         self.cursor = self.conn.cursor(dictionary=True)
         self.interest_scores = interest_scores
 

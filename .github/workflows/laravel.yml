@@ -33,4 +33,4 @@ jobs:
         sudo apt-get install -y sshpass
     - name: Deploy to Server
       run: |
-        sshpass -p ${{ secrets.PASSWORD }} ssh -o StrictHostKeyChecking=no -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'cd domains/gennz.site && rm -rf * && git clone -b Gen.z https://github.com/zcroll/Flouss.git .'
+        sshpass -p ${{ secrets.PASSWORD }} ssh -o StrictHostKeyChecking=no -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'cd domains/gennz.site/public_html && rm -rf * && git clone -b Gen.z https://github.com/zcroll/Flouss.git .'

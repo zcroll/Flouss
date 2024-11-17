@@ -1,4 +1,4 @@
-mariadb
+mysql-connector-python
 pandas
 random
 sys
