@@ -4,7 +4,6 @@
 
 
 <template>
-      <link rel="stylesheet" href="/css/listing_page.css">
   <AppLayout
 
     name="Jobs"
@@ -291,3 +290,6 @@ watch([selectedEducationLevels, selectedSort], () => {
   applyFilters();
 }, { deep: true });
 </script>
+<style scoped>
+@import '/public/css/listing_page.css';
+</style>
