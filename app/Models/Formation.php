@@ -15,7 +15,7 @@ class Formation extends Model
 
     protected $fillable = [
         'diploma',
-        'niveau', 
+        'niveau',
         'nom',
         'type_etablissement',
         'ville',
@@ -28,7 +28,7 @@ class Formation extends Model
      */
     public function degrees(): BelongsToMany
     {
-        return $this->belongsToMany(Degree::class, 'course_degree_similarity', 'course_id', 'degree_id')
-                    ->withPivot(['similarity_score', 'category', 'area_name', 'degree_name']);
+        return $this->belongsToMany(Degree::class, 'degree_courses', 'course_id', 'degree_id')
+                    ->withPivot(['similarity_score', 'degree_name']);
     }
 }

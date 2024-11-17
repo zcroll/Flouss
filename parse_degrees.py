@@ -23,7 +23,7 @@ def clean_json_content(content):
 def create_sql_inserts():
     try:
         # Read and clean the JSON file
-        with open('cleaned_degrees.json', 'r', encoding='utf-8') as f:
+        with open('Cleaned_degrees_json/cleaned_degrees_lettre.json', 'r', encoding='utf-8') as f:
             content = f.read()
             
         # Clean the JSON content
@@ -33,7 +33,7 @@ def create_sql_inserts():
         data = json.loads(cleaned_content)
         
         # Create SQL file
-        with open('degree_courses.sql', 'w', encoding='utf-8') as f:
+        with open('degree_courses_Droit.sql', 'w', encoding='utf-8') as f:
             # Write table creation
             f.write("""-- Create the table if it doesn't exist
 CREATE TABLE IF NOT EXISTS degree_courses (

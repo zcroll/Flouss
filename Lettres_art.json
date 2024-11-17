@@ -1,0 +1,984 @@
+{
+  "courses": [
+    {
+      "id": 75,
+      "name": "الشريعة والقانون والدراسات الشرعية المعاصرة"
+    },
+    {
+      "id": 76,
+      "name": "الشريعة والقانون والمهن القضائية"
+    },
+    {
+      "id": 77,
+      "name": "الشريعة و القانون والعلوم الشرعية"
+    },
+    {
+      "id": 78,
+      "name": "الشريعة والقانون والمهن القضائية"
+    },
+    {
+      "id": 79,
+      "name": "الشريعة والقانون والعلوم الشرعية"
+    },
+    {
+      "id": 80,
+      "name": "الشريعة والقانون والأسرة والرعاية الاجتماعية"
+    },
+    {
+      "id": 81,
+      "name": "الشريعة والقانون والمالية التشاركية"
+    },
+    {
+      "id": 82,
+      "name": "Linguistic, Literary, and Cultural Studies"
+    },
+    {
+      "id": 83,
+      "name": "Sciences du Langage et de la Communication"
+    },
+    {
+      "id": 84,
+      "name": "Lettres et Arts"
+    },
+    {
+      "id": 85,
+      "name": "البيئة وتدبير الأوساط الطبيعية"
+    },
+    {
+      "id": 86,
+      "name": "التهيئة والتنمية"
+    },
+    {
+      "id": 87,
+      "name": "Filología Hispánica"
+    },
+    {
+      "id": 88,
+      "name": "English Linguistics and Literature"
+    },
+    {
+      "id": 89,
+      "name": "Littérature, Langue et Communication"
+    },
+    {
+      "id": 90,
+      "name": "Linguistique Amazighe"
+    },
+    {
+      "id": 91,
+      "name": "Littérature Amazighe"
+    },
+    {
+      "id": 92,
+      "name": "مجتمع المعرفة والتحولات المعاصر"
+    },
+    {
+      "id": 93,
+      "name": "الفقه والأصول"
+    },
+    {
+      "id": 94,
+      "name": "القرآن والحديث"
+    },
+    {
+      "id": 95,
+      "name": "التاريخ والحضارة"
+    },
+    {
+      "id": 96,
+      "name": "البيئة والتهيئة"
+    },
+    {
+      "id": 97,
+      "name": "الإبداع الأدبي والمهن الثقافية"
+    },
+    {
+      "id": 98,
+      "name": "اللسانيات وديداكتيك اللغة العربية"
+    },
+    {
+      "id": 99,
+      "name": "Langues, Communication et Traduction"
+    },
+    {
+      "id": 100,
+      "name": "Design Thinking & UX / UI Design"
+    },
+    {
+      "id": 104,
+      "name": "Langues Etrangères Appliquées et Communication"
+    },
+    {
+      "id": 105,
+      "name": "Entrepreneuriat et Développement des Business"
+    },
+    {
+      "id": 107,
+      "name": "Langues Etrangères Appliquées"
+    },
+    {
+      "id": 108,
+      "name": "Génie Thermique et Efficacité Énergétique"
+    },
+    {
+      "id": 110,
+      "name": "Assistance Sociale"
+    },
+    {
+      "id": 111,
+      "name": "الفنون والتراث"
+    },
+    {
+      "id": 112,
+      "name": "Film, Techniques and Aesthetics"
+    },
+    {
+      "id": 113,
+      "name": "Applied Islamic Sciences"
+    },
+    {
+      "id": 114,
+      "name": "الشريعة والاقتصاد التضامني"
+    },
+    {
+      "id": 115,
+      "name": "الشريعة والدراسات القضائية المقارنة"
+    },
+    {
+      "id": 116,
+      "name": "العلوم الجنائية و الأمنية"
+    },
+    {
+      "id": 122,
+      "name": "Information, Communication"
+    },
+    {
+      "id": 123,
+      "name": "Analytique des Données et Intelligence Artificielle"
+    },
+    {
+      "id": 128,
+      "name": "TRANSCULTURAL AND MEMORY STUDIES *"
+    },
+    {
+      "id": 143,
+      "name": "الخلاف العالي والاجتهاد الفقهي *"
+    },
+    {
+      "id": 144,
+      "name": "AUDIOVISUEL, MEMOIRE ET SOCIETE *"
+    },
+    {
+      "id": 147,
+      "name": "إدارة المنازعات البنكية *"
+    },
+    {
+      "id": 148,
+      "name": "SYSTEME D'INFORMATION ET CONTROLE DE GESTION *"
+    },
+    {
+      "id": 150,
+      "name": "Licence d'Education : Spécialité Enseignement secondaire : Langue Française *"
+    },
+    {
+      "id": 152,
+      "name": "Didactique du Français langue Etrangère"
+    },
+    {
+      "id": 153,
+      "name": "English language Teaching and Global Market"
+    },
+    {
+      "id": 154,
+      "name": "Information et Communication"
+    },
+    {
+      "id": 156,
+      "name": "Sciences Agroalimentaires"
+    },
+    {
+      "id": 158,
+      "name": "AUTOMATISME ET GESTION TECHNIQUE DES BATIMENTS *"
+    },
+    {
+      "id": 165,
+      "name": "SCIENCES MATHEMATIQUES ET INFORMATIQUE  *"
+    },
+    {
+      "id": 177,
+      "name": "Ecriture et analyse cinématographiques et audiovisuelles"
+    },
+    {
+      "id": 178,
+      "name": "Histoire de l'Art"
+    },
+    {
+      "id": 179,
+      "name": "التحرير الصحفي"
+    },
+    {
+      "id": 180,
+      "name": "Information et Communication"
+    },
+    {
+      "id": 181,
+      "name": "الجغرافيا"
+    },
+    {
+      "id": 182,
+      "name": "التاريخ والحضارة"
+    },
+    {
+      "id": 183,
+      "name": "الدراسات الإسلامية"
+    },
+    {
+      "id": 184,
+      "name": "علم الاجتماع"
+    },
+    {
+      "id": 185,
+      "name": "الدراسات العربية"
+    },
+    {
+      "id": 186,
+      "name": "ⵜⵉⵖⵓⵔⵉⵡⵉⵏ ⵜⵉⵎⴰⵣⵉⵖⵉⵏ (الدراسات الأمازيغية)"
+    },
+    {
+      "id": 187,
+      "name": "الدراسات الصحراوية والأفريقية"
+    },
+    {
+      "id": 188,
+      "name": "Interculturalismo Marruecos y Mundo Hispanico"
+    },
+    {
+      "id": 189,
+      "name": "العلاقات الدينية والثقافية بين المغرب وأفريقيا جنوب الصحراء"
+    },
+    {
+      "id": 190,
+      "name": "Comparative studies in literature"
+    },
+    {
+      "id": 191,
+      "name": "Didactique du Français Langue Etrangère: culture et médiation"
+    },
+    {
+      "id": 192,
+      "name": "Travail Social et développement"
+    },
+    {
+      "id": 193,
+      "name": "Tourisme, Communication et Développement"
+    },
+    {
+      "id": 194,
+      "name": "علم النص وتحليل الخطاب"
+    },
+    {
+      "id": 195,
+      "name": "اللغة والأدب بالجنوب المغربي"
+    },
+    {
+      "id": 196,
+      "name": "الديناميات المجتمعية عبر حدودية المغرب وبلدان الغرب الافريقي"
+    },
+    {
+      "id": 197,
+      "name": "الخطاب الشرعي وتكامل العلوم"
+    },
+    {
+      "id": 198,
+      "name": "دينامية المجتمعات: الهجرة والديمغرافية والتنمية"
+    },
+    {
+      "id": 199,
+      "name": "تاريخ الجنوب المغربي: السلطة والمجتمع والدين"
+    },
+    {
+      "id": 200,
+      "name": "التحرير الصحفي والتنوع الاعلامي"
+    },
+    {
+      "id": 201,
+      "name": "Géosciences et Géo-ressources"
+    },
+    {
+      "id": 239,
+      "name": "Techniques Audiovisuelles et Multimédia"
+    },
+    {
+      "id": 246,
+      "name": "العقيدة الأشعرية بالغرب الإسلامي والامتداد الافريقي"
+    },
+    {
+      "id": 248,
+      "name": "الفقه المالكي رواية ودراية وتطبيقا"
+    },
+    {
+      "id": 250,
+      "name": "العلوم الشرعية والقضايا المعاصرة"
+    },
+    {
+      "id": 254,
+      "name": "Métiers de la culture et travail social"
+    },
+    {
+      "id": 255,
+      "name": "الجغرافيا والتهيئة"
+    },
+    {
+      "id": 256,
+      "name": "Etudes françaises"
+    },
+    {
+      "id": 257,
+      "name": "Etudes Anglaises"
+    },
+    {
+      "id": 258,
+      "name": "Energétique, Mécanique et Matériaux"
+    },
+    {
+      "id": 306,
+      "name": "Systèmes informatiques embarqués"
+    },
+    {
+      "id": 323,
+      "name": "Gestion des ressources humaines"
+    },
+    {
+      "id": 344,
+      "name": "ⵜⵓⵜⵍⴰⵢⵜ ⴷ ⵜⴷⵍⵙⴰ ⵜⴰⵎⴰⵣⵉⵖⵜ (Langue et Culture Amazighes)"
+    },
+    {
+      "id": 345,
+      "name": "Communication des organisations"
+    },
+    {
+      "id": 346,
+      "name": "Métiers et pratiques des médias"
+    },
+    {
+      "id": 347,
+      "name": "Etudes anglaises"
+    },
+    {
+      "id": 348,
+      "name": "Etudes Françaises"
+    },
+    {
+      "id": 349,
+      "name": "Etudes Hispaniques"
+    },
+    {
+      "id": 350,
+      "name": "Didactique du Français Langue Etrangère"
+    },
+    {
+      "id": 351,
+      "name": "English Language teaching and the Global Market"
+    },
+    {
+      "id": 352,
+      "name": "Accompagnement Social"
+    },
+    {
+      "id": 353,
+      "name": "Langues étrangères appliquées"
+    },
+    {
+      "id": 354,
+      "name": "Classes Préparatoires Au Cycle Ingénieur"
+    },
+    {
+      "id": 1282,
+      "name": "المغرب ومحيطه الدولي"
+    },
+    {
+      "id": 1283,
+      "name": "Sciences du langage"
+    },
+    {
+      "id": 1284,
+      "name": "المنظومات الطبيعية وإمكانات التكيف مع التغيرات الكبرى"
+    },
+    {
+      "id": 1285,
+      "name": "المجال والتهيئة"
+    },
+    {
+      "id": 1286,
+      "name": "علم الإجتماع الحضاري"
+    },
+    {
+      "id": 1287,
+      "name": "Literary and cultural studies"
+    },
+    {
+      "id": 1288,
+      "name": "الأدب والإعلام"
+    },
+    {
+      "id": 1289,
+      "name": "Littératures francophones"
+    },
+    {
+      "id": 1290,
+      "name": "الخطاب الديني وقضايا التجديد"
+    },
+    {
+      "id": 1291,
+      "name": "علم النفس النمو"
+    },
+    {
+      "id": 1292,
+      "name": "Language studies"
+    },
+    {
+      "id": 1293,
+      "name": "اللسانيات وديداكتيك اللغة العربية"
+    },
+    {
+      "id": 1294,
+      "name": "الحكامة الأسرية"
+    },
+    {
+      "id": 1295,
+      "name": "Traducción y didáctica de ELE"
+    },
+    {
+      "id": 1296,
+      "name": "Management culturel"
+    },
+    {
+      "id": 1297,
+      "name": "Sciences de langage et traduction"
+    },
+    {
+      "id": 1298,
+      "name": "Milieux naturels et globale change"
+    },
+    {
+      "id": 1299,
+      "name": "Géographie et sciences des territoires"
+    },
+    {
+      "id": 1300,
+      "name": "Genre, discours et représentations"
+    },
+    {
+      "id": 1301,
+      "name": "SIG, télédétection et cartographie appliquées à l'aménagement du territoire"
+    },
+    {
+      "id": 1302,
+      "name": "سيكوسوسيلوجية الاعاقة"
+    },
+    {
+      "id": 1303,
+      "name": "العلوم الإسلامية ومقاصدها المنهجية والمعرفية"
+    },
+    {
+      "id": 1304,
+      "name": "فلسفة القانون"
+    },
+    {
+      "id": 1305,
+      "name": "Dynamiques urbaine, gouvernance et mutations sociales en Afrique"
+    },
+    {
+      "id": 1306,
+      "name": "El yo y el otro en el imaginario collectif hispano-marroquí"
+    },
+    {
+      "id": 1307,
+      "name": "Psychologie clinique et psychopathologie"
+    },
+    {
+      "id": 1308,
+      "name": "دراسات مسرحية"
+    },
+    {
+      "id": 1309,
+      "name": "علم نفس النمو للطفل والمراهق"
+    },
+    {
+      "id": 1310,
+      "name": "العلوم الشرعية وقضايا العصر"
+    },
+    {
+      "id": 1311,
+      "name": "الجيوماتية والتنمية الترابية"
+    },
+    {
+      "id": 1312,
+      "name": "الوساطة الاجتماعية"
+    },
+    {
+      "id": 1313,
+      "name": "Literary and cultural studies"
+    },
+    {
+      "id": 1314,
+      "name": "التاريخ والمجال والتراث"
+    },
+    {
+      "id": 1315,
+      "name": "الفلسفة والتحديات المعاصرة"
+    },
+    {
+      "id": 1316,
+      "name": "Littératures francophones et comparées"
+    },
+    {
+      "id": 1317,
+      "name": "Language and linguistics"
+    },
+    {
+      "id": 1318,
+      "name": "الدراسات العربية والثقافية"
+    },
+    {
+      "id": 1319,
+      "name": "الجيوماتيك وإعداد المشاهد و الموارد الطبيعية"
+    },
+    {
+      "id": 1320,
+      "name": "اللسانيات"
+    },
+    {
+      "id": 1321,
+      "name": "Français spécialisé et écrits professionnels"
+    },
+    {
+      "id": 1322,
+      "name": "الترجمة والذكاء الاصطناعي"
+    },
+    {
+      "id": 1323,
+      "name": "Accompagnateurs sociaux"
+    },
+    {
+      "id": 1324,
+      "name": "Arts et media"
+    },
+    {
+      "id": 1325,
+      "name": "Communication des organisations"
+    },
+    {
+      "id": 1326,
+      "name": "Ingénierie culturelle et artistique"
+    },
+    {
+      "id": 1327,
+      "name": "لسانيات عربية مقارنة"
+    },
+    {
+      "id": 1328,
+      "name": "السرد الأدبي الحديث والأشكال الثقافية"
+    },
+    {
+      "id": 1329,
+      "name": "Cultural policy and cultural management"
+    },
+    {
+      "id": 1330,
+      "name": "تدبير الاخطار وحكامة الموارد المائية"
+    },
+    {
+      "id": 1331,
+      "name": "Communication des organisations"
+    },
+    {
+      "id": 1332,
+      "name": "القرآن والحديث"
+    },
+    {
+      "id": 1333,
+      "name": "العقيدة والفكر"
+    },
+    {
+      "id": 1334,
+      "name": "أدب"
+    },
+    {
+      "id": 1335,
+      "name": "Didactique du français"
+    },
+    {
+      "id": 1336,
+      "name": "Linguistic"
+    },
+    {
+      "id": 1337,
+      "name": "Litterature"
+    },
+    {
+      "id": 1338,
+      "name": "Traducción y comunicación"
+    },
+    {
+      "id": 1339,
+      "name": "Sprache, Literatur und Übersetzung"
+    },
+    {
+      "id": 1340,
+      "name": "Linguistica, civiltà e traduzione"
+    },
+    {
+      "id": 1341,
+      "name": "ديداكتيك الأمازيغية"
+    },
+    {
+      "id": 1342,
+      "name": "المغرب والتفاعلات الإقليمية"
+    },
+    {
+      "id": 1343,
+      "name": "التهيئة والبيئة"
+    },
+    {
+      "id": 1344,
+      "name": "Socio-anthropologie du changement"
+    },
+    {
+      "id": 1345,
+      "name": "علم النفس العام"
+    },
+    {
+      "id": 1346,
+      "name": "Langue et culture chinoises"
+    },
+    {
+      "id": 1347,
+      "name": "Genre, discours et pratiques"
+    },
+    {
+      "id": 1348,
+      "name": "Communication et transformation numérique"
+    },
+    {
+      "id": 1349,
+      "name": "Genre, société et culture"
+    },
+    {
+      "id": 1350,
+      "name": "Institutions et organisations sociales"
+    },
+    {
+      "id": 1351,
+      "name": "Lingüística y literatura hispánicas"
+    },
+    {
+      "id": 1352,
+      "name": "Applied linguistics and discourse studies"
+    },
+    {
+      "id": 1353,
+      "name": "لسانيات عربية تطبيقية"
+    },
+    {
+      "id": 1354,
+      "name": "مناهج التربية وقضايا الأسرة المعاصرة"
+    },
+    {
+      "id": 1355,
+      "name": "Dynamique des milieux naturels et gestion"
+    },
+    {
+      "id": 1356,
+      "name": "المتروبولية والتنمية الترابية"
+    },
+    {
+      "id": 1931,
+      "name": "Stratégies de la Communication Digitale"
+    },
+    {
+      "id": 1932,
+      "name": "علم النفس الاكلينيكي والمرضي"
+    },
+    {
+      "id": 1933,
+      "name": "التراث والأركيولوجيا"
+    },
+    {
+      "id": 1934,
+      "name": "التاريخ المعاصر"
+    },
+    {
+      "id": 1935,
+      "name": "الفاعل الاجتماعي والتغير الثقافي"
+    },
+    {
+      "id": 1936,
+      "name": "علم النفس الاكلينيكي"
+    },
+    {
+      "id": 1937,
+      "name": "مجالات الفلسفة المعاصرة"
+    },
+    {
+      "id": 1938,
+      "name": "التهيئة والتنمية الترابية"
+    },
+    {
+      "id": 1939,
+      "name": "البيئة والمجال"
+    },
+    {
+      "id": 1940,
+      "name": "الدراسات الشرعية والفكرية"
+    },
+    {
+      "id": 1941,
+      "name": "آداب وفنون"
+    },
+    {
+      "id": 1942,
+      "name": "لسانيات"
+    },
+    {
+      "id": 1943,
+      "name": "Marruecos, Multiculturalidad y Panhispanismo"
+    },
+    {
+      "id": 1944,
+      "name": "Gestión Cultural y Patrimonio"
+    },
+    {
+      "id": 1945,
+      "name": "Théorie et Pratique Littéraires"
+    },
+    {
+      "id": 1946,
+      "name": "Communication, Arts et Médias"
+    },
+    {
+      "id": 1947,
+      "name": "Linguistics and Communication"
+    },
+    {
+      "id": 1948,
+      "name": "Literary and Cultural Studies"
+    },
+    {
+      "id": 1949,
+      "name": "Marruecos , España y  América Latina : Comunicación, Gestión Cultural y Diplomática"
+    },
+    {
+      "id": 1950,
+      "name": "Littératures Française, Francophone et Comparée"
+    },
+    {
+      "id": 1951,
+      "name": "English Literature and the History of Ideas"
+    },
+    {
+      "id": 1952,
+      "name": "العقيدة الاسلامية: علوم وحضارة"
+    },
+    {
+      "id": 1953,
+      "name": "-شمال المغرب المتوسطي - التاريخ والمجتمع"
+    },
+    {
+      "id": 1954,
+      "name": "النص النثري العربي: دراسة في الأشكال والأنواع"
+    },
+    {
+      "id": 1955,
+      "name": "الأدب العربي في المغرب العلوي: الأصول والامتدادات"
+    },
+    {
+      "id": 1956,
+      "name": "المناخ وتدبير الموارد المائية"
+    },
+    {
+      "id": 1957,
+      "name": "التأويليات والدراسات اللسانية"
+    },
+    {
+      "id": 1958,
+      "name": "Études Françaises"
+    },
+    {
+      "id": 1959,
+      "name": "English Studies"
+    },
+    {
+      "id": 1960,
+      "name": "Estudios Hispanicos"
+    },
+    {
+      "id": 1961,
+      "name": "علم الاجتماع"
+    },
+    {
+      "id": 1962,
+      "name": "الفلسفة"
+    },
+    {
+      "id": 1963,
+      "name": "الدراسات العربية"
+    },
+    {
+      "id": 1964,
+      "name": "التاريخ والحضارة"
+    },
+    {
+      "id": 1965,
+      "name": "الدراسات الاسلامية"
+    },
+    {
+      "id": 1966,
+      "name": "تدبير التغيرات البيئية بالمتوسط : حالة المجالات الانتقالية"
+    },
+    {
+      "id": 1967,
+      "name": "الجغرافيا  وإعداد المجال"
+    },
+    {
+      "id": 1968,
+      "name": "Etudes Cinématographiques: le Cinéma Documentaire"
+    },
+    {
+      "id": 2145,
+      "name": "Communication Culturelle et Civilisationnelle"
+    },
+    {
+      "id": 2146,
+      "name": "الفكر الإسلامي و الحوار الحضاري"
+    },
+    {
+      "id": 2147,
+      "name": "أصول الدين و قضايا العصر"
+    },
+    {
+      "id": 2148,
+      "name": "الحوار و الوساطة الثقافية و بينثقافية"
+    },
+    {
+      "id": 2149,
+      "name": "الفكر الإسلامي والحضارة بالمغرب"
+    },
+    {
+      "id": 2150,
+      "name": "العلوم الاسلامية: مناهج الاستمداد وآليات التجديد"
+    },
+    {
+      "id": 2151,
+      "name": "الفكر المقاصدي والاجتماعي في السياق المعاصر"
+    },
+    {
+      "id": 2152,
+      "name": "العقيدة والفكر في الغرب الإسلامي"
+    },
+    {
+      "id": 2153,
+      "name": "أصول الدين والدراسات الشرعية في الغرب الإسلامي"
+    },
+    {
+      "id": 2154,
+      "name": "الفكر الإسلامي والفلسفة وعلوم الأديان"
+    },
+    {
+      "id": 2155,
+      "name": "أصول الدين و الدراسات القرآنية والحديثية"
+    },
+    {
+      "id": 2187,
+      "name": "Langues Étrangères Appliquées aux Organisations"
+    },
+    {
+      "id": 2382,
+      "name": "Information et communication"
+    },
+    {
+      "id": 2383,
+      "name": "Production des Contenus Audiovisuels et Numériques"
+    },
+    {
+      "id": 2384,
+      "name": "Médias et Migrations"
+    },
+    {
+      "id": 2385,
+      "name": "Communication Publique et Politique"
+    },
+    {
+      "id": 2386,
+      "name": "Communication Politique et Sociale (En langue arabe)"
+    },
+    {
+      "id": 2411,
+      "name": "Anthropologie et Muséologie : Anthropologie"
+    },
+    {
+      "id": 2412,
+      "name": "Anthropologie et Muséologie : Muséologie"
+    },
+    {
+      "id": 2413,
+      "name": "Anthropologie et Muséologie : Monuments historiques et sites"    
+    },
+    {
+      "id": 2414,
+      "name": "Archéologie : Préhistoire"
+    },
+    {
+      "id": 2415,
+      "name": "Archéologie : Vestiges préislamiques"
+    },
+    {
+      "id": 2416,
+      "name": "Archéologie : Vestiges islamiques"
+    },
+    {
+      "id": 2461,
+      "name": "Management Touristique"
+    },
+    {
+      "id": 2462,
+      "name": "Management opérationnel de l’hôtellerie et de la restauration"
+    },
+    {
+      "id": 2463,
+      "name": "Strategie et Management des Organisations Touristiques"
+    },
+    {
+      "id": 2464,
+      "name": "Strategie et Management des Organisations Hôteliers"
+    },
+    {
+      "id": 2526,
+      "name": "culture et littérature francophone moderne"
+    },
+    {
+      "id": 2528,
+      "name": "Dynamique des espaces géographiques au Maroc"
+    },
+    {
+      "id": 2529,
+      "name": "Systèmes narratifs et visuels :Composants et fonctions"
+    },
+    {
+      "id": 2530,
+      "name": "Didactique du français et technologie numérique"
+    },
+    {
+      "id": 2531,
+      "name": "Rhétorique et discours"
+    },
+    {
+      "id": 2580,
+      "name": "Philosophie contemporaine:Concepts théoriques et pratiques"
+    },
+    {
+      "id": 2581,
+      "name": "Origines et références de la pensée critique arabe"
+    }
+]
+}

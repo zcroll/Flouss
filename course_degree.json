@@ -704,247 +704,37 @@
     },
 
     "degrees": {
-        {
-            // Agriculture and Natural Resources
-            "231": {"name": "Agriculture", "courses": []},
-            "513": {"name": "Agronomie", "courses": ["2230" /*Agronomie*/, "2555" /*Agro-énergie*/, "2556" /*Agrochimie*/, "1137" /*Gestion de l'environnement et développement durable*/, "2613" /*Génie agroenvironnement*/]},
-            "484": {"name": "Production végétale", "courses": ["2547" /*Industrie Agroalimentaire*/, "2474" /*Agro-industrie*/, "2244" /*Sciences et Techniques des Productions Végétales*/, "2241" /*Protection des Plantes et Environnement*/]},
-            "512": {"name": "Sciences végétales", "courses": ["2474" /*Agro-industrie*/, "2232" /*Protection des Plantes*/, "2176" /*Bioressources et Environnement*/, "2002" /*Sciences de la Vie*/]},
-            "514": {"name": "Horticulture", "courses": ["2238" /*Horticulture*/, "2258" /*Horticulture Ornementale et Espaces Verts*/, "2260" /*Eau et Horticulture Durable*/, "2257" /*Technologies de l'eau et énergies renouvelables*/]},
-            "494": {"name": "Gestion d'entreprise horticole", "courses": ["2253" /*Technico-Commercial en Productions Horticoles*/, "2255" /*Cultures Ornementales et Aménagement des Espaces Verts*/]},
-            "499": {"name": "Gestion du gazon", "courses": ["2259" /*Aménagement du Paysage*/, "2255" /*Cultures Ornementales et Aménagement des Espaces Verts*/, "2246" /*Aménagement des Forêts*/]},
-            "230": {"name": "Génie agricole", "courses": ["2538" /*Génie Agroalimentaire*/, "2245" /*Ingénierie Agroécologie*/, "2031" /*Ingénierie Environnementale, Changement Climatique et Développement Durable*/]},
-            "480": {"name": "Mécanique agricole", "courses": ["2547"]},
-            "483": {"name": "Aquaculture", "courses": ["2256" /*Aquaculture*/, "2368" /*Aquaculture Marine*/, "2028" /*Environnement, Aquaculture et Développement Durable*/, "2158" /*Aquaculture*/, "2235" /*Ingénierie halieutique*/, "1173" /*Environnement marin et gestion des bio-ressources*/]},
-            "486": {"name": "Science équine", "courses": ["2612"]},
-            "487": {"name": "Sciences animales", "courses": ["2612" /*Génie équin*/, "2536" /*Génie de Production Végétale et Animale*/, "2243" /*Productions Animales et Pastoralisme*/]},
-            "508": {"name": "Science laitière", "courses": ["2244"]},
-            "510": {"name": "Science de la volaille", "courses": []},
-            "473": {"name": "Agroalimentaire", "courses": ["2557" /*Technologies Agroalimentaires*/, "2547" /*Industrie Agroalimentaire*/, "2474" /*Agro-industrie*/, "2538" /*Génie Agroalimentaire*/, "2072" /*Sciences Agroalimentaires et Techniques de Commerce*/, "2027" /*Sciences Agroalimentaires*/, "2233" /*Industrie Agricoles et Alimentaires*/]},
-            "3" : {"name" : "Économie agricole", "courses": ["2072","2242", "2248" /*Economie Forestière*/]},
-            "9": {"name": "Sylviculture", "courses": ["2252","2249","2232","2239","2259", "2247" /*Ecologie et Gestion des Ressources Naturelles*/, "2246" /*Aménagement des Forêts*/, "2262" /*Gestion Acridienne (FR)*/, "2263" /*Gestion Acridienne (EN)*/, "2612" /*Génie équin*/, "2536" /*Génie de Production Végétale et Animale*/, "2243" /*Productions Animales et Pastoralisme*/]},
-
-
-            // Environmental Sciences
-            "88": {"name": "Génie de l'environnement", "courses": []},
-            "19": {"name": "Sciences de l'environnement", "courses": ["2042" /*Sciences de l'Environnement*/, "1985" /*Biotechnologie et Sciences de l'Environnement*/, "1385" /*Science et gestion de l'environnement*/, "1988" /*Géosciences de l'Environnement*/]},
-            "520": {"name": "Conservation des ressources naturelles", "courses": ["2247" /*Ecologie et Gestion des Ressources Naturelles*/, "2248" /*Economie Forestière*/, "1113" /*Gestion de l'environnement et des ressources naturelles*/, "1130" /*Valorisation des ressources naturelles, procédés chimiques et développement durable*/, "1162" /*Géosciences et ressources naturelles*/]},
-            "521": {"name": "Études environnementales", "courses": ["1137" /*Gestion de l'environnement et développement durable*/, "2031" /*Ingénierie Environnementale, Changement Climatique et Développement Durable*/, "2315" /*Environnement et sécurité́ industriels*/, "1987" /*Génie Énergétique et Environnement*/]},
-            "524": {"name": "Planification environnementale", "courses": ["2340" /*Ingénierie de la Ville et de l'Environnement*/, "2058" /*Géorisques et Environnement*/, "1144" /*Géomatique appliquée aux géosciences et à l'environnement*/, "1975" /*Géosciences et Aménagement du Territoire*/]},
-            "323": {"name": "Conception environnementale", "courses": ["2544" /*Génie de l'Environnement*/, "2564" /*Génie de l'Environnement*/, "2537" /*Génie de l'Environnement*/, "1369" /*Génie de l'eau et de l'environnement*/, "2593" /*Génie de l'Eau et de l'Environnement*/, "2071" /*Génie de l'Eau et l'Environnement*/]},
-            "527": {"name": "Sciences et gestion de la pêche", "courses": ["1173" /*Environnement marin et gestion des bio-ressources*/, "2032" /*Sciences du Littoral : Approche Pluridisciplinaire*/, "2067" /*Génie du Littoral*/]},
-            "528": {"name": "Sciences forestières et biologie", "courses": ["2246" /*Aménagement des Forêts*/, "2184" /*Sciences de la Vie*/, "2002" /*Sciences de la Vie*/]},
-            "534": {"name": "Science et gestion de la faune", "courses": ["2176" /*Bioressources et Environnement*/, "2007" /*Risques et Ressources Naturelles*/]},
-            "738": {"name": "Gestion du traitement des eaux usées", "courses": ["1166" /*Gestion des effluents liquides et solides*/, "2548" /*Gestion et Technologie de l'Eau*/, "1993" /*Ingénierie et Gestion de l'Eau et de l'Assainissement*/, "1976" /*Ingénierie de l'Eau et de l'Environnement*/, "1860" /*Génie de l'Eau et de l'Environnement*/, "1738" /*Génie de l'Eau et de l'Environnement*/, "1687" /*Génie de l'Eau et de l'Environnement*/, "1611" /*Génie de l'Eau et de l'Environnement*/, "1541" /*Génie de l'Eau et de l'Environnement*/]},
-            "740": {"name": "Gestion des matières dangereuses", "courses": ["2601" /*Qualité, Hygiène et Sécurité et Environnement*/, "2563" /*Génie des Mines et de l'Environnement*/]},
-
-            // Life Sciences
-            "20": {"name": "Biologie", "courses": ["1172" /*Biologie fondamentale et appliquée*/, "1164" /*Biologie et biotechnologie*/, "2184" /*Sciences de la Vie*/, "2002" /*Sciences de la Vie*/]},
-            "22": {"name": "Botanique", "courses": ["1118" /*Biotechnologie et production végétale*/, "2565" /*Biotechnologie Végétale*/, "2176" /*Bioressources et Environnement*/]},
-            "23": {"name": "Biologie moléculaire", "courses": ["2041" /*Bases Cellulaires et Moléculaires en Biotechnologie*/]},
-            "24": {"name": "Écologie", "courses": ["1165" /*Biotechnologie et environnement*/, "2247" /*Ecologie et Gestion des Ressources Naturelles*/]},
-            "25": {"name": "Génétique", "courses": ["2553" /*Génie Biologique et Amélioration de la Production Animale*/]},
-            "26": {"name": "Microbiologie", "courses": ["1384" /*Microbiologie appliquée et génie biologique*/]},
-            "27": {"name": "Pharmacologie", "courses": ["1159" /*Pharmacologie et développement des molécules bioactives*/]},
-            "28": {"name": "Physiologie", "courses": []},
-            "29": {"name": "Zoologie", "courses": []},
-            "258": {"name": "Biochimie", "courses": []},
-            "260": {"name": "Bioinformatique", "courses": ["1852" /*Bio-Informatique et Sciences de Données*/, "1730" /*Bio-Informatique et Sciences de Données*/, "1679" /*Bio-Informatique et Sciences de Données*/, "1603" /*Bio-Informatique et Sciences de Données*/, "2294" /*Bio-informatique et modélisation des systèmes complexes appliquée à la santé*/]},
-            "261": {"name": "Sciences biomédicales", "courses": ["1114" /*Sciences biomédicales appliquées*/, "1365" /*Technologies biomédicales*/]},
-            "262": {"name": "Biotechnologie", "courses": ["2048" /*Biotechnologies*/, "2159" /*Biotechnologie et Agrodiversité*/, "1984" /*Biosciences, Biotechnologie et Santé*/, "1143" /*Biotechnologie et démarche qualité*/, "1985" /*Biotechnologie et Sciences de l'Environnement*/]},
-            "351": {"name": "Immunologie", "courses": []},
-            "384": {"name": "Biologie Marine", "courses": ["1999" /*Conservation de la Biodiversité Marine*/, "1173" /*Environnement marin et gestion des bio-ressources*/, "2032" /*Sciences du Littoral : Approche Pluridisciplinaire*/]},
-            "880": {"name": "Biophysique", "courses": []},
-            "890": {"name": "Biologie Cellulaire", "courses": []},
-            "912": {"name": "Endocrinologie", "courses": []},
-            "918": {"name": "Pathologie", "courses": ["1176" /*Sciences de la santé et biotechnologies (option : pathologies métaboliques, inflammatoires et infectieuses)*/]},
-            "919": {"name": "Oncologie et biologie du cancer", "courses": []},
-            "923": {"name": "Toxicologie", "courses": []},
-            "929": {"name": "Biologie computationnelle", "courses": ["2294" /*Bio-informatique et modélisation des systèmes complexes appliquée à la santé*/]},
-            "934": {"name": "Biologie de la conservation", "courses": []},
-            "936": {"name": "Épidémiologie", "courses": []},
-            "941": {"name": "Neurobiologie", "courses": []},
-
-            // Computer Science & Data
-            "53": {"name": "L'informatique", "courses": ["1119" /*Développement informatique*/, "1155" /*Développement informatique*/, "1433" /*Génie informatique*/, "1524" /*Génie Informatique*/, "1537" /*Génie Informatique*/, "2611" /*Génie Informatique*/, "2602" /*Génie Informatique*/]},
-            "299": {"name": "Cybersécurité", "courses": ["1147" /*Cybersécurité*/, "1467" /*Ingénierie informatique, cybersécurité et confiance numérique*/, "1531" /*Cybersecurity*/, "2329" /*Cybersécurité et Confiance Numérique*/, "2302" /*Ingénierie de la Sécurité des Systèmes d'Information et Cyberdéfense*/, "2192" /*Sécurité IT et Confiance Numérique*/, "2055" /*Cryptologie et Sécurité Informatique*/]},
-            "301": {"name": "Science des données", "courses": ["1136" /*Data science et big data*/, "1181" /*Big data et cloud computing*/, "1408" /*Big Data et Internet des objets*/, "1543" /*Ingénierie des Données*/, "2336" /*Data Science*/, "2335" /*Data and Software Engineering*/, "2296" /*Sciences des données et Big Data*/, "2288" /*Génie de la Data*/, "2193" /*Sciences des Données, Big data & IA*/]},
-            "302": {"name": "Gestion de base de données", "courses": ["2303" /*Master Spécialisé en Management de l'Information*/, "2300" /*Ingénierie de l'Information Numérique*/, "2301" /*Ingénierie des Systèmes d'Information et de la Transformation Digitale*/]},
-            "602": {"name": "Intelligence artificielle", "courses": ["1405" /*Intelligence artificielle et génie informatique*/, "1475" /*Systèmes distribués et intelligence artificielle*/, "2589" /*Intelligence Artificielle et Ingénierie des Données ( IAID)*/, "2561" /*Ingénierie des Données et Intelligence Artificielle*/, "2289" /*Ingénierie de l'Intelligence Artificielle*/, "2188" /*Intelligence Artificielle*/, "1972" /*Machine Learning and Artificial Intelligence*/]},
-            "603": {"name": "Informatique", "courses": ["1375" /*Informatique, réseau et multimédia*/, "1380" /*Ingénierie logiciel et intégration des systèmes informatiques*/, "1396" /*Génie logiciel et digitalisation*/, "1469" /*Génie du logiciel et des systèmes informatiques distribués*/]},
-            "604": {"name": "Informatique", "courses": ["1471" /*Ingénierie informatique, BIG Data et Cloud Computing*/, "1528" /*Ingénierie Informatique, Sécurité et Décision*/, "1544" /*Génie Informatique*/, "2551" /*Génie Informatique*/, "2470" /*Génie Informatique*/]},
-            "611": {"name": "Conception de sites Web", "courses": ["1516" /*Technologie de Conception et de Développement Web & Mobile*/, "1835" /*Technologie de Conception et de Développement Web & Mobile*/, "1896" /*Génie Logiciel et Développement Web*/, "1970" /*Ingénierie du Web Avancé*/]},
-            "612": {"name": "Infographie", "courses": ["2309" /*Génie MIS (Modélisation et Informatique Scientifique)*/, "2070" /*Mathématiques et Informatique*/]},
-            "613": {"name": "Programmation de simulations", "courses": ["2163" /*Développement Informatique et Méthodes DevOps*/, "2156" /*DevOps et Cloud Computing*/, "2060" /*Ingénierie de Données et Développement Logiciel*/]},
-            "615": {"name": "Administration des systèmes réseau", "courses": ["1126" /*Administration réseaux et systèmes*/, "1150" /*Administration des systèmes*/, "1434" /*Génie logiciel et administration avancée des systèmes et réseaux informatiques*/, "1893" /*Cybersécurité et Administration des Réseaux et Systèmes*/]},
-            "616": {"name": "Gestion du réseau", "courses": ["1892" /*Réseaux Informatiques et Télécommunications*/, "2190" /*Réseaux et sécurité informatique*/, "2465" /*Réseaux et Sécurité Informatique*/, "2586" /*Réseaux et Télécommunication (RT)*/]},
-            "619": {"name": "Gestion des technologies de l'information", "courses": ["1899" /*Système d'Information et Technologies de l'Entreprise*/, "1777" /*Système d'Information et Technologies de l'Entreprise*/, "1676" /*Systèmes d'Information et Marketing Digital*/, "1600" /*Systèmes d'Information et Marketing Digital*/]},
-            "449": {"name": "Génie logiciel informatique", "courses": []},
-            "85": {"name": "Génie informatique", "courses": []},
-
-
-            // Mathematics & Statistics
-            "57": {"name": "Mathématiques", "courses": ["1121" /*Analyse mathématiques*/, "1133" /*Analyse mathématique et applications*/, "1148" /*Analyse mathématique*/, "1175" /*Mathématiques fondamentales et applications*/, "2004" /*Sciences Mathématiques et Applications*/, "2050" /*Mathématiques et Applications*/, "2182" /*Sciences Mathématiques et Applications*/]},
-            "58": {"name": "Mathématiques appliquées", "courses": ["1371" /*Mathématiques appliquées*/, "1376" /*Génie mathématiques et informatique*/, "1399" /*Mathématiques / Physique / Technologie*/, "2056" /*Mathématiques Appliquées pour l'Ingénierie et l'Innovation*/, "2178" /*Mathématiques Appliquées*/, "2166" /*Modélisation Mathématique et Applications*/]},
-            "59": {"name": "Statistiques", "courses": ["1120" /*Statistiques*/, "1157" /*Statistique et aide à la décision*/, "1169" /*Méthodes numériques et statistiques appliquées*/, "1983" /*Modélisation Mathématique et Statistiques*/, "2049" /*Ingénierie Statistique*/, "2037" /*Analyse Appliquée et Ingénierie Statistique*/, "2022" /*Statistique et Science des Données*/]},
-            "718": {"name": "Recherche opérationnelle", "courses": ["1152" /*Calcul scientifique et optimisation*/, "2338" /*Sciences de la Décision et Recherche Opérationnelle*/, "2164" /*Analyse des Données et Outils d'Aide à la Décision*/]},
-            "946": {"name": "Mathématiques computationnelles", "courses": ["1409" /*Data science et mathématiques industrielles*/, "2026" /*Modélisation Mathématique et Science de Données*/]},
-
-            // Engineering
-            "77": {"name": "Architecture", "courses": ["2340" /*Ingénierie de la Ville et de l'Environnement (IVE)*/, "2436" /*Diplôme d'Architecte*/, "2437" /*Diplôme d'Architecte*/, "2438" /*Diplôme d'Architecte*/, "2439" /*Diplôme d'Architecte*/, "2440" /*Diplôme d'Architecte*/, "2441" /*Le diplôme de l'Institut National d'Aménagement et d'Urbanisme*/, "2442" /*Aménagement et Urbanisme*/]},
-            "84": {"name": "Génie civil", "courses": ["2339" /*Ingénierie de l'hydraulique et de l'Environnement (IHE)*/, "2594" /*Génie Civil-Construction Durable*/, "2552" /*Génie Civil*/, "2444" /*Génie Civil*/, "2445" /*Génie Civil*/, "2446" /*Génie Civil*/, "2447" /*Génie Civil*/, "2448" /*Génie Civil*/, "2449" /*Géomètre Topographe*/, "2450" /*Maintenance des Engins du BTP*/, "2451" /*Bâtiment*/, "2452" /*Conducteur d'Engins BTP*/, "2455" /*Maintenance des engins lourds et véhicules industriels option BTP*/, "2456" /*Gros œuvres*/, "2344" /*Génie Civil : Infrastructures de transport (IT)*/, "2345" /*Génie Civil : Ingénierie du Bâtiment (IB)*/, "2320" /*Génie Civil et Minier*/, "2306" /*Génie Civil*/, "2043" /*Génie Civil*/, "2017" /*Ingénierie et Expertise Génie Civil*/, "2010" /*Ingénierie - Génie Civil et Management de Projets de B.T.P*/, "1864" /*Génie Civil*/, "1787" /*Génie Civil*/, "1742" /*Génie Civil*/, "1691" /*Génie Civil*/, "1615" /*Génie Civil*/, "1545" /*Génie Civil*/, "2052" /*Génie Civil*/, "2034" /*Géoinformation*/, "1909" /*Génie Civil*/, "2231" /*Science Géomatiques et Topographie*/, "2013" /*Ingénierie du Bâtiment*/, "2014" /*Ingénierie Topographique et Systèmes d'Informations Géographiques Appliqués*/, "2018" /*Géomatique Appliquée au Développement Durable*/, "2019" /*Ingénierie et Expertise en Bathymétrie et Topographie*/, "2236" /*Génie Rural*/, "2240" /*Ingénierie de Développement Rural*/, "2454" /*Métreur*/, "2457" /*Voirie*/, "2453" /*Grutier à Tour GMA GME*/]},
-            "81": {"name": "Génie architectural", "courses": []},
-            "79": {"name": "Génie aérospatial", "courses": []},
-            "83": {"name": "Génie Chimique", "courses": ["1139" /*Contrôle qualité dans les industries pharmaceutique, alimentaire et cosmétique*/, "1130" /*Valorisation des ressources naturelles, procédés chimiques et développement durable*/, "1115" /*Génie des matériaux*/, "1117" /*Procédés analytiques et industriels*/, "1131" /*Instrumentation et méthodes physicochimiques d'analyse*/, "1138" /*Génie des matériaux et énergie*/, "1145" /*Formulation de produits industriels*/, "1154" /*Matériaux organique et inorganique*/, "1160" /*Chimie analytique, contrôle de qualité et environnement*/, "1168" /*Chimie*/, "1367" /*Chimie appliquée*/, "1368" /*Techniques d'analyse et contrôle de qualité*/, "1379" /*Génie des procédés et d'environnement*/, "1382" /*Physico-chimie et analyse des matériaux*/, "1383" /*Ingénierie et physique des matériaux avancés*/, "1394" /*Procédés industriels et plasturgie*/, "1431" /*Génie des procédés*/, "1438" /*Génie des procédés*/, "2473" /*Génie des Procédés*/, "2312" /*Génie des Procédés Industriels*/, "2047" /*Génie des Procédés*/, "1978" /*Génie des Procédés Industriels*/, "2554" /*Chimie et Techniques d'Analyse*/, "2273" /*Chimie et traitement des matériaux (CTM)*/, "2068" /*Chimie Analytique et Qualité*/, "2057" /*Chimie Appliquée aux Industries Chimiques et Pharmaceutiques*/, "2005" /*Sciences de la Matière Chimie*/, "1998" /*Chimie*/, "1977" /*Chimie Analytique et Contrôle de la Qualité*/, "2044" /*Techniques d'Analyses Chimiques*/]},
-            "86": {"name": "Génie électrique", "courses": ["1161" /*Génie électrique*/, "1372" /*Génie électrique et informatique industrielle*/, "1378" /*Génie électrique et télécommunication*/, "1389" /*Génie des systèmes électriques*/, "1390" /*Génie électrique, systèmes embarqués et télécommunication*/, "1397" /*Génie électrique - contrôle automatique des procédés industriels*/, "1402" /*Génie électrique*/, "1432" /*Génie électrique*/, "1466" /*Génie électrique*/, "1472" /*Génie électrique et contrôle des systèmes industriels*/, "1473" /*Génie électrique et énergies renouvelables*/, "1476" /*Génie électrique et informatique industrielle*/, "2604" /*Génie Electrique et Systèmes Automatisés*/, "2346" /*Génie Electrique : Electrotechnique et Automatismes Industriels (EAI)*/, "2347" /*Génie Electrique : Electronique et Télécommunication (ET)*/, "2314" /*Génie Électrique*/, "2054" /*Génie Électrique*/, "2035" /*Génie Électrique et Management Industriel*/, "2472" /*Génie Electrique - Energies Renouvelables et Efficacité Energétique*/, "2532" /*Instrumentation Réseaux et énergies renouvelables*/]},
-            "90": {"name": "Génie Industriel", "courses": ["1180" /*Génie logistique*/, "1381" /*Management de la qualité, de la sécurité et de l'environnement*/, "1392" /*Qualité, maintenance et sécurité industrielle*/, "1395" /*Génie industriel et logistique*/, "1401" /*Génie industriel*/, "1407" /*Génie des Systèmes Industriels*/, "1435" /*Génie Industriel et logistique*/, "1468" /*Génie industriel et logistique*/, "1517" /*Génie des Systèmes Industriels*/, "1518" /*Management de la Qualité, Hygiène, Sécurité & Environnement*/, "1519" /*Management Industriel*/, "1520" /*Technologies Industrielles & Simulation*/, "1521" /*Maintenance des Systèmes Mécatroniques*/, "2197" /*Electromécanique des systèmes industriels*/, "2199" /*Systèmes industriels Automatisés*/, "2201" /*Systèmes industriels Automatisés*/, "2603" /*Génie Industriel et Maintenance*/, "2592" /*Génie Industriel 4.0 et Techniques Avancées de la Maintenance*/, "2324" /*Génie Industriel*/, "2053" /*Génie Industriel*/, "2033" /*Génie Industriel*/, "2315" /*Environnement et sécurité́ industriels*/]},
-            "92": {"name": "Génie mécanique", "courses": ["1374" /*Génie mécanique*/, "1391" /*Génie des systèmes mécaniques*/, "1393" /*Conception mécanique et production intégrée*/, "1400" /*Génie mécanique*/, "1406" /*Génie des systèmes mécaniques industrielles*/, "1410" /*Ingénierie mécanique et calcul scientifique*/, "1430" /*Génie mécanique et productique*/, "1470" /*Génie mécanique des systèmes industriels*/, "2313" /*Génie Mécanique*/, "2198" /*Génie Mécanique*/, "2194" /*Génie Mécanique*/, "1861" /*Génie Mécanique*/, "1739" /*Génie Mécanique*/, "1688" /*Génie Mécanique*/, "1612" /*Génie Mécanique*/, "1542" /*Génie Mécanique*/, "2200" /*Génie Mécanique*/]},
-            "96": {"name": "Génie Nucléaire", "courses": []}, 
-            "97": {"name": "Génie Pétrolier", "courses": ["2036" /*Géoressources Énergétiques et Réservoirs*/]},
-            "319": {"name": "Génie Physique", "courses": ["1122" /*Physique appliquée*/, "1151" /*Génie physique : matériaux et énergie*/, "1373" /*Physique appliquée*/, "1981" /*Physique et Applications*/, "2598" /*Physique Appliquée et Physique computationnelle*/]},
-            "383": {"name": "Ingénierie de fabrication", "courses": ["2274" /*Technicien Spécialisé en Méthodes de Fabrication*/]},
-            "391": {"name": "Ingénierie robotique", "courses": ["1474" /*Mécanique, robotique et matériaux innovants*/]},
-            "454": {"name": "Ingénierie des structures", "courses": []},
-            "458": {"name": "Ingénierie des systèmes", "courses": ["1773" /*Génie des Systèmes Mécatroniques Intelligents*/, "1895" /*Génie des Systèmes Mécatroniques Intelligents*/, "1855" /*Génie des Systèmes Électroniques et Automatiques*/, "1682" /*Génie des Systèmes Électroniques et Automatiques*/, "1606" /*Génie des Systèmes Électroniques et Automatiques*/, "1536" /*Génie des Systèmes Électroniques et Automatiques*/]},
-            "80": {"name": "Génie biomédical", "courses": ["1114" /*Sciences biomédicales appliquées*/, "1127" /*Sciences de la santé*/, "1132" /*Biologie et santé*/, "1163" /*Bio analyses médicales*/, "1176" /*Sciences de la santé et biotechnologies*/, "1365" /*Technologies biomédicales*/, "1366" /*Analyses biologiques et contrôle qualité*/, "1411" /*Ingénierie digitale pour les métiers de la santé*/, "2566" /*Bio analyses et Contrôles*/]},
-            "78": {"name": "Ingénierie", "courses": []},
-            "89": {"name": "Génie géologique", "courses": ["1116" /*Géosciences et géoressources*/, "1135" /*Géologie appliquée à la prospection des ressources naturelles*/, "1162" /*Géosciences et ressources naturelles*/, "1975" /*Géosciences et Aménagement du Territoire*/, "1988" /*Géosciences de l'Environnement*/, "2307" /*Génie Minéral*/, "2550" /*Génie Minier*/, "2549" /*Géométallurgie et Géotechnique Minière*/, "2001" /*Sciences de la Terre et de l'Univers*/]},
-
-            "95": {"name": "Ingénierie navale", "courses": [
-                "1115", /* Génie des matériaux */
-                "1117", /* Procédés analytiques et industriels */
-                "1131", /* Instrumentation et méthodes physicochimiques d'analyse */
-                "1138", /* Génie des matériaux et énergie */
-                "1145", /* Formulation de produits industriels */
-                "1154", /* Matériaux organique et inorganique */
-                "1367", /* Chimie appliquée */
-                "1368", /* Techniques d'analyse et contrôle de qualité */
-                "1379", /* Génie des procédés et d'environnement */
-                "1382", /* Physico-chimie et analyse des matériaux */
-                "1383", /* Ingénierie et physique des matériaux avancés */
-                "1394", /* Procédés industriels et plasturgie */
-                "1978", /* Génie des Procédés Industriels */
-                "2554", /* Chimie et Techniques d'Analyse */
-                "2273", /* Chimie et traitement des matériaux (CTM) */
-                "2068", /* Chimie Analytique et Qualité */
-                "2057", /* Chimie Appliquée aux Industries Chimiques et Pharmaceutiques */
-                "2005", /* Sciences de la Matière Chimie */
-                "1977", /* Chimie Analytique et Contrôle de la Qualité */
-                "2044", /* Techniques d'Analyses Chimiques */
-                "2367", /* Mécanique Marine */
-                "2370", /* Sciences navales */
-                "2371", /* Ingénierie Navale */
-                "2372", /* Construction et Maintenance Navales */
-                "2374", /* Officier Mécanicien de 1ére Classe de Marine Marchande */
-                "2375", /* Mécanique Navale */
-                "2376", /* Sciences Navales */
-                "2377"  /* Construction et Maintenance Navales */
-            ]}
-
             "320": {"name": "Sciences de l'ingénieur", "courses": []},
+            
             // Business & Economics
-            "33": {"name": "Entreprise", "courses": []},
-            "34": {"name": "Comptabilité", "courses": []},
-            "39": {"name": "Commercialisation", "courses": []},
-            "40": {"name": "Finance", "courses": []},
-            "42": {"name": "Commerce internationales", "courses": []},
-            "167": {"name": "Économie", "courses": []},
-            "1433": {"name": "Audit", "courses": []},
-            "1444": {"name": "Communications d'entreprise", "courses": []},
-            "1445": {"name": "Entrepreneuriat", "courses": []},
-            "1450": {"name": "Finances internationales", "courses": []},
-            "1461": {"name": "Relations de travail", "courses": []},
-            "1473": {"name": "Imposition", "courses": []},
-            "2107": {"name": "Administration des affaires", "courses": []},
-
-            // Arts & Design
-            "11": {"name": "Beaux arts", "courses": []},
-            "14": {"name": "Arts visuels et du spectacle", "courses": []},
-            "175": {"name": "Conception graphique", "courses": []},
-            "182": {"name": "Design d'intérieur", "courses": []},
-            "357": {"name": "Architecture d'intérieur", "courses": []},
-            "450": {"name": "Musique", "courses": []},
-            "460": {"name": "Arts du théâtre", "courses": []},
-            "472": {"name": "Théorie et composition musicale", "courses": []},
-            "1209": {"name": "Direction", "courses": []},
-            "1211": {"name": "Conception de costumes", "courses": ["2268" /* Génie Industriel option Textile-Habillement */, "2275" /* Développement en Habillement */, "2276" /* Gestion de Production en Habillement */]},
-            "1216": {"name": "Arts multimédias", "courses": []},
-            "1232": {"name": "Entreprise de musique", "courses": []},
-
-            // Communication & Media
-            "47": {"name": "Journalisme", "courses": [
-                "2387", /* Master spécialisé en Développement Audiovisuel et Cinématographie */
-                "2388", /* Technico Artistique du Son et de l'Image */
-                "2389"  /* Développent et Technique de l'Audiovisuel et du Cinéma «DEVTECH» */
-            ]},
-            "48": {"name": "Études sur la communication de masse et les médias", "courses": [
-                "2387", /* Master spécialisé en Développement Audiovisuel et Cinématographie */
-                "2388", /* Technico Artistique du Son et de l'Image */
-                "2389", /* Développent et Technique de l'Audiovisuel et du Cinéma «DEVTECH» */
-                "2390", /* منصة التصوير والآليات */
-                "2396", /* السمعي البصري: اختيار الصورة */
-                "2397"  /* السمعي البصري: اختيار التوضيب */
-            ]},
-            "49": {"name": "Publicité", "courses": []},
-            "576": {"name": "Communication vocale et rhétorique", "courses": []},
-            "578": {"name": "Journalisme audiovisuel", "courses": [
-                "2387", /* Master spécialisé en Développement Audiovisuel et Cinématographie */
-                "2388", /* Technico Artistique du Son et de l'Image */
-                "2389"  /* Développent et Technique de l'Audiovisuel et du Cinéma «DEVTECH» */
-            ]},
-            "580": {"name": "Radio et Télévision", "courses": [
-                "2387", /* Master spécialisé en Développement Audiovisuel et Cinématographie */
-                "2388", /* Technico Artistique du Son et de l'Image */
-                "2389"  /* Développent et Technique de l'Audiovisuel et du Cinéma «DEVTECH» */
-            ]},
-            "582": {"name": "Relations publiques", "courses": []},
-            "583": {"name": "Communication organisationnelle", "courses": []},
-            "584": {"name": "Communication politique", "courses": []},
-            "585": {"name": "Communications sur la santé", "courses": []},
-            "586": {"name": "Communication sportive", "courses": []},
-            "589": {"name": "Édition", "courses": []},
-
-            // Education
-            "64": {"name": "Éducation élémentaire", "courses": []},
-            "72": {"name": "Éducation", "courses": []},
-            "640": {"name": "Éducation bilingue", "courses": []},
-            "643": {"name": "Programme d'études et enseignement", "courses": []},
-            "644": {"name": "Administration de l'éducation", "courses": []},
-            "659": {"name": "Éducation internationale et comparée", "courses": []},
-            "661": {"name": "Enseignement en éducation spécialisée", "courses": []},
-            "668": {"name": "Éducation de la petite enfance", "courses": []},
-            "2110": {"name": "Enseignement", "courses": []},
+            "33": {"name": "Entreprise", "courses": [2105, 2534, 2540, 2600, 2610]},
+            "34": {"name": "Comptabilité", "courses": [6, 11, 12, 120, 223, 225, 337, 1216, 1231, 1275, 2074, 2085, 2104, 2122, 2167, 2514]},
+            "39": {"name": "Commercialisation", "courses": [3, 24, 273, 1196, 1221, 1232, 1267, 1416, 1492, 1511, 1562, 1581, 1657, 1708, 1811, 1830, 2123, 2168, 2497, 2585]},
+            "40": {"name": "Finance", "courses": [7, 227, 282, 371, 1228, 1261, 1423, 1233, 2074, 2090, 2110, 2140, 2087, 2117, 224]},
+            "42": {"name": "Commerce internationales", "courses": [162, 271, 366, 1197, 1235, 1268, 1417, 1491, 1510, 1561, 1580, 1656, 1707, 1810, 1829, 2107, 2086, 1222, 1250, 1262]},
+            "167": {"name": "Économie", "courses": [13, 26, 126, 214, 229, 283, 304, 338, 339, 341, 1224, 1241, 1259, 2084, 2090, 2103, 2108, 2143, 2185, 2337, 224, 2086, 1222, 1250, 1262, 16, 32, 2081, 2111]}, // Added: الدراسات الإدارية والمالية
+            "1433": {"name": "Audit", "courses": [369, 1208, 1279, 1413, 1494, 1513, 1564, 1583, 1659, 1710, 1813, 1832, 2126]},
+            "1444": {"name": "Communications d'entreprise", "courses": [1226, 1229, 1235]},
+            "1445": {"name": "Entrepreneuriat", "courses": [213, 1199, 1226, 2103, 2173, 1276]},
+            "1450": {"name": "Finances internationales", "courses": [7, 227, 282, 371, 1228, 1261]},
+            "1461": {"name": "Relations de travail", "courses": [4, 23, 274, 1223, 1236, 1247, 1415, 1495, 1514, 1565, 1584, 1660, 1711, 1814, 1833, 2083, 2124, 2139, 2165, 2559]},
+            "1473": {"name": "Imposition", "courses": [1194, 1245, 1256, 2104, 1210]}, // Added: المالية العامة والضرائب
+            "2107": {"name": "Administration des affaires", "courses": [1255, 2105, 2534, 30, 207, 1192, 1206, 1230, 1242, 1264, 209, 210]}, // Added: الإدارة العامة والإستثمار, الإدارة وحقوق الإنسان والديموقراطية
+            "366": {"name": "Loi", "courses": [118, 2106, 2078, 2091, 2132, 2109, 2133, 2100, 2142, 2181, 2089, 2118, 1218, 1243, 28, 15, 1253, 31, 2082, 2112, 2171, 1211, 208, 212, 2094, 1271, 1214]}, // Added: العقود والأعمال, الدراسات العقارية, العقار والتعمير, العقار والتوثيق
 
             // Languages & Literature
-            "119": {"name": "Linguistique", "courses": []},
-            "120": {"name": "Langues et littératures étrangères", "courses": []},
-            "321": {"name": "Anglais", "courses": []},
-            "330": {"name": "Langue française", "courses": []},
-            "339": {"name": "Langue allemande", "courses": []},
-            "446": {"name": "Langue des signes américaine", "courses": []},
-            "448": {"name": "Langue espagnole", "courses": []},
-            "773": {"name": "Traduction", "courses": []},
-            "868": {"name": "En écrivant", "courses": []},
-            "869": {"name": "Rédaction technique", "courses": []},
-            "870": {"name": "Littérature", "courses": []},
-            "874": {"name": "Littérature jeunesse", "courses": []},
 
-            // Psychology & Social Sciences
-            "32": {"name": "Sciences cognitives", "courses": []},
-            "156": {"name": "Psychologie", "courses": []},
-            "158": {"name": "Psychologie Clinique", "courses": []},
-            "159": {"name": "Psychologie du conseil", "courses": []},
-            "160": {"name": "Psychologie industrielle et organisationnelle", "courses": []},
-            "161": {"name": "Psychologie sociale", "courses": []},
-            "164": {"name": "Travail social", "courses": []},
-            "257": {"name": "Sciences du comportement", "courses": []},
-            "1076": {"name": "Psychologie de l'enfant", "courses": []},
-            "1079": {"name": "Psychobiologie", "courses": []},
-            "1081": {"name": "Psychopharmacologie", "courses": []},
-            "1083": {"name": "Psychologie scolaire", "courses": []},
-            "1087": {"name": "Psychologie de la santé", "courses": []},
-            "1088": {"name": "Psychologie familiale", "courses": []},
-            "1089": {"name": "Psychologie médico-légale", "courses": []},
+
+            // Arts & Design
+
+
+            // Communication & Media
+
+
+            // Education
+
+
+
 
             // Healthcare & Medicine
             "112": {"name": "Pré-médecine", "courses": []},
@@ -969,6 +759,51 @@
             "1380": {"name": "Nutrition Clinique", "courses": []},
             "1385": {"name": "Homéopathie", "courses": []},
 
+            // Communication & Media
+            "47": {"name": "Journalisme", "courses": []},
+            "48": {"name": "Études sur la communication de masse et les médias", "courses": []},
+            "49": {"name": "Publicité", "courses": []},
+            "576": {"name": "Communication vocale et rhétorique", "courses": []},
+            "578": {"name": "Journalisme audiovisuel", "courses": []},
+            "580": {"name": "Radio et Télévision", "courses": []}, 
+            "582": {"name": "Relations publiques", "courses": []},
+            "583": {"name": "Communication organisationnelle", "courses": []},
+            "584": {"name": "Communication politique", "courses": []},
+            "585": {"name": "Communications sur la santé", "courses": []},
+            "586": {"name": "Communication sportive", "courses": []},
+            "589": {"name": "Édition", "courses": []},
+
+
+            // Psychology & Social Sciences
+            "32": {"name": "Sciences cognitives", "courses": []},
+            "156": {"name": "Psychologie", "courses": []},
+            "158": {"name": "Psychologie Clinique", "courses": []},
+            "159": {"name": "Psychologie du conseil", "courses": []},
+            "160": {"name": "Psychologie industrielle et organisationnelle", "courses": []},
+            "161": {"name": "Psychologie sociale", "courses": []},
+            "164": {"name": "Travail social", "courses": []},
+            "257": {"name": "Sciences du comportement", "courses": []},
+            "1076": {"name": "Psychologie de l'enfant", "courses": []},
+            "1079": {"name": "Psychobiologie", "courses": []},
+            "1081": {"name": "Psychopharmacologie", "courses": []},
+            "1083": {"name": "Psychologie scolaire", "courses": []},
+            "1087": {"name": "Psychologie de la santé", "courses": []},
+            "1088": {"name": "Psychologie familiale", "courses": []},
+            "1089": {"name": "Psychologie médico-légale", "courses": []},
+
+            "119": {"name": "Linguistique", "courses": []},
+            "120": {"name": "Langues et littératures étrangères", "courses": []},
+            "321": {"name": "Anglais", "courses": []},
+            "330": {"name": "Langue française", "courses": []},
+            "339": {"name": "Langue allemande", "courses": []},
+            "446": {"name": "Langue des signes américaine", "courses": []},
+            "448": {"name": "Langue espagnole", "courses": []},
+            "773": {"name": "Traduction", "courses": []},
+            "868": {"name": "En écrivant", "courses": []},
+            "869": {"name": "Rédaction technique", "courses": []},
+            "870": {"name": "Littérature", "courses": []},
+            "874": {"name": "Littérature jeunesse", "courses": []},
+
             // Regional & Cultural Studies
             "229": {"name": "Études africaines", "courses": []},
             "232": {"name": "Études américaines", "courses": []},
@@ -987,13 +822,36 @@
             "575": {"name": "Études sur les sourds", "courses": []},
             "1003": {"name": "Études internationales", "courses": []},
             "2093": {"name": "Études régionales", "courses": []},
+            "359": {"name": "Islamic Studies", "courses": []},
+
+            // Arts & Design
+            "11": {"name": "Beaux arts", "courses": []},
+            "14": {"name": "Arts visuels et du spectacle", "courses": []},
+            "175": {"name": "Conception graphique", "courses": []},
+            "182": {"name": "Design d'intérieur", "courses": []},
+            "357": {"name": "Architecture d'intérieur", "courses": []},
+            "450": {"name": "Musique", "courses": []},
+            "460": {"name": "Arts du théâtre", "courses": []},
+            "472": {"name": "Théorie et composition musicale", "courses": []},
+            "1209": {"name": "Direction", "courses": []},
+            "1211": {"name": "Conception de costumes", "courses": []},
+            "1216": {"name": "Arts multimédias", "courses": []},
+            "643": {"name": "Programme d'études et enseignement", "courses": []},
+            "644": {"name": "Administration de l'éducation", "courses": []}, 
+            "659": {"name": "Éducation internationale et comparée", "courses": []},
+            "661": {"name": "Enseignement en éducation spécialisée", "courses": []},
+            "668": {"name": "Éducation de la petite enfance", "courses": []},
+            "2110": {"name": "Enseignement", "courses": []},
+            "64": {"name": "Éducation élémentaire", "courses": []},
+            "72": {"name": "Éducation", "courses": []},
+            "1232": {"name": "Entreprise de musique", "courses": []},
+            "640": {"name": "Éducation bilingue", "courses": [
 
             // Other Professional Studies
             "141": {"name": "Reportage judiciaire", "courses": []},
             "200": {"name": "Cosmétologie", "courses": []},
             "204": {"name": "Par intérim", "courses": []},
             "214": {"name": "Stylisme", "courses": []},
-            "366": {"name": "Loi", "courses": []},
             "621": {"name": "Science mortuaire", "courses": []},
             "623": {"name": "Artistique du maquillage", "courses": []},
             "625": {"name": "Esthétique et soins de la peau", "courses": []},

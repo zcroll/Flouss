@@ -24,8 +24,8 @@ class DegreeController extends Controller
             ->firstOrFail();
 
         // Check if user is authenticated and if they favorited this degree
-        $isFavorited = auth()->check() ? 
-            $degree->favorites()->where('user_id', auth()->id())->exists() : 
+        $isFavorited = auth()->check() ?
+            $degree->favorites()->where('user_id', auth()->id())->exists() :
             false;
 
         ds($isFavorited);
@@ -62,12 +62,12 @@ class DegreeController extends Controller
     {
         $locale = app()->getLocale();
 
-        $degree = Degree::with('degreeSkills')
+        $degree = Degree::with('degreeSkills_v3')
             ->where('slug', $slug)
             ->firstOrFail();
 
-        $isFavorited = auth()->check() ? 
-            $degree->favorites()->where('user_id', auth()->id())->exists() : 
+        $isFavorited = auth()->check() ?
+            $degree->favorites()->where('user_id', auth()->id())->exists() :
             false;
 
         return Inertia::render('degree/Skills', [
@@ -94,8 +94,8 @@ class DegreeController extends Controller
             ->where('slug', $slug)
             ->firstOrFail();
 
-        $isFavorited = auth()->check() ? 
-            $degree->favorites()->where('user_id', auth()->id())->exists() : 
+        $isFavorited = auth()->check() ?
+            $degree->favorites()->where('user_id', auth()->id())->exists() :
             false;
 
         ds($isFavorited);
@@ -123,13 +123,12 @@ class DegreeController extends Controller
 
         $degree = Degree::where('slug', $slug)->firstOrFail();
 
-        $isFavorited = auth()->check() ? 
-            $degree->favorites()->where('user_id', auth()->id())->exists() : 
+        $isFavorited = auth()->check() ?
+            $degree->favorites()->where('user_id', auth()->id())->exists() :
             false;
 
         $formations = Formation::whereHas('degrees', function($query) use ($degree) {
-            $query->where('degrees.id', $degree->id)
-                  ->where('course_degree_similarity.similarity_score', '>', 0.8);
+            $query->where('degrees.id', $degree->id);
         })->get();
 
         return Inertia::render('degree/HowToObtain', [
