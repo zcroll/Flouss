@@ -269,20 +269,37 @@ class MainTestController extends Controller
     private function matchJobs($interest_scores)
     {
         $scriptPath = app_path('/python/test.py');
-        $process = new Process(['python3', $scriptPath, json_encode($interest_scores)]);
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            Log::error('Python script execution failed', ['error' => $process->getErrorOutput()]);
-            throw new ProcessFailedException($process);
-        }
-
-        $output = $process->getOutput();
+        $pythonPath = env('PYTHON_PATH', 'python3');
+        
+        $process = new Process([$pythonPath, $scriptPath, json_encode($interest_scores)]);
+        $process->setTimeout(60); // Increase timeout if needed
+        
         try {
+            $process->run();
+            
+            if (!$process->isSuccessful()) {
+                Log::error('Python script execution failed', [
+                    'error' => $process->getErrorOutput(),
+                    'command' => $process->getCommandLine(),
+                    'working_dir' => $process->getWorkingDirectory()
+                ]);
+                throw new ProcessFailedException($process);
+            }
+
+            $output = $process->getOutput();
+            Log::info('Python script output', ['output' => $output]); // Add logging
+            
             return json_decode($output, true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
-            Log::error('Failed to decode JSON from Python script', ['error' => $e->getMessage(), 'output' => $output]);
-            throw new \RuntimeException('Failed to process job matching results');
+            
+        } catch (\Exception $e) {
+            Log::error('Job matching failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return [
+                'error' => 'Failed to process job matching',
+                'details' => $e->getMessage()
+            ];
         }
     }
 
