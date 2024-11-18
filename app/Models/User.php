@@ -32,6 +32,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'google_id',
     ];
 
     /**
@@ -86,8 +87,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Favorite::class);
     }
-    public function hasResult(): bool
+
+    public function hasResult()
     {
-        return $this->results()->exists();
+        return false; // Implement your actual logic here
     }
 }

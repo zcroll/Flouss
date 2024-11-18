@@ -269,20 +269,27 @@ class MainTestController extends Controller
     private function matchJobs($interest_scores)
     {
         $scriptPath = app_path('/python/test.py');
-        $process = new Process(['python3', $scriptPath, json_encode($interest_scores)]);
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            Log::error('Python script execution failed', ['error' => $process->getErrorOutput()]);
-            throw new ProcessFailedException($process);
-        }
-
-        $output = $process->getOutput();
+        
         try {
-            return json_decode($output, true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
-            Log::error('Failed to decode JSON from Python script', ['error' => $e->getMessage(), 'output' => $output]);
-            throw new \RuntimeException('Failed to process job matching results');
+            $process = new Process([
+                '/home/u723210868/python3.11',  // Updated Python path
+                $scriptPath,
+                json_encode($interest_scores)
+            ]);
+            
+            $process->setTimeout(300);
+            $process->run();
+
+            if (!$process->isSuccessful()) {
+                Log::error('Python script failed', ['error' => $process->getErrorOutput()]);
+                throw new ProcessFailedException($process);
+            }
+
+            return json_decode($process->getOutput(), true);
+            
+        } catch (\Exception $e) {
+            Log::error('Job matching failed', ['error' => $e->getMessage()]);
+            return ['error' => 'Failed to process job matching'];
         }
     }
 

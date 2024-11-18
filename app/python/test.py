@@ -1,4 +1,4 @@
-import mariadb
+import mysql.connector
 from typing import Dict, List, Tuple
 from dataclasses import dataclass
 import itertools
@@ -26,7 +26,11 @@ class JobMatch:
 class JobMatcher:
     def __init__(self, db_config: Dict, interest_scores: Dict[str, int]):
         """Initialize database connection and prepare interest scores"""
-        self.conn = mariadb.connect(**db_config)
+        # Add charset and collation settings to db_config
+        db_config['charset'] = 'utf8mb4'
+        db_config['collation'] = 'utf8mb4_unicode_ci'
+        
+        self.conn = mysql.connector.connect(**db_config)
         self.cursor = self.conn.cursor(dictionary=True)
         self.interest_scores = interest_scores
 
@@ -38,8 +42,8 @@ class JobMatcher:
         FROM job_requirement jr1
         JOIN job_requirement jr2 ON jr1.job_id = jr2.job_id
         JOIN job_infos ji ON ji.id = jr1.job_id
-        WHERE jr1.scale_name = ? AND jr2.scale_name = ?
-        LIMIT ?
+        WHERE jr1.scale_name = %s AND jr2.scale_name = %s
+        LIMIT %s
         """
         self.cursor.execute(query, (field1, field2, limit))
         return self.cursor.fetchall()

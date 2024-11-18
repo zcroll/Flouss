@@ -1,4 +1,14 @@
 <template>
+    <link
+        rel="stylesheet"
+        href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css"
+    />
+
+    <link
+        rel="stylesheet"
+        href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/user-results.3aa4bb301b9f.css"
+    />
+
     <AppLayout title="Results">
         <div class="DashboardPage">
             <section class="section">
@@ -109,7 +119,7 @@
                     </div>
                     <div class="DashboardPage__careers__buttons">
                         <button
-                            v-if="!showAllJobs"
+                            v-if="!showAllJobs && jobs && jobs.length > displayedJobs.length"
                             class="Button DashboardPage__button DashboardPage__button--careers"
                             data-on-page-nav="false"
                             data-on-page-nav-offset="0"
@@ -223,6 +233,9 @@ export default defineComponent({
     },
     computed: {
         displayedJobs() {
+            if (!this.jobs) {
+                return [];
+            }
             if (this.showAllJobs) {
                 return this.jobs;
             }
@@ -254,8 +267,3 @@ export default defineComponent({
     },
 });
 </script>
-
-<style scoped>
-@import 'https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css';
-@import 'https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/user-results.3aa4bb301b9f.css';
-</style>
