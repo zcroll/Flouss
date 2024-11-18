@@ -63,52 +63,52 @@ class JobMatcherController extends Controller
          ds($jobs);
 
 
-//
-//        $scriptPath = app_path('/python/test.py');
-//
-//        // Pass interest_scores to the Python script
-//        $process = new Process([
-//            'python3',
-//            $scriptPath,
-//            json_encode($interest_scores),
-//        ]);
-//
-//        try {
-//            $process->run();
-//
-//            if (!$process->isSuccessful()) {
-//                Log::error('Python script execution failed', [
-//                    'error' => $process->getErrorOutput(),
-//                    'command' => $process->getCommandLine(),
-//                    'working_directory' => $process->getWorkingDirectory(),
-//                ]);
-//                throw new ProcessFailedException($process);
-//            }
-//
-//            $output = $process->getOutput();
-//            Log::info('Python script output', ['output' => $output]);
-//
-//            $decodedOutput = json_decode($output, true);
-//
-//            if (json_last_error() !== JSON_ERROR_NONE) {
-//                throw new \Exception('Failed to decode Python script output');
-//            }
-//
-//            return response()->json([
-//                'status' => 'success',
-//                'data' => $decodedOutput
-//            ]);
-//
-//        } catch (\Exception $e) {
-//            Log::error('Job matching failed', [
-//                'error' => $e->getMessage(),
-//                'trace' => $e->getTraceAsString()
-//            ]);
-//
-//            return response()->json([
-//                'status' => 'error',
-//                'message' => 'Failed to process job matching'
-//            ], 500);
-//        }
+
+       $scriptPath = app_path('/python/test.py');
+
+       // Pass interest_scores to the Python script
+       $process = new Process([
+           'python3',
+           $scriptPath,
+           json_encode($interest_scores),
+       ]);
+
+       try {
+           $process->run();
+
+           if (!$process->isSuccessful()) {
+               Log::error('Python script execution failed', [
+                   'error' => $process->getErrorOutput(),
+                   'command' => $process->getCommandLine(),
+                   'working_directory' => $process->getWorkingDirectory(),
+               ]);
+               throw new ProcessFailedException($process);
+           }
+
+           $output = $process->getOutput();
+           Log::info('Python script output', ['output' => $output]);
+
+           $decodedOutput = json_decode($output, true);
+
+           if (json_last_error() !== JSON_ERROR_NONE) {
+               throw new \Exception('Failed to decode Python script output');
+           }
+
+           return response()->json([
+               'status' => 'success',
+               'data' => $decodedOutput
+           ]);
+
+       } catch (\Exception $e) {
+           Log::error('Job matching failed', [
+               'error' => $e->getMessage(),
+               'trace' => $e->getTraceAsString()
+           ]);
+
+           return response()->json([
+               'status' => 'error',
+               'message' => 'Failed to process job matching'
+           ], 500);
+       }
     }
 }

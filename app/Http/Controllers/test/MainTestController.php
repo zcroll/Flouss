@@ -272,7 +272,7 @@ class MainTestController extends Controller
         
         try {
             $process = new Process([
-                '/home/u723210868/python3.11',  // Updated Python path
+                'python',  // Updated Python path
                 $scriptPath,
                 json_encode($interest_scores)
             ]);
