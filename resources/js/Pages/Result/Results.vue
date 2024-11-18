@@ -1,14 +1,4 @@
 <template>
-    <link
-        rel="stylesheet"
-        href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css"
-    />
-
-    <link
-        rel="stylesheet"
-        href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/user-results.3aa4bb301b9f.css"
-    />
-
     <AppLayout title="Results">
         <div class="DashboardPage">
             <section class="section">
@@ -142,7 +132,7 @@
                                     ></path></svg></span
                             >{{ __("results.See_more_matches") }}
                         </button>
-                        
+
                     </div>
                 </div>
             </section>
@@ -207,7 +197,7 @@ export default defineComponent({
     },
     data() {
         return {
-            isCollapsed: {}, 
+            isCollapsed: {},
             selectedJob: null,
             showAllJobs: false,
             cards: [
