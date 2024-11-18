@@ -1,65 +1,52 @@
-<style src="vue-multiselect/dist/vue-multiselect.css">
-
-</style>
-
-
 <template>
   <AppLayout
-
     name="Jobs"
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div class="flex flex-col lg:flex-row gap-6">
         <!-- Filter sidebar -->
         <div class="w-full lg:w-2/4">
-          <div class=" border-[4px] rounded-3xl p-5 shadow-sm sticky-filter">
-            <div class="mb-3">
-              <label for="search" class="block text-sm font-medium text-gray-000 mb-1">{{ __('jobs.search') }}</label>
+          <div class="bg-white border-2 border-[#db492b]/20 rounded-2xl p-6 shadow-lg shadow-[#db492b]/5 sticky-filter">
+            <div class="mb-4">
+              <label for="search" class="block text-sm font-semibold text-gray-700 mb-1">{{ __('jobs.search') }}</label>
               <input
                 id="search"
                 v-model="searchQuery"
                 type="text"
                 :placeholder="__('jobs.search_jobs')"
-                class="w-full px-3 py-1.5 text-gray-900 text-sm bg-gray-50 rounded-md shadow-sm focus:ring-[#fb6303] focus:border-[#fb6303]"
+                class="w-full px-4 py-2.5 text-gray-900 placeholder-gray-500 bg-white border border-[#db492b]/20 rounded-xl shadow-sm focus:ring-2 focus:ring-[#db492b]/20 focus:border-[#db492b] transition duration-200"
                 @input="debouncedSearch"
               />
             </div>
 
-            <div class="mb-3">
-              <label class="block text-sm font-medium text-gray-900 mb-1">{{ __('jobs.education_levels') }}</label>
-              <VueMultiselect
+            <div class="mb-4">
+              <label class="block text-sm font-semibold text-gray-700 mb-1">{{ __('jobs.education_levels') }}</label>
+              <CustomMultiSelect
                 v-model="selectedEducationLevels"
                 :options="educationLevelOptions"
-                :multiple="true"
-                :close-on-select="false"
                 :placeholder="__('jobs.select_education_levels')"
-                label="label"
-                track-by="value"
-                class="multiselect"
               />
             </div>
 
-            <div class="mb-3">
-              <label class="block text-sm font-medium text-gray-900 mb-1">{{ __('jobs.sort_by') }}</label>
+            <!-- <div class="mb-4">
+              <label class="block text-sm font-semibold text-gray-700 mb-1">{{ __('jobs.sort_by') }}</label>
               <select
                 v-model="selectedSort"
-                class="w-full px-3 py-1.5 text-gray-400 text-sm border bg-gray-50 rounded-md shadow-sm ring-[#fb6303] border-[#fb6303]"
+                class="w-full px-4 py-2.5 text-gray-900 bg-white border border-[#db492b]/20 rounded-xl shadow-sm focus:ring-2 focus:ring-[#db492b]/20 focus:border-[#db492b] transition duration-200"
                 @change="applyFilters"
               >
                 <option value="">{{ __('jobs.select_sorting_option') }}</option>
                 <option value="salary_desc">{{ __('jobs.highest_salary') }}</option>
                 <option value="satisfaction_desc">{{ __('jobs.highest_satisfaction') }}</option>
               </select>
-            </div>
+            </div> -->
 
             <button
               @click="resetFilters"
-              class="mt-3 w-full px-4 py-2 bg-[#db492b] font-black text-gray-100 rounded-md hover:bg-gray-800 hover:text-white transition-colors duration-300"
+              class="mt-4 w-full px-6 py-3 bg-[#db492b] text-white font-semibold rounded-xl hover:bg-[#db492b]/90 focus:ring-2 focus:ring-[#db492b]/50 focus:ring-offset-2 transition duration-200"
             >
               {{ __('jobs.reset_filters') }}
             </button>
-
-
           </div>
         </div>
 
@@ -154,7 +141,7 @@
 import { ref, watch, onMounted, onUnmounted } from 'vue';
 import { router, Link, usePage } from '@inertiajs/vue3';
 import AppLayout from "@/Layouts/AppLayout.vue";
-import VueMultiselect from 'vue-multiselect';
+import CustomMultiSelect from '@/Components/CustomMultiSelect.vue';
 import debounce from 'lodash/debounce';
 // import BackToTop from '@/Components/BackToTop.vue';
 import { WhenVisible } from '@inertiajs/vue3';
@@ -166,7 +153,10 @@ const props = defineProps({
 });
 
 const searchQuery = ref(props.filters.q || '');
-const selectedEducationLevels = ref(props.filters.education ? props.filters.education.map(level => educationLevelOptions.find(option => option.value === level)) : []);
+const selectedEducationLevels = ref(props.filters.education ? props.filters.education.map(level => ({
+  value: level,
+  label: level
+})) : []);
 const selectedSort = ref(props.filters.sort || '');
 
 const educationLevelOptions = [

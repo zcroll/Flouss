@@ -26,4 +26,13 @@ return [
 'liked_formations' => 'Formations Aimées',
 'orientation_ai_assistant' => 'Votre Assistant IA d\'Orientation',
 'best_decision' => 'Prenez la Meilleure Décision Pour un Avenir Radieux.',
+'your_assessment_results' => 'Vos résultats d\'évaluation',
+'assessment_summary' => 'Voici un résumé des résultats de votre évaluation de carrière.',
+'view_full_results' => 'Voir les résultats complets',
+'your_personality_type' => 'Votre type de personnalité',
+'trait' => 'Trait',
+'top_career_matches' => 'Meilleures correspondances de carrière',
+'take_assessment' => 'Passez l\'évaluation de carrière',
+'participate_assessment' => 'Participez à notre évaluation de carrière pour découvrir votre cheminement de carrière idéal.',
+'begin_assessment' => 'Commencer l\'évaluation',
 ];

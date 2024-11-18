@@ -26,4 +26,13 @@ return [
 'liked_formations' => 'Liked Formations',
 'orientation_ai_assistant' => 'Your Orientation AI Assistant',
 'best_decision' => 'Make the Best Decision For a Bright Future.',
+'your_assessment_results' => 'Your Assessment Results',
+'assessment_summary' => 'Here is a summary of your career assessment results.',
+'view_full_results' => 'View Full Results',
+'your_personality_type' => 'Your Personality Type',
+'trait' => 'Trait',
+'top_career_matches' => 'Top Career Matches',
+'take_assessment' => 'Take the Career Assessment',
+'participate_assessment' => 'Participate in our career assessment to discover your ideal career path.',
+'begin_assessment' => 'Begin Assessment',
 ];

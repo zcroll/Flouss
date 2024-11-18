@@ -68,11 +68,6 @@ class ResultController extends Controller
 
 
 
-                
-
-
-
-
 
 
         if ($firstScore) {

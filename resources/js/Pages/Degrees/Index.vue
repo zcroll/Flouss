@@ -1,5 +1,3 @@
-<style src="vue-multiselect/dist/vue-multiselect.css"></style>
-
 <template>
     <AppLayout name="Degrees">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -7,12 +5,12 @@
                 <!-- Filter sidebar -->
                 <div class="w-full lg:w-2/4">
                     <div
-                        class="border-[4px] rounded-3xl p-5 shadow-sm sticky-filter"
+                        class="bg-white border-2 border-[#db492b]/20 rounded-2xl p-6 shadow-lg shadow-[#db492b]/5 sticky-filter"
                     >
-                        <div class="mb-3">
+                        <div class="mb-4">
                             <label
                                 for="search"
-                                class="block text-sm font-medium text-gray-900 mb-1"
+                                class="block text-sm font-semibold text-gray-700 mb-1"
                                 >{{ __("degrees.search") }}</label
                             >
                             <input
@@ -20,41 +18,34 @@
                                 v-model="searchQuery"
                                 type="text"
                                 :placeholder="__('degrees.search_degrees')"
-                                class="w-full px-3 py-1.5 text-gray-400 text-sm border bg-gray-50 rounded-md shadow-sm focus:ring-[#db492b] focus:border-[#db492b]"
+                                class="w-full px-4 py-2.5 text-gray-900 placeholder-gray-500 bg-white border border-[#db492b]/20 rounded-xl shadow-sm focus:ring-2 focus:ring-[#db492b]/20 focus:border-[#db492b] transition duration-200"
                                 @input="debouncedSearch"
                             />
                         </div>
 
-                        <div class="mb-3">
+                        <!-- <div class="mb-4">
                             <label
-                                class="block text-sm font-medium text-gray-900 mb-1"
+                                class="block text-sm font-semibold text-gray-700 mb-1"
                                 >{{ __("degrees.degree_levels") }}</label
                             >
-                            <VueMultiselect
+                            <CustomMultiSelect
                                 v-model="selectedDegreeLevels"
                                 :options="degreeLevelOptions"
-                                :multiple="true"
-                                :close-on-select="false"
-                                :placeholder="
-                                    __('degrees.select_degree_levels')
-                                "
-                                label="label"
-                                track-by="value"
-                                class="multiselect"
+                                :placeholder="__('degrees.select_degree_levels')"
                             />
-                        </div>
+                        </div> -->
 
-                        <div class="mb-3">
+                       <div class="mb-4">
                             <label
-                                class="block text-sm font-medium text-gray-000 mb-1"
+                                class="block text-sm font-semibold text-gray-700 mb-1"
                                 >{{ __("degrees.sort_by") }}</label
                             >
                             <select
                                 v-model="selectedSort"
-                                class="w-full px-3 py-1.5 text-gray-400 text-sm border bg-gray-50 rounded-md shadow-sm border-[#db492b]"
+                                class="w-full px-4 py-2.5 text-gray-900 bg-white border border-[#db492b]/20 rounded-xl shadow-sm focus:ring-2 focus:ring-[#db492b]/20 focus:border-[#db492b] transition duration-200"
                                 @change="applyFilters"
                             >
-                                <option value="">
+                                <option selected value="">
                                     {{ __("degrees.select_sorting_option") }}
                                 </option>
                                 <option value="salary_desc">
@@ -68,7 +59,7 @@
 
                         <button
                             @click="resetFilters"
-                            class="mt-3 w-full px-4 py-2 bg-[#db492b] font-black text-[#e4e2dc] rounded-md hover:bg-gray-50 hover:text-white transition-colors duration-300"
+                            class="mt-4 w-full px-6 py-3 bg-[#db492b] text-white font-semibold rounded-xl hover:bg-[#db492b]/90 focus:ring-2 focus:ring-[#db492b]/50 focus:ring-offset-2 transition duration-200"
                         >
                             {{ __("degrees.reset_filters") }}
                         </button>
@@ -169,12 +160,12 @@
                                 </article>
                             </div>
                             <div v-else class="text-center py-8">
-                                <p class="text-lg text-gray-600 mb-4">
+                                <p class="text-xl font-bold text-gray-900 mb-4 tracking-tight font-['aktiv-grotesk','Helvetica Neue',Helvetica,Arial,sans-serif]">
                                     {{ __("degrees.no_degrees_found") }}
                                 </p>
                                 <button
                                     @click="resetFilters"
-                                    class="px-4 py-2 bg-[#4db554] text-white rounded-md hover:bg-gray-700 transition-colors duration-300"
+                                    class="px-6 py-2.5 bg-black text-white font-black rounded-xl hover:bg-gray-800 transition-all duration-300 shadow-sm hover:shadow-md text-sm uppercase"
                                 >
                                     {{ __("degrees.reset_filters") }}
                                 </button>
@@ -212,9 +203,8 @@
 import { ref, watch, onMounted, onUnmounted } from "vue";
 import { router, Link } from "@inertiajs/vue3";
 import AppLayout from "@/Layouts/AppLayout.vue";
-import VueMultiselect from "vue-multiselect";
+import CustomMultiSelect from "@/Components/CustomMultiSelect.vue";
 import debounce from "lodash/debounce";
-import Pagination from "@/Components/Pagination.vue";
 import { usePage } from "@inertiajs/vue3";
 import { WhenVisible } from "@inertiajs/vue3";
 import BackToTop from "@/Components/BackToTop.vue";
@@ -373,6 +363,5 @@ const showBackToTop = ref(false);
 </script>
 
 <style scoped>
-
 @import '/public/css/listing_page.css';
 </style>

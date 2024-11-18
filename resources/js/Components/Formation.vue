@@ -1,38 +1,47 @@
 <template>
-  <ul role="list" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-1">
-    <li v-for="formation in formations" :key="formation.id" class="col-span-1 divide-y divide-gray-200 rounded-lg bg-gray-100 shadow">
-      <div class="flex w-full items-center justify-between space-x-6 p-6">
-        <div class="flex-1">
-          <div class="flex items-center space-x-3">
-            <h3 class="text-lg sm:text-xl font-medium text-gray-900">{{ formation.nom }}</h3>
-            <span class="inline-flex flex-shrink-0 items-center rounded-full bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-              Recommended
+  <ul role="list" class="grid grid-cols-1 gap-6">
+    <li v-for="formation in formations" :key="formation.id" 
+        class="col-span-1 bg-white rounded-2xl shadow-lg shadow-[#db492b]/5 border-2 border-[#db492b]/20 transition duration-300 hover:shadow-xl hover:shadow-[#db492b]/10">
+      <div class="p-6">
+        <div class="flex flex-col space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xl font-bold text-gray-900 tracking-tight">{{ formation.nom }}</h3>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-[#db492b]/10 text-[#db492b]">
+              {{ formation.niveau }}
             </span>
           </div>
-          <p class="mt-1 text-md sm:text-lg text-gray-500">{{ formation.type_etablissement }}</p>
-          <p class="mt-1 text-sm sm:text-md text-gray-500">{{ formation.diploma }}</p>
-        </div>
-      </div>
-      <div>
-        <div class="-mt-px flex divide-x divide-gray-200">
-          <div class="flex w-0 flex-1">
-            <a :href="`mailto:${formation.email}`" class="relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
-              {{ formation.niveau }}
-            </a>
-          </div>
-          <div class="-ml-px flex w-0 flex-1">
-            <a :href="`tel:${formation.telephone}`" class="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
+
+          <div class="space-y-2">
+            <p class="text-gray-600 flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#db492b]" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
+              </svg>
+              {{ formation.type_etablissement }}
+            </p>
+            <p class="text-gray-600 flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#db492b]" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+              </svg>
+              {{ formation.diploma }}
+            </p>
+            <p class="text-gray-600 flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#db492b]" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+              </svg>
               {{ formation.ville }}
-            </a>
+            </p>
           </div>
-          <div class="-ml-px flex w-0 flex-1">
-            <a :href="`tel:${formation.telephone}`" class="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
-              <EnvelopeIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+
+          <div class="flex gap-4 pt-4">
+            <a :href="`mailto:${formation.email}`" 
+               class="flex-1 inline-flex justify-center items-center px-4 py-2 border border-[#db492b] text-sm font-medium rounded-xl text-[#db492b] bg-white hover:bg-[#db492b] hover:text-white transition-colors duration-300">
+              <EnvelopeIcon class="h-5 w-5 mr-2" />
+              Contact
             </a>
-          </div>
-          <div class="-ml-px flex w-0 flex-1">
-            <a :href="`tel:${formation.telephone}`" class="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
-              <PhoneIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+            <a :href="`tel:${formation.telephone}`"
+               class="flex-1 inline-flex justify-center items-center px-4 py-2 border border-[#db492b] text-sm font-medium rounded-xl text-white bg-[#db492b] hover:bg-[#db492b]/90 transition-colors duration-300">
+              <PhoneIcon class="h-5 w-5 mr-2" />
+              Call
             </a>
           </div>
         </div>
@@ -51,7 +60,3 @@ const props = defineProps({
   },
 });
 </script>
-
-<style scoped>
-/* Add any necessary styles */
-</style>
