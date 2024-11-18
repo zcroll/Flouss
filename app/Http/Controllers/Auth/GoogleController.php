@@ -14,12 +14,24 @@ use Inertia\Inertia;
 
 class GoogleController extends Controller
 {
+    protected function getRedirectUrl()
+    {
+        $appUrl = config('app.url');
+        $isProduction = $appUrl === 'https://gennz.site';
+        
+        return $isProduction 
+            ? 'https://gennz.site/auth/google/callback'
+            : 'http://localhost:8000/auth/google/callback';
+    }
+
     public function redirectToGoogle()
     {
         try {
             return Socialite::driver('google')
+                ->redirectUrl($this->getRedirectUrl())
                 ->redirect();
         } catch (Exception $e) {
+            Log::error('Google OAuth error: ' . $e->getMessage());
             return to_route('login')->with('error', 'Could not connect to Google. Please try again.');
         }
     }
@@ -27,7 +39,9 @@ class GoogleController extends Controller
     public function handleGoogleCallback(Request $request)
     {
         try {
-            $googleUser = Socialite::driver('google')->user();
+            $googleUser = Socialite::driver('google')
+                ->redirectUrl($this->getRedirectUrl())
+                ->user();
             
             $user = User::updateOrCreate(
                 ['email' => $googleUser->email],
