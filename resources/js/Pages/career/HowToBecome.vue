@@ -67,20 +67,7 @@
             </div>
           </section>
 
-          <section id="step-3" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0">
-
-            <h2 class="custom-heading mb-8" itemProp="name">Certifications</h2>
-            <div v-if="howToBecome.certifications && howToBecome.certifications.length > 0" class="space-y-4 mb-8">
-              <ul class="list-custom">
-                <li v-for="(certification, index) in howToBecome.certifications" :key="index" class="text-lg py-1 text-gray-700 leading-relaxed">
-                  {{ certification.title }}
-                </li>
-              </ul>
-            </div>
-            <div v-else class="space-y-4 mb-8">
-              <p class="text-lg text-gray-700">No certifications available for this occupation.</p>
-            </div>
-          </section>
+     
 
           <section v-if="howToBecome.associations && howToBecome.associations.length > 0" id="step-4" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0">
             <span class="Tag">Step 4</span>

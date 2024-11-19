@@ -15,14 +15,19 @@ use Inertia\Response;
 
 class CareerController extends Controller
 {
+    protected function getLocalizedColumn($model, $baseColumn)
+    {
+        $locale = app()->getLocale();
+        $localizedColumn = $locale === 'fr' ? $baseColumn . '_fr' : $baseColumn;
+        
+        return $model->$localizedColumn ?? $model->$baseColumn;
+    }
+
     public function index(string $job): Response
     {
         $occupation = JobInfo::with(['jobInfoDetail', 'jobInfoDuties', 'jobInfoTypes', 'workplaces'])
             ->where('slug', $job)
             ->firstOrFail();
-
-
-            
 
         $isFavorited = auth()->check() ? 
             $occupation->favorites()->where('user_id', auth()->id())->exists() : 
@@ -32,27 +37,25 @@ class CareerController extends Controller
             'occupation' => new JobInfoResource($occupation),
             'jobInfoDetail' => JobInfoDetailResource::collection($occupation->jobInfoDetail),
             'jobInfoDuties' => $occupation->jobInfoDuties->map(function ($duty) {
-                $locale = app()->getLocale();
                 return [
-                    'duty_description' => $locale === 'fr' ? $duty->duty_description_fr : $duty->duty_description,
+                    'duty_description' => $this->getLocalizedColumn($duty, 'duty_description'),
                 ];
             }),
             'jobInfoTypes' => $occupation->jobInfoTypes->unique('type_name')->map(function ($type) {
-                $locale = app()->getLocale();
                 return [
-                    'type_name' => $locale === 'fr' ? $type->type_name_fr : $type->type_name,
-                    'type_description' => $locale === 'fr' ? $type->type_description_fr : $type->type_description,
+                    'type_name' => $this->getLocalizedColumn($type, 'type_name'),
+                    'type_description' => $this->getLocalizedColumn($type, 'type_description'),
                 ];
             }),
             'workplaces' => $occupation->workplaces->map(function ($workplace) {
-                $locale = app()->getLocale();
                 return [
-                    'content' => $locale === 'fr' ? $workplace->content_fr : $workplace->content,
+                    'content' => $this->getLocalizedColumn($workplace, 'content'),
                 ];
             }),
             'is_favorited' => $isFavorited,
         ]);
     }
+
     public function workEnvironments(string $job): Response
     {
         $occupation = JobInfo::with('workEnvironments')
@@ -72,8 +75,6 @@ class CareerController extends Controller
 
     public function personality(string $job): Response
     {
-        $locale = app()->getLocale();
-
         $occupation = JobInfo::where('slug', $job)->firstOrFail();
 
         $isFavorited = auth()->check() ? 
@@ -95,7 +96,7 @@ class CareerController extends Controller
         return Inertia::render('career/personality', [
             'occupation' => [
                 'id' => $occupation->id,
-                'name' => $locale === 'fr' ? $occupation->name_fr : $occupation->name,
+                'name' => $this->getLocalizedColumn($occupation, 'name'),
                 'slug' => $occupation->slug,
                 'image' => $occupation->image,
                 'is_favorited' => $isFavorited,
@@ -107,8 +108,6 @@ class CareerController extends Controller
 
     public function howToBecome(string $job): Response
     {
-        $locale = app()->getLocale();
-
         $occupation = JobInfo::with([
             'jobSteps',
             'jobCertifications',
@@ -126,10 +125,10 @@ class CareerController extends Controller
             ->map(function ($jobDegree) {
                 $degree = $jobDegree->degree;
                 return [
-                    'title' => $degree->name,
+                    'title' => $this->getLocalizedColumn($degree, 'name'),
                     'image' => $degree->image,
                     'slug' => $degree->slug,
-                    'name' => $degree->name,
+                    'name' => $this->getLocalizedColumn($degree, 'name'),
                 ];
             });
 
@@ -138,13 +137,12 @@ class CareerController extends Controller
         return Inertia::render('career/HowToBecome', [
             'occupation' => [
                 'id' => $occupation->id,
-                'name' => $locale === 'fr' ? $occupation->name_fr : $occupation->name,
+                'name' => $this->getLocalizedColumn($occupation, 'name'),
                 'slug' => $occupation->slug,
                 'image' => $occupation->image,
                 'is_favorited' => $isFavorited,
             ],
             'jobSteps' => $occupation->jobSteps,
-            'jobCertifications' => $occupation->jobCertifications,
             'jobAssociations' => $occupation->jobAssociations,
             'jobDegrees' => $degrees,
             'howToBecome' => $occupation->howToBecome,

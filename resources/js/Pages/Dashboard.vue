@@ -193,21 +193,8 @@
                   <div class="w-3 h-3 bg-amber-500 rounded-full animate-pulse"></div>
                   <h2 class="text-xl font-semibold text-stone-100">AI Career Guide</h2>
                 </div>
-                <button @click="showQuestions = !showQuestions"
-                  class="p-2 hover:bg-stone-800 rounded-lg transition-colors">
-                  <svg class="w-6 h-6 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </button>
-              </div>
-              <!-- Predefined Questions Dropdown -->
-              <div v-if="showQuestions" class="mt-4 bg-stone-900 rounded-xl p-4 space-y-2 max-h-60 overflow-y-auto">
-                <button v-for="category in predefinedQuestions || []" :key="category.category"
-                  class="w-full text-left p-2 text-stone-300 hover:bg-stone-800 rounded-lg transition-colors">
-                  {{ category.category }}
-                </button>
-              </div>
+                </div>
+            
             </div>
             <div class="flex-1 overflow-y-auto p-6 custom-scrollbar" ref="chatContainer">
               <div class="space-y-6">
@@ -285,10 +272,18 @@
                     </div>
 
                     <!-- Predefined Questions Dropdown -->
-                    <div v-if="showQuestions && !isLoading"
+                    <div v-if="showQuestions && !isLoading" @click.outside="showQuestions = false"
                       class="absolute bottom-full left-0 right-0 mb-2 bg-stone-900/95 backdrop-blur-sm rounded-xl border border-stone-700 shadow-lg max-h-[400px] overflow-y-auto transform transition-all duration-200 ease-out z-50"
                       :class="{ 'opacity-0 scale-95': !showQuestions, 'opacity-100 scale-100': showQuestions }">
                       <div class="p-4">
+                        <div class="flex justify-between items-center mb-4">
+                          <h3 class="text-stone-300 font-medium">Suggested Questions</h3>
+                          <button @click="showQuestions = false" class="p-1 hover:bg-stone-800 rounded-lg transition-colors">
+                            <svg class="w-5 h-5 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
+                        </div>
                         <div v-for="category in predefinedQuestions || []" :key="category.category"
                           class="mb-6 last:mb-0">
                           <div class="flex items-center space-x-2 mb-3">
@@ -344,7 +339,6 @@
 <script setup>
 import { Link, router } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
-import { useForm } from '@inertiajs/vue3';
 import { ref, nextTick, onMounted, onUnmounted, watch, computed } from 'vue';
 import axios from 'axios';
 

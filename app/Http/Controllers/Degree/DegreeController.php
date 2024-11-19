@@ -11,29 +11,28 @@ use Inertia\Response;
 
 class DegreeController extends Controller
 {
-    public function index(string $slug): Response
+    protected function getLocalizedColumn($model, $baseColumn)
     {
         $locale = app()->getLocale();
-        $mainDescriptionColumn = $locale === 'fr' ? 'main_description_fr' : 'main_description';
-        $secondaryDescriptionColumn = $locale === 'fr' ? 'secondary_description_fr' : 'secondary_description';
-        $jobTitleColumn = $locale === 'fr' ? 'job_title_fr' : 'job_title';
-        $jobDescriptionColumn = $locale === 'fr' ? 'job_description_fr' : 'job_description';
+        $localizedColumn = $locale === 'fr' ? $baseColumn . '_fr' : $baseColumn;
+        
+        return $model->$localizedColumn ?? $model->$baseColumn;
+    }
 
+    public function index(string $slug): Response
+    {
         $degree = Degree::with(['degreeDescription', 'degreeSkills', 'degreeJobs'])
             ->where('slug', $slug)
             ->firstOrFail();
 
-        // Check if user is authenticated and if they favorited this degree
         $isFavorited = auth()->check() ?
             $degree->favorites()->where('user_id', auth()->id())->exists() :
             false;
 
-        ds($isFavorited);
-
         return Inertia::render('degree/Overview', [
             'degree' => [
                 'id' => $degree->id,
-                'name' => $degree->name,
+                'name' => $this->getLocalizedColumn($degree, 'name'),
                 'slug' => $degree->slug,
                 'image' => $degree->image,
                 'degree_level' => $degree->degree_level,
@@ -41,18 +40,18 @@ class DegreeController extends Controller
                 'is_favorited' => $isFavorited,
             ],
             'degreeDescription' => [
-                'main_description' => $degree->degreeDescription ? $degree->degreeDescription->$mainDescriptionColumn : null,
-                'secondary_description' => $degree->degreeDescription ? $degree->degreeDescription->$secondaryDescriptionColumn : null,
+                'main_description' => $degree->degreeDescription ? $this->getLocalizedColumn($degree->degreeDescription, 'main_description') : null,
+                'secondary_description' => $degree->degreeDescription ? $this->getLocalizedColumn($degree->degreeDescription, 'secondary_description') : null,
             ],
-            'degreeSkills' => $degree->degreeSkills->map(function ($skill) use ($locale) {
+            'degreeSkills' => $degree->degreeSkills->map(function ($skill) {
                 return [
-                    'skill_description' => $locale === 'fr' ? $skill->skill_description_fr : $skill->skill_description,
+                    'skill_description' => $this->getLocalizedColumn($skill, 'skill_description'),
                 ];
             }),
-            'degreeJobs' => $degree->degreeJobs->map(function ($job) use ($jobTitleColumn, $jobDescriptionColumn) {
+            'degreeJobs' => $degree->degreeJobs->map(function ($job) {
                 return [
-                    'job_title' => $job->$jobTitleColumn,
-                    'job_description' => $job->$jobDescriptionColumn,
+                    'job_title' => $this->getLocalizedColumn($job, 'job_title'),
+                    'job_description' => $this->getLocalizedColumn($job, 'job_description'),
                 ];
             }),
         ]);
@@ -60,8 +59,6 @@ class DegreeController extends Controller
 
     public function skills(string $slug): Response
     {
-        $locale = app()->getLocale();
-
         $degree = Degree::with('degreeSkills_v3')
             ->where('slug', $slug)
             ->firstOrFail();
@@ -73,14 +70,14 @@ class DegreeController extends Controller
         return Inertia::render('degree/Skills', [
             'degree' => [
                 'id' => $degree->id,
-                'name' => $degree->name,
+                'name' => $this->getLocalizedColumn($degree, 'name'),
                 'slug' => $degree->slug,
                 'image' => $degree->image,
                 'is_favorited' => $isFavorited,
             ],
-            'degreeSkills' => $degree->degreeSkills->map(function ($skill) use ($locale) {
+            'degreeSkills' => $degree->degreeSkills->map(function ($skill) {
                 return [
-                    'skill_description' => $locale === 'fr' ? $skill->skill_description_fr : $skill->skill_description,
+                    'skill_description' => $this->getLocalizedColumn($skill, 'skill_description'),
                 ];
             }),
         ]);
@@ -88,8 +85,6 @@ class DegreeController extends Controller
 
     public function jobs(string $slug): Response
     {
-        $locale = app()->getLocale();
-
         $degree = Degree::with('degreeJobs')
             ->where('slug', $slug)
             ->firstOrFail();
@@ -98,20 +93,18 @@ class DegreeController extends Controller
             $degree->favorites()->where('user_id', auth()->id())->exists() :
             false;
 
-        ds($isFavorited);
-
         return Inertia::render('degree/Jobs', [
             'degree' => [
                 'id' => $degree->id,
-                'name' => $degree->name,
+                'name' => $this->getLocalizedColumn($degree, 'name'),
                 'slug' => $degree->slug,
                 'image' => $degree->image,
                 'is_favorited' => $isFavorited,
             ],
-            'degreeJobs' => $degree->degreeJobs->map(function ($job) use ($locale) {
+            'degreeJobs' => $degree->degreeJobs->map(function ($job) {
                 return [
-                    'job_title' => $locale === 'fr' ? $job->job_title_fr : $job->job_title,
-                    'job_description' => $job->job_description,
+                    'job_title' => $this->getLocalizedColumn($job, 'job_title'),
+                    'job_description' => $this->getLocalizedColumn($job, 'job_description'),
                 ];
             }),
         ]);
@@ -119,8 +112,6 @@ class DegreeController extends Controller
 
     public function howToObtain(string $slug): Response
     {
-        $locale = app()->getLocale();
-
         $degree = Degree::where('slug', $slug)->firstOrFail();
 
         $isFavorited = auth()->check() ?
@@ -134,7 +125,7 @@ class DegreeController extends Controller
         return Inertia::render('degree/HowToObtain', [
             'degree' => [
                 'id' => $degree->id,
-                'name' => $degree->name,
+                'name' => $this->getLocalizedColumn($degree, 'name'),
                 'slug' => $degree->slug,
                 'image' => $degree->image,
                 'is_favorited' => $isFavorited,
@@ -142,13 +133,13 @@ class DegreeController extends Controller
             'formations' => $formations->map(function ($formation) {
                 return [
                     'id' => $formation->id,
-                    'nom' => $formation->nom,
-                    'diploma' => $formation->diploma,
-                    'niveau' => $formation->niveau,
-                    'type_etablissement' => $formation->type_etablissement,
-                    'ville' => $formation->ville,
-                    'discipline' => $formation->discipline,
-                    'region' => $formation->region,
+                    'nom' => $this->getLocalizedColumn($formation, 'nom'),
+                    'diploma' => $this->getLocalizedColumn($formation, 'diploma'),
+                    'niveau' => $this->getLocalizedColumn($formation, 'niveau'),
+                    'type_etablissement' => $this->getLocalizedColumn($formation, 'type_etablissement'),
+                    'ville' => $this->getLocalizedColumn($formation, 'ville'),
+                    'discipline' => $this->getLocalizedColumn($formation, 'discipline'),
+                    'region' => $this->getLocalizedColumn($formation, 'region'),
                     'similarity_score' => $formation->degrees->first()->pivot->similarity_score
                 ];
             }),

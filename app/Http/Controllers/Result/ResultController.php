@@ -17,14 +17,19 @@ use App\Models\Persona;
 
 class ResultController extends Controller
 {
+    protected function getLocalizedColumn($model, $baseColumn)
+    {
+        $locale = app()->getLocale();
+        $localizedColumn = $locale === 'fr' ? $baseColumn . '_fr' : $baseColumn;
+        
+        return $model->$localizedColumn ?? $model->$baseColumn;
+    }
+
     /**
      * @throws \JsonException
      */
     public function results() : \Inertia\Response|\Illuminate\Http\RedirectResponse
     {
-        $locale = app()->getLocale();
-        $nameColumn = $locale === 'fr' ? 'name_fr' : 'name';
-
         $userId = Auth::id();
         $firstScore = ResultResource::collection(Result::with('user')->where('user_id', $userId)->latest()->get())->first();
 
@@ -41,18 +46,20 @@ class ResultController extends Controller
             if (isset($decodedJobs['job_matches'])) {
                 $jobIds = collect($decodedJobs['job_matches'])->pluck('job_id');
                 $jobs = JobInfo::whereIn('id', $jobIds)
-                    ->select('id', "{$nameColumn} as name", 'slug', 'image')
-                    ->get();
+                    ->get()
+                    ->map(function ($job) {
+                        return [
+                            'id' => $job->id,
+                            'name' => $this->getLocalizedColumn($job, 'name'),
+                            'slug' => $job->slug,
+                            'image' => $job->image
+                        ];
+                    });
             }
         }
 
         $Archetype = DB::table('persona')->where('name', $archetype[0] ?? '')->first();
-
         $archetypeDiscovery = DB::table('archetype_discoveries')->where('slug', '=', strtolower($archetype[0]))->first();
-
-
-
-
 
         if ($firstScore) {
             return Inertia::render('Result/Results', [
@@ -63,17 +70,12 @@ class ResultController extends Controller
             ]);
         }
 
-
         return to_route('dashboard');
     }
+
     public function personality($id): \Inertia\Response
     {
-        $locale = app()->getLocale();
-        $nameColumn = $locale === 'fr' ? 'name_fr' : 'name';
-        $insightColumn = $locale === 'fr' ? 'insight_fr' : 'insight';
-
         $userId = Auth::id();
-
         $scores = ResultResource::collection(Result::with('user')->where('user_id', $userId)->get());
 
         if ($scores->isEmpty()) {
@@ -83,35 +85,27 @@ class ResultController extends Controller
         $firstScore = $scores->first();
         ds($firstScore->scores);
         
-        // Get archetype from the Archetype column
         $archetype = null;
         if (!empty($firstScore->Archetype)) {
-            $archetype = $firstScore->Archetype; // Already a string from the database
+            $archetype = $firstScore->Archetype;
         }
         ds(['archetypetest'=>$archetype[0]]);
-
-
 
         $ArchetypeData = DB::table('persona')->where('name', '=',$archetype[0])->first();
         ds(['ArchetypeData'=>$ArchetypeData]);
 
-        // Fetch insights grouped by category
         $insights = $ArchetypeData ? Insight::where('persona_id', $ArchetypeData->id)
-            ->select('insight_category_slug', $insightColumn)
             ->get()
             ->groupBy('insight_category_slug')
-            ->map(function ($group) use ($insightColumn) {
-                return $group->pluck($insightColumn);
+            ->map(function ($group) {
+                return $group->map(function ($insight) {
+                    return $this->getLocalizedColumn($insight, 'insight');
+                });
             }) : collect([]);
-
-
-        // Transform the grouped insights into the desired format
-
 
         $archetypeDiscovery = DB::table('archetype_discoveries')->where('slug', '=', strtolower($archetype[0]))->first();
 
         ds(['archetypeDiscovery'=>$archetypeDiscovery]);
-        // Update the query to use the new model
      
         return Inertia::render('Result/StrategistDescription', [
             "ArchetypeData" => $ArchetypeData ?? [],
