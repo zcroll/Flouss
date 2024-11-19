@@ -13,7 +13,7 @@
 
     <ChatInput v-model="form.message" :is-loading="isLoading" :show-questions="showQuestions"
       :predefined-questions="predefinedQuestions" @send="sendMessage" @select-question="selectQuestion"
-      @toggle-questions="showQuestions = !showQuestions" />
+      @toggle-questions="toggleQuestions" />
   </div>
 </template>
 
@@ -108,5 +108,9 @@ const sendMessage = async () => {
 
   await nextTick();
   scrollToBottom();
+};
+
+const toggleQuestions = (value) => {
+  showQuestions.value = value;
 };
 </script>

@@ -27,8 +27,9 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <AssessmentResults 
-            :hasresult="hasResult"
+            :hasResult="hasResult"
             :archetype="archetype"
+            :topTraits="topTraits"
             :parsed-scales="parsedScales"
             class="lg:col-span-2"
           />
@@ -57,7 +58,8 @@ const props = defineProps({
   favoriteDegrees: Array,
   predefinedQuestions: Array,
   archetype: Object,
-  chatHistory: Array
+  chatHistory: Array,
+  topTraits: Array
 });
 
 const removeFavorite = (id) => {

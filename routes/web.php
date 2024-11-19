@@ -91,6 +91,10 @@ Route::middleware([
 
         // Chat routes
         Route::post('/chat', [ApiController::class, 'sendMessage'])->name('chat.send');
+
+        // Welcome back routes
+        Route::get('/welcome-back/show', [WelcomeBackController::class, 'showWelcomeBack'])->name('welcome-back.show');
+        Route::post('/welcome-back/set-shown', [WelcomeBackController::class, 'setWelcomeBackShown'])->name('welcome-back.set-shown');
     });
 });
 
@@ -126,9 +130,6 @@ Route::post('/store-answer', [TestController::class, 'storeAnswer'])->name('stor
 Route::get('/testt', function () {
     return Inertia::render('Result/Test');
 })->name('testt');
-
-Route::get('/welcome-back/show', [WelcomeBackController::class, 'showWelcomeBack'])->name('welcome-back.show');
-Route::post('/welcome-back/set-shown', [WelcomeBackController::class, 'setWelcomeBackShown'])->name('welcome-back.set-shown');
 
 Route::get('/im', function () {
   return Inertia::render('im');

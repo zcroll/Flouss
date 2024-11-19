@@ -151,12 +151,12 @@ class MainTestController extends Controller
             $category = $response['category'];
             $answer = $response['answer'];
 
-          $normalizedAnswer = $answer ;
+            $normalizedAnswer = (int)$answer;
 
-          $formattedResponses[$category] = $normalizedAnswer;
-      }
+            $formattedResponses[$category] = $normalizedAnswer;
+        }
 
-      ds($formattedResponses);
+      ds(['formattedResponses'=>$formattedResponses]);
 
 
         return to_route('main-test');
@@ -221,12 +221,12 @@ class MainTestController extends Controller
               $category = $response['category'];
               $answer = $response['answer'];
 
-            $normalizedAnswer = $answer ;
+              $normalizedAnswer = (int)$answer;
 
-            $formattedResponses[$category] = $normalizedAnswer;
-        }
+              $formattedResponses[$category] = $normalizedAnswer;
+          }
 
-        ds($formattedResponses);
+        ds(['formattedResponses'=>$formattedResponses]);
 
 
 

@@ -108,20 +108,20 @@ const emit = defineEmits(['update:modelValue', 'send', 'select-question', 'toggl
 const dropdown = ref(null);
 
 const handleClickOutside = (event) => {
-  if (dropdown.value && !dropdown.value.contains(event.target) && 
+  if (props.showQuestions && 
+      dropdown.value && 
+      !dropdown.value.contains(event.target) && 
       !event.target.closest('input')) {
-    emit('toggle-questions');
+    emit('toggle-questions', false);
   }
 };
 
 const handleFocus = () => {
-  if (!props.showQuestions) {
-    emit('toggle-questions');
-  }
+  emit('toggle-questions', true);
 };
 
 const closeQuestions = () => {
-  emit('toggle-questions');
+  emit('toggle-questions', false);
 };
 
 const handleQuestionSelect = (question) => {

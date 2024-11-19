@@ -1,6 +1,5 @@
-
 <template>
-  <div v-if="hasresult" class="lg:col-span-2 bg-stone-950 rounded-2xl p-6 border border-stone-700">
+  <div v-if="hasResult" class="lg:col-span-2 bg-stone-950 rounded-2xl p-6 border border-stone-700">
     <div class="flex justify-between items-center mb-6">
       <h2 class="text-2xl font-semibold text-stone-100">{{ __('dashboard.your_assessment_results') }}</h2>
       <Link href="/results"
@@ -10,8 +9,13 @@
     </div>
 
     <!-- Archetype Card -->
-    <div class="bg-[#353535] rounded-2xl p-4 sm:p-8 mb-6 shadow-2xl hover:shadow-amber-500/5 transition-all duration-500 border border-stone-700/50 relative overflow-hidden"
-      style="background-image: url('https://res.cloudinary.com/hnpb47ejt/image/upload/f_auto,q_auto/v1607545512/dashboard-sharing-bg-lg_ngkdfq.png'); background-size: cover; background-position: center;">
+    <div 
+      class="bg-[#353535] rounded-2xl p-4 sm:p-8 mb-6 shadow-2xl hover:shadow-amber-500/5 transition-all duration-500 border border-stone-700/50 relative overflow-hidden"
+      :style="{
+        backgroundImage: `url('https://res.cloudinary.com/hnpb47ejt/image/upload/f_auto,q_auto/v1607545512/dashboard-sharing-bg-lg_ngkdfq.png')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }">
       <div class="absolute top-0 right-0 w-48 sm:w-64 h-48 sm:h-64 bg-amber-500/5 rounded-full blur-3xl -mr-24 sm:-mr-32 -mt-24 sm:-mt-32"></div>
       <div class="absolute bottom-0 left-0 w-48 sm:w-64 h-48 sm:h-64 bg-stone-600/5 rounded-full blur-3xl -ml-24 sm:-ml-32 -mb-24 sm:-mb-32"></div>
 
@@ -40,36 +44,31 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 pt-4 sm:pt-6">
-        <div v-for="(scale, index) in parsedScales" :key="scale.scale_id"
+        <div v-for="(score, trait) in topTraits" :key="trait"
           class="bg-black rounded-xl p-3 sm:p-6 transition-all duration-300 border border-stone-700 hover:border-amber-500/30 group">
-          <div class="flex justify-between items-center mb-2">
-            <h4 class="text-sm sm:text-base font-medium text-stone-300">{{ scale.name }}</h4>
-            <button @click="toggleDescription(scale.scale_id)"
-              class="p-1 hover:bg-stone-800 rounded-lg transition-colors">
-              <svg class="w-4 h-4 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </button>
+          <div class="flex justify-between items-center mb-3 sm:mb-4">
+            <h4 class="text-base sm:text-lg font-semibold text-stone-100 tracking-wide">
+              {{ trait }}
+            </h4>
+            <span class="text-lg sm:text-xl font-bold text-amber-400 bg-amber-400/10 px-2 sm:px-3 py-0.5 sm:py-1 rounded-lg">
+              {{ Math.round(score * 100) }}%
+            </span>
           </div>
-          <div class="relative pt-1">
-            <div class="flex mb-2 items-center justify-between">
-              <div>
-                <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-amber-600 bg-amber-200">
-                  {{ scale.score }}%
-                </span>
-              </div>
-            </div>
-            <div class="flex h-2 mb-4 overflow-hidden text-xs rounded bg-stone-700">
-              <div :style="{ width: `${scale.score}%` }"
-                class="flex flex-col justify-center text-center text-white bg-amber-500 transition-all duration-500 ease-in-out">
-              </div>
+          <div class="w-full bg-stone-800 rounded-full h-4 sm:h-5 mb-3 sm:mb-4 overflow-hidden">
+            <div class="bg-amber-500 h-4 sm:h-5 rounded-full transition-all duration-700 ease-out"
+              :style="{ width: `${Math.round(score * 100)}%` }">
             </div>
           </div>
-          <p v-show="scale.showDescription"
-            class="text-xs sm:text-sm text-stone-400 mt-2 transition-all duration-300">
-            {{ scale.description }}
-          </p>
+          <div @click="toggleDescription(trait)"
+            class="cursor-pointer group-hover:bg-stone-800/50 rounded-lg p-2 sm:p-3 transition-colors">
+            <p class="text-xs sm:text-sm leading-relaxed text-stone-300 font-medium tracking-wide group-hover:text-stone-200 transition-colors"
+              :class="{ 'line-clamp-2': !expandedDescriptions[trait] }">
+              {{ getTraitDescription(trait) }}
+            </p>
+            <span class="text-amber-400 text-xs sm:text-sm mt-1 sm:mt-2 hover:text-amber-300">
+              {{ expandedDescriptions[trait] ? '▲ Show less' : '▼ Read more' }}
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -81,35 +80,47 @@ import { ref, computed } from 'vue';
 import { Link } from '@inertiajs/vue3';
 
 const props = defineProps({
-  hasresult: {
+  hasResult: {
     type: Boolean,
     required: true
   },
   archetype: {
     type: Object,
     default: null
+  },
+  topTraits: {
+    type: Array,
+    default: null
   }
 });
-console.log(props.hasResult);
+
+const expandedDescriptions = ref({});
+
+const traitDescriptions = {
+  'Realistic': 'You have a strong preference for working with objects, tools, and machines. You enjoy hands-on problem solving and creating tangible results.',
+  'Investigative': 'You are analytical, intellectual and scientific. You enjoy solving complex problems through observation and research.',
+  'Artistic': 'You are creative, intuitive and expressive. You thrive in environments that allow for self-expression and innovative thinking.',
+  'Social': 'You excel at helping, teaching, and counseling others. You are empathetic and enjoy working in collaborative environments.',
+  'Enterprising': 'You excel at leading, persuading, and managing others. You are goal-oriented and enjoy taking initiative in business ventures and organizational projects.',
+  'Conventional': 'You are detail-oriented, organized and methodical. You excel at following established procedures and working with data and numbers.'
+};
 
 const parsedScales = computed(() => {
   if (!props.archetype?.scales) return [];
   try {
     const scales = JSON.parse(props.archetype.scales);
-    return scales.map(scale => ({
-      ...scale,
-      showDescription: false
-    }));
+    return scales;
   } catch (e) {
     console.error('Error parsing scales:', e);
     return [];
   }
 });
 
-function toggleDescription(scaleId) {
-  const scale = parsedScales.value.find(s => s.scale_id === scaleId);
-  if (scale) {
-    scale.showDescription = !scale.showDescription;
-  }
+function getTraitDescription(trait) {
+  return traitDescriptions[trait] || 'Description not available';
+}
+
+function toggleDescription(id) {
+  expandedDescriptions.value[id] = !expandedDescriptions.value[id];
 }
 </script>

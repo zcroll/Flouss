@@ -39,6 +39,14 @@ class ResultController extends Controller
 
         $archetype = $firstScore->Archetype ?? null;
 
+        // Get top 2 traits from scores
+        $topTraits = [];
+        if (!empty($firstScore->scores)) {
+            $scores = json_decode($firstScore->scores, true);
+            arsort($scores);
+            $topTraits = array_slice($scores, 0, 2, true);
+        }
+
         $jobs = null;
         if (!empty($firstScore->jobs)) {
             $decodedJobs = json_decode($firstScore->jobs, true, 512, JSON_THROW_ON_ERROR);

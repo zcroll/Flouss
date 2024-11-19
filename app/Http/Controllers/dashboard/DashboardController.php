@@ -60,16 +60,18 @@ class DashboardController extends Controller
                     ->select(['slug', 'rarity_string', 'rationale', 'scales'])
                     ->first();
             }
-
+               // Get top 2 traits from scores
+            $topTraits = [];
             if (!empty($result->scores)) {
-                $decodedScores = json_decode($result->scores, true);
-                $topTraits = collect($decodedScores)->take(3)->map(function ($score, $trait) {
-                    return [
-                        'name' => $trait,
-                        'score' => $score
-                    ];
-                })->values()->toArray();
+                $scores = json_decode($result->scores, true);
+                arsort($scores);
+                $topTraits = array_slice($scores, 0, 2, true);
             }
+
+            ds(['topTraits'=>$topTraits]);
+
+
+         
 
             if (!empty($result->jobs)) {
                 $decodedJobs = json_decode($result->jobs, true, 512, JSON_THROW_ON_ERROR);
@@ -137,7 +139,7 @@ class DashboardController extends Controller
         ];
 
         // ds(['chathistory'=>$chatHistory->toArray()]);
-
+ds(['archetype'=>$archetypeDiscovery]);
         return Inertia::render('Dashboard', [
             'hasResult' => $hasResult,
             'favoriteJobs' => $favoriteJobs,
