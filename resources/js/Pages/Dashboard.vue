@@ -12,8 +12,6 @@
             title="Liked Jobs"
             :items="favoriteJobs"
             type="career"
-            :empty-message="__('dashboard.no_liked_jobs')"
-            :browse-message="__('dashboard.discover_jobs')"
             browse-link="/jobs"
             @remove="removeFavorite"
           />
@@ -22,8 +20,6 @@
             title="Liked Formations"
             :items="favoriteDegrees"
             type="degree"
-            :empty-message="__('dashboard.no_liked_formations')"
-            :browse-message="__('dashboard.discover_formations')"
             browse-link="/degrees"
             @remove="removeFavorite"
           />
