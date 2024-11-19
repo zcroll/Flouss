@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use App\Models\Favorite;
 use App\Models\JobInfo;
 use App\Models\Result;
+use App\Models\ChatHistory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -84,14 +85,43 @@ class DashboardController extends Controller
                 }
             }
         }
-        ds([
-            'hasResult' => $hasResult,
-            'favoriteJobs' => $favoriteJobs,
-            'favoriteDegrees' => $favoriteDegrees,
-            'archetype' => $archetypeDiscovery,
-            'topTraits' => $topTraits,
-            'topJobs' => $topJobs
-        ]);
+
+        $chatHistory = ChatHistory::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->take(50)
+            ->get();
+
+        $predefinedQuestions = [
+            [
+                'id' => 1,
+                'category' => 'Career Path',
+                'questions' => [
+                    'What career paths align with my personality type?',
+                    'How can I develop skills for my chosen career?',
+                    'What industries match my interests?'
+                ]
+            ],
+            [
+                'id' => 2,
+                'category' => 'Education',
+                'questions' => [
+                    'What degrees match my career goals?',
+                    'Which universities offer relevant programs?',
+                    'How can I prepare for my chosen field?'
+                ]
+            ],
+            [
+                'id' => 3,
+                'category' => 'Skills Development',
+                'questions' => [
+                    'What skills should I focus on developing?',
+                    'How can I improve my professional profile?',
+                    'What certifications are valuable in my field?'
+                ]
+            ]
+        ];
+
+        ds(['chathistory'=>$chatHistory->toArray()]);
 
         return Inertia::render('Dashboard', [
             'hasResult' => $hasResult,
@@ -99,10 +129,10 @@ class DashboardController extends Controller
             'favoriteDegrees' => $favoriteDegrees,
             'archetype' => $archetypeDiscovery,
             'topTraits' => $topTraits,
-            'topJobs' => $topJobs
+            'topJobs' => $topJobs,
+            'chatHistory' => $chatHistory,
+            'predefinedQuestions' => $predefinedQuestions
         ]);
 
     }
-
-
 }

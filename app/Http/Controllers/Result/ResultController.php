@@ -26,43 +26,27 @@ class ResultController extends Controller
         $nameColumn = $locale === 'fr' ? 'name_fr' : 'name';
 
         $userId = Auth::id();
-        $scores = ResultResource::collection(Result::with('user')->where('user_id', $userId)->latest()->get());
+        $firstScore = ResultResource::collection(Result::with('user')->where('user_id', $userId)->latest()->get())->first();
 
-        if ($scores->isEmpty()) {
+        if (!$firstScore) {
             return to_route('dashboard');
         }
 
-        $firstScore = $scores->first();
-        ds(['firstScore'=>$firstScore]);
+        $archetype = $firstScore->Archetype ?? null;
 
-        // Get archetype from the Archetype column
-        $archetype = null;
-        if (!empty($firstScore->Archetype)) {
-            $archetype = $firstScore->Archetype; // Already a string from the database
-        }
-        ds(['archetypewww'=>$archetype]);
-
-        // Handle jobs data
         $jobs = null;
         if (!empty($firstScore->jobs)) {
             $decodedJobs = json_decode($firstScore->jobs, true, 512, JSON_THROW_ON_ERROR);
             
             if (isset($decodedJobs['job_matches'])) {
-                $jobsCollection = collect($decodedJobs['job_matches']);
-                ds(['jobsCollection' => $jobsCollection]);
-
-                $jobIds = $jobsCollection->pluck('job_id')->toArray();
-
+                $jobIds = collect($decodedJobs['job_matches'])->pluck('job_id');
                 $jobs = JobInfo::whereIn('id', $jobIds)
-                    ->select('id', $nameColumn . ' as name', 'slug', 'image')
+                    ->select('id', "{$nameColumn} as name", 'slug', 'image')
                     ->get();
-
-                ds($jobs->toArray());
             }
         }
 
-
-        $Archetype = DB::table('persona')->where('name', '=', $archetype[0])->first();
+        $Archetype = DB::table('persona')->where('name', $archetype[0] ?? '')->first();
 
         $archetypeDiscovery = DB::table('archetype_discoveries')->where('slug', '=', strtolower($archetype[0]))->first();
 

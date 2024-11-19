@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiController;
 use App\Http\Controllers\Result\ResultController;
 use App\Http\Controllers\Career\CareerController;
 use App\Http\Controllers\Filters\DegreeFilterController;
@@ -26,7 +27,7 @@ use App\Http\Controllers\FavoriteController;
 Route::get('auth/google', [App\Http\Controllers\Auth\GoogleController::class, 'redirectToGoogle'])
     ->name('auth.google')
     ->middleware('guest');
-    
+
 Route::get('auth/google/callback', [App\Http\Controllers\Auth\GoogleController::class, 'handleGoogleCallback'])
     ->name('auth.google.callback')
     ->middleware('guest');
@@ -68,14 +69,6 @@ Route::middleware([
             Route::get('/results/{id}/personality', 'personality')->name('personality');
         });
 
-
-
-
-
-
-
-
-
         Route::get('/main-test', [MainTestController::class, 'index'])->name('main-test');
         Route::post('/main-test/store-holland-code', [MainTestController::class, 'storeHollandCodeResponse'])->name('store-holland-code-response');
         Route::post('/main-test/store-basic-interest', [MainTestController::class, 'storeBasicInterestResponse'])->name('store-basic-interest-response');
@@ -96,15 +89,10 @@ Route::middleware([
         Route::get('/degrees', [DegreeFilterController::class, 'index'])->name('degrees.index');
         Route::get('/jobs', [JobFilterController::class, 'index'])->name('jobs.index');
 
-
-    });});
-
-
-
-
-
-
-
+        // Chat routes
+        Route::post('/chat', [ApiController::class, 'sendMessage'])->name('chat.send');
+    });
+});
 
 Route::get('/how-it-works', function () {
     return Inertia::render('HomePage/HowItWork');
@@ -125,10 +113,7 @@ Route::middleware(['auth'])->group(function () {
 
 Route::post('language/', LanguageController::class)->name('language.switch');
 
-
 Route::get('/test-data', [JobMatcherController::class, 'matchJobs'])->name('test-data');
-
-
 
 Route::get('/test', [TestController::class, 'index'])->name('test.index');
 
@@ -138,16 +123,12 @@ Route::get('/degree-matches', [TestController::class, 'degreeMatches']);
 Route::get('/final-results', [TestController::class, 'finalResults']);
 Route::post('/store-answer', [TestController::class, 'storeAnswer'])->name('store-answer');
 
-
-
 Route::get('/testt', function () {
     return Inertia::render('Result/Test');
 })->name('testt');
 
 Route::get('/welcome-back/show', [WelcomeBackController::class, 'showWelcomeBack'])->name('welcome-back.show');
 Route::post('/welcome-back/set-shown', [WelcomeBackController::class, 'setWelcomeBackShown'])->name('welcome-back.set-shown');
-
-
 
 Route::get('/im', function () {
   return Inertia::render('im');
@@ -157,12 +138,12 @@ Route::get('/career-test', function () {
   return Inertia::render('Career-Test');
 });
 
-
 Route::get('/for-organizations', function () {
   return Inertia::render('For-organizations');
 });
 
-
 Route::get('/ruller', function () {
   return Inertia::render('ruller');
 });
+
+Route::get('/api',[ApiController::class,'index']);
