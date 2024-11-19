@@ -87,9 +87,24 @@ class DashboardController extends Controller
         }
 
         $chatHistory = ChatHistory::where('user_id', $user->id)
-            ->orderBy('created_at', 'desc')
-            ->take(50)
-            ->get();
+            ->orderBy('created_at', 'asc')
+            ->get()
+            ->flatMap(function ($chat) {
+                return [
+                    [
+                        'role' => 'user',
+                        'content' => $chat->message,
+                        'timestamp' => $chat->created_at->format('H:i:s')
+                    ],
+                    [
+                        'role' => 'assistant',
+                        'content' => $chat->response,
+                        'timestamp' => $chat->created_at->format('H:i:s')
+                    ]
+                ];
+            })
+            ->values()
+            ->all();
 
         $predefinedQuestions = [
             [
@@ -121,7 +136,7 @@ class DashboardController extends Controller
             ]
         ];
 
-        ds(['chathistory'=>$chatHistory->toArray()]);
+        // ds(['chathistory'=>$chatHistory->toArray()]);
 
         return Inertia::render('Dashboard', [
             'hasResult' => $hasResult,
