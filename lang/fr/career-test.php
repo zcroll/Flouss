@@ -8,7 +8,7 @@ return [
     'avg_rating' => 'Note moyenne',
     'rating' => '4.5 sur 5',
     'customers_count' => '1806 clients au cours des 30 derniers jours',
-    'discover_your_top_matches' => 'Découvrez vos meilleures correspondances de carrière grâce à la science de pointe de CareerExplorer',
+    'discover_your_top_matches' => 'Découvrez vos meilleures correspondances de carrière grâce à la science de pointe de Gen.Z',
     'rapidly_advancing_platform' => 'Plateforme en rapide évolution',
     'rapidly_advancing_description' => 'Nos modèles d\'apprentissage automatique s\'entraînent sur des millions de points de données, améliorant constamment la fiabilité et la validité de nos résultats de test de carrière.',
     'comprehensive_model' => 'Modèle complet',

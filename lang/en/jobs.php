@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'explore_jobs' => 'Explore Jobs',
+    'explore_jobs' => 'Explore Careers',
     'filters' => 'Filters',
     'search' => 'Search',
-    'search_jobs' => 'Search jobs',
+    'search_jobs' => 'Search Careers',
     'education_levels' => 'Education Levels',
     'select_education_levels' => 'Select education levels',
     'sort_by' => 'Sort By',

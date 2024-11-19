@@ -13,5 +13,5 @@ return [
     'how_to_obtain' => 'How to Obtain',
     'how_to_become' => 'How to Become',
     'requirements' => 'Requirements',
-    'similar_jobs' => 'Similar Jobs',
+    'similar_jobs' => 'Similar Careers',
 ];

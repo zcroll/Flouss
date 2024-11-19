@@ -5,7 +5,7 @@
         </div>
 
         <!-- Sticky Sidebar -->
-        <div class="w-full lg:w-1/3 lg:mb-0 lg:pl-8 pb-5">
+        <div class="w-full lg:w-1/3 lg:mb-0 lg:pl-8 pb-5 pt-8">
             <div
                 class="sticky top-[100px] text-white rounded-2xl p-6 overflow-hidden bg-[#353535]"
             >

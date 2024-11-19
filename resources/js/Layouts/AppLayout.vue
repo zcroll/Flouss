@@ -204,7 +204,7 @@ const navigation = [
                                              :alt="$page.props.auth.user.name" />
                                         <div class="ml-3">
                                             <div class="font-medium text-stone-100">{{ $page.props.auth.user.name }}</div>
-                                            <div class="text-sm text-stone-400">{{ $page.props.auth.user.email }}</div>
+                                            <div class="text-xs text-stone-400">{{ $page.props.auth.user.email }}</div>
                                         </div>
                                     </div>
 

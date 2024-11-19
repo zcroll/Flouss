@@ -4,7 +4,7 @@ return [
     'explore_jobs' => 'Explorer les emplois',
     'filters' => 'Filtres',
     'search' => 'Rechercher',
-    'search_jobs' => 'Rechercher des emplois',
+    'search_jobs' => 'Rechercher des Carrières',
     'education_levels' => 'Niveaux d\'éducation',
     'select_education_levels' => 'Sélectionner les niveaux d\'éducation',
     'sort_by' => 'Trier par',

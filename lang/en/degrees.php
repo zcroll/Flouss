@@ -1,11 +1,11 @@
 <?php
 
 return [
-    'explore_degrees' => 'Explore Degrees',
+    'explore_degrees' => 'Explore Academic Disciplines',
     'find_academic_paths' => 'Find the academic paths that align with your unique talents and aspirations.',
     'filters' => 'Filters',
     'search' => 'Search',
-    'search_degrees' => 'Search degrees',
+    'search_degrees' => 'Search Degrees',
     'degree_levels' => 'Degree Levels',
     'select_degree_levels' => 'Select degree levels',
     'sort_by' => 'Sort By',

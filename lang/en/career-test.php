@@ -8,7 +8,7 @@ return [
     'avg_rating' => 'Avg Rating',
     'rating' => '4.5 out of 5',
     'customers_count' => '1806 customers from the last 30 days',
-    'discover_your_top_matches' => 'Discover your top career matches using CareerExplorer’s cutting-edge science',
+    'discover_your_top_matches' => 'Discover your top career matches using Gen.Z cutting-edge science',
     'rapidly_advancing_platform' => 'Rapidly-advancing platform',
     'rapidly_advancing_description' => 'Our machine learning models train on millions of data points, constantly improving the reliability and validity of our career test results.',
     'comprehensive_model' => 'Comprehensive model',

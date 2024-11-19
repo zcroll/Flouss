@@ -35,16 +35,16 @@
 
           <section>
             <p class="lead text-gray-700 mb-8" tabindex="0">
-              We surveyed {{occupation.name.toLowerCase()}}s to learn what personality traits and interests make them unique. Here are the results.
+              {{ __('career.we_surveyed') }} {{occupation.name.toLowerCase()}}s {{ __('career.to_learn_what_personality_traits') }}
             </p>
           </section>
 
           <aside id="table-of-contents-container" class="mb-12">
             <div class="TableOfContents" tabindex="0" role="directory" title="Table of contents">
-              <h3>In this article:</h3>
+              <h3>{{ __('career.in_this_article') }}</h3>
               <ol>
-                <li><a href="#holland-codes" class="standard-link">Primary interests (Holland Codes)</a></li>
-                <li><a href="#big-five" class="standard-link">Broad personality traits (Big 5)</a></li>
+                <li><a href="#holland-codes" class="standard-link">{{ __('career.primary_interests') }}</a></li>
+                <li><a href="#big-five" class="standard-link">{{ __('career.broad_personality_traits') }}</a></li>
               </ol>
             </div>
           </aside>
@@ -52,24 +52,24 @@
           <!-- Holland Codes Section -->
           <section id="holland-codes" class="mb-12">
             <h2 class="text-2xl font-semibold mb-6">
-              {{occupation.name}}s are <em>{{getTopHollandTraits}}</em>
+              {{occupation.name}}s {{ __('career.are') }} <em>{{getTopHollandTraits}}</em>
             </h2>
             <p class="text-gray-700 mb-8">
               {{ personalityDetails.find(d => d.trait_type === 'Holland Codes')?.description }}
             </p>
             <!-- <p class="text-gray-700 mb-8">
-              If you are one or both of these archetypes, you may be well suited to be a {{occupation.name.toLowerCase()}}. However, if you are conventional, this is probably not a good career for you.
-              <a href="/career-test/" class="standard-link">Take the career test now</a>.
+              If you are one or both of these archetypes, you may be well suited to be a {{occupation.name.toLowerCase()}}. However, if you are conventional, {{ __('career.probably_not_good_career_for_you') }}
+              <a href="/career-test/" class="standard-link">{{ __('career.take_career_test_now') }}</a>.
             </p> -->
 
             <div id="personality-holland-codes-container" class="PersonalityGraphs">
               <a v-for="trait in hollandCodeTraits" :key="trait.id" class="Box" @click="setActiveDefinition(trait.id)">
                 <div class="PersonalityGraphs__scale">
                   <div class="PersonalityGraphs__scale__name" :id="`${trait.id}-personalitygraph-scale-label`" >
-                    {{formatTraitName(trait.trait_name)}}
+                    {{ __(`career.${formatTraitName(trait.trait_name).toLowerCase()}`) }}
                   </div>
                   <span class="sr-only" :id="`${trait.id}-personalitygraph-scale-desc`" >
-                    {{getTraitDefinition(formatTraitName(trait.trait_name))}}
+                    {{ __(`career.${formatTraitName(trait.trait_name).toLowerCase()}_definition`) }}
                   </span>
                   <figure class="PersonalityGraphs__scale__graph"
                           tabindex="0"
@@ -90,7 +90,7 @@
                   </div>
                 </div>
                 <div v-if="activeDefinition === trait.id" class="PersonalityGraphs__scale__definition">
-                  <p>{{getTraitDefinition(formatTraitName(trait.trait_name))}}</p>
+                  <p>{{ __(`career.${formatTraitName(trait.trait_name).toLowerCase()}_definition`) }}</p>
                 </div>
               </a>
             </div>
@@ -99,7 +99,7 @@
           <!-- Big Five Section -->
           <section id="big-five" class="mb-12">
             <h2 class="text-2xl font-semibold mb-6">
-              The top personality traits of {{occupation.name.toLowerCase()}}s are <em>{{getTopBigFiveTraits}}</em>
+              {{ __('career.top_personality_traits_of') }} {{occupation.name.toLowerCase()}}s {{ __('career.are') }} <em>{{__(getTopBigFiveTraits)}}</em>
             </h2>
             <p class="text-gray-700 mb-8">
               {{ personalityDetails.find(d => d.trait_type === 'Big Five')?.description }}
@@ -109,10 +109,10 @@
               <a v-for="trait in bigFiveTraits" :key="trait.scale_id" class="Box" @click="setActiveDefinition(trait.scale_id)">
                 <div class="PersonalityGraphs__scale">
                   <div class="PersonalityGraphs__scale__name" :id="`${trait.scale_id}-personalitygraph-scale-label`">
-                    {{trait.short_name}}
+                    {{ __(trait.short_name)}}
                   </div>
                   <span class="sr-only" :id="`${trait.scale_id}-personalitygraph-scale-desc`">
-                    {{trait.definition}}
+                    {{ __(trait.definition) }}
                   </span>
                   <figure class="PersonalityGraphs__scale__graph"
                           tabindex="0"
@@ -133,7 +133,7 @@
                   </div>
                 </div>
                 <div v-if="activeDefinition === trait.scale_id" class="PersonalityGraphs__scale__definition">
-                  <p>{{trait.definition}}</p>
+                  <p>{{ __(trait.definition) }}</p>
                 </div>
               </a>
             </div>
@@ -153,6 +153,7 @@ import StickySidebar from "@/Pages/lib/StickySidebar.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link } from '@inertiajs/vue3';
 import BackToTop from "@/Components/BackToTop.vue";
+import __ from '@/lang';
 
 const props = defineProps({
   occupation: {
@@ -192,37 +193,37 @@ const bigFiveTraits = computed(() => {
   return [
     {
       name: "AMBI-NEO-Conscientiousness",
-      short_name: "Conscientiousness",
+      short_name: 'career.conscientiousness',
       scale_id: 508,
-      definition: "Conscientiousness is one's ability to master our impulses and act on a schedule. Individuals with a high conscientiousness score will find it easier to ignore urges and plan in advance; this also means they may have a difficult time with spontaneous or unexpected situations.",
+      definition: 'career.conscientiousness_definition',
       value: 0.663973684210526
     },
     {
-      name: "AMBI-HEXACO-Honesty",
-      short_name: "Social Responsibility",
+      name: "AMBI-HEXACO-Honesty", 
+      short_name: 'career.social_responsibility',
       scale_id: 509,
-      definition: "Social responsibility measures a person's desire to see fair outcomes and their general concern for the welfare of others. People who score high on this trait value equality and are generally not particularly experience-seeking.",
+      definition: 'career.social_responsibility_definition',
       value: 0.586618421052632
     },
     {
       name: "AMBI-NEO-Extraversion",
-      short_name: "Extraversion",
+      short_name: 'career.extraversion',
       scale_id: 505,
-      definition: "While most people associate extroversion with a love of other people, the reality is that this trait covers a much broader range of situations. A high extroversion level means that an individual need external stimulus to be happy; this can mean surrounding themselves with others or trying new experiences. Introverts tend to be able to satisfy themselves from within, and are therefore usually far more independent than extroverts.",
+      definition: 'career.extraversion_definition',
       value: 0.44247368421052596
     },
     {
       name: "AMBI-NEO-Openness",
-      short_name: "Openness",
+      short_name: 'career.openness',
       scale_id: 506,
-      definition: "Do you find yourself searching for new ideas? Do you enjoy talking about big, abstract ideas? If so, you may have a high openness to experience score. Some common traits of a high openness score include a desire for variety, high curiosity, and an active imagination.",
+      definition: 'career.openness_definition',
       value: 0.416684210526316
     },
     {
       name: "AMBI-NEO-Agreeableness",
-      short_name: "Agreeableness",
+      short_name: 'career.agreeableness',
       scale_id: 507,
-      definition: "Agreeableness is the value which you place on ensuring that everyone gets along. Someone with a high agreeableness score will be more likely to try and understand the needs of other people, and looks for ways to ensure that everyone is satisfied; the downside of this being that their own needs and wants may be given a low priority.",
+      definition: 'career.agreeableness_definition',
       value: 0.373197368421053
     }
   ];
@@ -240,18 +241,18 @@ const getTopBigFiveTraits = computed(() => {
   const top2 = bigFiveTraits.value
     .sort((a,b) => b.value - a.value)
     .slice(0,2)
-    .map(t => t.short_name.toLowerCase());
-  return `${top2[0]} and ${top2[1]}`;
+    .map(t => t.short_name);
+  return `${__('career.conscientiousness')} and ${__('career.social_responsibility')}`;
 });
 
 const getTraitDefinition = (traitName) => {
   const definitions = {
-    'Realistic': 'Realistic people are practical, physical, hands-on problem solvers. They enjoy working outdoors and with tools/machines. They prefer concrete tasks over abstract thinking and often excel in mechanical or technical fields.',
-    'Artistic': 'Artistic people are creative, intuitive and expressive. They enjoy working in unstructured situations using their imagination and originality. They tend to be independent and focused on creative pursuits.',
-    'Investigative': 'Investigative people are analytical, intellectual and scientific. They enjoy research, mathematical or scientific activities and solving complex problems. They prefer working independently with data and ideas.',
-    'Social': 'Social people are helpful, friendly and trustworthy. They enjoy working with and helping others. They prefer solving problems through discussions and have strong communication and teaching abilities.',
-    'Enterprising': 'Enterprising people are energetic, ambitious and sociable. They enjoy leading, persuading others and taking risks. They prefer competitive business activities and leadership roles.',
-    'Conventional': 'Conventional people are careful, structured and detail-oriented. They enjoy working with data, numbers and records. They prefer following established procedures and working in structured environments.'
+    'career.realistic': 'career.realistic_definition',
+    'career.artistic': 'career.artistic_definition',
+    'career.investigative': 'career.investigative_definition', 
+    'career.social': 'career.social_definition',
+    'career.enterprising': 'career.enterprising_definition',
+    'career.conventional': 'career.conventional_definition'
   };
 
   return definitions[traitName] || '';

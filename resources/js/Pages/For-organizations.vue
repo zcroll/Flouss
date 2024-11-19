@@ -4,17 +4,17 @@
   <div class="landinghero wf-section">
     <div class="mehero mehero--discord">
       <svg class="background-animation" width="800" height="800" viewBox="0 0 800 800">
-        <path class="line-drawing" 
-              d="M100,200 Q400,100 700,200" 
-              fill="none" 
+        <path class="line-drawing"
+              d="M100,200 Q400,100 700,200"
+              fill="none"
               stroke="#333"
               stroke-width="2"/>
 
-        <path id="motionPath1" 
-              d="M100,400 C100,100 700,100 700,400 S100,700 100,400 Z" 
-              fill="none" 
+        <path id="motionPath1"
+              d="M100,400 C100,100 700,100 700,400 S100,700 100,400 Z"
+              fill="none"
               stroke="none"/>
-              
+
         <path id="motionPath2"
               d="M200,300 C200,500 600,500 600,300 S200,100 200,300 Z"
               fill="none"
@@ -23,9 +23,9 @@
         <g class="moving-elements">
           <circle class="element" r="15" fill="#5E5141" opacity="0.65"/>
           <rect class="element" width="30" height="30" fill="#E4D5C6" opacity="0.5"/>
-          <path class="element" 
-                d="M-10,-10 L10,-10 L0,10 Z" 
-                fill="#7B6E61" 
+          <path class="element"
+                d="M-10,-10 L10,-10 L0,10 Z"
+                fill="#7B6E61"
                 opacity="0.4"/>
         </g>
 
@@ -36,18 +36,18 @@
 
       <div class="mehero__wrap mehero__wrap--orgs">
         <div class="mehero__wrap__inner">
-          <div class="mehero__text" 
-               data-w-id="77c9ae79-3fb1-a629-2d1d-1b9d0a9d8c20" 
+          <div class="mehero__text"
+               data-w-id="77c9ae79-3fb1-a629-2d1d-1b9d0a9d8c20"
                style="opacity: 1; transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg); transform-style: preserve-3d;">
             <h1 class="productive-heading-07 override">
-              {{ __('CareerExplorer for Organizations') }} <br>
+              {{ __('for-organizations.CareerExplorer_for_Organizations') }} <br>
             </h1>
             <div class="mehero__text__floating">
               <p class="productive-heading-04">
-                {{ __('Empower your students with comprehensive career discovery tools.') }}<br>
+                {{ __('for-organizations.Empower_your_students') }}<br>
               </p>
               <p class="body-short-02">
-                {{ __('A self-serve platform for universities, high schools, independent educational consultants, career counselors, non-profits, and other organizations.') }}
+                {{ __('for-organizations.A_self_serve') }}
               </p>
             </div>
           </div>
@@ -58,7 +58,7 @@
                  loading="lazy"
                  sizes="(max-width: 991px) 100vw, 45vw"
                  width="570"
-                 alt="CareerExplorer for Organizations"
+                 alt="Gen.Z for Organizations"
                  srcset="https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/609d67af9f365d9ba4e158e2_portraits-p-500.png 500w, https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/609d67af9f365d9ba4e158e2_portraits-p-800.png 800w, https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/609d67af9f365d9ba4e158e2_portraits-p-1080.png 1080w, https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/609d67af9f365d9ba4e158e2_portraits.png 1140w"
                  class="mehero__img__img mehero__img__img--discord">
           </div>
@@ -106,7 +106,7 @@ const initBackgroundAnimation = () => {
 
   // Motion path animations
   const elements = document.querySelectorAll('.element');
-  
+
   elements.forEach((el, i) => {
     anime({
       targets: el,

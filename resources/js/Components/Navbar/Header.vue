@@ -4,7 +4,7 @@
         <nav class="GlobalNav GlobalNav--sticky" role="navigation">
       <a class="GlobalNav-logo--desktop" data-track="mixpanel" data-target="Home" data-link-type="Header" href="/">
         <svg class="GlobalNav-logo" version="1.1" viewBox="0 0 239 56" xmlns="http://www.w3.org/2000/svg">
-          <title>CareerExplorer</title>
+          <title>Gen.Z</title>
           <g id="Final(WithSokanu)--default" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
             <g id="Finalized-Logo---Black-and-White--default" transform="translate(-18.000000, -29.000000)" fill="currentColor">
               <g id="Logo--default" transform="translate(18.000000, 29.000000)">

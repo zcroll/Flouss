@@ -6240,7 +6240,7 @@ body{
     top:calc(29px + 72px)
 }
 .Listings__Results{
-    background-color:#f4f4f4
+    background-color:transparent
 }
 @media all and (min-width: 768px){
     .Listings__Results{
@@ -6436,7 +6436,7 @@ body{
     box-shadow:0 6px 12px 0 rgba(0,0,0,0.03);
     position:relative;
     margin-bottom:14px;
-    border-radius:0
+    border-radius:10px
 }
 @media all and (min-width: 768px){
     .Listings__ResultItem{
@@ -6570,7 +6570,8 @@ body{
         grid-column:span 2;
         margin:14px;
         border:1px solid #e1e1e1;
-        padding:8px 12px
+        padding:8px 12px;
+        border-radius:10px
     }
 }
 .Listings__ResultItem__stat h4{
@@ -6793,7 +6794,7 @@ body.dark-theme h1,body.dark-theme h2,body.dark-theme h3,body.dark-theme h4,body
     color:white
 }
 body.dark-theme .Listings__FilterSection,body.dark-theme .Listings__Results{
-    background-color:#1b1b1b
+    background-color:transparent
 }
 body.dark-theme .Listings__Sidebar__link{
     color:#f7f7f780

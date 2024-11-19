@@ -6,7 +6,7 @@ return [
     'tableOfContents' => 'Table des matières',
     'inThisArticle' => 'Dans cet article :',
     'skillsGained' => 'Compétences acquises',
-    'relatedJobs' => 'Emplois connexes',
+    'relatedJobs' => 'Carrières connexes',
     'interestedInDegree' => 'Intéressé par ce diplôme ? Explorez notre',
-    'degreeGuide' => 'Guide des diplômes',
+    'degreeGuide' => 'Guide des Diplômes',
 ];

@@ -32,79 +32,79 @@ const submit = () => {
             <AuthenticationCardLogo />
         </template>
 
-        <form @submit.prevent="submit">
+        <form @submit.prevent="submit" class="space-y-4 sm:space-y-6 w-full max-w-sm mx-auto px-4 sm:px-0">
             <div>
-                <InputLabel for="name" value="Name" />
+                <InputLabel for="name" value="Name" class="text-sm sm:text-base" />
                 <TextInput
                     id="name"
                     v-model="form.name"
                     type="text"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full text-sm sm:text-base"
                     required
                     autofocus
                     autocomplete="name"
                 />
-                <InputError class="mt-2" :message="form.errors.name" />
+                <InputError class="mt-2 text-xs sm:text-sm" :message="form.errors.name" />
             </div>
 
-            <div class="mt-4">
-                <InputLabel for="email" value="Email" />
+            <div>
+                <InputLabel for="email" value="Email" class="text-sm sm:text-base" />
                 <TextInput
                     id="email"
                     v-model="form.email"
                     type="email"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full text-sm sm:text-base"
                     required
                     autocomplete="username"
                 />
-                <InputError class="mt-2" :message="form.errors.email" />
+                <InputError class="mt-2 text-xs sm:text-sm" :message="form.errors.email" />
             </div>
 
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
+            <div>
+                <InputLabel for="password" value="Password" class="text-sm sm:text-base" />
                 <TextInput
                     id="password"
                     v-model="form.password"
                     type="password"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full text-sm sm:text-base"
                     required
                     autocomplete="new-password"
                 />
-                <InputError class="mt-2" :message="form.errors.password" />
+                <InputError class="mt-2 text-xs sm:text-sm" :message="form.errors.password" />
             </div>
 
-            <div class="mt-4">
-                <InputLabel for="password_confirmation" value="Confirm Password" />
+            <div>
+                <InputLabel for="password_confirmation" value="Confirm Password" class="text-sm sm:text-base" />
                 <TextInput
                     id="password_confirmation"
                     v-model="form.password_confirmation"
                     type="password"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full text-sm sm:text-base"
                     required
                     autocomplete="new-password"
                 />
-                <InputError class="mt-2" :message="form.errors.password_confirmation" />
+                <InputError class="mt-2 text-xs sm:text-sm" :message="form.errors.password_confirmation" />
             </div>
 
-            <div v-if="$page.props.jetstream.hasTermsAndPrivacyPolicyFeature" class="mt-4">
+            <div v-if="$page.props.jetstream.hasTermsAndPrivacyPolicyFeature">
                 <InputLabel for="terms">
                     <div class="flex items-center">
                         <Checkbox id="terms" v-model:checked="form.terms" name="terms" required />
 
-                        <div class="ms-2">
-                            I agree to the <a target="_blank" :href="route('terms.show')" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Terms of Service</a> and <a target="_blank" :href="route('policy.show')" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Privacy Policy</a>
+                        <div class="ms-2 text-xs sm:text-sm">
+                            I agree to the <a target="_blank" :href="route('terms.show')" class="underline text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Terms of Service</a> and <a target="_blank" :href="route('policy.show')" class="underline text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Privacy Policy</a>
                         </div>
                     </div>
-                    <InputError class="mt-2" :message="form.errors.terms" />
+                    <InputError class="mt-2 text-xs sm:text-sm" :message="form.errors.terms" />
                 </InputLabel>
             </div>
 
-            <div class="flex items-center justify-between mt-4">
-                <SecondaryButton @click="$inertia.visit(route('login'))" class="text-sm text-gray-600 hover:text-gray-900 rounded-md font-bold">
+            <div class="flex flex-row items-center justify-between gap-2">
+                <SecondaryButton @click="$inertia.visit(route('login'))" class="text-[10px] sm:text-sm text-gray-600 hover:text-gray-900 rounded-md font-bold">
                     registered?
                 </SecondaryButton>
 
-                <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing" class="text-[10px] sm:text-sm">
                     Sign up
                 </PrimaryButton>
             </div>

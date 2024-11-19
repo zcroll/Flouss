@@ -1,12 +1,12 @@
 <?php
 
 return [
-    'explore_degrees' => 'Explorer les diplômes',
+    'explore_degrees' => 'Explorer les disciplines académiques',
     'find_academic_paths' => 'Trouvez les parcours académiques qui correspondent à vos talents et aspirations uniques.',
     'filters' => 'Filtres',
     'search' => 'Rechercher',
-    'search_degrees' => 'Rechercher des diplômes',
-    'degree_levels' => 'Niveaux de diplôme',
+    'search_degrees' => 'Rechercher des Diplômes',
+    'degree_levels' => 'Niveaux de Diplôme',
     'select_degree_levels' => 'Sélectionner les niveaux de diplôme',
     'sort_by' => 'Trier par',
     'select_sorting_option' => 'Sélectionner l\'option de tri',

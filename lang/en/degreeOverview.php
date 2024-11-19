@@ -6,7 +6,7 @@ return [
     'tableOfContents' => 'Table of contents',
     'inThisArticle' => 'In this article:',
     'skillsGained' => 'Skills Gained',
-    'relatedJobs' => 'Related Jobs',
-    'interestedInDegree' => 'Interested in pursuing this degree? Explore our',
+    'relatedJobs' => 'Related Careers',
+    'interestedInDegree' => 'Interested in pursuing this Degree? Explore our',
     'degreeGuide' => 'Degree Guide',
 ];

@@ -11,7 +11,7 @@ onMounted(() => {
 
   timeline
     .add({
-      targets: '.Organizations__header__bg path:nth-child(1)', 
+      targets: '.Organizations__header__bg path:nth-child(1)',
       translateX: [-10, 10],
       translateY: [-5, 5],
       rotate: [-1, 1],
@@ -21,7 +21,7 @@ onMounted(() => {
     .add({
       targets: '.Organizations__header__bg path:nth-child(2)',
       translateX: [5, -5],
-      translateY: [10, -10], 
+      translateY: [10, -10],
       rotate: [1, -1],
       duration: 3500,
       easing: 'easeInOutQuad'
@@ -30,7 +30,7 @@ onMounted(() => {
       targets: '.Organizations__header__bg path:nth-child(3)',
       translateX: [-8, 8],
       translateY: [8, -8],
-      rotate: [-2, 2], 
+      rotate: [-2, 2],
       duration: 4500,
       easing: 'easeInOutQuad'
     }, '-=3500');
@@ -46,11 +46,11 @@ onMounted(() => {
         <path fill-rule="evenodd" clip-rule="evenodd" d="M622.228 573.148C583.029 598.6 551.393 628.291 507.974 618.343C466.537 608.848 432.848 589.1 399.062 567.112C354.003 537.788 286.154 520.281 278.723 469.147C271.326 418.254 328.404 373.634 364.496 329.271C398.647 287.293 431.911 244.519 482.17 219.072C536.564 191.531 602.725 162.33 656.029 181.663C709.03 200.886 705.249 269.449 736.771 311.415C764.321 348.094 840.295 364.883 828.339 411.066C815.353 461.228 724.236 460.075 687.488 501.785C656.647 536.79 662.514 546.99 622.228 573.148Z" fill="#7B6E61"/>
       </svg>
 
-      <div class="mehero__text" 
-           data-w-id="77c9ae79-3fb1-a629-2d1d-1b9d0a9d8c20" 
+      <div class="mehero__text"
+           data-w-id="77c9ae79-3fb1-a629-2d1d-1b9d0a9d8c20"
            style="opacity: 1; transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg); transform-style: preserve-3d;">
         <h1 class="productive-heading-07 override">
-          CareerExplorer for Organizations<br>
+          Gen.Z for Organizations<br>
         </h1>
         <div class="mehero__text__floating">
           <p class="productive-heading-04">
@@ -68,7 +68,7 @@ onMounted(() => {
              loading="lazy"
              sizes="(max-width: 991px) 100vw, 45vw"
              width="570"
-             alt="CareerExplorer for Organizations"
+             alt="Gen.Z for Organizations"
              srcset="https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/609d67af9f365d9ba4e158e2_portraits-p-500.png 500w, https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/609d67af9f365d9ba4e158e2_portraits-p-800.png 800w, https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/609d67af9f365d9ba4e158e2_portraits-p-1080.png 1080w, https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/609d67af9f365d9ba4e158e2_portraits.png 1140w"
              class="mehero__img__img mehero__img__img--discord">
       </div>

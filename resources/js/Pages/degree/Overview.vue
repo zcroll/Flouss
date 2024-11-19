@@ -149,8 +149,9 @@
                     </section>
 
                     <!-- Related Jobs Section -->
-                    <section id="related-jobs" class="space-y-8 mt-12">
+                    <section v-if="degreeJobs.length>1" id="related-jobs" class="space-y-8 mt-12">
                         <h2
+                        
                             class="text-2xl font-extralight text-gray-900 border-b-2 pb-2 border-gray-200"
                         >
                             {{ __("degreeOverview.relatedJobs") }}
@@ -168,8 +169,9 @@
                                 {{ job.job_description }}
                             </p>
                         </div>
-                        <BackToTop />
+                        
                     </section>
+                    <BackToTop />
                 </div>
             </StickySidebar>
         </div>

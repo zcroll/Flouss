@@ -47,7 +47,7 @@
             </div>
             <div class="Discovery__sidebar">
               <div>
-                <img :src="'https://res.cloudinary.com/hnpb47ejt/image/upload/q_auto,f_auto,w_480/v1568404399/ux8i7elvayqifan41pj8'" alt="CareerExplorer Assessment" class="">
+                <img :src="'https://res.cloudinary.com/hnpb47ejt/image/upload/q_auto,f_auto,w_480/v1568404399/ux8i7elvayqifan41pj8'" alt="Gen.Z Assessment" class="">
                 <div class="Discovery__sidebar__content">
                   <h3 class="">Your magic 🤩💫</h3>
                   <!-- <p class="">Are you {{ ArchetypeData.name.charAt(0).toLowerCase() === 'a' || ArchetypeData.name.charAt(0).toLowerCase() === 'e' || ArchetypeData.name.charAt(0).toLowerCase() === 'i' || ArchetypeData.name.charAt(0).toLowerCase() === 'o' || ArchetypeData.name.charAt(0).toLowerCase() === 'u' ? 'an' : 'a' }} {{ ArchetypeData.name }} {{ArchetypeData.personality_paragraph}}.</p> -->
