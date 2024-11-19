@@ -6,21 +6,49 @@
 
         <!-- Sticky Sidebar -->
         <div class="w-full lg:w-1/3 lg:mb-0 lg:pl-8 pb-5 pt-8">
-            <div
-                class="sticky top-[100px] text-white rounded-2xl p-6 overflow-hidden bg-[#353535]"
-            >
+            <!-- Mobile Navigation Bar (Fixed Bottom) -->
+            <div v-if="isSmallScreen" 
+                 class="fixed bottom-0 left-0 right-0 bg-[#353535] text-white shadow-lg z-50 px-4 py-3">
+                <div class="flex items-center justify-between">
+                    <img :src="image" alt="Icon" class="w-10 h-10 rounded-full"/>
+                    <h3 class="text-sm font-bold ml-2 flex-1 truncate">{{ title }}</h3>
+                    <FavoriteButton
+                        :model-id="id"
+                        :model-type="type"
+                        :initial-is-favorited="isFavorited"
+                        :show-label="false"
+                        class="ml-2"
+                        :key="id"
+                    />
+                </div>
+                <div class="overflow-x-auto scrollbar-hide mt-3">
+                    <div class="flex space-x-2 pb-2">
+                        <Link
+                            v-for="(link, index) in links"
+                            :key="index"
+                            :href="link.url"
+                            :class="{
+                                'bg-amber-500': $page.url === link.url,
+                                'bg-stone-700': $page.url !== link.url
+                            }"
+                            class="whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-all"
+                        >
+                            {{ __(
+                                `stickybar.${link.text.toLowerCase().replace(" ", "_")}`
+                            ) }}
+                        </Link>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Desktop Sticky Sidebar -->
+            <div v-else
+                 class="sticky top-[100px] text-white rounded-2xl p-6 overflow-hidden bg-[#353535]">
                 <div class="relative z-10">
-                    <!-- Main Content for Large Screens -->
-                    <div v-if="!isSmallScreen" class="rounded-3xl">
+                    <div class="rounded-3xl">
                         <div class="flex items-center mb-10">
-                            <div
-                                class="w-20 h-20 bg-white rounded-full flex items-center justify-center mr-4"
-                            >
-                                <img
-                                    :src="image"
-                                    alt="Icon"
-                                    class="w-16 h-16 rounded-full"
-                                />
+                            <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center mr-4">
+                                <img :src="image" alt="Icon" class="w-16 h-16 rounded-full"/>
                             </div>
 
                             <div class="flex flex-col">
@@ -38,79 +66,31 @@
                             </div>
                         </div>
 
-
                         <ul class="space-y-4">
                             <li v-for="(link, index) in links" :key="index">
                                 <Link
                                     :href="link.url"
                                     :class="{
-                                        active: $page.url === link.url,
-                                        'disabled-link': $page.url === link.url,
+                                        'bg-amber-500': $page.url === link.url,
+                                        'hover:bg-stone-700': $page.url !== link.url
                                     }"
-                                    :aria-disabled="$page.url === link.url"
-                                    :prefetch="['mount', 'hover']"
-                                    class="block py-2 px-4 rounded-lg transition-colors duration-200 hover:bg-white hover:bg-opacity-20"
+                                    class="block py-2 px-4 rounded-lg transition-colors duration-200"
                                 >
-                                    <span class="text-xl font-semibold">{{
-                                        __(
-                                            `stickybar.${link.text
-                                                .toLowerCase()
-                                                .replace(" ", "_")}`
-                                        )
-                                    }}</span>
+                                    <span class="text-xl font-semibold">
+                                        {{ __(
+                                            `stickybar.${link.text.toLowerCase().replace(" ", "_")}`
+                                        ) }}
+                                    </span>
                                 </Link>
                             </li>
                         </ul>
                     </div>
-                    <!-- Centered Content for Small Screens -->
-                    <div v-else class="flex flex-col items-center">
-                        <div
-                            class="w-20 h-20 bg-white rounded-full flex items-center justify-center mb-4"
-                        >
-                            <img
-                                :src="image"
-                                alt="Icon"
-                                class="w-16 h-16 rounded-full"
-                            />
-                        </div>
-                        <h3 class="text-xl font-bold mb-6">{{ title }}</h3>
-                        <div class="grid grid-cols-3 gap-4 mb-6 w-full">
-                            <!-- Add small screen content here if needed -->
-                        </div>
-                        <div class="flex flex-wrap justify-center gap-2">
-                            <Link
-                                v-for="(link, index) in links"
-                                :key="index"
-                                :href="link.url"
-                                :class="{
-                                    active: $page.url === link.url,
-                                    'disabled-link': $page.url === link.url,
-                                }"
-                                :prefetch="['mount', 'hover']"
-                                :aria-disabled="$page.url === link.url"
-                                class="py-2 px-4 bg-white bg-opacity-20 rounded-lg text-center transition-colors duration-200 hover:bg-opacity-30"
-                            >
-                                <span class="text-sm font-semibold">{{
-                                    __(
-                                        `stickybar.${link.text
-                                            .toLowerCase()
-                                            .replace(" ", "_")}`
-                                    )
-                                }}</span>
-                            </Link>
-                        </div>
-                    </div>
                 </div>
+                
                 <!-- Decorative background elements -->
-                <div
-                    class="absolute top-0 left-0 w-full h-full overflow-hidden opacity-10"
-                >
-                    <div
-                        class="absolute top-0 left-0 w-40 h-40 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2"
-                    ></div>
-                    <div
-                        class="absolute bottom-0 right-0 w-60 h-60 bg-white rounded-full transform translate-x-1/2 translate-y-1/2"
-                    ></div>
+                <div class="absolute top-0 left-0 w-full h-full overflow-hidden opacity-10">
+                    <div class="absolute top-0 left-0 w-40 h-40 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
+                    <div class="absolute bottom-0 right-0 w-60 h-60 bg-white rounded-full transform translate-x-1/2 translate-y-1/2"></div>
                 </div>
             </div>
         </div>
@@ -146,12 +126,10 @@ const props = defineProps({
     }
 });
 
-// Watch isFavorited prop changes
 watch(() => props.isFavorited, (newValue) => {
     console.log('isFavorited changed:', newValue);
 });
 
-// Log initial value
 console.log('Initial isFavorited:', props.isFavorited);
 
 const isSmallScreen = ref(false);
@@ -160,10 +138,7 @@ const updateScreenSize = () => {
     isSmallScreen.value = window.innerWidth < 1024;
 };
 
-// Call once to set initial value
 updateScreenSize();
-
-// Add event listener for resize
 window.addEventListener("resize", updateScreenSize);
 
 const baseUrl = computed(() => `/${props.type}/${props.slug}`);
@@ -172,16 +147,9 @@ const links = computed(() => {
     if (props.type === "career") {
         return [
             { text: "overview", url: baseUrl.value },
-            {
-                text: "work_environments",
-                url: `${baseUrl.value}/workEnvironments`,
-            },
+            { text: "work_environments", url: `${baseUrl.value}/workEnvironments` },
             { text: "personality", url: `${baseUrl.value}/personality` },
-            {
-                text: "how_to_become",
-                url: `${baseUrl.value}/how-to-become`,
-                disabled: props.disableStepsLink,
-            },
+            { text: "how_to_become", url: `${baseUrl.value}/how-to-become`, disabled: props.disableStepsLink },
         ];
     } else if (props.type === "degree") {
         return [
@@ -222,26 +190,17 @@ const getSecondBoxContent = computed(() => {
 });
 
 const isAnimating = ref(false);
-
-// Remove the existing saveFavorite function and favoriteButtonClasses since we're using the FavoriteButton component now
-
 </script>
 
 <style scoped>
-@keyframes bounce {
-    0%, 100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-5px);
-    }
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
 }
 
-.animate-bounce {
-    animation: bounce 0.5s ease-in-out;
-}
-
-/* Add this new style for the favorite button */
 .favorite-button {
     @apply flex items-center mt-2 transition-all duration-300;
 }

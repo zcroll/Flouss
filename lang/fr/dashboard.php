@@ -39,4 +39,8 @@ return [
     'no_liked_formations' => 'Vous n\'avez pas aimé de formations.',
     'discover_jobs' => 'Découvrez des Carrières.',
     'discover_formations' => 'Découvrez des disciplines académiques.',
+    'type_your_message' => 'Écrivez votre message...',
+    'suggested_questions' => 'Questions suggérées',
+    'ai_career_guide' => 'Guide de carrière IA',
+    'ai_assistant' => 'Assistant IA',
 ];

@@ -39,4 +39,8 @@ return [
     'no_liked_formations' => 'You have not liked any Area of study yet.',
     'discover_jobs' => 'Discover Careers',
     'discover_formations' => 'Discover Academic Disciplines',
+    'type_your_message' => 'Type your message...',
+    'suggested_questions' => 'Suggested Questions',
+    'ai_career_guide' => 'AI Career Guide',
+    'ai_assistant' => 'AI Assistant',
 ];
