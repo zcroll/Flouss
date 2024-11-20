@@ -1,6 +1,5 @@
 <template>
-  <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css">
-  <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/assessments.ba16abcb0f5b.css">
+
 
   <section class="Roadmap" data-testid="roadmap">
     <div class="assessment-with-progress">
@@ -221,4 +220,7 @@ onMounted(() => {
 </script>
 
 
-
+<style scoped>
+@import url('https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css');
+@import url('https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/assessments.ba16abcb0f5b.css');
+</style>
