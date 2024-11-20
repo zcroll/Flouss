@@ -20,7 +20,7 @@ class ApiController extends Controller
     public function __construct()
     {
         $this->client = OpenAI::factory()
-            ->withApiKey(env('OPENAI_API_KEY'))
+            ->withApiKey(env('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'))
             ->withBaseUri('https://models.inference.ai.azure.com')
             ->make();
     }
@@ -36,7 +36,7 @@ class ApiController extends Controller
         // Get user's assessment results for context
         $userId = Auth::id();
         $firstScore = ResultResource::collection(Result::with('user')->where('user_id', $userId)->latest()->get())->first();
-        
+
         $systemContext = 'You are a helpful AI assistant focused on career guidance and professional development. You have access to the user\'s assessment results, personality archetype, and career matches. Use this information to provide personalized advice and insights.
 
 Format your responses in a clean, organized way using emojis at the start of each point. Present career information like this example:
@@ -57,7 +57,7 @@ When giving advice:
 - Tailor suggestions to their strengths
 
 Show all the data provided in the context and use it to personalize your responses.';
-        
+
         if ($firstScore) {
             $archetype = $firstScore->Archetype ?? null;
             $jobs = null;
@@ -82,7 +82,7 @@ Show all the data provided in the context and use it to personalize your respons
 
             if ($Archetype) {
                 $systemContext .= " Their personality archetype is {$Archetype->name}.";
-                
+
                 if (!empty($Archetype->scales)) {
                     $scales = json_decode($Archetype->scales, true);
                     $systemContext .= " Their key personality traits are:";
