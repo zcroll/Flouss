@@ -66,12 +66,12 @@ class MainTestController extends Controller
         $totalHollandCodeItems = array_sum(array_map(function ($set) {
             return count($set['items']);
         }, $hollandCodeSets));
-        
+
         $totalBasicInterestItems = count($basicInterests);
-        
+
         $hollandCodeProgress = count($hollandCodeResponses) / $totalHollandCodeItems * 100;
         $basicInterestProgress = count($basicInterestResponses) / $totalBasicInterestItems * 100;
-        
+
         $progress = [
             'hollandCode' => round($hollandCodeProgress),
             'basicInterest' => round($basicInterestProgress),
@@ -143,9 +143,9 @@ class MainTestController extends Controller
         Session::put('current_item_index', $currentItemIndex);
 
         $currentItem = $basicInterests[$currentItemIndex];
- 
 
-       
+
+
         $formattedResponses = [];
         foreach ($responses as $response) {
             $category = $response['category'];
@@ -173,6 +173,7 @@ class MainTestController extends Controller
                     return [
                         'id' => $item->id,
                         'text' => $item->text,
+                        'text_fr' => app()->getLocale() === 'fr' ? $item->text_fr : null,
                         'type' => $item->type,
                     ];
                 })->toArray(),
@@ -180,6 +181,7 @@ class MainTestController extends Controller
         })->toArray();
 
         Session::put('holland_code_sets', $hollandCodeSets);
+        ds(['hollandCodeSets'=>$hollandCodeSets]);
 
         return $hollandCodeSets;
     }
@@ -190,7 +192,9 @@ class MainTestController extends Controller
             return [
                 'id' => $interest->id,
                 'category' => $interest->category,
+                'category_fr' => app()->getLocale() === 'fr' ? $interest->category_fr : null,
                 'question' => $interest->question,
+                'question_fr' => app()->getLocale() === 'fr' ? $interest->question_fr : null,
             ];
         })->toArray();
 
@@ -232,7 +236,7 @@ class MainTestController extends Controller
 
         $hollandScores = $this->calculateHollandScores($hollandCodeResponses);
         $archetype =  $this->getArchetypeAndTopScores($hollandScores);
-        
+
         $topMatchingJobs = $this->matchJobs($formattedResponses);
 
         ds(['archetype'=>$archetype, 'topMatchingJobs'=>$topMatchingJobs]);
@@ -256,8 +260,8 @@ class MainTestController extends Controller
             throw new \RuntimeException('Failed to save assessment results');
         }
 
-        return to_route('results');
         Session::forget(['holland_code_sets', 'basic_interests', 'current_set_index', 'current_item_index', 'holland_code_responses', 'basic_interest_responses', 'test_stage']);
+        return to_route('results');
 
 
 
@@ -269,14 +273,14 @@ class MainTestController extends Controller
     private function matchJobs($interest_scores)
     {
         $scriptPath = app_path('/python/test.py');
-        
+
         try {
             $process = new Process([
                 'python',  // Updated Python path
                 $scriptPath,
                 json_encode($interest_scores)
             ]);
-            
+
             $process->setTimeout(300);
             $process->run();
 
@@ -286,7 +290,7 @@ class MainTestController extends Controller
             }
 
             return json_decode($process->getOutput(), true);
-            
+
         } catch (\Exception $e) {
             Log::error('Job matching failed', ['error' => $e->getMessage()]);
             return ['error' => 'Failed to process job matching'];
@@ -337,14 +341,14 @@ class MainTestController extends Controller
         $currentSetIndex = Session::get('current_set_index', 0);
         $currentItemIndex = Session::get('current_item_index', 0);
         $testStage = Session::get('test_stage', 'holland_codes');
-        
+
         // If we're at the start of basic interests, go back to holland codes
         if ($testStage === 'basic_interests' && $currentItemIndex === 0) {
             $testStage = 'holland_codes';
             $hollandCodeSets = Session::get('holland_code_sets');
             $currentSetIndex = count($hollandCodeSets) - 1;
             $currentItemIndex = count($hollandCodeSets[$currentSetIndex]['items']) - 1;
-            
+
             // Remove the last basic interest response
             $responses = Session::get('basic_interest_responses', []);
             array_pop($responses);
@@ -353,12 +357,12 @@ class MainTestController extends Controller
         // If we're in basic interests
         else if ($testStage === 'basic_interests') {
             $currentItemIndex--;
-            
+
             // Remove the last response
             $responses = Session::get('basic_interest_responses', []);
             array_pop($responses);
             Session::put('basic_interest_responses', $responses);
-            
+
         }
         // If we're in holland codes
         else {
@@ -371,17 +375,17 @@ class MainTestController extends Controller
             } else {
                 $currentItemIndex--;
             }
-            
+
             // Remove the last response
             $responses = Session::get('holland_code_responses', []);
             array_pop($responses);
             Session::put('holland_code_responses', $responses);
         }
-        
+
         Session::put('test_stage', $testStage);
         Session::put('current_set_index', $currentSetIndex);
         Session::put('current_item_index', $currentItemIndex);
-        
+
         return to_route('main-test');
     }
 }

@@ -3,14 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class JobStep extends Model
 {
-    protected $table = 'job_steps';
+    public $timestamps = false;
 
-    protected $fillable = ['job_info_id', 'step_title'];
-
-    public function jobInfo()
+    public function jobInfo(): BelongsTo
     {
         return $this->belongsTo(JobInfo::class);
     }

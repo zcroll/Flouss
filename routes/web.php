@@ -13,7 +13,6 @@ use App\Http\Controllers\Degree\DegreeController;
 use App\Http\Controllers\dashboard\DashboardController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\test\TestController_test;
 use Inertia\Inertia;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\test\MainTestController;
@@ -137,11 +136,11 @@ Route::get('/im', function () {
 
 Route::get('/career-test', function () {
   return Inertia::render('Career-Test');
-});
+})->name('Career-Test');
 
 Route::get('/for-organizations', function () {
   return Inertia::render('For-organizations');
-});
+})->name('For-organizations');
 
 Route::get('/ruller', function () {
   return Inertia::render('ruller');

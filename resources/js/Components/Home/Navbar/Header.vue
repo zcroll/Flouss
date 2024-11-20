@@ -35,12 +35,11 @@ export default {
 
 
 <template>
-    <link rel="stylesheet" href="/css/header.css">
        <div id="globalnav-container" data-registration-modal="true">
         <nav :class="['GlobalNav', { 'GlobalNav--sticky': isSticky }]" role="navigation">
-            <a class="GlobalNav-logo--desktop w--current" data-track="mixpanel" data-target="Home" data-link-type="Header" href="/">
+            <Link class="GlobalNav-logo--desktop w--current" data-track="mixpanel" data-target="Home" data-link-type="Header" :href="route('home')">
               <img src="/logo_no_background.png" alt="Gen.Z" class="h-20" />
-            </a>
+            </Link>
             <a class="GlobalNav-menu-button" href="#" data-track="mixpanel" data-target="Toggle Menu" data-link-type="Header" aria-label="Open Menu">
                 <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="bars" class="svg-inline--fa fa-bars GlobalNav-menu-hamburger" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                     <path fill="currentColor" d="M0 96C0 78.33 14.33 64 32 64H416C433.7 64 448 78.33 448 96C448 113.7 433.7 128 416 128H32C14.33 128 0 113.7 0 96zM0 256C0 238.3 14.33 224 32 224H416C433.7 224 448 238.3 448 256C448 273.7 433.7 288 416 288H32C14.33 288 0 273.7 0 256zM416 448H32C14.33 448 0 433.7 0 416C0 398.3 14.33 384 32 384H416C433.7 384 448 398.3 448 416C448 433.7 433.7 448 416 448z"></path>
@@ -48,24 +47,20 @@ export default {
             </a>
             <ul class="GlobalNav-menu">
               <li class="GlobalNav-menu-item">
-                    <a class="GlobalNav-menu-link GlobalNav-menu-link--default" data-track="mixpanel" data-target="For Organizations" data-link-type="Header" href="/for-organizations/">&nbsp;&nbsp;&nbsp;&nbsp;</a>
-                </li>     <li class="GlobalNav-menu-item">
-                    <a class="GlobalNav-menu-link GlobalNav-menu-link--default" data-track="mixpanel" data-target="For Organizations" data-link-type="Header" href="/">Home </a>
+                    <Link class="GlobalNav-menu-link GlobalNav-menu-link--default" data-track="mixpanel" data-target="For Organizations" data-link-type="Header" :href="route('For-organizations')">&nbsp;&nbsp;&nbsp;&nbsp;</Link>
+                </li>     
+                <li class="GlobalNav-menu-item">
+                    <Link class="GlobalNav-menu-link GlobalNav-menu-link--default" data-track="mixpanel" data-target="For Organizations" data-link-type="Header" :href="route('home')">Home</Link>
                 </li>
                 <li class="GlobalNav-menu-item GlobalNav-menu-item--mobile">
-                    <a class="GlobalNav-menu-link GlobalNav-menu-link--default w--current" data-track="mixpanel" data-target="Home" data-link-type="Header" href="/">{{ __('navigation.home') }}</a>
+                    <Link class="GlobalNav-menu-link GlobalNav-menu-link--default w--current" data-track="mixpanel" data-target="Home" data-link-type="Header" :href="route('home')">{{ __('navigation.home') }}</Link>
                 </li>
                 <li class="GlobalNav-menu-item">
-                    <a class="GlobalNav-menu-link GlobalNav-menu-link--default" data-track="mixpanel" data-target="Career Test" data-link-type="Header" href="/career-test/">{{ __('navigation.Career_Test') }}</a>
+                    <Link class="GlobalNav-menu-link GlobalNav-menu-link--default" data-track="mixpanel" data-target="Career Test" data-link-type="Header" :href="route('Career-Test')">{{ __('navigation.Career_Test') }}</Link>
                 </li>
                 <li class="GlobalNav-menu-item">
-                    <a class="GlobalNav-menu-link GlobalNav-menu-link--default" data-track="mixpanel" data-target="For Organizations" data-link-type="Header" href="/for-organizations/">{{ __('navigation.Organization') }}</a>
+                    <Link class="GlobalNav-menu-link GlobalNav-menu-link--default" data-track="mixpanel" data-target="For Organizations" data-link-type="Header" :href="route('For-organizations')">{{ __('navigation.Organization') }}</Link>
                 </li>
-
-
-
-
-
             </ul>
             <div class="GlobalNav-menu-item--login">
                 <template v-if="$page.props.auth.user">
@@ -86,3 +81,9 @@ export default {
         </div>
     </div>
 </template>
+<style scoped>
+
+@import '/public/css/header.css';
+
+/* @import '@/css/header.css'; */
+</style>

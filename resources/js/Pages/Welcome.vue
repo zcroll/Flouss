@@ -1,31 +1,31 @@
 <template>
     <div>
 
-      <Header  :canLogin="canLogin" :canRegister="canRegister"/>
-      <HomePage />
-
+      <Header  :canLogin="canLogin" :canRegister="canRegister" />
+      <Hero />
+      <Steps />
+      <HowItWork />
+      <Gardien />
       <Footer />
-    </div>
+      </div>
 
   </template>
 
   <script>
   import { Link , usePage } from '@inertiajs/vue3';
-  import Content from "@/Components/Content.vue";
-  import NavBar from "@/Pages/NavBar.vue";
   import Footer from "@/Components/Footer.vue"
-  import Section from "@/Pages/HomePage/Section.vue";
+  import Steps from "@/Components/Home/Steps.vue";
   import HowItWork from "@/Components/Home/HowItWork.vue";
-  import Im from "@/Pages/HomePage.vue";
-  import HomePage from "@/Pages/HomePage.vue";
+  import Gardien from "@/Components/Home/Gardien.vue";
   import Header from "@/Components/Home/Navbar/Header.vue";
+  import Hero from "@/Components/Home/Hero.vue";
 
 
 
 
   export default {
     name: 'App',
-    components: {Header, HomePage, Im, HowItWork, Section, NavBar, Content, Footer, Link, usePage},
+    components: {Header, Steps, HowItWork, Gardien, Footer, Link, usePage, Hero},
     props: {
       canLogin: Boolean,
       canRegister: Boolean,
@@ -72,6 +72,7 @@
   }
   </script>
 <style>
+    @import '/public/css/Home.css';
 
 .module {
   margin-top: 20px;

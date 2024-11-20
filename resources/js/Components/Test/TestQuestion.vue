@@ -13,8 +13,22 @@
         <h4 v-if="currentItemIndex === 0" aria-hidden="true">
           {{ testStage === 'holland_codes' ? 'Would you like to...' : 'Would you enjoy...' }}
         </h4>
-        <h3 aria-hidden="true">{{ testStage === 'holland_codes' ? currentItem.text : currentItem.category }}</h3>
-        <h5 v-if="testStage === 'basic_interests'" aria-hidden="true">
+        <h3 v-if="testStage === 'holland_codes' && currentItem.text_fr" aria-hidden="true">
+          {{ currentItem.text_fr }}
+        </h3>
+        <h3 v-else-if="testStage === 'holland_codes'" aria-hidden="true">
+          {{ currentItem.text }}
+        </h3>
+        <h3 v-if="testStage === 'basic_interests' && currentItem.category_fr" aria-hidden="true">
+          {{ currentItem.category_fr }}
+        </h3>
+        <h3 v-else-if="testStage === 'basic_interests'" aria-hidden="true">
+          {{ currentItem.category }}
+        </h3>
+        <h5 v-if="testStage === 'basic_interests' && currentItem.question_fr" aria-hidden="true">
+          <p>{{ currentItem.question_fr }}</p>
+        </h5>
+        <h5 v-else-if="testStage === 'basic_interests'" aria-hidden="true">
           <p>{{ currentItem.question }}</p>
         </h5>
         

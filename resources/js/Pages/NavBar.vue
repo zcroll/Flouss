@@ -1,6 +1,5 @@
 <template>
   <div>
-    <link rel="stylesheet" media="all" href="/css/landingPage/index.css" />
     <div class="top-menu__main">
       <div class="top-menu__left">
         <nav role="navigation">
@@ -89,3 +88,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+@import '@/css/landingPage/index.css';
+</style>
+
+

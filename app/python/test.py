@@ -53,6 +53,7 @@ class JobMatcher:
         final_matches = []
         data_cache = {}
         duplicate_tracker = set()
+        allowed_education = ["Master's", "Doctorate", "Bachelor's"]
         
         # Get interests by score
         interests_by_score = {}
@@ -73,7 +74,7 @@ class JobMatcher:
             for pair in pairs:
                 if pair not in data_cache:
                     jobs = self.get_jobs_by_fields(pair)
-                    filtered_jobs = [job for job in jobs if job['education_level'] not in ['high school', 'associate']]
+                    filtered_jobs = [job for job in jobs if job['education_level'] in allowed_education]
                     data_cache[pair] = filtered_jobs
                 
                 final_matches.extend(data_cache[pair])
@@ -83,7 +84,7 @@ class JobMatcher:
             pair = tuple(high_score_interests)
             if pair not in data_cache:
                 jobs = self.get_jobs_by_fields(pair)
-                filtered_jobs = [job for job in jobs if job['education_level'] not in ['high school', 'associate']]
+                filtered_jobs = [job for job in jobs if job['education_level'] in allowed_education]
                 data_cache[pair] = filtered_jobs
             
             final_matches.extend(data_cache[pair])
@@ -94,7 +95,7 @@ class JobMatcher:
             for pair in pairs:
                 if pair not in data_cache:
                     jobs = self.get_jobs_by_fields(pair)
-                    filtered_jobs = [job for job in jobs if job['education_level'] not in ['high school', 'associate']]
+                    filtered_jobs = [job for job in jobs if job['education_level'] in allowed_education]
                     data_cache[pair] = filtered_jobs
             
             sorted_pairs = sorted(pairs, key=lambda p: len(data_cache[p]), reverse=True)
@@ -122,7 +123,7 @@ class JobMatcher:
             for pair in pairs:
                 if pair not in data_cache:
                     jobs = self.get_jobs_by_fields(pair)
-                    filtered_jobs = [job for job in jobs if job['education_level'] not in ['high school', 'associate']]
+                    filtered_jobs = [job for job in jobs if job['education_level'] in allowed_education]
                     data_cache[pair] = filtered_jobs
             
             sorted_pairs = sorted(pairs, key=lambda p: len(data_cache[p]), reverse=True)
@@ -150,7 +151,7 @@ class JobMatcher:
             for pair in pairs:
                 if pair not in data_cache:
                     jobs = self.get_jobs_by_fields(pair)
-                    filtered_jobs = [job for job in jobs if job['education_level'] not in ['high school', 'associate']]
+                    filtered_jobs = [job for job in jobs if job['education_level'] in allowed_education]
                     data_cache[pair] = filtered_jobs
             
             sorted_pairs = sorted(pairs, key=lambda p: len(data_cache[p]), reverse=True)
@@ -178,7 +179,7 @@ class JobMatcher:
             for pair in pairs:
                 if pair not in data_cache:
                     jobs = self.get_jobs_by_fields(pair)
-                    filtered_jobs = [job for job in jobs if job['education_level'] not in ['high school', 'associate']]
+                    filtered_jobs = [job for job in jobs if job['education_level'] in allowed_education]
                     data_cache[pair] = filtered_jobs
             
             sorted_pairs = sorted(pairs, key=lambda p: len(data_cache[p]), reverse=True)

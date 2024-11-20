@@ -9,6 +9,7 @@ use App\Http\Resources\Career\WorkEnvironmentResource;
 use App\Models\Degree;
 use App\Models\DegreeJob;
 use App\Models\JobInfo;
+use App\Models\JobStep;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -110,7 +111,6 @@ class CareerController extends Controller
     {
         $occupation = JobInfo::with([
             'jobSteps',
-            'jobCertifications',
             'jobAssociations',
             'howToBecome',
         ])->where('slug', $job)->firstOrFail();
@@ -142,7 +142,12 @@ class CareerController extends Controller
                 'image' => $occupation->image,
                 'is_favorited' => $isFavorited,
             ],
-            'jobSteps' => $occupation->jobSteps,
+            'jobSteps' => $occupation->jobSteps->map(function($step) {
+                return [
+                    'id' => $step->id,
+                    'title' => $this->getLocalizedColumn($step, 'step_title'),
+                ];
+            }),
             'jobAssociations' => $occupation->jobAssociations,
             'jobDegrees' => $degrees,
             'howToBecome' => $occupation->howToBecome,

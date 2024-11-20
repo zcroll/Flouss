@@ -1,5 +1,4 @@
 <template>
-    <link rel="stylesheet" href="/css/Home.css" />
     <div class="home">
         <section class="home__howitworks wf-section">
             <h2 class="home__howitworks__h">{{ __('how_it_works.title') }}</h2>
@@ -174,4 +173,7 @@ export default {
     justify-content: center;
     transition: all 1.2s ease-in-out;
 }
+</style>
+<style scoped>
+@import '/public/css/Home.css';
 </style>
