@@ -20,7 +20,7 @@ class ApiController extends Controller
     public function __construct()
     {
         $this->client = OpenAI::factory()
-            ->withApiKey(env('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'))
+            ->withApiKey('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')
             ->withBaseUri('https://models.inference.ai.azure.com')
             ->make();
     }
