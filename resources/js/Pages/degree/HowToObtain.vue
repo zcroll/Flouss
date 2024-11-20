@@ -107,7 +107,7 @@
         <BackToTop />
       </div>
     </StickySidebar>
-    <Ruller />
+    <!-- <Ruller /> -->
   </AppLayout>
 </template>
 
