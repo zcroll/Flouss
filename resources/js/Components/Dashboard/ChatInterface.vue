@@ -53,6 +53,7 @@
           :disabled="isLoading || !messageInput.trim()"
           @click="handleSendMessage"
         >
+        
           Send
         </button>
       </div>
