@@ -41,7 +41,7 @@ return [
     'done' => 'Done.',
     'please_enter_password' => 'Please enter your password to confirm you would like to log out of your other browser sessions across all of your devices.',
     'delete_account_confirmation' => 'Are you sure you want to delete your account? Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.',
-
+    'confirm' => 'Confirm',
     'logout_other_sessions_info' => 'If necessary, you may log out of all of your other browser sessions across all of your devices. Some of your recent sessions are listed below; however, this list may not be exhaustive. If you feel your account has been compromised, you should also update your password.',
     'finish_enabling_two_factor_instructions' => 'To finish enabling two factor authentication, scan the following QR code using your phone\'s authenticator application or enter the setup key and provide the generated OTP code.',
     'two_factor_enabled_instructions' => 'Two factor authentication is now enabled. Scan the following QR code using your phone\'s authenticator application or enter the setup key.',

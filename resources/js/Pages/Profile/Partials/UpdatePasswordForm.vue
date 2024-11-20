@@ -49,46 +49,46 @@ const updatePassword = () => {
 
         <template #form>
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="current_password" :value="__('profile.current_password')" />
+                <InputLabel for="current_password" :value="__('profile.current_password')" class="text-stone-300" />
                 <TextInput
                     id="current_password"
                     ref="currentPasswordInput"
                     v-model="form.current_password"
                     type="password"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full bg-stone-700 text-stone-300"
                     autocomplete="current-password"
                 />
-                <InputError :message="form.errors.current_password" class="mt-2" />
+                <InputError :message="form.errors.current_password" class="mt-2 text-stone-300" />
             </div>
 
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="password" :value="__('profile.new_password')" />
+                <InputLabel for="password" :value="__('profile.new_password')" class="text-stone-300" />
                 <TextInput
                     id="password"
                     ref="passwordInput"
                     v-model="form.password"
                     type="password"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full bg-stone-700 text-stone-300"
                     autocomplete="new-password"
                 />
-                <InputError :message="form.errors.password" class="mt-2" />
+                <InputError :message="form.errors.password" class="mt-2 text-stone-300" />
             </div>
 
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="password_confirmation" :value="__('profile.confirm_password')" />
+                <InputLabel for="password_confirmation" :value="__('profile.confirm_password')" class="text-stone-300" />
                 <TextInput
                     id="password_confirmation"
                     v-model="form.password_confirmation"
                     type="password"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full bg-stone-700 text-stone-300"
                     autocomplete="new-password"
                 />
-                <InputError :message="form.errors.password_confirmation" class="mt-2" />
+                <InputError :message="form.errors.password_confirmation" class="mt-2 text-stone-300" />
             </div>
         </template>
 
         <template #actions>
-            <ActionMessage :on="form.recentlySuccessful" class="me-3">
+            <ActionMessage :on="form.recentlySuccessful" class="me-3 text-stone-300">
                 {{ __('profile.saved') }}
             </ActionMessage>
 

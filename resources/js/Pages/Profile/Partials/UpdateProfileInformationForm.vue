@@ -96,7 +96,7 @@ const clearPhotoFileInput = () => {
                     @change="updatePhotoPreview"
                 >
 
-                <label class="block font-medium text-sm text-gray-700" for="photo">
+                <label class="block font-medium text-sm text-stone-300" for="photo">
                     {{ __('profile.photo') }}
                 </label>
 
@@ -131,12 +131,12 @@ const clearPhotoFileInput = () => {
 
             <!-- Name -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="name" :value="__('profile.name')" />
+                <InputLabel for="name" :value="__('profile.name')" class="text-stone-300" />
                 <TextInput
                     id="name"
                     v-model="form.name"
                     type="text"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full bg-stone-700 text-stone-300"
                     autocomplete="name"
                 />
                 <InputError :message="form.errors.name" class="mt-2" />
@@ -144,19 +144,19 @@ const clearPhotoFileInput = () => {
 
             <!-- Email -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="email" :value="__('profile.email')" />
+                <InputLabel for="email" :value="__('profile.email')" class="text-stone-300" />
                 <TextInput
                     id="email"
                     v-model="form.email"
                     type="email"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full bg-stone-700 text-stone-300"
                 />
                 <InputError :message="form.errors.email" class="mt-2" />
             </div>
         </template>
 
         <template #actions>
-            <ActionMessage :on="form.recentlySuccessful" class="mr-3">
+            <ActionMessage :on="form.recentlySuccessful" class="mr-3 text-stone-300">
                 {{ __('profile.saved') }}
             </ActionMessage>
 

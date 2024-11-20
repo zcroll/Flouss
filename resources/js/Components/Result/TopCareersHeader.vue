@@ -22,7 +22,7 @@
         </span>
         <span class="DashboardPage__button__copy">{{ __('results.share') }}</span>
       </button>
-      <Link href="/careers/" class="Button DashboardPage__button DashboardPage__button--share">
+      <Link href="/jobs/" class="Button DashboardPage__button DashboardPage__button--share">
         <span>{{ __('results.View_All_careers') }}</span>
       </Link>
     </span>
@@ -31,4 +31,4 @@
 
 <script setup>
 import { Link } from '@inertiajs/vue3';
-</script> 
+</script>

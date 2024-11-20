@@ -48,7 +48,7 @@ const closeModal = () => {
         </template>
 
         <template #content>
-            <div class="max-w-xl text-sm text-gray-600">
+            <div class="max-w-xl text-sm text-stone-300">
                 {{ __('profile.delete_account_warning') }}
             </div>
 
@@ -72,7 +72,7 @@ const closeModal = () => {
                             ref="passwordInput"
                             v-model="form.password"
                             type="password"
-                            class="mt-1 block w-3/4"
+                            class="mt-1 block w-3/4 bg-stone-700 text-stone-300"
                             :placeholder="__('profile.password')"
                             autocomplete="current-password"
                             @keyup.enter="deleteUser"

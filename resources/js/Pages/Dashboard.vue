@@ -9,7 +9,9 @@
         
         <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
           <FavoritesList
-            title="Liked Jobs"
+            :title="__('dashboard.liked_jobs')"
+            :empty-message="__('dashboard.no_liked_jobs')"
+            :browse-message="__('dashboard.discover_jobs')"
             :items="favoriteJobs"
             type="career"
             browse-link="/jobs"
@@ -17,7 +19,9 @@
           />
           
           <FavoritesList
-            title="Liked Formations"
+            :title="__('dashboard.liked_formations')"
+            :empty-message="__('dashboard.no_liked_formations')"
+            :browse-message="__('dashboard.discover_formations')"
             :items="favoriteDegrees"
             type="degree"
             browse-link="/degrees"
