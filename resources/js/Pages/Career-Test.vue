@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import HowItWork from '@/Components/Home/Test/HowItWork.vue';
-import Final from '@/Components/Home/Test/Final.vue';
+/*import HowItWork from '@/Components/Home/Test/HowItWork.vue';
+import Final from '@/Components/Home/Test/Final.vue';*/
 import Header from '@/Components/Home/Navbar/Header.vue';
 import { Link } from '@inertiajs/vue3';
 import __ from '@/lang';
@@ -13,12 +13,12 @@ const stats = ref([
     label: 'career-test.questions_answered'
   },
   {
-    heading: '1500+', 
+    heading: '1500+',
     label: 'career-test.degrees_and_careers'
   },
   {
     heading: '140+',
-    label: 'career-test.personality_traits' 
+    label: 'career-test.personality_traits'
   }
 ]);
 
@@ -40,7 +40,7 @@ onMounted(() => {
     })
     .add({
       targets: '.CareerTest__header__bg path:nth-child(2)',
-      translateX: [5, -5], 
+      translateX: [5, -5],
       translateY: [10, -10],
       rotate: [1, -1],
       duration: 3500,
@@ -49,7 +49,7 @@ onMounted(() => {
     .add({
       targets: '.CareerTest__header__bg path:nth-child(3)',
       translateX: [-8, 8],
-      translateY: [8, -8], 
+      translateY: [8, -8],
       rotate: [-2, 2],
       duration: 4500,
       easing: 'easeInOutQuad'
@@ -73,7 +73,7 @@ onMounted(() => {
         <path fill-rule="evenodd" clip-rule="evenodd" d="M622.228 573.148C583.029 598.6 551.393 628.291 507.974 618.343C466.537 608.848 432.848 589.1 399.062 567.112C354.003 537.788 286.154 520.281 278.723 469.147C271.326 418.254 328.404 373.634 364.496 329.271C398.647 287.293 431.911 244.519 482.17 219.072C536.564 191.531 602.725 162.33 656.029 181.663C709.03 200.886 705.249 269.449 736.771 311.415C764.321 348.094 840.295 364.883 828.339 411.066C815.353 461.228 724.236 460.075 687.488 501.785C656.647 536.79 662.514 546.99 622.228 573.148Z" fill="#7B6E61"/>
         <path d="M224.867 754.152C171.398 689.31 128.389 615.278 97.6981 540.302C89.7386 520.857 83.1884 498.502 81.9117 477.271C81.8016 475.441 80.7438 464.13 89.5497 464.897C107.058 466.422 156.37 487.582 161.031 489.559C224.36 516.42 283.197 552.541 350.93 573.48C431.1 598.263 535.482 587.345 612.693 542.318C704.886 488.554 692.547 408.726 659.682 341.766C632.317 286.01 606.292 253.673 555.929 210.877C525.494 185.016 494.239 163.251 449.27 154.081C431.96 150.552 413.36 149.775 394.918 150.156C363.468 150.805 269.268 162.889 240.88 168.306C192.306 177.576 100.836 196.13 95.6661 248.516C93.9165 266.243 114.366 271.027 132.316 271.837C186.814 274.294 247.128 262.07 300.509 247.005C326.923 239.551 351.492 226.539 373.706 212.363C450.903 163.101 507.811 103.329 526.815 27.422" stroke="#E3D661" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-      
+
       <div class="CareerTest__header__copy">
         <h1>{{ __('career-test.title') }}</h1>
         <p class="CareerTest__header__description">
@@ -83,7 +83,7 @@ onMounted(() => {
 
         <section class="CareerTest__header__stats">
           <h2 class="CareerTest__header__stats__heading">{{ __('career-test.by_the_numbers') }}</h2>
-          
+
           <div class="UserSatisfactionStars">
             <div class="UserSatisfactionStars__wrap">
               <div class="UserSatisfactionStars__label">{{ __('career-test.avg_rating') }}</div>
@@ -177,7 +177,7 @@ onMounted(() => {
             <h4 class="CareerTest__heading">
               {{ __('career-test.share_discoveries') }}
             </h4>
-            <p> 
+            <p>
               {{ __('career-test.Are_you_a_Visionary_?') }}
             </p>
           </div>
@@ -202,7 +202,7 @@ onMounted(() => {
             </video></div>
           <a href="/members/register/deferred/" class="alans-butt--black alans-butt--large CareerTest__features__key-feature__button--mobile" data-track="mixpanel" data-target="Let’s get started">{{ __('career-test.find_your_career_matches') }}</a>
         </div>
-        
+
         <div class="CareerTest__features__four-dimensions__wrap">
           <div class="CareerTest__features__four-dimensions__diagram">
             <img class=" lazyloaded" data-src="https://res.cloudinary.com/hnpb47ejt/image/fetch/f_auto/https://d5lqosquewn6c.cloudfront.net/static/sokanu/compiled/images/career-test/four-dimensions.c6ddda17fdb8.png" alt="Four Dimensions" src="https://res.cloudinary.com/hnpb47ejt/image/fetch/f_auto/https://d5lqosquewn6c.cloudfront.net/static/sokanu/compiled/images/career-test/four-dimensions.c6ddda17fdb8.png">
@@ -235,8 +235,8 @@ onMounted(() => {
           </div>
         </div>
       </div>
-      <HowItWork />
-      <Final />
+<!--      <HowItWork />-->
+<!--      <Final />-->
     </section>
   </div>
 </template>
