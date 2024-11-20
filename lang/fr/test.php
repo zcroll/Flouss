@@ -39,4 +39,9 @@ return [
     'incomplete_warning' => 'Soumettre vos réponses maintenant peut affecter votre résultat global. Êtes-vous sûr de vouloir terminer le test ?',
     'no_take_me_back' => 'Non, ramenez-moi',
     'yes_im_done' => 'Oui, j\'ai terminé',
+    'love_it' => 'J\'aime ça',
+    'like_it' => 'Je l\'aime',
+    'neutral' => 'Neutre',
+    'dislike_it' => 'Je n\'aime pas',
+    'hate_it' => 'Je déteste ça',
 ];

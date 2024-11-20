@@ -39,4 +39,9 @@ return [
     'incomplete_warning' => 'Submitting your answers now can affect your overall result. Are you sure you want to finish the test?',
     'no_take_me_back' => 'No, take me back',
     'yes_im_done' => 'Yes, I\'m done',
+    'love_it' => 'Love it',
+    'like_it' => 'Like it',
+    'neutral' => 'Neutral',
+    'dislike_it' => 'Dislike it',
+    'hate_it' => 'Hate it',
 ];

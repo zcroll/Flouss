@@ -28,6 +28,7 @@
 </template>
 
 <script setup>
+import __ from '@/lang';
 const props = defineProps({
   currentItem: {
     type: Object,
@@ -48,12 +49,12 @@ const props = defineProps({
 });
 
 const options = [
-  { id: 'hate-it', value: 1, label: 'Hate it' },
-  { id: 'dislike-it', value: 2, label: 'Dislike it' },
-  { id: 'neutral', value: 3, label: 'Neutral' },
-  { id: 'like-it', value: 4, label: 'Like it' },
-  { id: 'love-it', value: 5, label: 'Love it' },
+  { id: 'love-it', value: 5, label: __('test.love_it') },
+  { id: 'like-it', value: 2, label: __('test.like_it') },
+  { id: 'neutral', value: 3, label: __('test.neutral') },
+  { id: 'dislike-it', value: 4, label: __('test.dislike_it') },
+  { id: 'hate-it', value: 1, label: __('test.hate_it') }
 ];
 
 defineEmits(['update:modelValue', 'submit']);
-</script> 
+</script>
