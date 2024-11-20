@@ -15,7 +15,7 @@ class DegreeFilterController extends Controller
         $nameColumn = $locale === 'fr' ? 'name_fr' : 'name';
 
         $query = Degree::query()
-            ->select('id', $nameColumn, 'image', 'slug', 'salary');
+            ->select('id', $nameColumn, 'image', 'slug', 'salary', );
 
         $filters = [];
 
@@ -53,10 +53,6 @@ class DegreeFilterController extends Controller
             $query->whereHas('industries', function ($q) use ($industries) {
                 $q->whereIn('id', $industries);
             });
-        }
-
-        if ($request->has('has_skills')) {
-            $query->whereHas('degreeSkills');
         }
 
         $degrees = $query->paginate(12);
