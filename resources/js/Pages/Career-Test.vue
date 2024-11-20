@@ -116,6 +116,7 @@ onMounted(() => {
         <div class="CareerTest__header__images__mobile" style="background-image: url(/landingPage/carrerTest/test_answer.png)"></div>
       </div>
     </section>
+<!--
     <section class="CareerTest__features lazyloaded" data-bg="https://res.cloudinary.com/hnpb47ejt/image/fetch/https://d5lqosquewn6c.cloudfront.net/static/sokanu/compiled/images/career-test/blobs-features.5e6a32f66cd7.svg" style="background-image: url(&quot;https://res.cloudinary.com/hnpb47ejt/image/fetch/https://d5lqosquewn6c.cloudfront.net/static/sokanu/compiled/images/career-test/blobs-features.5e6a32f66cd7.svg&quot;);">
       <div class="CareerTest__spacer"></div>
       <div class="CareerTest__features__copy">
@@ -200,7 +201,7 @@ onMounted(() => {
           <div class="CareerTest__features__key-feature__preview lazyload" data-bg="https://res.cloudinary.com/hnpb47ejt/image/fetch/https://d5lqosquewn6c.cloudfront.net/static/sokanu/compiled/images/career-test/key-feature-3-blobs.e4ada8534a83.svg">
             <video class="lazyload" preload="none" src="https://d5lqosquewn6c.cloudfront.net/static/sokanu/compiled/images/career-test/pick-up-flow.76d8df8d4bbe.mp4" data-autoplay="" muted="" loop="" playsinline="">
             </video></div>
-          <a href="/members/register/deferred/" class="alans-butt--black alans-butt--large CareerTest__features__key-feature__button--mobile" data-track="mixpanel" data-target="Let’s get started">{{ __('career-test.find_your_career_matches') }}</a>
+          <a href="/members/register/deferred/" class="alans-butt&#45;&#45;black alans-butt&#45;&#45;large CareerTest__features__key-feature__button&#45;&#45;mobile" data-track="mixpanel" data-target="Let’s get started">{{ __('career-test.find_your_career_matches') }}</a>
         </div>
 
         <div class="CareerTest__features__four-dimensions__wrap">
@@ -235,9 +236,10 @@ onMounted(() => {
           </div>
         </div>
       </div>
-<!--      <HowItWork />-->
-<!--      <Final />-->
+&lt;!&ndash;      <HowItWork />&ndash;&gt;
+&lt;!&ndash;      <Final />&ndash;&gt;
     </section>
+-->
   </div>
 </template>
 
