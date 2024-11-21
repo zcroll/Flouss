@@ -21,6 +21,7 @@ use App\Http\Controllers\test\WelcomeBackController;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TestMail;
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\FeedbackController;
 
 // Google Login Routes (place these BEFORE any auth middleware groups)
 Route::get('auth/google', [App\Http\Controllers\Auth\GoogleController::class, 'redirectToGoogle'])
@@ -125,6 +126,8 @@ Route::get('/career-matches', [TestController::class, 'careerMatches']);
 Route::get('/degree-matches', [TestController::class, 'degreeMatches']);
 Route::get('/final-results', [TestController::class, 'finalResults']);
 Route::post('/store-answer', [TestController::class, 'storeAnswer'])->name('store-answer');
+
+Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
 
 Route::get('/testt', function () {
     return Inertia::render('Result/Test');

@@ -9,6 +9,7 @@ conn = mysql.connector.connect(
     database="theproject2"
 )
 
+
 # Create a cursor object to execute SQL queries
 cursor = conn.cursor()
 

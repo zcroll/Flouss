@@ -89,7 +89,6 @@ export default {
 }
 </script>
 <style scoped>
-@import '@/css/landingPage/index.css';
 </style>
 
 
