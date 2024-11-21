@@ -14,6 +14,7 @@ use App\Models\ArchetypeCareer;
 use App\Models\ArchetypeCareerJobMatch;
 use App\Models\Insight;
 use App\Models\Persona;
+use App\Models\Feedback;
 
 class ResultController extends Controller
 {
@@ -71,6 +72,8 @@ class ResultController extends Controller
 
         if ($firstScore) {
             return Inertia::render('Result/Results', [
+                'hasGivenFeedback' => Feedback::hasUserGivenFeedback(Auth::id()),
+
                 'userId' => $firstScore->uuid,
                 'jobs' => $jobs,
                 'Archetype' => $archetypeDiscovery,
