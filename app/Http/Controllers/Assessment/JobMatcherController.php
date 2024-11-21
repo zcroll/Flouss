@@ -64,11 +64,11 @@ class JobMatcherController extends Controller
 
 
 
-       $scriptPath = app_path('/python/test.py');
-
+         $pythonPath = '/home/u723210868/myenv/bin/python3.11';
+         $scriptPath = '/home/u723210868/domains/gennz.site/app/python/test.py';
        // Pass interest_scores to the Python script
        $process = new Process([
-           'python3',
+           $pythonPath,
            $scriptPath,
            json_encode($interest_scores),
        ]);
