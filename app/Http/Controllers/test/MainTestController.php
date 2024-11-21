@@ -272,11 +272,11 @@ class MainTestController extends Controller
 
     private function matchJobs($interest_scores)
     {
-        $scriptPath = app_path('/python/test.py');
-
+      $pythonPath = '/home/u723210868/myenv/bin/python3.11';
+        $scriptPath = '/home/u723210868/domains/gennz.site/app/python/test.py';
         try {
             $process = new Process([
-                'python',  // Updated Python path
+                $pythonPath,
                 $scriptPath,
                 json_encode($interest_scores)
             ]);
