@@ -1,8 +1,5 @@
 <template>
-    <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css">
-
-        <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/user-results.3aa4bb301b9f.css"></link>
-
+   
     <div class="DashboardPage__reports">
       <div class="DashboardPage__report" style="background-image: url('/results_folder/circles-5444818_1920.png'); background-size: cover; background-position: center;">
         <div class="DashboardPage__report__book" >
@@ -148,6 +145,8 @@
   }
   </script>
 <style  scoped>
+@import url('https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css');
+@import url('https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/user-results.3aa4bb301b9f.css');
 @import url('https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css');
 @import url('https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/shared-discovery.4d94d358083a.css');
 </style>

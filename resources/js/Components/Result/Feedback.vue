@@ -1,8 +1,4 @@
 <script setup>
-import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { StarFilledIcon, StarIcon } from '@radix-icons/vue'
 import { ref, watch } from 'vue'
 
 const props = defineProps({
@@ -11,7 +7,7 @@ const props = defineProps({
     required: true
   },
   rating: {
-    type: Number,
+    type: Number, 
     required: true
   },
   errors: {
@@ -50,37 +46,56 @@ watch(() => props.processing, (newVal, oldVal) => {
 </script>
 
 <template>
-  <Card class="w-full max-w-lg mx-auto">
-    <CardHeader>
-      <CardTitle>Your Feedback</CardTitle>
-      <CardDescription>
-        Please rate your experience and share your thoughts with us
-      </CardDescription>
-    </CardHeader>
-    <CardContent>
-      <div v-if="showSuccessMessage" class="mb-4 p-4 bg-green-100 text-green-700 rounded">
+  <div class="DashboardPage__sharing flex items-center justify-center">
+    <div class="DashboardPage__sharing__wrap text-center max-w-2xl w-full">
+      <h2 class="DashboardPage__sharing__title text-center text-3xl font-bold mb-6">
+        Your Feedback<br />Help us improve
+      </h2>
+
+      <div v-if="showSuccessMessage" class="mb-4 p-4 bg-green-100 text-green-700 rounded-lg text-center mx-auto shadow-md">
         Thank you for your feedback!
       </div>
 
-      <div class="flex items-center justify-center space-x-1 mb-6">
-        <button v-for="star in 5" :key="star" @click="setRating(star)" class="focus:outline-none" type="button">
-          <StarFilledIcon v-if="star <= rating" class="w-8 h-8 text-yellow-400" />
-          <StarIcon v-else class="w-8 h-8 text-gray-300" />
+      <div class="flex items-center justify-center space-x-2 mb-8">
+        <button v-for="star in 5" :key="star" @click="setRating(star)" 
+          class="focus:outline-none transform hover:scale-110 transition-transform duration-200" 
+          type="button">
+          <svg v-if="star <= rating" class="w-10 h-10 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+          </svg>
+          <svg v-else class="w-10 h-10 text-gray-300 hover:text-yellow-200" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+          </svg>
         </button>
       </div>
 
-      <div v-if="rating > 0">
-        <textarea :value="feedback" @input="handleInput" placeholder="Tell us about your experience..."
-          class="w-full min-h-[100px] p-2 border rounded-md" :class="{ 'border-red-500': errors.feedback }"></textarea>
-        <p v-if="errors.feedback" class="mt-1 text-sm text-red-500">
+      <div v-if="rating > 0" class="DashboardPage__sharing__preview flex flex-col items-center">
+        <textarea 
+          :value="feedback" 
+          @input="handleInput" 
+          placeholder="Tell us about your experience..."
+          class="w-full p-4 min-h-[150px] text-center rounded-lg border-2 border-blue-200 
+                 focus:border-blue-400 focus:ring focus:ring-blue-200 focus:ring-opacity-50
+                 transition duration-200 ease-in-out resize-none
+                 bg-white/80 backdrop-blur-sm shadow-inner"
+          :class="{ 'border-red-500': errors.feedback }"
+        ></textarea>
+        <p v-if="errors.feedback" class="mt-2 text-sm text-red-500 text-center">
           {{ errors.feedback }}
         </p>
+        <button 
+          @click="submitFeedback" 
+          :disabled="!rating || processing"
+          class="mt-6 px-8 py-3 text-lg font-semibold text-white 
+                 bg-gradient-to-r from-blue-500 to-indigo-600
+                 rounded-full shadow-lg hover:shadow-xl
+                 transform hover:-translate-y-0.5 transition-all duration-200
+                 disabled:opacity-50 disabled:cursor-not-allowed
+                 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        >
+          {{ processing ? 'Submitting...' : 'Submit Feedback' }}
+        </button>
       </div>
-    </CardContent>
-    <CardFooter>
-      <Button @click="submitFeedback" :disabled="!rating || processing" class="w-full">
-        {{ processing ? 'Submitting...' : 'Submit Feedback' }}
-      </Button>
-    </CardFooter>
-  </Card>
+    </div>
+  </div>
 </template>

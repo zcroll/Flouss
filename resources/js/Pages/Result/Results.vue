@@ -17,14 +17,18 @@
         <DataShare />
       </section>
 
-      <section class="section" v-if="hasGivenFeedback">
-        <svg class="absolute inset-0 w-full h-full -z-10" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <path d="M0,50 a1,1 0 0,0 100,0" fill="#f3f4f6"/>
-        </svg>
-        <!-- Feedback Section -->
-        <Feedback :feedback="form.feedback" :rating="form.rating" :errors="form.errors"
-          :processing="form.processing" @update:feedback="form.feedback = $event"
-          @update:rating="form.rating = $event" @submit="submitFeedback" />
+      <section class="section" v-if="!hasGivenFeedback">
+       
+          <Feedback 
+            :feedback="form.feedback" 
+            :rating="form.rating" 
+            :errors="form.errors"
+            :processing="form.processing" 
+            @update:feedback="form.feedback = $event"
+            @update:rating="form.rating = $event" 
+            @submit="submitFeedback"
+            class="backdrop-blur-sm bg-white/30 rounded-lg shadow-lg p-6" 
+          />
       </section>
     </div>
   </AppLayout>
