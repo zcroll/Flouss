@@ -1,8 +1,7 @@
 <template>
   <AppLayout>
   <div>
-    <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css">
-    <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/shared-discovery.4d94d358083a.css">
+
     <div class="SharedDiscoveryPage__wrap">
       <div id="shared-discovery-container">
         <div class="SharedDiscoveryPage">
@@ -103,3 +102,8 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+@import url('https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css');
+@import url('https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/shared-discovery.4d94d358083a.css');
+</style>
