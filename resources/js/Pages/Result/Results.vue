@@ -17,7 +17,7 @@
         <DataShare />
       </section>
 
-      <section class="section" v-if="!hasGivenFeedback">
+      <section class="section" v-if="hasGivenFeedback">
         <svg class="absolute inset-0 w-full h-full -z-10" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
           <path d="M0,50 a1,1 0 0,0 100,0" fill="#f3f4f6"/>
         </svg>

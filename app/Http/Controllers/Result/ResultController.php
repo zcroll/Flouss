@@ -15,6 +15,7 @@ use App\Models\ArchetypeCareerJobMatch;
 use App\Models\Insight;
 use App\Models\Persona;
 use App\Models\Feedback;
+use App\Models\ArchetypeDiscovery;
 
 class ResultController extends Controller
 {
@@ -95,7 +96,7 @@ class ResultController extends Controller
 
         $firstScore = $scores->first();
         ds($firstScore->scores);
-
+        
         $archetype = null;
         if (!empty($firstScore->Archetype)) {
             $archetype = $firstScore->Archetype;
@@ -114,15 +115,30 @@ class ResultController extends Controller
                 });
             }) : collect([]);
 
-        $archetypeDiscovery = DB::table('archetype_discoveries')->where('slug', '=', strtolower($archetype[0]))->first();
+        // Fetch Archetype Discovery
+        $archetypeDiscovery = ArchetypeDiscovery::where('slug', '=', strtolower($archetype[0]))->first();
 
         ds(['archetypeDiscovery'=>$archetypeDiscovery]);
-
+     
         return Inertia::render('Result/StrategistDescription', [
             "ArchetypeData" => $ArchetypeData ?? [],
             'firstScore' => $firstScore->scores ?? [],
             'Insights' => $insights ?? [],
-            'archetypeDiscovery' => $archetypeDiscovery ?? [],
+            'archetypeDiscovery' => [
+                'slug' => $archetypeDiscovery->slug,
+                'type' => $archetypeDiscovery->type,
+                'notification_text' => $archetypeDiscovery->notification_text,
+                'verbose_description' => $this->getLocalizedColumn($archetypeDiscovery, 'verbose_description'),
+                'image_url' => $archetypeDiscovery->image_url,
+                'rationale' => $this->getLocalizedColumn($archetypeDiscovery, 'rationale'),
+                'short_descriptor' => $this->getLocalizedColumn($archetypeDiscovery, 'short_descriptor'),
+                'verbose_description_header' => $this->getLocalizedColumn($archetypeDiscovery, 'verbose_description_header'),
+                'scales_descriptor' => $this->getLocalizedColumn($archetypeDiscovery, 'scales_descriptor'),
+                'strengths_body' => $this->getLocalizedColumn($archetypeDiscovery, 'strengths_body'),
+                'weaknesses_body' => $this->getLocalizedColumn($archetypeDiscovery, 'weaknesses_body'),
+                'scales' => $archetypeDiscovery->scales,
+                'name' => $archetypeDiscovery->name
+            ] ?? [],
         ]);
     }
 }

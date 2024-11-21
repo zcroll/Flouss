@@ -109,9 +109,7 @@
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { radar } from 'svg-radar-chart'
-import stringify from 'virtual-dom-stringify'
 import { smoothing } from 'svg-radar-chart/smoothing.js'
-import LineChart from "./LineChart.vue";
 import StrategistDescription from './StrategistDescription.vue';
 
 export default {
@@ -221,16 +219,7 @@ export default {
         }),
       });
 
-      // this.svgChart = `
-      //   <svg version="1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="300" height="250">
-      //     <style>
-      //       .axis { stroke: #888; stroke-width: 1; }
-      //       .shape { fill: rgba(168, 8, 247, 0.5); stroke: rgba(168, 85, 247, 1); stroke-width: 2; }
-      //     </style>
-      //     <rect width="100%" height="100%" fill="#f8f8f8" />
-      //     ${stringify(chart)}
-      //   </svg>
-      // `;
+   
     },
     scrollToSection(sectionId) {
       const section = document.getElementById(sectionId);
