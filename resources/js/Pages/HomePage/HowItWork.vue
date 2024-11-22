@@ -35,7 +35,7 @@
                   src="https://cdn0.careerhunter.io/packs/media/components/home/preview-img-6e9ac4a5a3b7af2e8c90b269a03e4a66.png"
                   class="rounded-3xl border-4 border-[#fb6302]"
                 />
-                
+
               </div>
             </div>
           </div>
@@ -50,7 +50,7 @@
 <script>
 import Procces from './Procces.vue';
 import Navbar from '@/Pages/NavBar.vue';
-import Footer from '@/Components/Footer.vue';
+import Footer from '@/Components/helpers/Footer.vue';
 import NavBar from "@/Pages/NavBar.vue";
 
 export default {

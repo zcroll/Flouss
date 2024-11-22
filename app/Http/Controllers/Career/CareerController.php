@@ -120,8 +120,13 @@ class CareerController extends Controller
             false;
 
         $degrees = DegreeJob::where('job_id', $occupation->id)
-            ->with('degree')
-            ->get()
+        ->with(['degree' => function($query) {
+            $query->has('degreeSkills');
+        }])
+        ->get()
+        ->filter(function ($jobDegree) {
+            return !is_null($jobDegree->degree);
+        })
             ->map(function ($jobDegree) {
                 $degree = $jobDegree->degree;
                 return [

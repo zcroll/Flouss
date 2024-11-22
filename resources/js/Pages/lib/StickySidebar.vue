@@ -7,7 +7,7 @@
         <!-- Sticky Sidebar -->
         <div class="w-full lg:w-1/3 lg:mb-0 lg:pl-8 pb-5 pt-8">
             <!-- Mobile Navigation Bar (Fixed Bottom) -->
-            <div v-if="isSmallScreen" 
+            <div v-if="isSmallScreen"
                  class="fixed bottom-0 left-0 right-0 bg-[#353535] text-white shadow-lg z-50 px-4 py-3">
                 <div class="flex items-center justify-between">
                     <img :src="image" alt="Icon" class="w-10 h-10 rounded-full"/>
@@ -86,7 +86,7 @@
                         </ul>
                     </div>
                 </div>
-                
+
                 <!-- Decorative background elements -->
                 <div class="absolute top-0 left-0 w-full h-full overflow-hidden opacity-10">
                     <div class="absolute top-0 left-0 w-40 h-40 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
@@ -101,7 +101,7 @@
 import { Link, router } from '@inertiajs/vue3';
 import { ref, computed, watch } from 'vue';
 import __ from '@/lang';
-import FavoriteButton from '@/Components/FavoriteButton.vue';
+import FavoriteButton from '@/Components/helpers/FavoriteButton.vue';
 
 const props = defineProps({
     type: {

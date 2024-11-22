@@ -116,8 +116,8 @@ import { defineComponent, ref, onMounted, onBeforeUnmount } from 'vue'
 import { Link } from '@inertiajs/vue3'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import StickySidebar from '@/Pages/lib/StickySidebar.vue'
-import Formation from '@/Components/Formation.vue'
-import BackToTop from "@/Components/BackToTop.vue"
+import Formation from '@/Components/helpers/Formation.vue'
+import BackToTop from "@/Components/helpers/BackToTop.vue"
 import Ruller from '@/Pages/ruller.vue'
 
 export default defineComponent({

@@ -38,9 +38,9 @@
 </template>
 
 <script>
-import InterestHeader from "@/Components/InterestHeader.vue";
+import InterestHeader from "@/Components/helpers/InterestHeader.vue";
 import Navbar from "@/Pages/NavBar.vue";
-import Footer from "@/Components/Footer.vue"
+import Footer from "@/Components/helpers/Footer.vue"
 import MainInterest from "@/Pages/HomePage/MainInterest.vue";
 import Industries from "@/Pages/HomePage/Industries.vue";
 import NavBar from "@/Pages/NavBar.vue";

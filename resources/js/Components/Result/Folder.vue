@@ -9,13 +9,13 @@
           <div class="ReportBook ReportBook--trait">
             <div class="ReportBook__content">
               <h1 class="ReportBook__title">
-                Trait Report
+                {{ __('results.trait_report') }}
               </h1>
               <h2 class="ReportBook__heading">
-                You're Social
+                {{ __('results.youre_social') }}
               </h2>
               <p class="ReportBook__copy">
-                In fact, you're more social than 93% of the population.
+                {{ __('results.more_social_than') }}
               </p>
               <div class="ReportBook__footer">
                 <svg
@@ -55,8 +55,7 @@
           </div>
         </div>
         <p class="DashboardPage__report__copy">
-          Learn what makes you unique and how you compare to the rest of the
-          world.
+          {{ __('results.learn_what_makes_unique') }}
         </p>
 
       </div>
@@ -65,10 +64,10 @@
           <div class="ReportBook ReportBook--personality">
             <div class="ReportBook__content">
               <h1 class="ReportBook__title">
-                Personality Report
+                {{ __('results.personality_report') }}
               </h1>
               <h2 class="ReportBook__heading">
-              You're a {{archetype.name}}
+                  {{archetype.name}}
               </h2>
               <p class="ReportBook__copy">
               </p>
@@ -116,7 +115,7 @@
           class="DashboardPage__report__link"
           :href="`/results/${userId}/personality`"
           tabindex="0"
-          aria-label="Click here to view your trait report details."
+          aria-label="{{ __('results.click_to_view_trait_report') }}"
         >
           {{ __('results.view_report') }}
         </Link>
@@ -126,6 +125,7 @@
 
   <script>
   import { Link } from '@inertiajs/vue3';
+  import __ from '@/lang';
 
   export default {
     name: 'Collapse',
@@ -133,7 +133,6 @@
       Link
     },
     props: {
-
         userId: {
             type: Number,
             required: true
@@ -142,12 +141,6 @@
             type: Object,
             required: true
         },
-
     }
-
   }
   </script>
-<style  scoped>
-@import url('https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css');
-@import url('https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/shared-discovery.4d94d358083a.css');
-</style>

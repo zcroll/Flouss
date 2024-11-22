@@ -67,7 +67,7 @@
             </div>
           </section>
 
-     
+
 
           <section v-if="howToBecome.associations && howToBecome.associations.length > 0" id="step-4" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0">
             <span class="Tag">Step 4</span>
@@ -92,7 +92,7 @@ import { defineComponent } from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import StickySidebar from '@/Pages/lib/StickySidebar.vue'
 import { Link } from '@inertiajs/vue3'
-import BackToTop from "@/Components/BackToTop.vue";
+import BackToTop from "@/Components/helpers/BackToTop.vue";
 
 export default defineComponent({
   components: {

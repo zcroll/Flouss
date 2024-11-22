@@ -25,4 +25,9 @@ return [
     'Science' => 'La Science',
     'Your_scores' => 'Vos scores',
     'Insights' => 'Aperçus',
+    'youre_social' => 'Vous êtes social',
+    'more_social_than' => 'En fait, vous êtes plus social que 93% de la population.',
+    'learn_what_makes_unique' => 'Découvrez ce qui vous rend unique et comment vous comparez à la plupart du monde.',
+
+    'personality_report' => 'Rapport de personnalité',
 ];

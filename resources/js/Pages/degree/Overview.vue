@@ -151,7 +151,7 @@
                     <!-- Related Jobs Section -->
                     <section v-if="degreeJobs.length>1" id="related-jobs" class="space-y-8 mt-12">
                         <h2
-                        
+
                             class="text-2xl font-extralight text-gray-900 border-b-2 pb-2 border-gray-200"
                         >
                             {{ __("degreeOverview.relatedJobs") }}
@@ -169,7 +169,7 @@
                                 {{ job.job_description }}
                             </p>
                         </div>
-                        
+
                     </section>
                     <BackToTop />
                 </div>
@@ -183,7 +183,7 @@ import { defineProps } from "vue";
 import StickySidebar from "@/Pages/lib/StickySidebar.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link } from "@inertiajs/vue3";
-import BackToTop from "@/Components/BackToTop.vue";
+import BackToTop from "@/Components/helpers/BackToTop.vue";
 
 defineProps({
     degree: {

@@ -15,7 +15,8 @@ class DegreeFilterController extends Controller
         $nameColumn = $locale === 'fr' ? 'name_fr' : 'name';
 
         $query = Degree::query()
-            ->select('id', $nameColumn, 'image', 'slug', 'salary', );
+        ->select('id', $nameColumn, 'image', 'slug', 'salary')
+        ->has('degreeSkills'); 
 
         $filters = [];
 

@@ -25,4 +25,8 @@ return [
     'Science' => 'The Science',
     'Your_scores' => 'Your scores',
     'Insights' => 'Insights',
+    'youre_social' => 'You\'re Social',
+    'more_social_than' => 'In fact, you\'re more social than 93% of the population.',
+    'learn_what_makes_unique' => 'Learn what makes you unique and how you compare to the rest of the world.',
+    'personality_report' => 'Personality Report',
 ];
