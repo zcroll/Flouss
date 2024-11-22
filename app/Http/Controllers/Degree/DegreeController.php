@@ -23,6 +23,7 @@ class DegreeController extends Controller
     {
         $degree = Degree::with(['degreeDescription', 'degreeSkills', 'degreeJobs'])
             ->where('slug', $slug)
+            ->has('degreeSkills')
             ->firstOrFail();
 
         $isFavorited = auth()->check() ?
