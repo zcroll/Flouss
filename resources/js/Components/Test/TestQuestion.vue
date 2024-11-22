@@ -9,7 +9,7 @@
     aria-live="assertive">
     <div>
       <BackButton v-if="currentItemIndex > 0" @click="$emit('go-back')" />
-      <form @submit.prevent="$emit('submit')" ref="formRef">
+      <form @submit.prevent="handleSubmit" ref="formRef">
         <h4 v-if="currentItemIndex === 0" aria-hidden="true">
           {{ testStage === 'holland_codes' ? 'Would you like to...' : 'Would you enjoy...' }}
         </h4>
@@ -37,7 +37,8 @@
           :test-stage="testStage"
           :previous-answers="previousAnswers"
           v-model="form.answer"
-          @submit="$emit('submit')"
+          @submit="handleSubmit"
+          @change="handleAnswerChange"
         />
 
         <button type="button"
@@ -86,7 +87,19 @@ const props = defineProps({
   }
 });
 
+const emit = defineEmits(['submit', 'go-back', 'skip', 're-answer']);
 const formRef = ref(null);
+
+const handleSubmit = () => {
+  emit('submit');
+};
+
+const handleAnswerChange = (newAnswer) => {
+  // If this is a previously answered question, emit re-answer event
+  if (props.previousAnswers[props.currentItem.id] !== undefined) {
+    emit('re-answer', newAnswer);
+  }
+};
 
 const ariaLabel = computed(() => {
   const prefix = props.testStage === 'holland_codes' ? 'Would you like to' : 'Would you enjoy';
@@ -95,5 +108,4 @@ const ariaLabel = computed(() => {
 });
 
 defineExpose({ formRef });
-defineEmits(['submit', 'go-back', 'skip']);
-</script> 
+</script>

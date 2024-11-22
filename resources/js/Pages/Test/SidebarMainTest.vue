@@ -11,27 +11,27 @@
           <h2 class="Journey__head sr-only">Your Progress</h2>
           <div class="Journey__body">
             <Milestone status="complete" title="Start" :progress="100" />
-            <Milestone 
-              :status="milestones[0]?.status || 'not-started'" 
-              :title="milestones[0]?.name || 'Your personality archetype'" 
+            <Milestone
+              :status="milestones[0]?.status || 'not-started'"
+              :title="milestones[0]?.name || 'Your personality archetype'"
               :time="milestones[0]?.time || '~ 3 mins'"
-              :progress="progress.hollandCode" 
+              :progress="progress.hollandCode"
             />
-            <Milestone 
-              :status="milestones[1]?.status || 'not-started'" 
-              :title="milestones[1]?.name || 'Your career matches'" 
+            <Milestone
+              :status="milestones[1]?.status || 'not-started'"
+              :title="milestones[1]?.name || 'Your career matches'"
               :time="milestones[1]?.time || '~ 3 mins'"
               :progress="progress.basicInterest"
             />
-            <Milestone 
-              :status="milestones[2]?.status || 'not-started'" 
-              :title="milestones[2]?.name || 'Your degree matches'" 
+            <Milestone
+              :status="milestones[2]?.status || 'not-started'"
+              :title="milestones[2]?.name || 'Your degree matches'"
               :time="milestones[2]?.time || '~ 1 min'"
               :progress="milestones[2]?.progress || 0"
             />
-            <Milestone 
-              :status="milestones[3]?.status || 'not-started'" 
-              :title="milestones[3]?.name || 'Your Results'" 
+            <Milestone
+              :status="milestones[3]?.status || 'not-started'"
+              :title="milestones[3]?.name || 'Your Results'"
               :time="milestones[3]?.time || '~ 20 mins'"
               :description="milestones[3]?.description || ['Final career matches and insights', 'Personality report', 'Trait report']"
               :progress="milestones[3]?.progress || 0"
@@ -51,8 +51,8 @@
               </div>
             </div>
           <div class="Journey__progress">
-            <MinimizedProgress 
-              v-for="(milestone, index) in milestones" 
+            <MinimizedProgress
+              v-for="(milestone, index) in milestones"
               :key="index"
               :status="milestone.status"
               :progress="milestone.progress"
@@ -68,7 +68,7 @@
 import { ref, onMounted, watch, computed } from 'vue';
 import Milestone from '@/Pages/Test/Milestone.vue';
 import MilestoneProgress from '@/Pages/Test/MilestoneProgress.vue';
-import SvgIcon from '@/Components/SvgIcon.vue';
+import SvgIcon from '@/Components/helpers/SvgIcon.vue';
 import { mdiChevronUp } from '@mdi/js';
 import MinimizedProgress from '@/Pages/Test/MinimizedProgress.vue';
 
@@ -127,7 +127,7 @@ export default {
         {
           name: 'Your personality archetype',
           time: '~ 3 mins',
-          status: props.testStage === 'basic_interests' ? 'complete' : 
+          status: props.testStage === 'basic_interests' ? 'complete' :
                  props.testStage === 'holland_codes' ? 'in-progress' : 'not-started',
           progress: props.progress.hollandCode,
         },

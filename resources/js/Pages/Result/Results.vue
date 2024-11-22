@@ -95,3 +95,13 @@ const submitFeedback = () => {
   });
 };
 </script>
+
+
+<style  >
+@import '/public/css/user-results.css';
+@import '/public/css/shared-discovery.css';
+@import '/public/css/assessment.css'
+
+
+
+</style>

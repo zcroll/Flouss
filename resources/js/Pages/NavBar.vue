@@ -68,7 +68,7 @@
 
 <script>
 import { Link, router } from '@inertiajs/vue3';
-import LanguageSelector from '@/Components/LanguageSelector.vue';
+import LanguageSelector from '@/Components/helpers/LanguageSelector.vue';
 
 export default {
   components: {

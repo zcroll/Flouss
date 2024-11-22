@@ -151,7 +151,7 @@ import { ref, computed } from 'vue';
 import StickySidebar from "@/Pages/lib/StickySidebar.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link } from '@inertiajs/vue3';
-import BackToTop from "@/Components/BackToTop.vue";
+import BackToTop from "@/Components/helpers/BackToTop.vue";
 import __ from '@/lang';
 
 const props = defineProps({
@@ -198,7 +198,7 @@ const bigFiveTraits = computed(() => {
       value: 0.663973684210526
     },
     {
-      name: "AMBI-HEXACO-Honesty", 
+      name: "AMBI-HEXACO-Honesty",
       short_name: 'career.social_responsibility',
       scale_id: 509,
       definition: 'career.social_responsibility_definition',
@@ -248,7 +248,7 @@ const getTraitDefinition = (traitName) => {
   const definitions = {
     'career.realistic': 'career.realistic_definition',
     'career.artistic': 'career.artistic_definition',
-    'career.investigative': 'career.investigative_definition', 
+    'career.investigative': 'career.investigative_definition',
     'career.social': 'career.social_definition',
     'career.enterprising': 'career.enterprising_definition',
     'career.conventional': 'career.conventional_definition'

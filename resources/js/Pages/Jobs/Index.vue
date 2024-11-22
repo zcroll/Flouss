@@ -141,7 +141,7 @@
 import { ref, watch, onMounted, onUnmounted } from 'vue';
 import { router, Link, usePage } from '@inertiajs/vue3';
 import AppLayout from "@/Layouts/AppLayout.vue";
-import CustomMultiSelect from '@/Components/CustomMultiSelect.vue';
+import CustomMultiSelect from '@/Components/helpers/CustomMultiSelect.vue';
 import debounce from 'lodash/debounce';
 // import BackToTop from '@/Components/BackToTop.vue';
 import { WhenVisible } from '@inertiajs/vue3';

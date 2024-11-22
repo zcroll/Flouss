@@ -1,14 +1,14 @@
 <template>
     <div class="relative" ref="multiSelectRef">
-        <div 
+        <div
             class="relative w-full cursor-default rounded-xl bg-white py-2 pl-3 pr-10 text-left border border-[#db492b]/20 focus:outline-none focus-visible:border-[#db492b] focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-[#db492b]/20 sm:text-sm shadow-sm"
             :class="{ 'ring-2 ring-[#db492b]/20 border-[#db492b]': isOpen }"
             @click="toggleDropdown"
         >
             <div class="flex flex-wrap gap-1 min-h-[1.5rem]">
                 <!-- Selected items -->
-                <span 
-                    v-for="item in modelValue" 
+                <span
+                    v-for="item in modelValue"
                     :key="item.value"
                     class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#db492b]/10 text-[#db492b] text-sm"
                 >
@@ -23,7 +23,7 @@
                         </svg>
                     </button>
                 </span>
-                
+
                 <!-- Search input -->
                 <input
                     ref="searchInput"
@@ -104,7 +104,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import { onClickOutside } from '@vueuse/core';
-import '@/../../public/css/vueMultiselect.css';
+import '../../../../public/css/vueMultiselect.css';
 
 const props = defineProps({
     modelValue: {
@@ -133,7 +133,7 @@ const multiSelectRef = ref(null);
 
 // Filtered options based on search
 const filteredOptions = computed(() => {
-    return props.options.filter(option => 
+    return props.options.filter(option =>
         option.label.toLowerCase().includes(search.value.toLowerCase())
     );
 });
@@ -160,13 +160,13 @@ const isSelected = (option) => {
 const toggleOption = (option) => {
     const newValue = [...props.modelValue];
     const index = newValue.findIndex(item => item.value === option.value);
-    
+
     if (index === -1) {
         newValue.push(option);
     } else {
         newValue.splice(index, 1);
     }
-    
+
     emit('update:modelValue', newValue);
 };
 
@@ -210,10 +210,10 @@ const highlightNext = () => {
         isOpen.value = true;
         return;
     }
-    
+
     const options = filteredOptions.value;
     if (options.length === 0) return;
-    
+
     const currentIndex = options.indexOf(highlightedOption.value);
     if (currentIndex === -1 || currentIndex === options.length - 1) {
         highlightedOption.value = options[0];
@@ -225,7 +225,7 @@ const highlightNext = () => {
 const highlightPrevious = () => {
     const options = filteredOptions.value;
     if (options.length === 0) return;
-    
+
     const currentIndex = options.indexOf(highlightedOption.value);
     if (currentIndex === -1 || currentIndex === 0) {
         highlightedOption.value = options[options.length - 1];
@@ -248,4 +248,4 @@ watch(filteredOptions, () => {
 
 <style scoped>
 /* Empty style block can be removed since we're using external CSS */
-</style> 
+</style>

@@ -13,7 +13,7 @@
 
   <script>
   import { Link , usePage } from '@inertiajs/vue3';
-  import Footer from "@/Components/Footer.vue"
+  import Footer from "@/Components/helpers/Footer.vue"
   import Steps from "@/Components/Home/Steps.vue";
   import HowItWork from "@/Components/Home/HowItWork.vue";
   import Gardien from "@/Components/Home/Gardien.vue";

@@ -130,7 +130,7 @@ import {defineProps} from 'vue';
 import StickySidebar from "@/Pages/lib/StickySidebar.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link } from '@inertiajs/vue3';
-import BackToTop from "@/Components/BackToTop.vue";
+import BackToTop from "@/Components/helpers/BackToTop.vue";
 defineProps({
     occupation: {
         type: Object,

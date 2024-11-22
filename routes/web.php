@@ -70,9 +70,9 @@ Route::middleware([
         });
 
         Route::get('/main-test', [MainTestController::class, 'index'])->name('main-test');
-        Route::post('/main-test/store-holland-code', [MainTestController::class, 'storeHollandCodeResponse'])->name('store-holland-code-response');
-        Route::post('/main-test/store-basic-interest', [MainTestController::class, 'storeBasicInterestResponse'])->name('store-basic-interest-response');
-        Route::post('/test/go-back', [MainTestController::class, 'goBack'])->name('test.go-back');
+        Route::get('/main-test/go-back', [MainTestController::class, 'goBack'])->name('main-test.go-back');
+        Route::post('/main-test/holland-code', [MainTestController::class, 'storeHollandCodeResponse'])->name('main-test.holland-code');
+        Route::post('/main-test/basic-interest', [MainTestController::class, 'storeBasicInterestResponse'])->name('main-test.basic-interest');
 
         Route::get('/degree/{degreeSlug}', [DegreeController::class, 'index'])->name('degree.index');
 

@@ -1,12 +1,12 @@
 <script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import AuthenticationCard from '@/Components/AuthenticationCard.vue';
-import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
-import Checkbox from '@/Components/Checkbox.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
+import AuthenticationCard from '@/Components/helpers/AuthenticationCard.vue';
+import AuthenticationCardLogo from '@/Components/helpers/AuthenticationCardLogo.vue';
+import Checkbox from '@/Components/helpers/Checkbox.vue';
+import InputError from '@/Components/helpers/InputError.vue';
+import InputLabel from '@/Components/helpers/InputLabel.vue';
+import PrimaryButton from '@/Components/helpers/PrimaryButton.vue';
+import TextInput from '@/Components/helpers/TextInput.vue';
 
 defineProps({
     canResetPassword: {
@@ -105,7 +105,7 @@ const submit = () => {
                 <span class="bg-white px-4 sm:px-6 text-gray-900">Or continue with</span>
             </div>
         </div>
-        
+
         <div class="mt-6 max-w-sm mx-auto px-4 sm:px-0">
             <a href="/auth/google" class="flex w-full items-center justify-center gap-3 rounded-md bg-white px-4 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:ring-transparent">
               <svg class="h-5 w-5" aria-hidden="true" viewBox="0 0 24 24">

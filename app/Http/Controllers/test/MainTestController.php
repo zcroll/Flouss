@@ -60,17 +60,19 @@ class MainTestController extends Controller
             ? $hollandCodeSets[$currentSetIndex]['items'][$currentItemIndex]
             : $basicInterests[$currentItemIndex];
 
-        $hollandCodeResponses = Session::get('holland_code_responses', []);
-        $basicInterestResponses = Session::get('basic_interest_responses', []);
-
         $totalHollandCodeItems = array_sum(array_map(function ($set) {
             return count($set['items']);
         }, $hollandCodeSets));
 
         $totalBasicInterestItems = count($basicInterests);
 
-        $hollandCodeProgress = count($hollandCodeResponses) / $totalHollandCodeItems * 100;
-        $basicInterestProgress = count($basicInterestResponses) / $totalBasicInterestItems * 100;
+        $hollandCodeProgress = count(array_filter($responses, function ($response) {
+            return $response['testStage'] === 'holland_codes';
+        })) / $totalHollandCodeItems * 100;
+        
+        $basicInterestProgress = count(array_filter($responses, function ($response) {
+            return $response['testStage'] === 'basic_interests';
+        })) / $totalBasicInterestItems * 100;
 
         $progress = [
             'hollandCode' => round($hollandCodeProgress),
@@ -94,9 +96,21 @@ class MainTestController extends Controller
     public function storeHollandCodeResponse(StoreResponseRequest $request)
     {
         $validated = $request->validated();
-        $responses = Session::get('holland_code_responses', []);
-        $responses[] = $validated;
-        Session::put('holland_code_responses', $responses);
+        $validated['testStage'] = 'holland_codes';
+        
+        $responses = Session::get('test_responses', []);
+        
+        // Update or add the response
+        $responseIndex = array_search($validated['itemId'], array_column($responses, 'itemId'));
+        if ($responseIndex !== false) {
+            // Update existing response
+            $responses[$responseIndex] = $validated;
+        } else {
+            // Add new response
+            $responses[] = $validated;
+        }
+        
+        Session::put('test_responses', $responses);
 
         $hollandCodeSets = Session::get('holland_code_sets');
         $currentSetIndex = Session::get('current_set_index', 0);
@@ -112,13 +126,9 @@ class MainTestController extends Controller
             Session::put('test_stage', 'basic_interests');
             return $this->startBasicInterests();
         }
-        $traitScores = $this->calculateHollandScores($responses);
-        ds($traitScores);
 
         Session::put('current_set_index', $currentSetIndex);
         Session::put('current_item_index', $currentItemIndex);
-
-        $currentItem = $hollandCodeSets[$currentSetIndex]['items'][$currentItemIndex];
 
         return to_route('main-test');
     }
@@ -126,41 +136,32 @@ class MainTestController extends Controller
     public function storeBasicInterestResponse(StoreResponseRequest $request)
     {
         $validated = $request->validated();
-        $responses = Session::get('basic_interest_responses', []);
-        $responses[] = $validated;
-
-        Session::put('basic_interest_responses', $responses);
+        $validated['testStage'] = 'basic_interests';
+        
+        $responses = Session::get('test_responses', []);
+        
+        // Update or add the response
+        $responseIndex = array_search($validated['itemId'], array_column($responses, 'itemId'));
+        if ($responseIndex !== false) {
+            // Update existing response
+            $responses[$responseIndex] = $validated;
+        } else {
+            // Add new response
+            $responses[] = $validated;
+        }
+        
+        Session::put('test_responses', $responses);
 
         $basicInterests = Session::get('basic_interests');
         $currentItemIndex = Session::get('current_item_index', 0);
-
         $currentItemIndex++;
 
         if ($currentItemIndex >= count($basicInterests)) {
-            return $this->processResults();
+            return $this->processResults($responses);
         }
 
         Session::put('current_item_index', $currentItemIndex);
-
-        $currentItem = $basicInterests[$currentItemIndex];
-
-
-
-        $formattedResponses = [];
-        foreach ($responses as $response) {
-            $category = $response['category'];
-            $answer = $response['answer'];
-
-            $normalizedAnswer = (int)$answer;
-
-            $formattedResponses[$category] = $normalizedAnswer;
-        }
-
-      ds(['formattedResponses'=>$formattedResponses]);
-
-
         return to_route('main-test');
-
     }
 
     private function initializeHollandCodeSets()
@@ -215,27 +216,24 @@ class MainTestController extends Controller
 
     }
 
- private function processResults()
+ private function processResults($responses)
     {
-        $hollandCodeResponses = Session::get('holland_code_responses', []);
-        $basicInterestResponses = Session::get('basic_interest_responses', []);
-
-          $formattedResponses = [];
-          foreach ($basicInterestResponses as $response) {
-              $category = $response['category'];
-              $answer = $response['answer'];
-
-              $normalizedAnswer = (int)$answer;
-
-              $formattedResponses[$category] = $normalizedAnswer;
-          }
-
-        ds(['formattedResponses'=>$formattedResponses]);
-
-
-
-        $hollandScores = $this->calculateHollandScores($hollandCodeResponses);
+        $hollandScores = $this->calculateHollandScores(array_filter($responses, function ($response) {
+            return $response['type'] === 'holland_code';
+        }));
         $archetype =  $this->getArchetypeAndTopScores($hollandScores);
+
+        $formattedResponses = [];
+        foreach (array_filter($responses, function ($response) {
+            return $response['type'] === 'basic_interest';
+        }) as $response) {
+            $category = $response['category'];
+            $answer = $response['answer'];
+
+            $normalizedAnswer = (int)$answer;
+
+            $formattedResponses[$category] = $normalizedAnswer;
+        }
 
         $topMatchingJobs = $this->matchJobs($formattedResponses);
 
@@ -260,7 +258,7 @@ class MainTestController extends Controller
             throw new \RuntimeException('Failed to save assessment results');
         }
 
-        Session::forget(['holland_code_sets', 'basic_interests', 'current_set_index', 'current_item_index', 'holland_code_responses', 'basic_interest_responses', 'test_stage']);
+        Session::forget(['holland_code_sets', 'basic_interests', 'current_set_index', 'current_item_index', 'test_stage', 'test_responses']);
         return to_route('results');
 
 
@@ -338,53 +336,33 @@ class MainTestController extends Controller
     // Add this new method to handle going back
     public function goBack()
     {
+        $testStage = Session::get('test_stage', 'holland_codes');
         $currentSetIndex = Session::get('current_set_index', 0);
         $currentItemIndex = Session::get('current_item_index', 0);
-        $testStage = Session::get('test_stage', 'holland_codes');
-
-        // If we're at the start of basic interests, go back to holland codes
-        if ($testStage === 'basic_interests' && $currentItemIndex === 0) {
-            $testStage = 'holland_codes';
-            $hollandCodeSets = Session::get('holland_code_sets');
-            $currentSetIndex = count($hollandCodeSets) - 1;
-            $currentItemIndex = count($hollandCodeSets[$currentSetIndex]['items']) - 1;
-
-            // Remove the last basic interest response
-            $responses = Session::get('basic_interest_responses', []);
-            array_pop($responses);
-            Session::put('basic_interest_responses', $responses);
-        }
-        // If we're in basic interests
-        else if ($testStage === 'basic_interests') {
-            $currentItemIndex--;
-
-            // Remove the last response
-            $responses = Session::get('basic_interest_responses', []);
-            array_pop($responses);
-            Session::put('basic_interest_responses', $responses);
-
-        }
-        // If we're in holland codes
-        else {
-            if ($currentItemIndex === 0) {
-                if ($currentSetIndex > 0) {
-                    $currentSetIndex--;
-                    $hollandCodeSets = Session::get('holland_code_sets');
-                    $currentItemIndex = count($hollandCodeSets[$currentSetIndex]['items']) - 1;
-                }
-            } else {
+        
+        if ($testStage === 'holland_codes') {
+            if ($currentItemIndex > 0) {
                 $currentItemIndex--;
+            } else if ($currentSetIndex > 0) {
+                $currentSetIndex--;
+                $hollandCodeSets = Session::get('holland_code_sets');
+                $currentItemIndex = count($hollandCodeSets[$currentSetIndex]['items']) - 1;
             }
-
-            // Remove the last response
-            $responses = Session::get('holland_code_responses', []);
-            array_pop($responses);
-            Session::put('holland_code_responses', $responses);
+        } else if ($testStage === 'basic_interests') {
+            if ($currentItemIndex > 0) {
+                $currentItemIndex--;
+            } else {
+                // Go back to holland codes if at the start of basic interests
+                $testStage = 'holland_codes';
+                $hollandCodeSets = Session::get('holland_code_sets');
+                $currentSetIndex = count($hollandCodeSets) - 1;
+                $currentItemIndex = count($hollandCodeSets[$currentSetIndex]['items']) - 1;
+            }
         }
 
-        Session::put('test_stage', $testStage);
         Session::put('current_set_index', $currentSetIndex);
         Session::put('current_item_index', $currentItemIndex);
+        Session::put('test_stage', $testStage);
 
         return to_route('main-test');
     }

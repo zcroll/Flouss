@@ -25,6 +25,7 @@
                   @submit="submitAnswer"
                   @go-back="goBack"
                   @skip="skipQuestion"
+                  @re-answer="handleReAnswer"
                   ref="questionRef"
                 />
               </div>
@@ -64,17 +65,27 @@ const props = defineProps({
 
 const page = usePage();
 const questionRef = ref(null);
-const previousAnswers = ref({});
+const previousAnswers = computed(() => {
+  const answers = {};
+  if (props.responses && Array.isArray(props.responses)) {
+    props.responses.forEach(response => {
+      if (response.itemId && response.answer !== undefined) {
+        answers[response.itemId] = parseInt(response.answer);
+      }
+    });
+  }
+  return answers;
+});
 const showWelcomeBack = ref(false);
 const showNextStep = ref(false);
 
 const form = useForm({
-  itemId: props.currentItem.id,
+  itemId: props.currentItem?.id,
   type: 'answered',
   answer: null,
   category: props.testStage === 'holland_codes'
-    ? props.hollandCodeData[props.currentSetIndex].title
-    : props.currentItem.category,
+    ? props.hollandCodeData[props.currentSetIndex]?.title
+    : props.currentItem?.category,
   testStage: props.testStage,
   _token: page.props.csrf_token
 });
@@ -116,25 +127,17 @@ const animateTransition = (direction, callback) => {
 };
 
 const goBack = () => {
-  router.post('/test/go-back', {
-    _token: page.props.csrf_token
-  }, {
-    preserveState: true,
-    preserveScroll: true,
-    onSuccess: (page) => {
-      if (page.props.testStage) {
-        form.testStage = page.props.testStage;
+  animateTransition('back', () => {
+    router.get(route('main-test.go-back'), {}, {
+      preserveState: true,
+      preserveScroll: true,
+      onSuccess: () => {
+        // Reset the form with the previous answer if it exists
+        if (props.currentItem && previousAnswers.value[props.currentItem.id] !== undefined) {
+          form.answer = previousAnswers.value[props.currentItem.id];
+        }
       }
-      if (page.props.currentItem) {
-        form.itemId = page.props.currentItem.id;
-        form.answer = previousAnswers.value[page.props.currentItem.id] || null;
-        form.category = page.props.testStage === 'holland_codes'
-          ? props.hollandCodeData[page.props.currentSetIndex].title
-          : page.props.currentItem.category;
-      }
-
-      animateTransition('back', () => {});
-    }
+    });
   });
 };
 
@@ -146,10 +149,11 @@ const skipQuestion = () => {
 
 const submitAnswer = () => {
   const routeName = props.testStage === 'holland_codes'
-    ? 'store-holland-code-response'
-    : 'store-basic-interest-response';
+    ? 'main-test.holland-code'
+    : 'main-test.basic-interest';
 
   if (form.answer !== null) {
+    // Update the previous answers map
     previousAnswers.value[form.itemId] = form.answer;
   }
 
@@ -157,6 +161,7 @@ const submitAnswer = () => {
     preserveState: true,
     preserveScroll: true,
     onSuccess: (page) => {
+      // Reset form for next question
       form.reset();
       form.itemId = props.currentItem.id;
       form.category = props.testStage === 'holland_codes'
@@ -171,6 +176,11 @@ const submitAnswer = () => {
       console.error('Error submitting response', errors);
     },
   });
+};
+
+const handleReAnswer = (newAnswer) => {
+  form.answer = newAnswer;
+  submitAnswer();
 };
 
 const checkWelcomeBack = async () => {
@@ -203,14 +213,17 @@ watch(() => props.testStage, (newStage) => {
 
 watch(() => props.currentItem, (newItem) => {
   if (newItem) {
-    form.reset();
     form.itemId = newItem.id;
     form.category = props.testStage === 'holland_codes'
       ? props.hollandCodeData[props.currentSetIndex].title
       : newItem.category;
     form.testStage = props.testStage;
-    form._token = page.props.csrf_token;
-    form.answer = previousAnswers.value[newItem.id] || null;
+    // Set the previous answer if it exists
+    if (previousAnswers.value[newItem.id] !== undefined) {
+      form.answer = previousAnswers.value[newItem.id];
+    } else {
+      form.answer = null;
+    }
   }
 });
 
