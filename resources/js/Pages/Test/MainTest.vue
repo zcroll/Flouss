@@ -8,7 +8,7 @@
         <WelcomeBack v-if="showWelcomeBack" @continue="continueTest" />
         <section v-else class="Assessment" tabindex="-1" data-testid="assessment-test" @submit.prevent="submitAnswer">
           <section class="Assessment__ItemSetLeadIn" v-if="currentItemIndex !== 0">
-            {{ testStage === 'holland_codes' ? 'Would you like to...' : 'Would you enjoy...' }}
+            {{ testStage === 'holland_codes' ? __('test.would_you_like') : __('test.would_you_enjoy') }}
           </section>
           <div class="Assessment__ItemSetLeadIn Assessment__ItemSetLeadIn--spacer" aria-hidden="true"></div>
           <div class="Assessment__scroll-container">

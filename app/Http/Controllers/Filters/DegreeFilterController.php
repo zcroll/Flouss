@@ -13,10 +13,12 @@ class DegreeFilterController extends Controller
     {
         $locale = app()->getLocale();
         $nameColumn = $locale === 'fr' ? 'name_fr' : 'name';
+        $descriptionColumn = $locale === 'fr' ? 'main_description_fr' : 'main_description';
 
         $query = Degree::query()
-        ->select('id', $nameColumn, 'image', 'slug', 'salary')
-        ->has('degreeSkills'); 
+            ->with('degreeDescription')
+            ->select('id', $nameColumn, 'image', 'slug', 'salary')
+            ->has('degreeSkills'); 
 
         $filters = [];
 
@@ -59,15 +61,17 @@ class DegreeFilterController extends Controller
         $degrees = $query->paginate(12);
 
         return Inertia::render('Degrees/Index', [
-            'degrees' => Inertia::merge(function () use ($degrees, $nameColumn) {
+            'degrees' => Inertia::merge(function () use ($degrees, $nameColumn, $descriptionColumn) {
                 return [
-                    'data' => $degrees->map(function ($degree) use ($nameColumn) {
+                    'data' => $degrees->map(function ($degree) use ($nameColumn, $descriptionColumn) {
                         return [
                             'id' => $degree->id,
                             'name' => $degree->$nameColumn,
                             'image' => $degree->image,
                             'slug' => $degree->slug,
                             'satisfaction' => $degree->satisfaction,
+                            'description' => $degree->degreeDescription ? 
+                                $degree->degreeDescription->$descriptionColumn : null,
                         ];
                     }),
                     'meta' => [

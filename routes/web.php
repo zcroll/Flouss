@@ -150,3 +150,5 @@ Route::get('/ruller', function () {
 });
 
 Route::get('/api',[ApiController::class,'index']);
+
+

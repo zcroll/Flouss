@@ -44,4 +44,7 @@ return [
     'neutral' => 'Neutre',
     'dislike_it' => 'Je n\'aime pas',
     'hate_it' => 'Je déteste ça',
+    'would_you_like' => 'Voulez-vous...',
+    'would_you_enjoy' => 'Voulez-vous...',
+    
 ];

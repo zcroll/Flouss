@@ -14,8 +14,12 @@ class JobFilterController extends Controller
         $locale = app()->getLocale();
         $nameColumn = $locale === 'fr' ? 'name_fr' : 'name';
         $descriptionColumn = $locale === 'fr' ? 'description_fr' : 'description';
+        $typeDescriptionColumn = $locale === 'fr' ? 'type_description_fr' : 'type_description';
 
         $query = JobInfo::query()
+            ->with(['jobInfoTypes' => function($query) use ($typeDescriptionColumn) {
+                $query->select('id', $typeDescriptionColumn);
+            }])
             ->when($locale === 'fr', function ($query) {
                 return $query->whereNotNull('name_fr');
             }, function ($query) {
@@ -54,9 +58,9 @@ class JobFilterController extends Controller
         $jobs = $query->paginate(12);
 
         return Inertia::render('Jobs/Index', [
-            'jobs' => Inertia::merge(function () use ($jobs, $locale, $nameColumn, $descriptionColumn) {
+            'jobs' => Inertia::merge(function () use ($jobs, $locale, $nameColumn, $descriptionColumn, $typeDescriptionColumn) {
                 return [
-                    'data' => $jobs->map(function ($job) use ($locale, $nameColumn, $descriptionColumn) {
+                    'data' => $jobs->map(function ($job) use ($locale, $nameColumn, $descriptionColumn, $typeDescriptionColumn) {
                         return [
                             'id' => $job->id,
                             'name' => $job->$nameColumn,
@@ -65,6 +69,7 @@ class JobFilterController extends Controller
                             'description' => $job->$descriptionColumn,
                             'salary' => $job->salary,
                             'satisfaction' => $job->satisfaction,
+                            'type_descriptions' => $job->jobInfoTypes->pluck($typeDescriptionColumn)->unique()->values()
                         ];
                     }),
                     'meta' => [
@@ -79,6 +84,8 @@ class JobFilterController extends Controller
                 ];
             }),
             'filters' => $filters
+            
         ]);
+        
     }
 }
