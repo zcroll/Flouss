@@ -1,10 +1,10 @@
 <template>
-  <div class="bg-stone-950 rounded-2xl border border-stone-700 flex flex-col h-[600px]">
+  <div class="bg-stone-950 rounded-xl border border-stone-700 flex flex-col h-[600px]">
     <div class="p-6 border-b border-stone-700">
       <div class="flex items-center justify-between">
         <div class="flex items-center space-x-3">
-          <div class="w-3 h-3 bg-amber-500 rounded-full animate-pulse"></div>
-          <h2 class="text-xl font-semibold text-stone-100">AI Career Guide</h2>
+          <div class="w-3 h-3 bg-violet-500 rounded-full animate-pulse"></div>
+          <h2 class="text-xl font-semibold text-stone-100">{{ __('dashboard.ai_career_guide') }}</h2>
         </div>
       </div>
     </div>

@@ -44,7 +44,7 @@ const navigation = [
 <template >
     <div >
         <Head :title="title" />
-        <div class="min-h-screen relative pb-5" style="background-image: linear-gradient(#d3cbb8, #dbd5a4);">
+        <div class="min-h-screen relative" style="background-image: linear-gradient(#ffffff, #ddd3ed);">
 
             <Header>
                 <template #navigation>

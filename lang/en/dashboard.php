@@ -41,6 +41,7 @@ return [
     'discover_formations' => 'Discover Academic Disciplines',
     'type_your_message' => 'Type your message...',
     'suggested_questions' => 'Suggested Questions',
-    'ai_career_guide' => 'AI Career Guide',
+    'ai_career_guide' => 'Orientation AI Assistant',
     'ai_assistant' => 'AI Assistant',
+    'dashboard' => 'Dashboard',
 ];

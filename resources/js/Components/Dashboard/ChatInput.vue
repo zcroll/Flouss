@@ -8,7 +8,7 @@
             @input="$emit('update:modelValue', $event.target.value)"
             @focus="handleFocus"
             type="text"
-            class="w-full h-10 px-4 bg-stone-900 text-stone-100 rounded-xl border border-stone-700 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors pl-10"
+            class="w-full h-10 px-4 bg-stone-900 text-stone-100 rounded-xl border border-stone-700 focus:border-violet-700 focus:ring-1 focus:ring-purple-950 transition-colors pl-10"
             :placeholder="__('dashboard.type_your_message')"
             :disabled="isLoading" 
           />
@@ -41,7 +41,7 @@
               </div>
               <div v-for="category in predefinedQuestions" :key="category.category" class="mb-6 last:mb-0">
                 <div class="flex items-center space-x-2 mb-3">
-                  <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-5 h-5 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="category.icon" />
                   </svg>
                   <h3 class="text-stone-300 font-medium">{{ category.category }}</h3>
@@ -53,7 +53,7 @@
                     class="w-full text-left p-3 text-stone-400 hover:text-stone-200 hover:bg-stone-800/50 rounded-lg transition-all duration-200 text-sm group">
                     <div class="flex items-center justify-between">
                       <span>{{ question }}</span>
-                      <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity text-amber-500"
+                      <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity text-violet-500"
                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                       </svg>
@@ -65,7 +65,7 @@
           </div>
         </div>
         <button type="submit"
-          class="h-10 w-10 flex items-center justify-center bg-amber-500 hover:bg-amber-600 disabled:bg-stone-700 text-stone-900 disabled:text-stone-400 rounded-xl transition-all duration-200 disabled:cursor-not-allowed"
+          class="h-10 w-10 flex items-center justify-center bg-violet-500 hover:bg-violet-600 disabled:bg-stone-700 text-stone-900 disabled:text-stone-400 rounded-xl transition-all duration-200 disabled:cursor-not-allowed"
           :disabled="!modelValue.trim() || isLoading">
           <svg v-if="!isLoading" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />

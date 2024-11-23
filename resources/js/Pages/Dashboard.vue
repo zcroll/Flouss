@@ -1,5 +1,5 @@
 <template>
-  <AppLayout title="dashboard">
+  <AppLayout title="dashboard" >
     <div class="min-h-screen">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
         <WelcomeBanner 

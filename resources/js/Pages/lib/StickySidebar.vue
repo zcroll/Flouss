@@ -71,7 +71,7 @@
                                 <Link
                                     :href="link.url"
                                     :class="{
-                                        'bg-amber-500': $page.url === link.url,
+                                        'bg-stone-700': $page.url === link.url,
                                         'hover:bg-stone-700': $page.url !== link.url
                                     }"
                                     class="block py-2 px-4 rounded-lg transition-colors duration-200"
