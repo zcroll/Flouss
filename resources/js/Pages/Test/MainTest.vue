@@ -5,7 +5,8 @@
     <div class="assessment-with-progress">
       <SidebarMainTest :progress="progress" :test-stage="testStage" />
       <div class="assessment Roadmap__inner">
-        <WelcomeBack v-if="showWelcomeBack" @continue="continueTest" />
+        <MainTestTutorial v-if="showTutorial" @continue="startTest" />
+        <WelcomeBack v-else-if="showWelcomeBack" @continue="continueTest" />
         <section v-else class="Assessment" tabindex="-1" data-testid="assessment-test" @submit.prevent="submitAnswer">
           <section class="Assessment__ItemSetLeadIn" v-if="currentItemIndex !== 0">
             {{ testStage === 'holland_codes' ? __('test.would_you_like') : __('test.would_you_enjoy') }}
@@ -15,23 +16,15 @@
             <div>
               <div class="Assessment__Item--forward-appear-done Assessment__Item--forward-enter-done">
                 <NextStep v-if="showNextStep" @continue="hideNextStep" />
-                <TestQuestion v-else
-                  :current-item="currentItem"
-                  :current-item-index="currentItemIndex"
-                  :current-set-index="currentSetIndex"
-                  :test-stage="testStage"
-                  :previous-answers="previousAnswers"
-                  :form="form"
-                  @submit="submitAnswer"
-                  @go-back="goBack"
-                  @skip="skipQuestion"
-                  ref="questionRef"
-                />
+                <TestQuestion v-else :current-item="currentItem" :current-item-index="currentItemIndex"
+                  :current-set-index="currentSetIndex" :test-stage="testStage" :previous-answers="previousAnswers"
+                  :form="form" @submit="submitAnswer" @go-back="goBack" @skip="skipQuestion" ref="questionRef" />
               </div>
             </div>
           </div>
         </section>
-        <section class="Discovery" aria-live="polite" aria-atomic="true" aria-relevant="text" role="presentation"></section>
+        <section class="Discovery" aria-live="polite" aria-atomic="true" aria-relevant="text" role="presentation">
+        </section>
       </div>
     </div>
   </section>
@@ -46,6 +39,7 @@ import NextStep from '@/Components/Test/NextStep.vue';
 import TestQuestion from '@/Components/Test/TestQuestion.vue';
 import axios from 'axios';
 import anime from 'animejs/lib/anime.es.js';
+import MainTestTutorial from '@/Components/Test/MainTestTutorial.vue';
 
 const props = defineProps({
   hollandCodeData: Array,
@@ -67,6 +61,7 @@ const questionRef = ref(null);
 const previousAnswers = ref({});
 const showWelcomeBack = ref(false);
 const showNextStep = ref(false);
+const showTutorial = ref(true);
 
 const form = useForm({
   itemId: props.currentItem.id,
@@ -133,7 +128,7 @@ const goBack = () => {
           : page.props.currentItem.category;
       }
 
-      animateTransition('back', () => {});
+      animateTransition('back', () => { });
     }
   });
 };
@@ -165,7 +160,7 @@ const submitAnswer = () => {
       form.testStage = props.testStage;
       form._token = page.props.csrf_token;
 
-      animateTransition('next', () => {});
+      animateTransition('next', () => { });
     },
     onError: (errors) => {
       console.error('Error submitting response', errors);
@@ -213,6 +208,10 @@ watch(() => props.currentItem, (newItem) => {
     form.answer = previousAnswers.value[newItem.id] || null;
   }
 });
+
+const startTest = () => {
+  showTutorial.value = false;
+};
 
 onMounted(() => {
   checkWelcomeBack();

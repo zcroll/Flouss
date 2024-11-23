@@ -77,6 +77,8 @@ class MainTestController extends Controller
             'basicInterest' => round($basicInterestProgress),
         ];
 
+        $showTutorial = empty($hollandCodeResponses) && empty($basicInterestResponses);
+
         return Inertia::render('Test/MainTest', [
             'hollandCodeData' => $hollandCodeSets,
             'basicInterests' => $basicInterests,
@@ -88,6 +90,7 @@ class MainTestController extends Controller
             'responses' => $responses,
             'testStage' => $testStage,
             'progress' => $progress,
+            'showTutorial' => $showTutorial,
         ]);
     }
 

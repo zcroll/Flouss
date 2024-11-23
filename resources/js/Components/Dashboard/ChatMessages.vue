@@ -32,7 +32,7 @@
               <span class="text-stone-500 text-xs">•</span>
               <span class="text-stone-300 text-sm font-medium">You</span>
             </div>
-            <div class="bg-amber-500/10 rounded-2xl p-4 border border-amber-500/20 break-words">
+            <div class="bg-purple-600/10 rounded-2xl p-4 border border-purple-600/20 break-words">
               <p class="text-sm text-stone-300 leading-relaxed whitespace-pre-wrap">{{ message.content }}</p>
             </div>
           </div>
