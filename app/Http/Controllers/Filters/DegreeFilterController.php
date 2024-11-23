@@ -20,6 +20,7 @@ class DegreeFilterController extends Controller
             ->select('id', $nameColumn, 'image', 'slug', 'salary')
             ->has('degreeSkills'); 
 
+
         $filters = [];
 
         if ($search = $request->input('q')) {

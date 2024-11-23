@@ -16,10 +16,9 @@
         autocomplete="on"
         type="radio"
         :value="option.value"
-        :checked="previousAnswers[currentItem.id] === option.value"
-        :model-value="modelValue"
-        @change="$emit('update:modelValue', $event.target.value); $emit('submit')"
-        @click="$emit('update:modelValue', option.value); $emit('submit')" />
+        :checked="modelValue === option.value"
+        v-model="selectedValue"
+        @click="handleClick(option.value)" />
       <label class="RadioField--label" :for="option.id">
         <span class="RadioField--label__inner">{{ option.label }}</span>
       </label>
@@ -29,6 +28,8 @@
 
 <script setup>
 import __ from '@/lang';
+import { computed, ref, watch } from 'vue';
+
 const props = defineProps({
   currentItem: {
     type: Object,
@@ -48,13 +49,27 @@ const props = defineProps({
   }
 });
 
+const emit = defineEmits(['update:modelValue', 'submit', 'change']);
+
+const selectedValue = ref(props.modelValue);
+
+watch(() => props.modelValue, (newValue) => {
+  selectedValue.value = newValue;
+});
+
+const handleClick = (value) => {
+  // Always emit the value on click, even if it's the same as before
+  selectedValue.value = value;
+  emit('update:modelValue', value);
+  emit('change', value);
+  emit('submit');
+};
+
 const options = [
   { id: 'love-it', value: 5, label: __('test.love_it') },
-  { id: 'like-it', value: 2, label: __('test.like_it') },
+  { id: 'like-it', value: 4, label: __('test.like_it') },
   { id: 'neutral', value: 3, label: __('test.neutral') },
-  { id: 'dislike-it', value: 4, label: __('test.dislike_it') },
+  { id: 'dislike-it', value: 2, label: __('test.dislike_it') },
   { id: 'hate-it', value: 1, label: __('test.hate_it') }
 ];
-
-defineEmits(['update:modelValue', 'submit']);
 </script>

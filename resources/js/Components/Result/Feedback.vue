@@ -1,5 +1,6 @@
 <script setup>
 import { StarFilledIcon, StarIcon } from '@radix-icons/vue'
+
 import { ref, watch } from 'vue'
 import __ from '@/lang'
 
@@ -9,7 +10,7 @@ const props = defineProps({
     required: true
   },
   rating: {
-    type: Number,
+    type: Number, 
     required: true
   },
   errors: {
@@ -99,6 +100,7 @@ watch(() => props.processing, (newVal, oldVal) => {
           class="mt-4 w-full px-6 py-3 text-base font-medium text-white bg-stone-900 rounded-lg hover:bg-stone-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#6B52F8] disabled:opacity-50"
         >
           {{ processing ? __('feedback.submitting') : __('feedback.submit') }}
+
         </button>
       </div>
     </div>

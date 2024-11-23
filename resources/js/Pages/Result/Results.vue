@@ -21,6 +21,7 @@
         <Feedback :feedback="form.feedback" :rating="form.rating" :errors="form.errors"
           :processing="form.processing" @update:feedback="form.feedback = $event"
           @update:rating="form.rating = $event" @submit="submitFeedback" />
+
       </section>
 
       <section class="section">
@@ -93,3 +94,13 @@ const submitFeedback = () => {
   });
 };
 </script>
+
+
+<style  >
+@import '/public/css/user-results.css';
+@import '/public/css/shared-discovery.css';
+@import '/public/css/assessment.css'
+
+
+
+</style>

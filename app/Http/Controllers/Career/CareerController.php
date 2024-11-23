@@ -127,6 +127,7 @@ class CareerController extends Controller
         ->filter(function ($jobDegree) {
             return !is_null($jobDegree->degree);
         })
+
             ->map(function ($jobDegree) {
                 $degree = $jobDegree->degree;
                 return [
