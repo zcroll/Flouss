@@ -58,7 +58,7 @@
                     </div>
             
                     <div>
-                      <p class="text-sm text-gray-600 line-clamp-2">{{ job.type_descriptions }}</p>
+                      <p class="text-sm text-gray-600 line-clamp-2">{{ job.description }}</p>
                     </div>
 
                     <Link :href="`/career/${job.slug}`" class="degree-card__link">
