@@ -1,7 +1,7 @@
 <template>
     <div class="mt-[-40px] flex flex-col-reverse lg:container lg:mx-auto lg:flex-row">
         <div class="w-full lg:w-2/3">
-            <div class="relative bg-gradient-to-b from-[#353535] to-[#2a2a2a] rounded-t-3xl p-1 lg:p-0 lg:mx-0 lg:bg-none lg:rounded-none overflow-hidden">
+            <div class="relative  rounded-t-3xl p-1 lg:p-0 lg:mx-0 lg:bg-none lg:rounded-none overflow-hidden">
                 <!-- Decorative elements -->
                 <div class="absolute inset-0 overflow-hidden pointer-events-none">
                     <!-- Gradient orbs -->
@@ -25,6 +25,7 @@
                  class="fixed bottom-0 left-0 right-0 bg-[#353535] text-white shadow-lg z-50 rounded-t-2xl">
                 <div class="flex items-center justify-between px-3 py-2 border-b border-gray-700">
                     <img :src="image" alt="Icon" class="w-8 h-8 rounded-full"/>
+
                     <h3 class="text-sm font-bold ml-2 flex-1 truncate">{{ title }}</h3>
                     <FavoriteButton
                         :model-id="id"
@@ -130,6 +131,7 @@ import {
     BookOpenIcon,
     ClipboardDocumentListIcon
 } from '@heroicons/vue/24/outline';
+
 
 const props = defineProps({
     type: {
