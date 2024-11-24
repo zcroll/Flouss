@@ -58,18 +58,6 @@
                   </picture>
                 </div>
               </div>
-              <div class="Tiles__tile-buttons">
-                <button class="Tiles__tile-button Tiles__tile-button--left" aria-label="Previous" tabindex="-1" @click="previousCard">
-                  <svg aria-hidden="true" focusable="false" data-prefix="fal" data-icon="chevron-left" class="svg-inline--fa fa-chevron-left" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-                    <path fill="currentColor" d="M234.8 36.25c3.438 3.141 5.156 7.438 5.156 11.75c0 3.891-1.406 7.781-4.25 10.86L53.77 256l181.1 197.1c6 6.5 5.625 16.64-.9062 22.61c-6.5 6-16.59 5.594-22.59-.8906l-192-208c-5.688-6.156-5.688-15.56 0-21.72l192-208C218.2 30.66 228.3 30.25 234.8 36.25z"></path>
-                  </svg>
-                </button>
-                <button class="Tiles__tile-button Tiles__tile-button--right" aria-label="Next" tabindex="-1" @click="nextCard">
-                  <svg aria-hidden="true" focusable="false" data-prefix="fal" data-icon="chevron-right" class="svg-inline--fa fa-chevron-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-                    <path fill="currentColor" d="M85.14 475.8c-3.438-3.141-5.156-7.438-5.156-11.75c0-3.891 1.406-7.781 4.25-10.86l181.1-197.1L84.23 58.86c-6-6.5-5.625-16.64 .9062-22.61c6.5-6 16.59-5.594 22.59 .8906l192 208c5.688 6.156 5.688 15.56 0 21.72l-192 208C101.7 481.3 91.64 481.8 85.14 475.8z"></path>
-                  </svg>
-                </button>
-              </div>
             </div>
           </div>
         </div>
@@ -88,7 +76,7 @@ export default {
         {
           variant: 'career-matches',
           title: 'Career Matches',
-          description: 'Discover your top career matches and why they\'re right for you.',
+          description: 'Discover your top career matches and ',
           mobileSrcset: 'https://res.cloudinary.com/hnpb47ejt/image/upload/q_auto,f_auto,w_600/v1593735998/fdxakkpypatudykgl3my 1x, https://res.cloudinary.com/hnpb47ejt/image/upload/q_auto,f_auto,w_1200/v1593735998/fdxakkpypatudykgl3my 2x',
           mobileWebpSrcset: 'https://res.cloudinary.com/hnpb47ejt/image/upload/q_auto,f_auto,w_600/v1593735998/fdxakkpypatudykgl3my.webp 1x, https://res.cloudinary.com/hnpb47ejt/image/upload/q_auto,f_auto,w_1200/v1593735998/fdxakkpypatudykgl3my.webp 2x',
           webpSrcset: 'https://res.cloudinary.com/hnpb47ejt/image/upload/q_auto,f_auto,w_744/v1593735998/fdxakkpypatudykgl3my.webp 1x, https://res.cloudinary.com/hnpb47ejt/image/upload/q_auto,f_auto,w_1488/v1593735998/fdxakkpypatudykgl3my.webp 2x',

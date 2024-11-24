@@ -46,4 +46,59 @@ return [
     'hate_it' => 'Hate it',
     'would_you_like' => 'Would you like to...',
     'would_you_enjoy' => 'Would you enjoy...',
+    'step_x_of_y' => 'Step :step of :total',
+    'example' => 'Example',
+    'example_question' => 'Question: "Would you enjoy designing a website?"',
+    'start_assessment' => 'Start Assessment',
+    'tutorial' => [
+        'welcome' => [
+            'title' => 'Welcome to Your Career Assessment',
+            'content' => 'This assessment uses the Holland Code (RIASEC) theory to match your personality with ideal career paths.',
+            'remember' => 'Remember, there are no wrong answers - just be yourself!'
+        ],
+        'holland_codes' => [
+            'title' => 'Understanding Holland Codes',
+            'content' => 'Your personality type combines: Realistic, Investigative, Artistic, Social, Enterprising, and Conventional. Each represents different work preferences.'
+        ],
+        'how_to_answer' => [
+            'title' => 'How to Answer Questions',
+            'content' => 'Rate activities from \'Strongly Dislike\' to \'Strongly Like\' based on your interest. Focus on enjoyment, not skill. Every answer is valid - just be honest!'
+        ],
+        'journey_begins' => [
+            'title' => 'Your Career Journey Begins',
+            'content' => 'After completing the assessment, you\'ll get personalized career suggestions based on your unique interests. Remember, all responses are valuable. Let\'s start your career discovery!'
+        ]
+    ],
+    'holland_codes' => [
+        'realistic' => [
+            'rest' => 'ealistic',
+            'title' => 'Realistic Traits',
+            'traits' => 'Practical, Physical, Hands-on, Tool-oriented, Athletic'
+        ],
+        'investigative' => [
+            'rest' => 'nvestigative',
+            'title' => 'Investigative Traits',
+            'traits' => 'Analytical, Scientific, Observant, Curious, Precise'
+        ],
+        'artistic' => [
+            'rest' => 'rtistic',
+            'title' => 'Artistic Traits',
+            'traits' => 'Creative, Intuitive, Imaginative, Innovative, Expressive'
+        ],
+        'social' => [
+            'rest' => 'ocial',
+            'title' => 'Social Traits',
+            'traits' => 'Helpful, Cooperative, Supportive, Understanding, Teaching'
+        ],
+        'enterprising' => [
+            'rest' => 'nterprising',
+            'title' => 'Enterprising Traits',
+            'traits' => 'Persuasive, Leadership, Competitive, Energetic, Ambitious'
+        ],
+        'conventional' => [
+            'rest' => 'onventional',
+            'title' => 'Conventional Traits',
+            'traits' => 'Organized, Detail-oriented, Systematic, Structured, Efficient'
+        ]
+    ],
 ];

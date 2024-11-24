@@ -46,5 +46,59 @@ return [
     'hate_it' => 'Je déteste ça',
     'would_you_like' => 'Voulez-vous...',
     'would_you_enjoy' => 'Voulez-vous...',
-    
+    'step_x_of_y' => 'Étape :step sur :total',
+    'example' => 'Exemple',
+    'example_question' => 'Question : "Aimeriez-vous concevoir un site web ?"',
+    'start_assessment' => 'Commencer l\'évaluation',
+    'tutorial' => [
+        'welcome' => [
+            'title' => 'Bienvenue dans votre évaluation de carrière',
+            'content' => 'Cette évaluation utilise la théorie du code Holland (RIASEC) pour faire correspondre votre personnalité avec des parcours professionnels idéaux.',
+            'remember' => 'Rappelez-vous, il n\'y a pas de mauvaises réponses - soyez simplement vous-même !'
+        ],
+        'holland_codes' => [
+            'title' => 'Comprendre les codes Holland',
+            'content' => 'Votre type de personnalité combine : Réaliste, Investigateur, Artistique, Social, Entreprenant et Conventionnel. Chacun représente différentes préférences de travail.'
+        ],
+        'how_to_answer' => [
+            'title' => 'Comment répondre aux questions',
+            'content' => 'Évaluez les activités de "N\'aime pas du tout" à "Aime beaucoup" selon votre intérêt. Concentrez-vous sur le plaisir, pas sur la compétence. Chaque réponse est valable - soyez simplement honnête !'
+        ],
+        'journey_begins' => [
+            'title' => 'Votre parcours professionnel commence',
+            'content' => 'Après avoir terminé l\'évaluation, vous recevrez des suggestions de carrière personnalisées basées sur vos intérêts uniques. N\'oubliez pas, toutes les réponses sont précieuses. Commençons votre découverte professionnelle !'
+        ]
+    ],
+    'holland_codes' => [
+        'realistic' => [
+            'rest' => 'éaliste',
+            'title' => 'Traits Réalistes',
+            'traits' => 'Pratique, Physique, Manuel, Orienté outils, Athlétique'
+        ],
+        'investigative' => [
+            'rest' => 'nvestigateur',
+            'title' => 'Traits Investigateurs',
+            'traits' => 'Analytique, Scientifique, Observateur, Curieux, Précis'
+        ],
+        'artistic' => [
+            'rest' => 'rtistique',
+            'title' => 'Traits Artistiques',
+            'traits' => 'Créatif, Intuitif, Imaginatif, Innovant, Expressif'
+        ],
+        'social' => [
+            'rest' => 'ocial',
+            'title' => 'Traits Sociaux',
+            'traits' => 'Serviable, Coopératif, Encourageant, Compréhensif, Pédagogue'
+        ],
+        'enterprising' => [
+            'rest' => 'ntreprenant',
+            'title' => 'Traits Entreprenants',
+            'traits' => 'Persuasif, Leadership, Compétitif, Énergique, Ambitieux'
+        ],
+        'conventional' => [
+            'rest' => 'onventionnel',
+            'title' => 'Traits Conventionnels',
+            'traits' => 'Organisé, Méthodique, Systématique, Structuré, Efficace'
+        ]
+    ],
 ];

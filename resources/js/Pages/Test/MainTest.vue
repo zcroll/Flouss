@@ -111,25 +111,19 @@ const animateTransition = (direction, callback) => {
 };
 
 const goBack = () => {
-  router.post('/test/go-back', {
-    _token: page.props.csrf_token
-  }, {
-    preserveState: true,
-    preserveScroll: true,
-    onSuccess: (page) => {
-      if (page.props.testStage) {
-        form.testStage = page.props.testStage;
-      }
-      if (page.props.currentItem) {
-        form.itemId = page.props.currentItem.id;
-        form.answer = previousAnswers.value[page.props.currentItem.id] || null;
-        form.category = page.props.testStage === 'holland_codes'
-          ? props.hollandCodeData[page.props.currentSetIndex].title
-          : page.props.currentItem.category;
-      }
 
-      animateTransition('back', () => { });
-    }
+  animateTransition('back', () => {
+    router.get(route('main-test.go-back'), {}, {
+      preserveState: true,
+      preserveScroll: true,
+      onSuccess: () => {
+        // Reset the form with the previous answer if it exists
+        if (props.currentItem && previousAnswers.value[props.currentItem.id] !== undefined) {
+          form.answer = previousAnswers.value[props.currentItem.id];
+        }
+        animateTransition('back', () => {});
+      }
+    });
   });
 };
 
@@ -219,7 +213,6 @@ onMounted(() => {
 </script>
 
 
-<style scoped>
-@import url('https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css');
-@import url('https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/assessments.ba16abcb0f5b.css');
+<style >
+@import url('public/css/assessment.css');
 </style>
