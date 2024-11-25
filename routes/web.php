@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\TestMail;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\Test\HollandCodeController;
 
 // Google Login Routes (place these BEFORE any auth middleware groups)
 Route::get('auth/google', [App\Http\Controllers\Auth\GoogleController::class, 'redirectToGoogle'])
@@ -95,6 +96,12 @@ Route::middleware([
         // Welcome back routes
         Route::get('/welcome-back/show', [WelcomeBackController::class, 'showWelcomeBack'])->name('welcome-back.show');
         Route::post('/welcome-back/set-shown', [WelcomeBackController::class, 'setWelcomeBackShown'])->name('welcome-back.set-shown');
+
+        Route::prefix('holland-codes')->group(function () {
+            Route::get('/', [HollandCodeController::class, 'index'])->name('holland-codes.index');
+            Route::post('/store-response', [HollandCodeController::class, 'storeResponse'])->name('holland-codes.store-response');
+            Route::post('/go-back', [HollandCodeController::class, 'goBack'])->name('holland-codes.go-back');
+        });
     });
 });
 
@@ -150,9 +157,5 @@ Route::get('/ruller', function () {
 });
 
 Route::get('/api',[ApiController::class,'index']);
-
-Route::get('/test/archetype-themes', function () {
-    return Inertia::render('Test/ArchetypeThemeTest');
-})->middleware(['auth']);
 
 

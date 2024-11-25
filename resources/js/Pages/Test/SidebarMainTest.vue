@@ -15,13 +15,13 @@
               :status="milestones[0]?.status || 'not-started'"
               :title="milestones[0]?.name || 'Your personality archetype'"
               :time="milestones[0]?.time || '~ 3 mins'"
-              :progress="progress.hollandCode"
+              :progress="milestones[0]?.progress || 0"
             />
             <Milestone
               :status="milestones[1]?.status || 'not-started'"
               :title="milestones[1]?.name || 'Your career matches'"
               :time="milestones[1]?.time || '~ 3 mins'"
-              :progress="progress.basicInterest"
+              :progress="milestones[1]?.progress || 0"
             />
             <Milestone
               :status="milestones[2]?.status || 'not-started'"
@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import { ref, onMounted, watch, computed } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import Milestone from '@/Pages/Test/Milestone.vue';
 import MilestoneProgress from '@/Pages/Test/MilestoneProgress.vue';
 import SvgIcon from '@/Components/helpers/SvgIcon.vue';
@@ -81,7 +81,23 @@ export default {
     MinimizedProgress,
   },
   props: {
-    progress: Object,
+    progress: {
+      type: Object,
+      required: true,
+      validator: (value) => {
+        return (
+          typeof value === 'object' &&
+          'hollandCodes' in value &&
+          'basicInterest' in value &&
+          'completed' in value
+        );
+      },
+      default: () => ({
+        hollandCodes: 0,
+        basicInterest: 0,
+        completed: false
+      })
+    },
     testStage: String,
   },
   setup(props) {
@@ -108,87 +124,50 @@ export default {
       {
         name: 'Your Results',
         time: '~ 20 mins',
-        description: [
-          'Final career matches and insights',
-          'Personality report',
-          'Trait report',
-        ],
+        description: ['Final career matches and insights', 'Personality report', 'Trait report'],
         status: 'not-started',
         progress: 0,
       },
     ]);
 
+    // Update milestone progress based on props
+    watch(() => props.progress, (newProgress) => {
+      if (newProgress) {
+        // Update Holland Codes milestone
+        milestones.value[0].progress = newProgress.hollandCodes || 0;
+        milestones.value[0].status = newProgress.hollandCodes === 100 ? 'complete' : 'in-progress';
+
+        // Update Basic Interest milestone
+        milestones.value[1].progress = newProgress.basicInterest || 0;
+        milestones.value[1].status = newProgress.basicInterest === 100 ? 'complete' : 
+          newProgress.hollandCodes === 100 ? 'in-progress' : 'not-started';
+
+        // Update status of remaining milestones based on completion
+        if (newProgress.completed) {
+          milestones.value[2].status = 'in-progress';
+          milestones.value[3].status = 'not-started';
+        }
+      }
+    }, { immediate: true });
+
+    const nextMilestone = computed(() => {
+      return milestones.value.find(m => m.status !== 'complete') || milestones.value[0];
+    });
+
     const toggleMinimized = () => {
       isMinimized.value = !isMinimized.value;
     };
 
-    const updateMilestones = () => {
-      milestones.value = [
-        {
-          name: 'Your personality archetype',
-          time: '~ 3 mins',
-          status: props.testStage === 'basic_interests' ? 'complete' :
-                 props.testStage === 'holland_codes' ? 'in-progress' : 'not-started',
-          progress: props.progress.hollandCode,
-        },
-        {
-          name: 'Your career matches',
-          time: '~ 3 mins',
-          status: props.testStage === 'basic_interests' ? 'in-progress' : 'not-started',
-          progress: props.progress.basicInterest,
-        },
-        {
-          name: 'Your degree matches',
-          time: '~ 1 min',
-          status: 'not-started',
-          progress: 0,
-        },
-        {
-          name: 'Your Results',
-          time: '~ 20 mins',
-          description: [
-            'Final career matches and insights',
-            'Personality report',
-            'Trait report',
-          ],
-          status: 'not-started',
-          progress: 0,
-        },
-      ];
-    };
-
-    const nextMilestone = computed(() => {
-      return milestones.value.find(milestone => milestone.status !== 'complete');
-    });
-
     onMounted(() => {
-      updateMilestones();
-
-      const assessmentProgress = document.querySelector('.assessment-progress');
-      if (assessmentProgress) {
-        assessmentProgress.onclick = () => {
-          if (window.innerWidth < 1024) {
-            if (assessmentProgress.classList.contains('minimized')) {
-              assessmentProgress.classList.remove('minimized');
-              // Emit event for opening assessment progress
-            } else {
-              assessmentProgress.classList.add('minimized');
-              // Emit event for closing assessment progress
-            }
-          }
-        };
-      }
+      console.log('Progress:', props.progress);
     });
-
-    watch(() => props.progress, updateMilestones);
-    watch(() => props.testStage, updateMilestones);
 
     return {
       isMinimized,
       milestones,
+      nextMilestone,
       toggleMinimized,
       mdiChevronUp,
-      nextMilestone,
     };
   },
 };

@@ -24,74 +24,74 @@ class MainTestController extends Controller
 
     public function index()
     {
-        $userId = auth()->id();
-        ds(['userId'=>$userId]);
-        $existingResult = Result::where('user_id', $userId)->first();
+        // $userId = auth()->id();
+        // ds(['userId'=>$userId]);
+        // $existingResult = Result::where('user_id', $userId)->first();
 
-        if ($existingResult) {
-            return to_route('dashboard');
-        }
+        // if ($existingResult) {
+        //     return to_route('dashboard');
+        // }
 
-        $hollandCodeSets = Session::get('holland_code_sets', $this->initializeHollandCodeSets());
-        $basicInterests = Session::get('basic_interests', $this->initializeBasicInterests());
-        $currentSetIndex = Session::get('current_set_index', 0);
-        $currentItemIndex = Session::get('current_item_index', 0);
-        $responses = Session::get('test_responses', []);
-        $testStage = Session::get('test_stage', 'holland_codes');
+        // $hollandCodeSets = Session::get('holland_code_sets', $this->initializeHollandCodeSets());
+        // $basicInterests = Session::get('basic_interests', $this->initializeBasicInterests());
+        // $currentSetIndex = Session::get('current_set_index', 0);
+        // $currentItemIndex = Session::get('current_item_index', 0);
+        // $responses = Session::get('test_responses', []);
+        // $testStage = Session::get('test_stage', 'holland_codes');
 
-        if ($testStage === 'holland_codes' && $currentSetIndex >= count($hollandCodeSets)) {
-            $testStage = 'basic_interests';
-            $currentSetIndex = 0;
-            $currentItemIndex = 0;
-            Session::put('test_stage', $testStage);
-            Session::put('current_set_index', $currentSetIndex);
-            Session::put('current_item_index', $currentItemIndex);
-        }
+        // if ($testStage === 'holland_codes' && $currentSetIndex >= count($hollandCodeSets)) {
+        //     $testStage = 'basic_interests';
+        //     $currentSetIndex = 0;
+        //     $currentItemIndex = 0;
+        //     Session::put('test_stage', $testStage);
+        //     Session::put('current_set_index', $currentSetIndex);
+        //     Session::put('current_item_index', $currentItemIndex);
+        // }
 
-        if ($testStage === 'basic_interests' && $currentItemIndex < count($basicInterests)) {
-            Session::put('show_welcome_back', true);
-        }
+        // if ($testStage === 'basic_interests' && $currentItemIndex < count($basicInterests)) {
+        //     Session::put('show_welcome_back', true);
+        // }
 
-        if ($testStage === 'basic_interests' && $currentItemIndex >= count($basicInterests)) {
-            return $this->processResults($responses);
-        }
+        // if ($testStage === 'basic_interests' && $currentItemIndex >= count($basicInterests)) {
+        //     return $this->processResults($responses);
+        // }
 
-        $currentItem = $testStage === 'holland_codes'
-            ? $hollandCodeSets[$currentSetIndex]['items'][$currentItemIndex]
-            : $basicInterests[$currentItemIndex];
+        // $currentItem = $testStage === 'holland_codes'
+        //     ? $hollandCodeSets[$currentSetIndex]['items'][$currentItemIndex]
+        //     : $basicInterests[$currentItemIndex];
 
-        $hollandCodeResponses = Session::get('holland_code_responses', []);
-        $basicInterestResponses = Session::get('basic_interest_responses', []);
+        // $hollandCodeResponses = Session::get('holland_code_responses', []);
+        // $basicInterestResponses = Session::get('basic_interest_responses', []);
 
-        $totalHollandCodeItems = array_sum(array_map(function ($set) {
-            return count($set['items']);
-        }, $hollandCodeSets));
+        // $totalHollandCodeItems = array_sum(array_map(function ($set) {
+        //     return count($set['items']);
+        // }, $hollandCodeSets));
 
-        $totalBasicInterestItems = count($basicInterests);
+        // $totalBasicInterestItems = count($basicInterests);
 
-        $hollandCodeProgress = count($hollandCodeResponses) / $totalHollandCodeItems * 100;
-        $basicInterestProgress = count($basicInterestResponses) / $totalBasicInterestItems * 100;
+        // $hollandCodeProgress = count($hollandCodeResponses) / $totalHollandCodeItems * 100;
+        // $basicInterestProgress = count($basicInterestResponses) / $totalBasicInterestItems * 100;
 
-        $progress = [
-            'hollandCode' => round($hollandCodeProgress),
-            'basicInterest' => round($basicInterestProgress),
-        ];
+        // $progress = [
+        //     'hollandCode' => round($hollandCodeProgress),
+        //     'basicInterest' => round($basicInterestProgress),
+        // ];
 
-        $showTutorial = empty($hollandCodeResponses) && empty($basicInterestResponses);
+        // $showTutorial = empty($hollandCodeResponses) && empty($basicInterestResponses);
 
-        return Inertia::render('Test/MainTest', [
-            'hollandCodeData' => $hollandCodeSets,
-            'basicInterests' => $basicInterests,
-            'currentSetIndex' => $currentSetIndex,
-            'currentItemIndex' => $currentItemIndex,
-            'currentItem' => $currentItem,
-            'totalSets' => $testStage === 'holland_codes' ? count($hollandCodeSets) : 1,
-            'totalItems' => $testStage === 'holland_codes' ? count($hollandCodeSets[$currentSetIndex]['items']) : count($basicInterests),
-            'responses' => $responses,
-            'testStage' => $testStage,
-            'progress' => $progress,
-            'showTutorial' => $showTutorial,
-        ]);
+        // return Inertia::render('Test/MainTest', [
+        //     'hollandCodeData' => $hollandCodeSets,
+        //     'basicInterests' => $basicInterests,
+        //     'currentSetIndex' => $currentSetIndex,
+        //     'currentItemIndex' => $currentItemIndex,
+        //     'currentItem' => $currentItem,
+        //     'totalSets' => $testStage === 'holland_codes' ? count($hollandCodeSets) : 1,
+        //     'totalItems' => $testStage === 'holland_codes' ? count($hollandCodeSets[$currentSetIndex]['items']) : count($basicInterests),
+        //     'responses' => $responses,
+        //     'testStage' => $testStage,
+        //     'progress' => $progress,
+        //     'showTutorial' => $showTutorial,
+        // ]);
     }
 
     public function storeHollandCodeResponse(StoreResponseRequest $request)

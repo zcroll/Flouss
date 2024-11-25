@@ -1,29 +1,63 @@
 <template>
-
-
   <section class="Roadmap" data-testid="roadmap">
+    <div v-if="hollandCodeStore.hasErrors" class="error-container">
+      <div v-for="error in hollandCodeStore.getErrorMessages" :key="error.type" class="error-alert">
+        {{ error.message }}
+      </div>
+    </div>
+
     <div class="assessment-with-progress">
-      <SidebarMainTest :progress="progress" :test-stage="testStage" />
+      <SidebarMainTest 
+        :progress="{
+          hollandCodes: Number(hollandCodeStore.progress?.progress_percentage || 0),
+          basicInterest: 0,
+          completed: Boolean(hollandCodeStore.progress?.completed || false)
+        }"
+        :test-stage="testStage" 
+      />
       <div class="assessment Roadmap__inner">
-        <MainTestTutorial v-if="showTutorial" @continue="startTest" />
-        <WelcomeBack v-else-if="showWelcomeBack" @continue="continueTest" />
-        <section v-else class="Assessment" tabindex="-1" data-testid="assessment-test" @submit.prevent="submitAnswer">
-          <section class="Assessment__ItemSetLeadIn" v-if="currentItemIndex !== 0">
-            {{ testStage === 'holland_codes' ? __('test.would_you_like') : __('test.would_you_enjoy') }}
-          </section>
-          <div class="Assessment__ItemSetLeadIn Assessment__ItemSetLeadIn--spacer" aria-hidden="true"></div>
-          <div class="Assessment__scroll-container">
-            <div>
-              <div class="Assessment__Item--forward-appear-done Assessment__Item--forward-enter-done">
-                <NextStep v-if="showNextStep" @continue="hideNextStep" />
-                <TestQuestion v-else :current-item="currentItem" :current-item-index="currentItemIndex"
-                  :current-set-index="currentSetIndex" :test-stage="testStage" :previous-answers="previousAnswers"
-                  :form="form" @submit="submitAnswer" @go-back="goBack" @skip="skipQuestion" ref="questionRef" />
-              </div>
-            </div>
+        <section v-if="!isReady || loading" class="Assessment">
+          <div class="loading">Loading...</div>
+        </section>
+        <section v-else-if="error" class="Assessment">
+          <div class="error">
+            <h3>Error Occurred</h3>
+            <p>{{ error }}</p>
+            <button @click="retryFetch">Retry</button>
           </div>
         </section>
-        <section class="Discovery" aria-live="polite" aria-atomic="true" aria-relevant="text" role="presentation">
+        <section v-else class="Assessment" tabindex="-1" data-testid="assessment-test">
+          <section class="Assessment__ItemSetLeadIn" v-if="hollandCodeStore.hollandCodesData && !hollandCodeStore.progress.completed">
+            {{ hollandCodeStore.hollandCodesData.lead_in_text }}
+          </section>
+
+          <div class="Assessment__scroll-container">
+            <div v-if="!hollandCodeStore.progress.completed && currentItem?.id">
+              <div class="Assessment__Item--forward-appear-done Assessment__Item--forward-enter-done">
+                <TestQuestion 
+                  :key="`question-${currentItem.id}-${hollandCodeStore.currentItemIndex}`" 
+                  :current-item="currentItem"
+                  :current-item-index="hollandCodeStore.currentItemIndex" 
+                  :test-stage="testStage"
+                  :holland-codes="hollandCodeStore.hollandCodesData" 
+                  :form="form" 
+                  :holland-code-store="hollandCodeStore"
+                  @submit="submitAnswer" 
+                  @go-back="goBack" 
+                  @skip="skipQuestion" 
+                  ref="questionRef" 
+                />
+              </div>
+            </div>
+            
+            <div v-else>
+              <Discovery 
+                v-if="hollandCodeStore.progress.archetypeDiscovery" 
+                :archetype-discovery="hollandCodeStore.progress.archetypeDiscovery" 
+              />
+              <NextStep @continue="continueToNextSection" />
+            </div>
+          </div>
         </section>
       </div>
     </div>
@@ -31,188 +65,98 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue';
-import { useForm, usePage, router } from '@inertiajs/vue3';
-import SidebarMainTest from './SidebarMainTest.vue';
-import WelcomeBack from '@/Components/Test/WelcomeBack.vue';
-import NextStep from '@/Components/Test/NextStep.vue';
-import TestQuestion from '@/Components/Test/TestQuestion.vue';
-import axios from 'axios';
-import anime from 'animejs/lib/anime.es.js';
-import MainTestTutorial from '@/Components/Test/MainTestTutorial.vue';
+import { ref, computed, watch, onMounted } from "vue";
+import { useForm } from "@inertiajs/vue3";
+import NextStep from "@/Components/Test/NextStep.vue";
+import SidebarMainTest from "./SidebarMainTest.vue";
+import TestQuestion from "@/Components/Test/TestQuestion.vue";
+import { useHollandCodeStore } from "@/stores/hollandCodeStore";
+import Discovery from "@/Components/Test/Discovery.vue";
+import { storeToRefs } from "pinia";
+
+const hollandCodeStore = useHollandCodeStore();
+
+// Initialize form with regular values
+const form = useForm({
+  itemId: null,
+  answer: null,
+  category: 'holland_codes',
+  testStage: null,
+  type: 'answered'
+});
 
 const props = defineProps({
-  hollandCodeData: Array,
-  basicInterests: Array,
-  currentSetIndex: Number,
-  currentItemIndex: Number,
-  currentItem: Object,
-  totalSets: Number,
-  totalItems: Number,
-  responses: Array,
-  message: String,
-  responseCount: Number,
   testStage: String,
-  progress: Object,
 });
 
-const page = usePage();
-const questionRef = ref(null);
-const previousAnswers = ref({});
-const showWelcomeBack = ref(false);
 const showNextStep = ref(false);
-const showTutorial = ref(true);
+const questionRef = ref(null);
 
-const form = useForm({
-  itemId: props.currentItem.id,
-  type: 'answered',
-  answer: null,
-  category: props.testStage === 'holland_codes'
-    ? props.hollandCodeData[props.currentSetIndex].title
-    : props.currentItem.category,
-  testStage: props.testStage,
-  _token: page.props.csrf_token
+// Get store refs after initialization
+const {
+  currentItem,
+  loading,
+  error,
+  isComplete,
+  isReady,
+} = storeToRefs(hollandCodeStore);
+
+// Watch for test stage changes
+watch(() => props.testStage, (newStage) => {
+  if (newStage) {
+    form.testStage = newStage;
+  }
+}, { immediate: true });
+
+// Watch for current item changes
+watch(currentItem, (newItem) => {
+  if (newItem?.id && !hollandCodeStore.progress.completed) {
+    form.itemId = newItem.id;
+    form.category = newItem.category || 'holland_codes';
+  }
+}, { immediate: true });
+
+onMounted(async () => {
+  try {
+    await hollandCodeStore.fetchHollandCodes();
+  } catch (err) {
+    console.error('Error fetching holland codes:', err);
+  }
 });
 
-const animateTransition = (direction, callback) => {
-  const animations = {
-    next: {
-      start: { translateY: [0, '-100%'], scale: [1, 0.98], opacity: [1, 0] },
-      end: { translateY: ['100%', 0], scale: [0.98, 1], opacity: [0, 1] }
-    },
-    back: {
-      start: { translateY: [0, '100%'], scale: [1, 0.98], opacity: [1, 0] },
-      end: { translateY: ['-100%', 0], scale: [0.98, 1], opacity: [0, 1] }
-    }
-  };
+const retryFetch = () => {
+  hollandCodeStore.fetchHollandCodes();
+};
 
-  const timing = {
-    duration: 400,
-    easing: 'cubicBezier(.4,0,.2,1)'
-  };
-
-  if (questionRef.value?.formRef) {
-    anime({
-      targets: questionRef.value.formRef,
-      ...animations[direction].start,
-      ...timing,
-      complete: () => {
-        callback();
-        anime({
-          targets: questionRef.value.formRef,
-          ...animations[direction].end,
-          ...timing
-        });
-      }
+const submitAnswer = async () => {
+  if (form.answer !== null || form.type === "skipped") {
+    await hollandCodeStore.submitAnswer({
+      itemId: form.itemId,
+      answer: form.answer,
+      type: form.type,
+      category: form.category,
+      testStage: form.testStage
     });
-  } else {
-    callback();
+    form.reset();
+    form.type = 'answered';
+    form.testStage = props.testStage;
   }
 };
 
 const goBack = () => {
-
-  animateTransition('back', () => {
-    router.get(route('main-test.go-back'), {}, {
-      preserveState: true,
-      preserveScroll: true,
-      onSuccess: () => {
-        // Reset the form with the previous answer if it exists
-        if (props.currentItem && previousAnswers.value[props.currentItem.id] !== undefined) {
-          form.answer = previousAnswers.value[props.currentItem.id];
-        }
-        animateTransition('back', () => {});
-      }
-    });
-  });
+  hollandCodeStore.goBack();
 };
 
 const skipQuestion = () => {
-  form.type = 'skipped';
-  form.answer = null;
+  form.type = "skipped";
   submitAnswer();
 };
 
-const submitAnswer = () => {
-  const routeName = props.testStage === 'holland_codes'
-    ? 'store-holland-code-response'
-    : 'store-basic-interest-response';
-
-  if (form.answer !== null) {
-    previousAnswers.value[form.itemId] = form.answer;
-  }
-
-  router.post(route(routeName), form, {
-    preserveState: true,
-    preserveScroll: true,
-    onSuccess: (page) => {
-      form.reset();
-      form.itemId = props.currentItem.id;
-      form.category = props.testStage === 'holland_codes'
-        ? props.hollandCodeData[props.currentSetIndex].title
-        : props.currentItem.category;
-      form.testStage = props.testStage;
-      form._token = page.props.csrf_token;
-
-      animateTransition('next', () => { });
-    },
-    onError: (errors) => {
-      console.error('Error submitting response', errors);
-    },
-  });
+const continueToNextSection = () => {
+  hollandCodeStore.continueToNextSection();
 };
-
-const checkWelcomeBack = async () => {
-  try {
-    const response = await axios.get(route('welcome-back.show'));
-    showWelcomeBack.value = response.data.showWelcomeBack;
-  } catch (error) {
-    console.error('Error checking welcome back status:', error);
-  }
-};
-
-const continueTest = async () => {
-  try {
-    await axios.post(route('welcome-back.set-shown'));
-    showWelcomeBack.value = false;
-  } catch (error) {
-    console.error('Error continuing test:', error);
-  }
-};
-
-const hideNextStep = () => {
-  showNextStep.value = false;
-};
-
-watch(() => props.testStage, (newStage) => {
-  if (newStage === 'basic_interests' && props.currentItemIndex === 0) {
-    showNextStep.value = true;
-  }
-});
-
-watch(() => props.currentItem, (newItem) => {
-  if (newItem) {
-    form.reset();
-    form.itemId = newItem.id;
-    form.category = props.testStage === 'holland_codes'
-      ? props.hollandCodeData[props.currentSetIndex].title
-      : newItem.category;
-    form.testStage = props.testStage;
-    form._token = page.props.csrf_token;
-    form.answer = previousAnswers.value[newItem.id] || null;
-  }
-});
-
-const startTest = () => {
-  showTutorial.value = false;
-};
-
-onMounted(() => {
-  checkWelcomeBack();
-});
 </script>
 
-
-<style >
-@import url('public/css/assessment.css');
+<style>
+@import '/public/css/assessment.css';
 </style>

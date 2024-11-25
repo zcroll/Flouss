@@ -13,12 +13,8 @@ class QuestionTrait extends Model
 
     protected $fillable = [
         'question_id',
-        'question_type_id',
         'holland_trait',
     ];
 
-    public function question(): BelongsTo
-    {
-        return $this->belongsTo(Question::class);
-    }
+    
 }

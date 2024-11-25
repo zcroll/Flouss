@@ -7,6 +7,8 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import draggable from 'vuedraggable';
 import __ from './lang';
+import { createPinia } from 'pinia'
+
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
@@ -20,9 +22,10 @@ createInertiaApp({
 
         app.config.globalProperties.__ = __;
 
+        const pinia = createPinia()
+        app.use(pinia)
 
-
-            app.mount(el);
+        app.mount(el);
     },
     progress: {
         color: '#4B5563',
