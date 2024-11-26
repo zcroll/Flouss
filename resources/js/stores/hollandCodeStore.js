@@ -52,10 +52,9 @@ export const useHollandCodeStore = defineStore('hollandCode', {
           
           // Check if test is completed based on progress
           const totalItems = this.hollandCodesData.items.length;
-          const answeredItems = Object.keys(data.progress.responses || {}).length;
-          const progressPercentage = totalItems > 0 ? (answeredItems / totalItems) * 100 : 0;
+          const progressPercentage = totalItems > 0 ? (data.progress.current_index / totalItems) * 100 : 0;
           
-          if (progressPercentage === 100 || data.progress.completed) {
+          if (data.progress.current_index >= totalItems || data.progress.completed) {
             this.progress.completed = true;
             this.isTestComplete = true;
           }
@@ -87,8 +86,7 @@ export const useHollandCodeStore = defineStore('hollandCode', {
 
     updateProgressPercentage() {
       const totalItems = this.hollandCodesData.items.length;
-      const answeredItems = Object.keys(this.responses).length;
-      this.progress.progress_percentage = totalItems > 0 ? (answeredItems / totalItems) * 100 : 0;
+      this.progress.progress_percentage = totalItems > 0 ? (this.progress.current_index / totalItems) * 100 : 0;
     },
 
     setCurrentItem() {
@@ -218,41 +216,43 @@ export const useHollandCodeStore = defineStore('hollandCode', {
   },
 
   getters: {
-    currentOptions: (state) => {
-      if (!state.currentItem?.optionSet) return [];
-      return state.currentItem.optionSet.options || [];
+    currentOptions(state) {
+      return state.currentItem?.optionSet?.options || [];
     },
-    progressPercentage: (state) => {
-      return state.progress.progress_percentage || 0;
+    progressPercentage(state) {
+      return state.progress.progress_percentage;
     },
-    isComplete: (state) => {
-      return state.currentItemIndex >= (state.hollandCodesData?.items?.length || 0);
+    isComplete(state) {
+      return state.progress.completed;
     },
-    isReady: (state) => {
-      return state.initialized && 
-             state.hollandCodesData.id !== null && 
-             state.currentItem !== null;
+    isReady(state) {
+      return state.initialized && !state.loading && !state.error;
     },
-    hasResponse: (state) => (itemId) => {
-      return state.responses[itemId] !== undefined;
+    hasResponse(state) {
+      return !!state.responses[state.currentItem?.id];
     },
-    getResponse: (state) => (itemId) => {
-      return state.responses[itemId] || null;
+    getResponse(state) {
+      return state.responses[state.currentItem?.id];
     },
-    totalQuestions: (state) => {
-      return state.hollandCodesData?.items?.length || 0;
+    totalQuestions(state) {
+      return state.hollandCodesData.items.length;
     },
-    answeredQuestions: (state) => {
-      return Object.keys(state.responses || {}).length;
+    answeredQuestions(state) {
+      return Object.keys(state.responses).length;
     },
-    hollandCodes: (state) => ({
-      ...state.hollandCodesData,
-      items: state.hollandCodesData.items,
-      option_sets: state.hollandCodesData.option_sets
-    }),
-    hasErrors: (state) => Object.values(state.errors).some(error => error !== null),
-    getErrorMessages: (state) => Object.entries(state.errors)
-      .filter(([_, error]) => error !== null)
-      .map(([type, error]) => ({ type, message: error.message }))
+    hollandCodes(state) {
+      return state.hollandCodesData;
+    },
+    hasErrors(state) {
+      return Object.values(state.errors).some(error => error !== null);
+    },
+    getErrorMessages(state) {
+      return Object.entries(state.errors)
+        .filter(([_, error]) => error !== null)
+        .map(([type, message]) => ({ type, message }));
+    },
+    archetypeDiscovery(state) {
+      return state.progress?.archetypeDiscovery || null;
+    }
   }
 }); 

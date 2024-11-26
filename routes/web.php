@@ -97,10 +97,21 @@ Route::middleware([
         Route::get('/welcome-back/show', [WelcomeBackController::class, 'showWelcomeBack'])->name('welcome-back.show');
         Route::post('/welcome-back/set-shown', [WelcomeBackController::class, 'setWelcomeBackShown'])->name('welcome-back.set-shown');
 
-        Route::prefix('holland-codes')->group(function () {
-            Route::get('/', [HollandCodeController::class, 'index'])->name('holland-codes.index');
-            Route::post('/store-response', [HollandCodeController::class, 'storeResponse'])->name('holland-codes.store-response');
-            Route::post('/go-back', [HollandCodeController::class, 'goBack'])->name('holland-codes.go-back');
+        Route::middleware(['auth'])->group(function () {
+            // Holland Codes SPA routes
+            Route::prefix('holland-codes')->group(function () {
+                // Main SPA route
+                Route::get('/', [HollandCodeController::class, 'index'])
+                    ->name('holland-codes.index');
+                
+                // Store response endpoint
+                Route::post('/store-response', [HollandCodeController::class, 'storeResponse'])
+                    ->name('holland-codes.store-response');
+                
+                // Go back endpoint
+                Route::post('/go-back', [HollandCodeController::class, 'goBack'])
+                    ->name('holland-codes.go-back');
+            });
         });
     });
 });

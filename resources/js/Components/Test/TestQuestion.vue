@@ -1,10 +1,6 @@
 <template>
-  <div 
-    class="Assessment__Item Assessment__RadioItem Assessment__RadioItem--active" 
-    :data-i="'i'" 
-    aria-atomic="true"
-    aria-live="assertive"
-  >
+  <div class="Assessment__Item Assessment__RadioItem Assessment__RadioItem--active" :data-i="'i'" aria-atomic="true"
+    aria-live="assertive">
     <div>
       <form @submit.prevent="submitAnswer" ref="formRef">
         <h4 v-if="hollandCodes?.lead_in_text">
@@ -14,23 +10,11 @@
           {{ currentItem.text }}
         </h3>
 
-        <AnswerOptions 
-          v-if="currentItem && optionSet"
-          :current-item="currentItem" 
-          :options="optionSet.options" 
-          :test-stage="testStage"
-          v-model="form.answer" 
-          @submit="submitAnswer" 
-        />
+        <AnswerOptions v-if="currentItem && optionSet" :current-item="currentItem" :options="optionSet.options"
+          :test-stage="testStage" v-model="form.answer" :store="hollandCodeStore" @submit="submitAnswer" />
 
-        <button type="button" 
-          title="Skip question" 
-          aria-label="Skip question" 
-          aria-hidden="true"
-          class="Assessment__RadioItem__skip" 
-          data-testid="skip-item" 
-          @click="$emit('skip')"
-        >
+        <button type="button" title="Skip question" aria-label="Skip question" aria-hidden="true"
+          class="Assessment__RadioItem__skip" data-testid="skip-item" @click="$emit('skip')">
           Skip question
         </button>
       </form>
@@ -116,18 +100,9 @@ defineExpose({ formRef });
   margin-bottom: 2rem;
 }
 
-.Assessment__RadioItem {
-  padding: 2rem;
-  background: #fff;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
 
-.Assessment__RadioItem--active {
-  border: 2px solid #4f46e5;
-}
 
-.Assessment__RadioItem__skip {
+. .Assessment__RadioItem__skip {
   margin-top: 1rem;
   color: #6b7280;
   font-size: 0.875rem;

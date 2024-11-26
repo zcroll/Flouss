@@ -1,7 +1,5 @@
 <template>
-  <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css">
-  <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/assessments.ba16abcb0f5b.css">
-
+  
   <section class="Discovery" aria-live="polite" aria-atomic="true" aria-relevant="text" role="presentation">
     <div class="DiscoveryButton__inner">
       <div class="DiscoveryConfetti" id="dicovery-confetti" data-testid="dicovery-confetti" aria-hidden="true">
@@ -51,7 +49,7 @@
       </button>
     </div>
     <div id="discovery-dialog-container" class="yodel dialog-container Dialog-container">
-      <Archetype v-if="showArchetype" :archetypeDiscovery="archetypeDiscovery" @close="showArchetype = false" />
+      <Archetype v-if="showArchetype" :archetype-discovery="archetypeDiscovery" @close="handleClose" />
     </div>
   </section>
 </template>
@@ -61,16 +59,28 @@ import Archetype from '../helpers/Archetype.vue';
 import { ref, onMounted } from 'vue';
 
 const props = defineProps({
-  archetypeDiscovery: Object
+  archetypeDiscovery: {
+    type: Object,
+    required: true
+  }
 });
+
+const emit = defineEmits(['close']);
 
 const showArchetype = ref(false);
 
+const handleClose = () => {
+  showArchetype.value = false;
+  emit('close');
+};
+
 onMounted(() => {
+  showArchetype.value = true;
   console.log('Archetype Discovery:', props.archetypeDiscovery);
 });
 </script>
 
 <style scoped>
-@import '/public/css/assessment.css';
+@import url('https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css');
+@import url('https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/assessments.ba16abcb0f5b.css')
 </style>
