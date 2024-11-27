@@ -111,29 +111,29 @@ class DashboardController extends Controller
         $predefinedQuestions = [
             [
                 'id' => 1,
-                'category' => 'Career Path',
+                'category' => __('dashboard.career_path'),
                 'questions' => [
-                    'What career paths align with my personality type?',
-                    'How can I develop skills for my chosen career?',
-                    'What industries match my interests?'
+                    __('dashboard.career_path_q1'),
+                    __('dashboard.career_path_q2'), 
+                    __('dashboard.career_path_q3')
                 ]
             ],
             [
                 'id' => 2,
-                'category' => 'Education',
+                'category' => __('dashboard.education'),
                 'questions' => [
-                    'What degrees match my career goals?',
-                    'Which universities offer relevant programs?',
-                    'How can I prepare for my chosen field?'
+                    __('dashboard.education_q1'),
+                    __('dashboard.education_q2'),
+                    __('dashboard.education_q3')
                 ]
             ],
             [
                 'id' => 3,
-                'category' => 'Skills Development',
+                'category' => __('dashboard.skills_development'),
                 'questions' => [
-                    'What skills should I focus on developing?',
-                    'How can I improve my professional profile?',
-                    'What certifications are valuable in my field?'
+                    __('dashboard.skills_q1'),
+                    __('dashboard.skills_q2'),
+                    __('dashboard.skills_q3')
                 ]
             ]
         ];
