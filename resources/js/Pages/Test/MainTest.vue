@@ -1,17 +1,23 @@
 <template>
   <section class="Roadmap" data-testid="roadmap">
-    <div v-if="hollandCodeStore.hasErrors" class="error-container">
-      <div v-for="error in hollandCodeStore.getErrorMessages" :key="error.type" class="error-alert">
-        {{ error.message }}
+    <div v-if="error" class="error-container">
+      <div class="error-alert">
+        {{ error }}
       </div>
     </div>
 
     <div class="assessment-with-progress">
       <SidebarMainTest :progress="{
-        hollandCodes: Number(hollandCodeStore.progress?.progress_percentage || 0),
-        basicInterest: 0,
-        completed: Boolean(hollandCodeStore.progress?.completed || false)
-      }" :test-stage="testStage" />
+        hollandCodes: Number(hollandCodeStore?.progress?.progress_percentage || 0),
+        basicInterest: {
+          currentIndex: basicInterestStore?.progress?.current_index || 0,
+          validResponses: basicInterestStore.validResponsesCount,
+          percentage: basicInterestStore.progressPercentage,
+          completed: basicInterestStore.isComplete
+        },
+        completed: isComplete && canProceed
+      }" :test-stage="testStageStore.currentStage" />
+
       <div class="assessment Roadmap__inner">
         <section v-if="!isReady || loading" class="Assessment">
           <div class="loading">Loading...</div>
@@ -24,26 +30,38 @@
           </div>
         </section>
         <section v-else class="Assessment" tabindex="-1" data-testid="assessment-test">
-          <section class="Assessment__ItemSetLeadIn"
-            v-if="hollandCodeStore.hollandCodesData && !hollandCodeStore.progress.completed">
-            {{ hollandCodeStore.hollandCodesData.lead_in_text }}
+          <section class="Assessment__ItemSetLeadIn" v-if="!isComplete">
+            {{ testStageStore.currentStage === 'basic_interest' 
+              ? basicInterestStore?.basicInterestData?.lead_in_text 
+              : hollandCodeStore?.hollandCodesData?.lead_in_text }}
           </section>
 
           <div class="Assessment__scroll-container">
             <div v-if="!isComplete && currentItem?.id">
-
               <div class="Assessment__Item--forward-appear-done Assessment__Item--forward-enter-done">
-                <TestQuestion :key="`question-${currentItem.id}-${hollandCodeStore.currentItemIndex}`"
-                  :current-item="currentItem" :current-item-index="hollandCodeStore.currentItemIndex"
-                  :test-stage="testStage" :holland-codes="hollandCodeStore.hollandCodesData" :form="form"
-                  :holland-code-store="hollandCodeStore" @submit="submitAnswer" @go-back="goBack" @skip="skipQuestion"
-                  ref="questionRef" />
+                <TestQuestion 
+                  :key="`question-${currentItem.id}-${testStageStore.currentStage}`"
+                  :current-item="currentItem" 
+                  :current-item-index="currentItemIndex"
+                  :test-stage="testStageStore.currentStage"
+                  :holland-codes="currentTestData"
+                  :form="form"
+                  :holland-code-store="currentStore"
+                  @submit="submitAnswer"
+                  @go-back="goBack"
+                  @skip="skipQuestion"
+                  ref="questionRef"
+                />
               </div>
             </div>
-            <Discovery v-if="isComplete && hollandCodeStore.progress?.archetypeDiscovery"
-              :archetype-discovery="hollandCodeStore.progress.archetypeDiscovery" @close="handleDiscoveryClose" />
 
-            <section class="discovery" v-if="isComplete">
+            <Discovery 
+              v-if="isComplete && testStageStore.currentStage === 'holland_codes' && hollandCodeStore?.progress?.archetypeDiscovery"
+              :archetype-discovery="hollandCodeStore.progress.archetypeDiscovery"
+              @close="handleDiscoveryClose"
+            />
+
+            <section class="discovery" v-if="isComplete && canProceed">
               <NextStep @continue="continueToNextSection" />
             </section>
           </div>
@@ -60,10 +78,15 @@ import NextStep from "@/Components/Test/NextStep.vue";
 import SidebarMainTest from "./SidebarMainTest.vue";
 import TestQuestion from "@/Components/Test/TestQuestion.vue";
 import { useHollandCodeStore } from "@/stores/hollandCodeStore";
+import { useTestStageStore } from "@/stores/testStageStore";
+import { useBasicInterestStore } from "@/stores/basicInterestStore";
 import Discovery from "@/Components/Test/Discovery.vue";
 import { storeToRefs } from "pinia";
 import BackButton from "@/Components/Test/BackButton.vue";
+
 const hollandCodeStore = useHollandCodeStore();
+const testStageStore = useTestStageStore();
+const basicInterestStore = useBasicInterestStore();
 
 const form = useForm({
   itemId: null,
@@ -79,14 +102,60 @@ const props = defineProps({
 
 const questionRef = ref(null);
 
-const {
-  currentItem,
-  loading,
-  error,
-  isComplete,
-  isReady,
-} = storeToRefs(hollandCodeStore);
+// Computed properties for current state
+const currentStore = computed(() => {
+  return testStageStore.currentStage === 'basic_interest' ? basicInterestStore : hollandCodeStore;
+});
 
+const currentTestData = computed(() => {
+  return testStageStore.currentStage === 'basic_interest' 
+    ? basicInterestStore.basicInterestData 
+    : hollandCodeStore.hollandCodesData;
+});
+
+const currentItemIndex = computed(() => {
+  return testStageStore.currentStage === 'basic_interest'
+    ? basicInterestStore.currentItemIndex
+    : hollandCodeStore.currentItemIndex;
+});
+
+const currentItem = computed(() => {
+  return currentStore.value.currentItem;
+});
+
+const isComplete = computed(() => {
+  if (testStageStore.currentStage === 'basic_interest') {
+    return basicInterestStore.isComplete;
+  }
+  return currentStore.value?.progress?.completed || false;
+});
+
+const canProceed = computed(() => {
+  if (testStageStore.currentStage === 'basic_interest') {
+    const canProceed = basicInterestStore.canProceed;
+    console.log('Basic Interest canProceed check:', {
+      validResponses: basicInterestStore.validResponsesCount,
+      totalQuestions: basicInterestStore.totalQuestionsCount,
+      canProceed
+    });
+    return canProceed;
+  }
+  return currentStore.value?.progress?.completed || false;
+});
+
+const loading = computed(() => {
+  return currentStore.value?.loading || false;
+});
+
+const error = computed(() => {
+  return currentStore.value?.error || null;
+});
+
+const isReady = computed(() => {
+  return !loading.value && !error.value;
+});
+
+// Watch for stage changes
 watch(() => props.testStage, (newStage) => {
   if (newStage) {
     form.testStage = newStage;
@@ -94,9 +163,9 @@ watch(() => props.testStage, (newStage) => {
 }, { immediate: true });
 
 watch(currentItem, (newItem) => {
-  if (newItem?.id && !hollandCodeStore.progress.completed) {
+  if (newItem?.id && !isComplete.value) {
     form.itemId = newItem.id;
-    form.category = newItem.category || 'holland_codes';
+    form.category = newItem.category || testStageStore.currentStage;
   }
 }, { immediate: true });
 
@@ -106,14 +175,22 @@ const handleDiscoveryClose = () => {
 
 onMounted(async () => {
   try {
-    await hollandCodeStore.fetchHollandCodes();
+    if (testStageStore.currentStage === 'basic_interest') {
+      await basicInterestStore.initialize();
+    } else {
+      await hollandCodeStore.fetchHollandCodes();
+    }
   } catch (err) {
-    console.error('Error fetching holland codes:', err);
+    console.error('Error initializing test:', err);
   }
 });
 
 const retryFetch = () => {
-  hollandCodeStore.fetchHollandCodes();
+  if (testStageStore.currentStage === 'basic_interest') {
+    basicInterestStore.initialize();
+  } else {
+    hollandCodeStore.fetchHollandCodes();
+  }
 };
 
 const submitAnswer = async () => {
@@ -127,7 +204,7 @@ const submitAnswer = async () => {
     };
 
     try {
-      await hollandCodeStore.submitAnswer(formData);
+      await currentStore.value.submitAnswer(formData);
       form.reset();
       form.type = 'answered';
       form.testStage = props.testStage;
@@ -139,7 +216,7 @@ const submitAnswer = async () => {
 
 const goBack = async () => {
   try {
-    await hollandCodeStore.goBack();
+    await currentStore.value.goBack();
   } catch (error) {
     console.error('Error going back:', error);
   }
@@ -151,8 +228,15 @@ const skipQuestion = () => {
   submitAnswer();
 };
 
-const continueToNextSection = () => {
-  hollandCodeStore.continueToNextSection();
+const continueToNextSection = async () => {
+  try {
+    await testStageStore.changeStage('basic_interest');
+    if (testStageStore.error) {
+      console.error('Stage transition error:', testStageStore.error);
+    }
+  } catch (error) {
+    console.error('Error transitioning to next section:', error);
+  }
 };
 </script>
 

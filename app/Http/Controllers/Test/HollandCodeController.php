@@ -15,6 +15,8 @@ class HollandCodeController extends Controller
 {
     use ArchetypeFinder;
 
+    protected const SESSION_KEY = 'holland_codes_progress';
+
     public function index()
     {
         // Initial page load without X-Inertia header
@@ -28,7 +30,7 @@ class HollandCodeController extends Controller
 
         try {
             // Get progress from session
-            $progress = Session::get('holland_code_progress', [
+            $progress = Session::get(self::SESSION_KEY, [
                 'current_index' => 0,
                 'responses' => [],
                 'completed' => false
@@ -51,7 +53,11 @@ class HollandCodeController extends Controller
             }
 
             $totalQuestions = $hollandCodes->items->count();
-            ds($progress['current_index'] >= $totalQuestions);
+            $isCompleted = $progress['current_index'] >= $totalQuestions;
+            
+            // Update the completed flag in the session
+            $progress['completed'] = $isCompleted;
+            Session::put(self::SESSION_KEY, $progress);
 
             return Inertia::render('Test/MainTest', [
                 'hollandCodes' => [
@@ -64,8 +70,7 @@ class HollandCodeController extends Controller
                 ],
                 'progress' => $progress,
                 'testStage' => $hollandCodes->title,
-                'isCompleted' => $progress['current_index'] >= $totalQuestions
-
+                'isCompleted' => $isCompleted
             ]);
 
         } catch (\Exception $e) {
@@ -90,7 +95,7 @@ class HollandCodeController extends Controller
             \Log::info('Received response:', $validated);
 
             // Get current progress from session
-            $progress = Session::get('holland_code_progress', [
+            $progress = Session::get(self::SESSION_KEY, [
                 'current_index' => 0,
                 'responses' => [],
                 'completed' => false,
@@ -115,7 +120,8 @@ class HollandCodeController extends Controller
                 : 0;
 
             // Update completed status
-            $progress['completed'] = $progress['current_index'] >= $totalQuestions;
+            $isCompleted = $progress['current_index'] >= $totalQuestions;
+            $progress['completed'] = $isCompleted;
 
             \Log::info('Storing response:', [
                 'currentIndex' => $progress['current_index'],
@@ -123,7 +129,8 @@ class HollandCodeController extends Controller
                 'percentage' => $progress['progress_percentage'],
                 'type' => $validated['type'],
                 'answer' => $validated['answer'],
-                'storedAnswer' => $progress['responses'][$validated['itemId']]
+                'storedAnswer' => $progress['responses'][$validated['itemId']],
+                'completed' => $isCompleted
             ]);
 
             // Calculate archetype if progress is sufficient
@@ -161,7 +168,7 @@ class HollandCodeController extends Controller
                 }
             }
 
-            Session::put('holland_code_progress', $progress);
+            Session::put(self::SESSION_KEY, $progress);
 
             if ($request->wantsJson()) {
                 return response()->json(['progress' => $progress]);
@@ -186,7 +193,7 @@ class HollandCodeController extends Controller
     public function goBack(Request $request)
     {
         try {
-            $progress = Session::get('holland_code_progress', [
+            $progress = Session::get(self::SESSION_KEY, [
                 'current_index' => 0,
                 'responses' => [],
                 'completed' => false,
@@ -216,7 +223,7 @@ class HollandCodeController extends Controller
                 'percentage' => $progress['progress_percentage']
             ]);
 
-            Session::put('holland_code_progress', $progress);
+            Session::put(self::SESSION_KEY, $progress);
 
             if ($request->wantsJson()) {
                 return response()->json(['progress' => $progress]);

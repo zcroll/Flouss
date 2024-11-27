@@ -285,6 +285,34 @@ export const useHollandCodeStore = defineStore('hollandCode', {
         this.error = error.message || 'Failed to go back';
         this.loading = false;
       }
+    },
+
+    async continueToNextSection() {
+      if (this.loading) return;
+
+      try {
+        this.loading = true;
+        await router.post(route('test.change-stage'), {
+          fromStage: 'holland_codes',
+          toStage: 'basic_interest'
+        }, {
+          preserveState: true,
+          onSuccess: (page) => {
+            console.log('Stage transition success:', page);
+          },
+          onError: (error) => {
+            console.error('Stage transition error:', error);
+            this.error = error.message || 'Failed to transition to next stage';
+          },
+          onFinish: () => {
+            this.loading = false;
+          }
+        });
+      } catch (error) {
+        console.error('Stage transition failed:', error);
+        this.error = error.message || 'Failed to transition to next stage';
+        this.loading = false;
+      }
     }
   },
 

@@ -23,6 +23,8 @@ use App\Mail\TestMail;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\Test\HollandCodeController;
+use App\Http\Controllers\Test\BasicInterestController;
+use App\Http\Controllers\Test\TestStageController;
 
 // Google Login Routes (place these BEFORE any auth middleware groups)
 Route::get('auth/google', [App\Http\Controllers\Auth\GoogleController::class, 'redirectToGoogle'])
@@ -75,10 +77,9 @@ Route::middleware([
         Route::post('/main-test/store-basic-interest', [MainTestController::class, 'storeBasicInterestResponse'])->name('store-basic-interest-response');
         Route::post('/test/go-back', [MainTestController::class, 'goBack'])->name('test.go-back');
 
-        Route::get('/degree/{degreeSlug}', [DegreeController::class, 'index'])->name('degree.index');
+        Route::get('/degree/{degreeSlug}', [DegreeController::class, 'index'])->name('degree.show');
 
         Route::prefix('degree')->group(function () {
-            Route::get('{slug}', [DegreeController::class, 'index'])->name('degree.index');
             Route::get('{slug}/skills', [DegreeController::class, 'skills'])->name('degree.skills');
             Route::get('{slug}/jobs', [DegreeController::class, 'jobs'])->name('degree.jobs');
             Route::get('{slug}/how-to-obtain', [DegreeController::class, 'howToObtain'])->name('degree.howToObtain');
@@ -112,6 +113,22 @@ Route::middleware([
                 Route::post('/go-back', [HollandCodeController::class, 'goBack'])
                     ->name('holland-codes.go-back');
             });
+
+            // Basic Interest routes
+            Route::prefix('basic-interest')->group(function () {
+                Route::get('/', [BasicInterestController::class, 'index'])
+                    ->name('basic-interest.index');
+                
+                Route::post('/store-response', [BasicInterestController::class, 'storeResponse'])
+                    ->name('basic-interest.store-response');
+                
+                Route::post('/go-back', [BasicInterestController::class, 'goBack'])
+                    ->name('basic-interest.go-back');
+            });
+
+            // Add stage transition route
+            Route::post('/test/change-stage', [TestStageController::class, 'changeStage'])
+                ->name('test.change-stage');
         });
     });
 });

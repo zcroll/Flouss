@@ -13,19 +13,19 @@
           <h2 class="Journey__head sr-only">Your Progress</h2>
           <div class="Journey__body">
             <Milestone status="complete" title="Start" :progress="100" />
-            <Milestone :status="milestones[0]?.status || 'not-started'"
-              :title="milestones[0]?.name || 'Your personality archetype'" :time="milestones[0]?.time || '~ 3 mins'"
-              :progress="milestones[0]?.progress || 0" />
-            <Milestone :status="milestones[1]?.status || 'not-started'"
-              :title="milestones[1]?.name || 'Your career matches'" :time="milestones[1]?.time || '~ 3 mins'"
-              :progress="milestones[1]?.progress || 0" />
-            <Milestone :status="milestones[2]?.status || 'not-started'"
-              :title="milestones[2]?.name || 'Your degree matches'" :time="milestones[2]?.time || '~ 1 min'"
-              :progress="milestones[2]?.progress || 0" />
-            <Milestone :status="milestones[3]?.status || 'not-started'" :title="milestones[3]?.name || 'Your Results'"
-              :time="milestones[3]?.time || '~ 20 mins'"
-              :description="milestones[3]?.description || ['Final career matches and insights', 'Personality report', 'Trait report']"
-              :progress="milestones[3]?.progress || 0" />
+            <Milestone :status="getMilestoneStatus('holland_codes')"
+              title="Your personality archetype" time="~ 3 mins"
+              :progress="testProgressStore.stageProgress('holland_codes')" />
+            <Milestone :status="getMilestoneStatus('basic_interests')"
+              title="Your career matches" time="~ 3 mins"
+              :progress="testProgressStore.stageProgress('basic_interests')" />
+            <Milestone :status="getMilestoneStatus('workplace')"
+              title="Your degree matches" time="~ 1 min"
+              :progress="testProgressStore.stageProgress('workplace')" />
+            <Milestone :status="getMilestoneStatus('personality')"
+              title="Your Results" time="~ 20 mins"
+              :description="['Final career matches and insights', 'Personality report', 'Trait report']"
+              :progress="testProgressStore.stageProgress('personality')" />
           </div>
         </div>
         <div class="Journey--minimized">
@@ -44,8 +44,10 @@
             </div>
           </div>
           <div class="Journey__progress">
-            <MinimizedProgress v-for="(milestone, index) in milestones" :key="index" :status="milestone.status"
-              :progress="milestone.progress" />
+            <MinimizedProgress v-for="stage in ['holland_codes', 'basic_interests', 'workplace', 'personality']" 
+              :key="stage" 
+              :status="getMilestoneStatus(stage)"
+              :progress="testProgressStore.stageProgress(stage)" />
           </div>
         </div>
       </div>
@@ -55,6 +57,7 @@
 
 <script>
 import { ref, computed, watch, onMounted } from 'vue';
+import { useTestProgressStore } from '@/stores/testProgressStore';
 import Milestone from '@/Pages/Test/Milestone.vue';
 import MilestoneProgress from '@/Pages/Test/MilestoneProgress.vue';
 import SvgIcon from '@/Components/helpers/SvgIcon.vue';
@@ -91,56 +94,141 @@ export default {
   },
   setup(props) {
     const isMinimized = ref(true);
-    const milestones = ref([
-      {
-        name: 'Your personality archetype',
-        time: '~ 3 mins',
-        status: 'not-started',
-        progress: 0,
-      },
-      {
-        name: 'Your career matches',
-        time: '~ 3 mins',
-        status: 'not-started',
-        progress: 0,
-      },
-      {
-        name: 'Your degree matches',
-        time: '~ 1 min',
-        status: 'not-started',
-        progress: 0,
-      },
-      {
-        name: 'Your Results',
-        time: '~ 20 mins',
-        description: ['Final career matches and insights', 'Personality report', 'Trait report'],
-        status: 'not-started',
-        progress: 0,
-      },
-    ]);
+    const testProgressStore = useTestProgressStore();
 
-    // Update milestone progress based on props
-    watch(() => props.progress, (newProgress) => {
-      if (newProgress) {
-        // Update Holland Codes milestone
-        milestones.value[0].progress = newProgress.hollandCodes || 0;
-        milestones.value[0].status = newProgress.hollandCodes === 100 ? 'complete' : 'in-progress';
+    // Debug helper
+    const logProgressUpdate = (stage, data, source) => {
+      console.group(`Progress Update [${stage}] from ${source}`);
+      console.log('Data:', data);
+      console.log('Current Store State:', testProgressStore.dumpState());
+      console.groupEnd();
+    };
 
-        // Update Basic Interest milestone
-        milestones.value[1].progress = newProgress.basicInterest || 0;
-        milestones.value[1].status = newProgress.basicInterest === 100 ? 'complete' :
-          newProgress.hollandCodes === 100 ? 'in-progress' : 'not-started';
-
-        // Update status of remaining milestones based on completion
-        if (newProgress.completed) {
-          milestones.value[2].status = 'in-progress';
-          milestones.value[3].status = 'not-started';
-        }
+    // Watch test stage changes
+    watch(() => props.testStage, (newStage, oldStage) => {
+      if (newStage) {
+        console.group('Test Stage Change');
+        console.log('From:', oldStage);
+        console.log('To:', newStage);
+        console.log('Store State Before:', testProgressStore.dumpState());
+        
+        testProgressStore.setCurrentStage(newStage);
+        
+        console.log('Store State After:', testProgressStore.dumpState());
+        console.groupEnd();
       }
     }, { immediate: true });
 
+    // Watch progress changes
+    watch(() => props.progress, (newProgress, oldProgress) => {
+      if (newProgress) {
+        console.group('Progress Update');
+        console.log('Previous:', oldProgress);
+        console.log('New:', newProgress);
+        console.log('Current Stage:', props.testStage);
+
+        // Update Holland Codes progress
+        if ('hollandCodes' in newProgress) {
+          const hollandProgress = {
+            percentage: newProgress.hollandCodes,
+            completed: newProgress.hollandCodes === 100,
+            currentIndex: 0,
+            validResponses: 0
+          };
+          logProgressUpdate('holland_codes', hollandProgress, 'props');
+          testProgressStore.updateStageProgress('holland_codes', hollandProgress);
+        }
+
+        // Update Basic Interest progress
+        if ('basicInterest' in newProgress) {
+          if (typeof newProgress.basicInterest === 'object') {
+            // Use controller's progress data directly
+            const basicInterestProgress = {
+              currentIndex: newProgress.basicInterest.currentIndex,
+              validResponses: newProgress.basicInterest.validResponses,
+              percentage: newProgress.basicInterest.percentage,
+              completed: newProgress.basicInterest.completed
+            };
+            logProgressUpdate('basic_interests', basicInterestProgress, 'controller');
+            testProgressStore.updateStageProgress('basic_interests', basicInterestProgress);
+          } else {
+            // Handle legacy number-only progress
+            const basicInterestProgress = {
+              percentage: newProgress.basicInterest,
+              completed: newProgress.basicInterest === 100,
+              currentIndex: 0,
+              validResponses: 0
+            };
+            logProgressUpdate('basic_interests', basicInterestProgress, 'legacy');
+            testProgressStore.updateStageProgress('basic_interests', basicInterestProgress);
+          }
+        }
+
+        // Handle stage completion
+        if (newProgress.completed) {
+          console.log('Stage completed:', props.testStage);
+          testProgressStore.markStageComplete(props.testStage);
+        } else {
+          console.log('Stage not completed, resetting transition');
+          testProgressStore.resetStageTransition(props.testStage);
+        }
+
+        console.log('Final Store State:', testProgressStore.dumpState());
+        console.groupEnd();
+      }
+    }, { immediate: true });
+
+    const getMilestoneStatus = (stage) => {
+      const status = testProgressStore.isStageComplete(stage) ? 'complete' :
+        stage === testProgressStore.currentStageName ? 
+          testProgressStore.canTransitionFromStage(stage) ? 'complete' : 'in-progress' :
+        testProgressStore.isStageComplete(getPreviousStage(stage)) ? 'in-progress' : 'not-started';
+
+      console.log(`Milestone status for ${stage}:`, {
+        isComplete: testProgressStore.isStageComplete(stage),
+        isCurrent: stage === testProgressStore.currentStageName,
+        canTransition: testProgressStore.canTransitionFromStage(stage),
+        previousComplete: testProgressStore.isStageComplete(getPreviousStage(stage)),
+        finalStatus: status
+      });
+
+      return status;
+    };
+
+    const getPreviousStage = (stage) => {
+      const stages = ['holland_codes', 'basic_interests', 'workplace', 'personality'];
+      const index = stages.indexOf(stage);
+      return index > 0 ? stages[index - 1] : null;
+    };
+
     const nextMilestone = computed(() => {
-      return milestones.value.find(m => m.status !== 'complete') || milestones.value[0];
+      const stages = ['holland_codes', 'basic_interests', 'workplace', 'personality'];
+      const nextStage = stages.find(stage => {
+        const isCurrentStage = stage === testProgressStore.currentStageName;
+        const canTransition = testProgressStore.canTransitionFromStage(stage);
+        const isComplete = testProgressStore.isStageComplete(stage);
+
+        console.log(`Next milestone check for ${stage}:`, {
+          isCurrentStage,
+          canTransition,
+          isComplete,
+          shouldShow: isCurrentStage ? !canTransition : !isComplete
+        });
+
+        return isCurrentStage ? !canTransition : !isComplete;
+      });
+
+      const result = nextStage ? {
+        name: {
+          'holland_codes': 'Your personality archetype',
+          'basic_interests': 'Your career matches',
+          'workplace': 'Your degree matches',
+          'personality': 'Your Results'
+        }[nextStage]
+      } : null;
+
+      console.log('Next milestone result:', { nextStage, result });
+      return result;
     });
 
     const toggleMinimized = () => {
@@ -148,15 +236,20 @@ export default {
     };
 
     onMounted(() => {
-      console.log('Progress:', props.progress);
+      console.group('Component Mounted');
+      console.log('Initial Stage:', props.testStage);
+      console.log('Initial Progress:', props.progress);
+      console.log('Initial Store State:', testProgressStore.dumpState());
+      console.groupEnd();
     });
 
     return {
       isMinimized,
-      milestones,
+      testProgressStore,
       nextMilestone,
       toggleMinimized,
       mdiChevronUp,
+      getMilestoneStatus
     };
   },
 };
