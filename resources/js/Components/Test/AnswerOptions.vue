@@ -18,8 +18,8 @@
         :data-qa-id="option.id" 
         :data-testid="option.id" 
         type="radio"
-        :value="option.value" 
-        v-model="selectedValue"
+        :value="option.value"
+        :checked="modelValue === option.value"
         :disabled="disabled"
         @change="handleChange($event, option)" 
       />
@@ -28,7 +28,7 @@
         :for="option.id"
         :class="{ 
           'disabled': disabled,
-          'active': modelValue === option.value 
+          'active': modelValue === option.value
         }"
       >
         <span class="RadioField--label__inner">
@@ -45,7 +45,6 @@ import { computed, watch, onMounted, ref } from 'vue';
 import { useHollandCodeStore } from '@/stores/hollandCodeStore';
 
 const hollandCodeStore = useHollandCodeStore();
-const selectedValue = ref(null);
 
 const props = defineProps({
   options: {
@@ -78,28 +77,44 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue', 'submit']);
 
 const handleChange = (event, option) => {
-  const value = parseInt(option.value);
-  selectedValue.value = value;
-  emit('update:modelValue', value);
+  console.log('Option change:', { 
+    optionId: option.id,
+    optionValue: option.value,
+    currentItem: props.currentItem,
+    currentResponse: props.store.responses[props.currentItem?.id]
+  });
+  
+  emit('update:modelValue', option.value);
   emit('submit');
 };
 
-// Watch for changes in current item
-watch(() => props.currentItem?.id, () => {
-  if (props.currentItem?.id && props.store?.responses) {
-    const response = props.store.responses[props.currentItem.id];
-    if (response) {
-      selectedValue.value = response;
-      emit('update:modelValue', response);
-    } else {
-      selectedValue.value = null;
-      emit('update:modelValue', null);
-    }
+// Watch for store responses changes
+watch(() => props.store.responses[props.currentItem?.id], (newResponse) => {
+  console.log('Store response changed:', {
+    itemId: props.currentItem?.id,
+    newResponse,
+    allResponses: props.store.responses
+  });
+  
+  if (newResponse !== undefined) {
+    emit('update:modelValue', newResponse);
+  } else {
+    emit('update:modelValue', null);
   }
 }, { immediate: true });
 
-// Watch for model value changes
-watch(() => props.modelValue, (newValue) => {
-  selectedValue.value = newValue;
-}, { immediate: true });
+onMounted(() => {
+  console.log('AnswerOptions mounted:', {
+    currentItem: props.currentItem,
+    modelValue: props.modelValue,
+    storeResponses: props.store.responses,
+    currentResponse: props.store.responses[props.currentItem?.id]
+  });
+  
+  // Set initial value from store response
+  const response = props.store.responses[props.currentItem?.id];
+  if (response !== undefined) {
+    emit('update:modelValue', response);
+  }
+});
 </script>

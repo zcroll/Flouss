@@ -31,6 +31,7 @@
 
           <div class="Assessment__scroll-container">
             <div v-if="!isComplete && currentItem?.id">
+
               <div class="Assessment__Item--forward-appear-done Assessment__Item--forward-enter-done">
                 <TestQuestion :key="`question-${currentItem.id}-${hollandCodeStore.currentItemIndex}`"
                   :current-item="currentItem" :current-item-index="hollandCodeStore.currentItemIndex"
@@ -54,14 +55,14 @@
 
 <script setup>
 import { ref, computed, watch, onMounted } from "vue";
-import { useForm } from "@inertiajs/vue3";
+import { useForm, router } from "@inertiajs/vue3";
 import NextStep from "@/Components/Test/NextStep.vue";
 import SidebarMainTest from "./SidebarMainTest.vue";
 import TestQuestion from "@/Components/Test/TestQuestion.vue";
 import { useHollandCodeStore } from "@/stores/hollandCodeStore";
 import Discovery from "@/Components/Test/Discovery.vue";
 import { storeToRefs } from "pinia";
-
+import BackButton from "@/Components/Test/BackButton.vue";
 const hollandCodeStore = useHollandCodeStore();
 
 const form = useForm({
@@ -117,25 +118,36 @@ const retryFetch = () => {
 
 const submitAnswer = async () => {
   if (form.answer !== null || form.type === "skipped") {
-    await hollandCodeStore.submitAnswer({
+    const formData = {
       itemId: form.itemId,
-      answer: form.answer,
+      answer: form.type === "skipped" ? 0 : form.answer,
       type: form.type,
       category: form.category,
       testStage: form.testStage
-    });
-    form.reset();
-    form.type = 'answered';
-    form.testStage = props.testStage;
+    };
+
+    try {
+      await hollandCodeStore.submitAnswer(formData);
+      form.reset();
+      form.type = 'answered';
+      form.testStage = props.testStage;
+    } catch (error) {
+      console.error('Error submitting answer:', error);
+    }
   }
 };
 
-const goBack = () => {
-  hollandCodeStore.goBack();
+const goBack = async () => {
+  try {
+    await hollandCodeStore.goBack();
+  } catch (error) {
+    console.error('Error going back:', error);
+  }
 };
 
 const skipQuestion = () => {
   form.type = "skipped";
+  form.answer = 0;
   submitAnswer();
 };
 

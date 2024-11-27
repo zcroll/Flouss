@@ -66,35 +66,62 @@ export const useHollandCodeStore = defineStore('hollandCode', {
     },
 
     setProgress(progress) {
-      this.progress = {
-        current_index: progress.current_index || 0,
-        responses: progress.responses || {},
-        completed: progress.completed || false,
-        progress_percentage: progress.progress_percentage || 0,
-        archetypeDiscovery: progress.archetypeDiscovery || null
-      };
+      if (!progress) return;
+      
+      console.log('Setting progress:', progress);
+      
+      // Update all progress properties
+      this.progress = progress;
       this.currentItemIndex = progress.current_index;
-      this.responses = progress.responses || {};
-      this.updateProgressPercentage();
-
-      // Update completed state if progress is 100%
-      if (this.progress.progress_percentage === 100) {
-        this.progress.completed = true;
-        this.isTestComplete = true;
+      
+      // Convert response values to numbers
+      if (progress.responses) {
+        this.responses = Object.fromEntries(
+          Object.entries(progress.responses).map(([key, value]) => [
+            key,
+            value !== null ? parseInt(value) : null
+          ])
+        );
       }
+      
+      this.setCurrentItem();
     },
 
     updateProgressPercentage() {
-      const totalItems = this.hollandCodesData.items.length;
-      this.progress.progress_percentage = totalItems > 0 ? (this.progress.current_index / totalItems) * 100 : 0;
+      const totalItems = this.hollandCodesData?.items?.length || 0;
+      if (totalItems === 0) {
+        this.progress.progress_percentage = 0;
+        return;
+      }
+      
+      // Calculate progress based on current index
+      this.progress.progress_percentage = Math.round((this.currentItemIndex / totalItems) * 100);
+      
+      // Update completion status
+      this.progress.completed = this.currentItemIndex >= totalItems;
+      
+      console.log('Progress updated:', {
+        currentIndex: this.currentItemIndex,
+        totalItems,
+        percentage: this.progress.progress_percentage,
+        completed: this.progress.completed
+      });
     },
 
     setCurrentItem() {
-      if (this.hollandCodesData?.items?.length > 0) {
-        const newItem = this.hollandCodesData.items[this.currentItemIndex] || null;
-        this.currentItem = newItem ? { ...newItem } : null;
-        this.logDebug('Current item set to:', this.currentItem);
-      }
+      if (!this.hollandCodesData?.items) return;
+      
+      const item = this.hollandCodesData.items[this.currentItemIndex];
+      const currentResponse = item ? this.responses[item.id] : null;
+      
+      console.log('Setting current item:', { 
+        index: this.currentItemIndex, 
+        item,
+        currentResponse,
+        allResponses: this.responses
+      });
+      
+      this.currentItem = item || null;
     },
 
     async fetchHollandCodes() {
@@ -141,34 +168,31 @@ export const useHollandCodeStore = defineStore('hollandCode', {
       console.log(`[HollandCode Debug]:`, message, data);
     },
 
-    async submitAnswer(formData) {
+    async submitAnswer(form) {
       try {
         this.loading = true;
-        this.error = null;
+        console.log('Submitting answer:', form);
 
-        // Update local state immediately for responsive UI
-        this.responses[formData.itemId] = {
-          itemId: formData.itemId,
-          answer: formData.answer,
-          type: formData.type,
-          category: formData.category
+        const formData = {
+          ...form,
+          answer: form.type === 'skipped' ? 0 : form.answer // Ensure skipped questions have answer = 0
         };
-        
-        this.updateProgressPercentage();
 
-        // Make API call
         await router.post(route('holland-codes.store-response'), formData, {
           preserveState: true,
           preserveScroll: true,
+          preserveUrl: true,
           onSuccess: (page) => {
             if (page.props.progress) {
+              // Update local response
+              this.responses[formData.itemId] = formData.answer;
               this.setProgress(page.props.progress);
             }
-            this.nextQuestion();
-            this.loading = false;
           },
           onError: (errors) => {
             this.logError('submission', errors);
+          },
+          onFinish: () => {
             this.loading = false;
           }
         });
@@ -178,17 +202,45 @@ export const useHollandCodeStore = defineStore('hollandCode', {
       }
     },
 
-    skipQuestion() {
-      const formData = {
-        itemId: this.currentItem.id,
-        answer: 0,
-        type: 'skipped',
-        category: this.currentItem.category || 'holland_codes',
-        testStage: 'holland_codes'
-      };
+    async skipQuestion() {
+      if (this.loading || !this.currentItem) return;
 
-      this.logDebug('Skipping question with data:', formData);
-      return this.submitAnswer(formData);
+      try {
+        this.loading = true;
+        console.log('Skipping question:', this.currentItem.id);
+
+        const skipData = {
+          itemId: this.currentItem.id,
+          answer: 0, // Use 0 to indicate skipped
+          type: 'skipped',
+          category: 'holland_codes',
+          testStage: 'holland_codes'
+        };
+
+        await router.post(route('holland-codes.store-response'), skipData, {
+          preserveState: true,
+          preserveScroll: true,
+          preserveUrl: true,
+          onSuccess: (page) => {
+            if (page.props.progress) {
+              // Update local response
+              this.responses[skipData.itemId] = 0;
+              this.setProgress(page.props.progress);
+            }
+          },
+          onError: (error) => {
+            console.error('Skip error:', error);
+            this.error = error.message || 'Failed to skip question';
+          },
+          onFinish: () => {
+            this.loading = false;
+          }
+        });
+      } catch (error) {
+        console.error('Skip failed:', error);
+        this.error = error.message || 'Failed to skip question';
+        this.loading = false;
+      }
     },
 
     nextQuestion() {
@@ -199,18 +251,39 @@ export const useHollandCodeStore = defineStore('hollandCode', {
     },
 
     async goBack() {
+      if (this.currentItemIndex <= 0 || this.loading) {
+        console.log('Cannot go back:', { currentIndex: this.currentItemIndex, loading: this.loading });
+        return;
+      }
+
       try {
-        router.post(route('holland-codes.go-back'), {}, {
+        console.log('Going back from index:', this.currentItemIndex);
+        
+        this.loading = true;
+        await router.post(route('holland-codes.go-back'), {}, {
           preserveState: true,
           preserveScroll: true,
-          onSuccess: (response) => {
-            this.progress = response.data.progress;
-            this.currentItemIndex = response.data.progress.current_index;
-            this.setCurrentItem();
+          preserveUrl: true,
+          onSuccess: (page) => {
+            console.log('Back navigation success:', page);
+            const progress = page.props?.progress || page.progress;
+            if (progress) {
+              this.setProgress(progress);
+            }
+          },
+          onError: (error) => {
+            console.error('Back navigation error:', error);
+            this.error = error.message || 'Failed to go back';
+          },
+          onFinish: () => {
+            console.log('Back navigation finished');
+            this.loading = false;
           }
         });
       } catch (error) {
-        this.error = error.message;
+        console.error('Back navigation failed:', error);
+        this.error = error.message || 'Failed to go back';
+        this.loading = false;
       }
     }
   },
@@ -227,6 +300,9 @@ export const useHollandCodeStore = defineStore('hollandCode', {
     },
     isReady(state) {
       return state.initialized && !state.loading && !state.error;
+    },
+    canGoBack(state) {
+      return state.currentItemIndex > 0 && !state.loading;
     },
     hasResponse(state) {
       return !!state.responses[state.currentItem?.id];

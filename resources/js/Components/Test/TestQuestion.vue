@@ -2,6 +2,12 @@
   <div class="Assessment__Item Assessment__RadioItem Assessment__RadioItem--active" :data-i="'i'" aria-atomic="true"
     aria-live="assertive">
     <div>
+      <BackButton 
+        :loading="hollandCodeStore.loading" 
+        :disabled="!hollandCodeStore.currentItemIndex" 
+        @go-back="handleGoBack"
+      />
+
       <form @submit.prevent="submitAnswer" ref="formRef">
         <h4 v-if="hollandCodes?.lead_in_text">
           {{ hollandCodes.lead_in_text }}
@@ -13,10 +19,17 @@
         <AnswerOptions v-if="currentItem && optionSet" :current-item="currentItem" :options="optionSet.options"
           :test-stage="testStage" v-model="form.answer" :store="hollandCodeStore" @submit="submitAnswer" />
 
-        <button type="button" title="Skip question" aria-label="Skip question" aria-hidden="true"
-          class="Assessment__RadioItem__skip" data-testid="skip-item" @click="$emit('skip')">
-          Skip question
-        </button>
+        <div class="Assessment__Question__actions">
+          <button 
+            type="button" 
+            class="Assessment__Question__skip" 
+            data-testid="skip-question"
+            :disabled="hollandCodeStore.loading"
+            @click="handleSkip"
+          >
+            {{ hollandCodeStore.loading ? 'Skipping...' : 'Skip question' }}
+          </button>
+        </div>
       </form>
     </div>
   </div>
@@ -91,6 +104,15 @@ const submitAnswer = () => {
   }
 };
 
+const handleGoBack = () => {
+  emit('go-back');
+};
+
+const handleSkip = () => {
+  if (props.hollandCodeStore.loading) return;
+  emit('skip');
+};
+
 defineExpose({ formRef });
 </script>
 
@@ -100,9 +122,9 @@ defineExpose({ formRef });
   margin-bottom: 2rem;
 }
 
+/* ... */
 
-
-. .Assessment__RadioItem__skip {
+.Assessment__RadioItem__skip {
   margin-top: 1rem;
   color: #6b7280;
   font-size: 0.875rem;
@@ -114,5 +136,21 @@ defineExpose({ formRef });
 
 .Assessment__RadioItem__skip:hover {
   color: #4f46e5;
+}
+
+.Assessment__Question__actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+
+.Assessment__Question__skip:hover:not(:disabled) {
+  opacity: 1;
+}
+
+.Assessment__Question__skip:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 </style>

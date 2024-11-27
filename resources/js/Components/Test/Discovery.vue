@@ -1,5 +1,5 @@
 <template>
-  
+
   <section class="Discovery" aria-live="polite" aria-atomic="true" aria-relevant="text" role="presentation">
     <div class="DiscoveryButton__inner">
       <div class="DiscoveryConfetti" id="dicovery-confetti" data-testid="dicovery-confetti" aria-hidden="true">
@@ -27,20 +27,19 @@
       </div>
       <button class="DiscoveryButton DiscoveryButton--degree-match DiscoveryButton--is-alive"
         data-dialog-target="dialog-discovery"
-        aria-label="We've made a new discovery: Click here for your degree matches!. "
-        aria-owns="#dialog-discovery" tabindex="0"
-        :style="{ backgroundImage: `url(${archetypeDiscovery.image_url})` }" @click="showArchetype = true">
+        aria-label="We've made a new discovery: Click here for your degree matches!. " aria-owns="#dialog-discovery"
+        tabindex="0" :style="{ backgroundImage: `url(${archetypeDiscovery.image_url})` }" @click="handleShowArchetype">
         <h3 class="DiscoveryButton__title" aria-hidden="true">Click here for your degree matches!</h3>
         <svg aria-hidden="true" focusable="false" data-prefix="fal" data-icon="chevron-up"
-          class="svg-inline--fa fa-chevron-up DiscoveryButton__arrow" role="img"
-          xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+          class="svg-inline--fa fa-chevron-up DiscoveryButton__arrow" role="img" xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 448 512">
           <path fill="currentColor"
             d="M443.8 330.8C440.6 334.3 436.3 336 432 336c-3.891 0-7.781-1.406-10.86-4.25L224 149.8l-197.1 181.1c-6.5 6-16.64 5.625-22.61-.9062c-6-6.5-5.594-16.59 .8906-22.59l208-192c6.156-5.688 15.56-5.688 21.72 0l208 192C449.3 314.3 449.8 324.3 443.8 330.8z">
           </path>
         </svg>
         <div class="DiscoveryButton__dismiss" tabindex="0" aria-label="Dismiss this discovery">
-          <svg aria-hidden="true" focusable="false" data-prefix="fal" data-icon="xmark"
-            class="svg-inline--fa fa-xmark " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+          <svg aria-hidden="true" focusable="false" data-prefix="fal" data-icon="xmark" class="svg-inline--fa fa-xmark "
+            role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
             <path fill="currentColor"
               d="M315.3 411.3c-6.253 6.253-16.37 6.253-22.63 0L160 278.6l-132.7 132.7c-6.253 6.253-16.37 6.253-22.63 0c-6.253-6.253-6.253-16.37 0-22.63L137.4 256L4.69 123.3c-6.253-6.253-6.253-16.37 0-22.63c6.253-6.253 16.37-6.253 22.63 0L160 233.4l132.7-132.7c6.253-6.253 16.37-6.253 22.63 0c6.253 6.253 6.253 16.37 0 22.63L182.6 256l132.7 132.7C321.6 394.9 321.6 405.1 315.3 411.3z">
             </path>
@@ -56,7 +55,7 @@
 
 <script setup>
 import Archetype from '../helpers/Archetype.vue';
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 
 const props = defineProps({
   archetypeDiscovery: {
@@ -66,18 +65,16 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['close']);
-
 const showArchetype = ref(false);
+
+const handleShowArchetype = () => {
+  showArchetype.value = true;
+};
 
 const handleClose = () => {
   showArchetype.value = false;
   emit('close');
 };
-
-onMounted(() => {
-  showArchetype.value = true;
-  console.log('Archetype Discovery:', props.archetypeDiscovery);
-});
 </script>
 
 <style scoped>
