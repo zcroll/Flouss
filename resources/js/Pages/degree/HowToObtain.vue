@@ -18,85 +18,153 @@
     >
       <div class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white mb-5 rounded-b-3xl shadow-2xl">
         <!-- Breadcrumb Navigation -->
-        <nav class="flex items-center space-x-2 text-sm mb-8 font-['aktiv-grotesk','Helvetica_Neue',Helvetica,Arial,sans-serif]">
-          <Link :href="route('dashboard')" class="text-[#53777a] font-medium border-b-2 border-[#53777a] transition-all duration-200 ease-in-out hover:text-[#db492b] hover:border-[#db492b]">{{ __('Home') }}</Link>
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-          </svg>
-          <Link :href="route('degrees.index')" class="text-[#53777a] font-medium border-b-2 border-[#53777a] transition-all duration-200 ease-in-out hover:text-[#db492b] hover:border-[#db492b]">{{ __('Degrees') }}</Link>
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-          </svg>
-          <Link :href="route('degree.index', { slug: degree.slug })" class="text-[#53777a] font-medium border-b-2 border-[#53777a] transition-all duration-200 ease-in-out hover:text-[#db492b] hover:border-[#db492b]">{{ degree.name }}</Link>
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-          </svg>
-          <span class="text-gray-400 font-medium">{{ __('How to Obtain') }}</span>
-        </nav>
+                <Breadcrumbs 
+            :items="[
+              { name: 'Home', route: 'dashboard' },
+              { name: 'Degrees', route: 'degrees.index' },
+              { name: degree.name, route: 'degree.index', params: { slug: degree.slug } },
+              { name: 'How to Obtain' }
+            ]"
+          />
 
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
           <div class="">
             <!-- Filter Section -->
             <aside class="mb-8">
-              <div class="bg-white rounded-xl shadow-sm border border-[#db492b]/10">
-                <section aria-labelledby="filter-heading" class="p-4">
-                  <h3 id="filter-heading" class="sr-only">Formation filters</h3>
-                  <div class="flex flex-wrap gap-4">
-                    <!-- City Filter -->
-                    <div class="relative" ref="cityDropdown">
-                      <button @click="toggleCityDropdown" class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-[#db492b]/20 rounded-xl hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#db492b]/20 transition duration-200">
-                        <span class="mr-2">{{ selectedCities.length ? `${selectedCities.length} Cities` : 'City' }}</span>
-                        <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                          <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                        </svg>
-                      </button>
-                      <div v-show="showCityDropdown" class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-xl bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        <div class="p-2 max-h-60 overflow-auto">
-                          <div v-for="ville in uniqueVilles" :key="ville" class="flex items-center px-4 py-2 hover:bg-gray-100 rounded-lg cursor-pointer">
-                            <input type="checkbox" :id="`city-${ville}`" :value="ville" v-model="selectedCities" class="h-4 w-4 rounded border-gray-300 text-[#db492b] focus:ring-[#db492b]" />
-                            <label :for="`city-${ville}`" class="ml-3 text-sm text-gray-600">{{ ville }}</label>
+              <div class="flex items-center justify-between gap-2 mb-4">
+                <div class="flex flex-wrap gap-2">
+                  <Badge 
+                    v-for="city in selectedCities" 
+                    :key="city"
+                    variant="secondary"
+                    class="flex items-center gap-1"
+                  >
+                    {{ city }}
+                    <button @click="removeCity(city)" class="ml-1">×</button>
+                  </Badge>
+                  <Badge 
+                    v-for="niveau in selectedNiveaux" 
+                    :key="niveau"
+                    variant="secondary"
+                    class="flex items-center gap-1"
+                  >
+                    {{ niveau }}
+                    <button @click="removeNiveau(niveau)" class="ml-1">×</button>
+                  </Badge>
+                  <Badge 
+                    v-for="type in selectedTypes" 
+                    :key="type"
+                    variant="secondary"
+                    class="flex items-center gap-1"
+                  >
+                    {{ type }}
+                    <button @click="removeType(type)" class="ml-1">×</button>
+                  </Badge>
+                </div>
+                
+                <!-- Mobile Filter Button -->
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button variant="outline" class="lg:hidden">
+                      <FunnelIcon class="h-4 w-4 mr-2" />
+                      Filters
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side="bottom" class="h-[85vh]">
+                    <SheetHeader>
+                      <SheetTitle>Filters</SheetTitle>
+                    </SheetHeader>
+                    <div class="space-y-6 py-4">
+                      <!-- Mobile Filter Content -->
+                      <div class="space-y-4">
+                        <h3 class="text-sm font-medium">Cities</h3>
+                        <div class="space-y-2">
+                          <div v-for="ville in uniqueVilles" :key="ville" class="flex items-center">
+                            <input type="checkbox" :id="`mobile-city-${ville}`" :value="ville" v-model="selectedCities" class="h-4 w-4 rounded border-gray-300 text-[#db492b] focus:ring-[#db492b]" />
+                            <label :for="`mobile-city-${ville}`" class="ml-3 text-sm text-gray-600">{{ ville }}</label>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="space-y-4">
+                        <h3 class="text-sm font-medium">Levels</h3>
+                        <div class="space-y-2">
+                          <div v-for="niveau in uniqueNiveaux" :key="niveau" class="flex items-center">
+                            <input type="checkbox" :id="`mobile-niveau-${niveau}`" :value="niveau" v-model="selectedNiveaux" class="h-4 w-4 rounded border-gray-300 text-[#db492b] focus:ring-[#db492b]" />
+                            <label :for="`mobile-niveau-${niveau}`" class="ml-3 text-sm text-gray-600">{{ niveau }}</label>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="space-y-4">
+                        <h3 class="text-sm font-medium">Institution Types</h3>
+                        <div class="space-y-2">
+                          <div v-for="type in uniqueTypes" :key="type" class="flex items-center">
+                            <input type="checkbox" :id="`mobile-type-${type}`" :value="type" v-model="selectedTypes" class="h-4 w-4 rounded border-gray-300 text-[#db492b] focus:ring-[#db492b]" />
+                            <label :for="`mobile-type-${type}`" class="ml-3 text-sm text-gray-600">{{ type }}</label>
                           </div>
                         </div>
                       </div>
                     </div>
-
-                    <!-- Level Filter -->
-                    <div class="relative" ref="niveauDropdown">
-                      <button @click="toggleNiveauDropdown" class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-[#db492b]/20 rounded-xl hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#db492b]/20 transition duration-200">
-                        <span class="mr-2">{{ selectedNiveaux.length ? `${selectedNiveaux.length} Levels` : 'Level' }}</span>
-                        <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                          <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                        </svg>
-                      </button>
-                      <div v-show="showNiveauDropdown" class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-xl bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        <div class="p-2 max-h-60 overflow-auto">
-                          <div v-for="niveau in uniqueNiveaux" :key="niveau" class="flex items-center px-4 py-2 hover:bg-gray-100 rounded-lg cursor-pointer">
-                            <input type="checkbox" :id="`niveau-${niveau}`" :value="niveau" v-model="selectedNiveaux" class="h-4 w-4 rounded border-gray-300 text-[#db492b] focus:ring-[#db492b]" />
-                            <label :for="`niveau-${niveau}`" class="ml-3 text-sm text-gray-600">{{ niveau }}</label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Institution Type Filter -->
-                    <div class="relative" ref="typeDropdown">
-                      <button @click="toggleTypeDropdown" class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-[#db492b]/20 rounded-xl hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#db492b]/20 transition duration-200">
-                        <span class="mr-2">{{ selectedTypes.length ? `${selectedTypes.length} Types` : 'Institution Type' }}</span>
-                        <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                          <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                        </svg>
-                      </button>
-                      <div v-show="showTypeDropdown" class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-xl bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        <div class="p-2 max-h-60 overflow-auto">
-                          <div v-for="type in uniqueTypes" :key="type" class="flex items-center px-4 py-2 hover:bg-gray-100 rounded-lg cursor-pointer">
-                            <input type="checkbox" :id="`type-${type}`" :value="type" v-model="selectedTypes" class="h-4 w-4 rounded border-gray-300 text-[#db492b] focus:ring-[#db492b]" />
-                            <label :for="`type-${type}`" class="ml-3 text-sm text-gray-600">{{ type }}</label>
-                          </div>
+                  </SheetContent>
+                </Sheet>
+                
+                <!-- Desktop Filters -->
+                <div class="hidden lg:flex gap-4">
+                  <!-- City Filter -->
+                  <div class="relative" ref="cityDropdown">
+                    <button @click="toggleCityDropdown" class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-[#db492b]/20 rounded-xl hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#db492b]/20 transition duration-200">
+                      <span class="mr-2">{{ selectedCities.length ? `${selectedCities.length} Cities` : 'City' }}</span>
+                      <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                      </svg>
+                    </button>
+                    <div v-show="showCityDropdown" class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-xl bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <div class="p-2 max-h-60 overflow-auto">
+                        <div v-for="ville in uniqueVilles" :key="ville" class="flex items-center px-4 py-2 hover:bg-gray-100 rounded-lg cursor-pointer">
+                          <input type="checkbox" :id="`city-${ville}`" :value="ville" v-model="selectedCities" class="h-4 w-4 rounded border-gray-300 text-[#db492b] focus:ring-[#db492b]" />
+                          <label :for="`city-${ville}`" class="ml-3 text-sm text-gray-600">{{ ville }}</label>
                         </div>
                       </div>
                     </div>
                   </div>
-                </section>
+
+                  <!-- Level Filter -->
+                  <div class="relative" ref="niveauDropdown">
+                    <button @click="toggleNiveauDropdown" class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-[#db492b]/20 rounded-xl hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#db492b]/20 transition duration-200">
+                      <span class="mr-2">{{ selectedNiveaux.length ? `${selectedNiveaux.length} Levels` : 'Level' }}</span>
+                      <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                      </svg>
+                    </button>
+                    <div v-show="showNiveauDropdown" class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-xl bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <div class="p-2 max-h-60 overflow-auto">
+                        <div v-for="niveau in uniqueNiveaux" :key="niveau" class="flex items-center px-4 py-2 hover:bg-gray-100 rounded-lg cursor-pointer">
+                          <input type="checkbox" :id="`niveau-${niveau}`" :value="niveau" v-model="selectedNiveaux" class="h-4 w-4 rounded border-gray-300 text-[#db492b] focus:ring-[#db492b]" />
+                          <label :for="`niveau-${niveau}`" class="ml-3 text-sm text-gray-600">{{ niveau }}</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Institution Type Filter -->
+                  <div class="relative" ref="typeDropdown">
+                    <button @click="toggleTypeDropdown" class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-[#db492b]/20 rounded-xl hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#db492b]/20 transition duration-200">
+                      <span class="mr-2">{{ selectedTypes.length ? `${selectedTypes.length} Types` : 'Institution Type' }}</span>
+                      <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                      </svg>
+                    </button>
+                    <div v-show="showTypeDropdown" class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-xl bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <div class="p-2 max-h-60 overflow-auto">
+                        <div v-for="type in uniqueTypes" :key="type" class="flex items-center px-4 py-2 hover:bg-gray-100 rounded-lg cursor-pointer">
+                          <input type="checkbox" :id="`type-${type}`" :value="type" v-model="selectedTypes" class="h-4 w-4 rounded border-gray-300 text-[#db492b] focus:ring-[#db492b]" />
+                          <label :for="`type-${type}`" class="ml-3 text-sm text-gray-600">{{ type }}</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </aside>
 
@@ -119,6 +187,17 @@ import StickySidebar from '@/Pages/lib/StickySidebar.vue'
 import Formation from '@/Components/helpers/Formation.vue'
 import BackToTop from "@/Components/helpers/BackToTop.vue"
 import Ruller from '@/Pages/ruller.vue'
+import { Button } from "@/Components/ui/button"
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/Components/ui/sheet"
+import { Badge } from "@/Components/ui/badge"
+import { FunnelIcon } from '@heroicons/vue/24/outline'
+import Breadcrumbs from '@/Components/helpers/Breadcrumbs.vue'
 
 export default defineComponent({
   components: {
@@ -128,6 +207,15 @@ export default defineComponent({
     Link,
     Formation,
     Ruller,
+    Button,
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+    Badge,
+    FunnelIcon,
+    Breadcrumbs,
   },
   props: {
     degree: Object,
@@ -195,6 +283,15 @@ export default defineComponent({
         this.showTypeDropdown = false
       }
     },
+    removeCity(city) {
+      this.selectedCities = this.selectedCities.filter(c => c !== city)
+    },
+    removeNiveau(niveau) {
+      this.selectedNiveaux = this.selectedNiveaux.filter(n => n !== niveau)
+    },
+    removeType(type) {
+      this.selectedTypes = this.selectedTypes.filter(t => t !== type)
+    }
   },
   mounted() {
     document.addEventListener('click', this.handleClickOutside)

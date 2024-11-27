@@ -16,55 +16,17 @@
                 <div
                     class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white shadow-2xl"
                 >
-                    <nav
-                        class="flex items-center space-x-2 text-sm mb-8"
-                        style="
-                            font-family: 'aktiv-grotesk', 'Helvetica Neue',
-                                Helvetica, Arial, sans-serif;
-                        "
-                    >
-                        <Link
-                            :href="route('dashboard')"
-                            class="text-[#53777a] font-medium border-b-2 border-[#53777a] hover:text-[#53777a] hover:border-[#53777a] transition-all duration-200"
-                            >{{ __("Home") }}</Link
-                        >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-4 w-4"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                        >
-                            <path
-                                fill-rule="evenodd"
-                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                clip-rule="evenodd"
-                            />
-                        </svg>
-                        <Link
-                            :href="route('degrees.index')"
-                            class="text-[#53777a] font-medium border-b-2 border-[#53777a] hover:text-[#53777a] hover:border-[#53777a] transition-all duration-200"
-                            >{{ __("Degrees") }}</Link
-                        >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-4 w-4"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                        >
-                            <path
-                                fill-rule="evenodd"
-                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                clip-rule="evenodd"
-                            />
-                        </svg>
-                        <span
-                            class="text-[#53777a] font-medium border-b-2 border-[#53777a]"
-                            >{{ degree.name }}</span
-                        >
-                    </nav>
+                <Breadcrumbs 
+            :items="[
+              { name: 'Home', route: 'dashboard' },
+              { name: 'Degrees', route: 'degrees.index' },
+              { name: degree.name, route: 'degree.index', params: { slug: degree.slug } },
+              { name: 'Overview' }
+            ]"
+                    />
                     <!-- Main Degree Description Section -->
                     <section class="space-y-8">
-                        <h2 class="custom-heading">
+                        <h2 class="heading-type">
                             {{
                                 __("degreeOverview.whatIs", {
                                     name: degree.name,
@@ -184,6 +146,7 @@ import StickySidebar from "@/Pages/lib/StickySidebar.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link } from "@inertiajs/vue3";
 import BackToTop from "@/Components/helpers/BackToTop.vue";
+import Breadcrumbs from '@/Components/helpers/Breadcrumbs.vue'
 
 defineProps({
     degree: {
@@ -207,22 +170,6 @@ defineProps({
 
 <style scoped>
 /* Use the same styles as in the OverView.vue file */
+@import '/public/css/items_description.css';
 
-ul.list-custom {
-    list-style: none;
-    padding-left: 1.5rem;
-}
-
-ul.list-custom li {
-    position: relative;
-    padding-left: 2rem;
-}
-
-ul.list-custom li::before {
-    content: "•";
-    position: absolute;
-    left: 0;
-    font-size: 2.1rem;
-    color: #a36fb2;
-}
 </style>

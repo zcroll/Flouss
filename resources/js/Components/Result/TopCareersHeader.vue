@@ -5,6 +5,7 @@
         {{ __('results.top_careers') }}
       </h2>
     </div>
+    
     <span class="flex gap-2">
       <button class="Button DashboardPage__button DashboardPage__button--share">
         <span class="Button-icon">
@@ -20,9 +21,9 @@
             </g>
           </svg>
         </span>
-        <span class="DashboardPage__button__copy">{{ __('results.share') }}</span>
+        <span v-if="!isMobile" class="DashboardPage__button__copy">{{ __('results.share') }}</span>
       </button>
-      <Link href="/jobs/" class="Button DashboardPage__button DashboardPage__button--share">
+      <Link v-if="!isMobile" href="/jobs/" class="Button DashboardPage__button DashboardPage__button--share">
         <span>{{ __('results.View_All_careers') }}</span>
       </Link>
     </span>
@@ -31,4 +32,19 @@
 
 <script setup>
 import { Link } from '@inertiajs/vue3';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
+
+let isMobile = ref(window.innerWidth <= 410);
+
+onMounted(() => {
+  window.addEventListener('resize', () => {
+    isMobile.value = window.innerWidth <= 410;
+  });
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', () => {
+    isMobile.value = window.innerWidth <= 410;
+  });
+});
 </script>

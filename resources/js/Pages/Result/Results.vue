@@ -1,34 +1,62 @@
 <template>
   <AppLayout title="Results">
-    <div class="DashboardPage">
-      <section class="section">
-        <Folder :archetype="Archetype" :archetype-jobs="ArchetypeJobs" :archetype-discovery="archetypeDiscovery"
-          :user-id="userId" />
-      </section>
+    <div class="min-h-screen">
+      <!-- Hero Section with Archetype -->
+      <div class="relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <Folder 
+            :archetype="Archetype" 
+            :archetype-jobs="ArchetypeJobs" 
+            :archetype-discovery="archetypeDiscovery"
+            :user-id="userId" 
+            class="shadow-xl rounded-2xl"
+          />
+        </div>
+      </div>
 
-      <section class="section">
-        <TopCareersHeader />
-        <CareersList :displayed-jobs="displayedJobs" :show-all-jobs="showAllJobs"
-          :has-more-jobs="jobs && jobs.length > displayedJobs.length" @select-job="selectedJob = $event"
-          @toggle-show-more="showAllJobs = true" />
-      </section>
-
-      <section class="section" v-if="!hasGivenFeedback">
-        <svg class="absolute inset-0 w-full h-full -z-10" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <path d="M0,50 a1,1 0 0,0 100,0" fill="#f3f4f6"/>
-        </svg>
-        <!-- Feedback Section -->
-        <Feedback :feedback="form.feedback" :rating="form.rating" :errors="form.errors"
-          :processing="form.processing" @update:feedback="form.feedback = $event"
-          @update:rating="form.rating = $event" @submit="submitFeedback" />
-      </section>
-
-      <section class="section">
-        <DataShare />
-      </section>
+      <!-- Careers Section -->
+      <div class="relative">
+        <!-- Decorative background elements -->
 
 
-    </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div class="relative">
+            <TopCareersHeader />
+            <CareersList 
+              :displayed-jobs="displayedJobs" 
+              :show-all-jobs="showAllJobs"
+              :has-more-jobs="jobs && jobs.length > displayedJobs.length" 
+              @select-job="selectedJob = $event"
+              @toggle-show-more="showAllJobs = true" 
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Feedback Section -->
+      <!-- <div v-if="!hasGivenFeedback" class="relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div class="rounded-3xl shadow-lg">
+            <Feedback 
+              :feedback="form.feedback" 
+              :rating="form.rating" 
+              :errors="form.errors"
+              :processing="form.processing" 
+              @update:feedback="form.feedback = $event"
+              @update:rating="form.rating = $event" 
+              @submit="submitFeedback" 
+            />
+          </div>
+        </div>
+      </div> -->
+
+      <!-- Data Share Section -->
+      <!-- <div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <DataShare class="rounded-3xl shadow-sm p-8" />
+        </div>
+      </div> -->
+    </div> 
   </AppLayout>
 </template>
 
@@ -93,3 +121,4 @@ const submitFeedback = () => {
   });
 };
 </script>
+

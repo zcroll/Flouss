@@ -15,7 +15,7 @@ const classes = computed(() => {
 
 // Define text classes that will change based on the `active` prop
 const textClasses = computed(() => {
-    return props.active ? ' text-[#db492b] text-[16px]' : ' text-[16px] text-stone-300 hover:text-[#db492b]' ;
+    return props.active ? ' text-[#db492b] text-[14px]' : ' text-[14px] text-stone-300 hover:text-[#db492b]' ;
 });
 </script>
 

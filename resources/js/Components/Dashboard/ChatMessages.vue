@@ -30,7 +30,7 @@
             <div class="flex items-center justify-end space-x-2 mb-1">
               <span class="text-stone-500 text-xs">{{ message.timestamp }}</span>
               <span class="text-stone-500 text-xs">•</span>
-              <span class="text-stone-300 text-sm font-medium">You</span>
+              <span class="text-stone-300 text-sm font-medium">{{ __('dashboard.you') }}</span>
             </div>
             <div class="bg-violet-500/10 rounded-2xl p-4 border border-violet-500/20 break-words">
               <p class="text-sm text-stone-300 leading-relaxed whitespace-pre-wrap">{{ message.content }}</p>

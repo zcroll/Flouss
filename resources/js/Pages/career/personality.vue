@@ -16,24 +16,17 @@
         :isFavorited="occupation.is_favorited"
       >
       <div class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white shadow-2xl">
-        <nav class="flex items-center space-x-2 text-sm text-gray-600 mb-8">
-                <Link :href="route('dashboard')" class="text-[#53777a] font-medium border-b-2 border-[#53777a] transition-all duration-200 ease-in-out hover:text-blue-600 hover:border-blue-600">{{ __('Home') }}</Link>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                </svg>
-                <Link :href="route('jobs.index')" class="text-[#53777a] font-medium border-b-2 border-[#53777a] transition-all duration-200 ease-in-out hover:text-blue-600 hover:border-blue-600">{{ __('Jobs') }}</Link>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                </svg>
-                <Link :href="route('career', { id: occupation.slug })" class="text-[#53777a] font-medium border-b-2 border-[#53777a] transition-all duration-200 ease-in-out hover:text-blue-600 hover:border-blue-600">{{ occupation.name }}</Link>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                </svg>
-                <span class="text-gray-400 font-medium border-b-2 border-gray-400 transition-all duration-200 ease-in-out hover:text-blue-600 hover:border-blue-600">{{ __('Personality') }}</span>
-            </nav>
+        <Breadcrumbs 
+            :items="[
+                { name: 'Home', route: 'dashboard' },
+                { name: 'Jobs', route: 'jobs.index' },
+                { name: occupation.name, route: 'career', params: { id: occupation.id } },
+                { name: 'Personality' }
+            ]"
+        />
 
           <section>
-            <p class="lead text-gray-700 mb-8" tabindex="0">
+            <p class="heading-type" tabindex="0">
               {{ __('career.we_surveyed') }} {{occupation.name.toLowerCase()}}s {{ __('career.to_learn_what_personality_traits') }}
             </p>
           </section>
@@ -153,6 +146,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link } from '@inertiajs/vue3';
 import BackToTop from "@/Components/helpers/BackToTop.vue";
 import __ from '@/lang';
+import Breadcrumbs from '@/Components/helpers/Breadcrumbs.vue'
 
 const props = defineProps({
   occupation: {

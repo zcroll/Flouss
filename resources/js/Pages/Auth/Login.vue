@@ -52,7 +52,7 @@ const submit = () => {
             {{ error }}
         </div>
 
-        <form @submit.prevent="submit" class="space-y-4 sm:space-y-6 w-full max-w-sm mx-auto px-4 sm:px-0">
+        <form @submit.prevent="submit" class="space-y-4 sm:space-y-6 w-full max-w-sm mx-auto px-4 sm:px-0 bg-transparent">
             <div>
                 <InputLabel for="email" value="Email" />
                 <TextInput
@@ -68,7 +68,7 @@ const submit = () => {
             </div>
 
             <div>
-                <InputLabel for="password" value="Password" />
+                <InputLabel for="password" :value="__('auth.password')" />
                 <TextInput
                     id="password"
                     v-model="form.password"
@@ -83,16 +83,16 @@ const submit = () => {
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
                 <label class="flex items-center">
                     <Checkbox v-model:checked="form.remember" name="remember" />
-                    <span class="ms-2 text-sm text-gray-600">Remember me</span>
+                    <span class="ms-2 text-sm text-gray-600">{{ __('auth.remember_me') }}</span>
                 </label>
                 <Link v-if="canResetPassword" :href="route('password.request')" class="text-sm text-gray-800 hover:text-gray-900 font-bold">
-                    Forgot password?
+                    {{ __('auth.forgot_password') }}
                 </Link>
             </div>
 
             <div>
                 <PrimaryButton class="w-full justify-center rounded-md px-4 py-2.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Sign in
+                    {{ __('auth.log_in') }}
                 </PrimaryButton>
             </div>
         </form>
@@ -102,7 +102,7 @@ const submit = () => {
                 <div class="w-full border-t border-gray-200" />
             </div>
             <div class="relative flex justify-center text-sm font-medium leading-6">
-                <span class="bg-white px-4 sm:px-6 text-gray-900">Or continue with</span>
+                <span class=" px-4 sm:px-6 text-gray-900">{{ __('auth.or_continue_with') }}</span>
             </div>
         </div>
 
@@ -114,13 +114,15 @@ const submit = () => {
                 <path d="M5.26498 14.2949C5.02498 13.5699 4.88501 12.7999 4.88501 11.9999C4.88501 11.1999 5.01998 10.4299 5.26498 9.7049L1.275 6.60986C0.46 8.22986 0 10.0599 0 11.9999C0 13.9399 0.46 15.7699 1.28 17.3899L5.26498 14.2949Z" fill="#FBBC05" />
                 <path d="M12.0004 24.0001C15.2404 24.0001 17.9654 22.935 19.9454 21.095L16.0804 18.095C15.0054 18.82 13.6204 19.245 12.0004 19.245C8.8704 19.245 6.21537 17.135 5.2654 14.29L1.27539 17.385C3.25539 21.31 7.3104 24.0001 12.0004 24.0001Z" fill="#34A853" />
               </svg>
-              <span>Sign in with Google</span>
+              <span>{{ __('auth.sign_in_with_google') }}</span>
             </a>
         </div>
 
         <p class="mt-8 sm:mt-10 text-center text-sm text-gray-500 px-4 sm:px-0">
-            Not a member?
-            <Link :href="route('register')" class="font-semibold leading-6 text-[#db492b] hover:text-gray-900">Sign up</Link>
+            {{ __('auth.not_a_member') }}
+            <Link :href="route('register')" class="font-semibold leading-6 text-[#db492b] hover:text-gray-900">
+                {{ __('auth.sign_up') }}
+            </Link>
         </p>
     </AuthenticationCard>
 </template>

@@ -22,7 +22,7 @@
         <div class="w-full lg:w-1/3 lg:mb-0 lg:pl-8 pb-5 pt-8">
             <!-- Mobile Navigation Bar (Fixed Bottom) -->
             <div v-if="isSmallScreen"
-                 class="fixed bottom-0 left-0 right-0 bg-[#353535] text-white shadow-lg z-50 rounded-t-2xl">
+                 class="fixed top-0 left-0 right-0 bg-[#353535] text-white shadow-lg z-50 rounded-b-2xl">
                 <div class="flex items-center justify-between px-3 py-2 border-b border-gray-700">
                     <img :src="image" alt="Icon" class="w-8 h-8 rounded-full"/>
 
@@ -43,8 +43,8 @@
                             :key="index"
                             :href="link.url"
                             :class="{
-                                'bg-amber-500': $page.url === link.url,
-                                'bg-stone-700': $page.url !== link.url
+                                'bg-slate-950 hover:bg-slate-900 active:bg-slate-900': $page.url === link.url,
+                                'bg-stone-700 hover:bg-slate-900 active:bg-slate-900': $page.url !== link.url
                             }"
                             class="flex-1 min-w-[60px] flex flex-col items-center justify-center px-1 py-1.5 rounded-xl text-sm font-medium transition-all mx-0.5"
                         >
@@ -61,50 +61,44 @@
             </div>
 
             <!-- Desktop Sticky Sidebar -->
-            <div v-else
-                 class="sticky top-[100px] text-white rounded-2xl p-6 overflow-hidden bg-[#353535]">
-                <div class="relative z-10">
-                    <div class="rounded-3xl">
-                        <div class="flex items-center mb-10">
-                            <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center mr-4">
-                                <img :src="image" alt="Icon" class="w-16 h-16 rounded-full"/>
-                            </div>
-
-                            <div class="flex flex-col">
-                                <h3 class="text-2xl font-bold text-white">
-                                    {{ title }}
-                                </h3>
-                                <FavoriteButton
-                                    :model-id="id"
-                                    :model-type="type"
-                                    :initial-is-favorited="isFavorited"
-                                    :show-label="true"
-                                    class="favorite-button"
-                                    :key="id"
-                                />
-                            </div>
+            <div v-else class="sticky top-[100px] bg-card text-card-foreground rounded-xl border shadow-sm">
+                <div class="p-6 relative z-10">
+                    <div class="flex items-center space-x-4 pb-6 border-b">
+                        <div class="h-16 w-16 overflow-hidden rounded-2xl ring-2 ring-muted">
+                            <img :src="image" alt="Icon" class="h-full w-full object-cover"/>
                         </div>
-
-                        <ul class="space-y-4">
-                            <li v-for="(link, index) in links" :key="index">
-                                <Link
-                                    :href="link.url"
-                                    :class="{
-                                        'bg-amber-500': $page.url === link.url,
-                                        'hover:bg-stone-700': $page.url !== link.url
-                                    }"
-                                    class="block py-2 px-4 rounded-lg transition-colors duration-200"
-                                >
-                                    <span class="text-xl font-semibold">
-                                        {{ __(
-                                            `stickybar.${link.text.toLowerCase().replace(" ", "_")}`
-                                        ) }}
-                                    </span>
-                                </Link>
-                            </li>
-                        </ul>
+                        <h3 class="text-lg font-semibold leading-none truncate flex-1">
+                            {{ title }}
+                        </h3>
+                        <FavoriteButton
+                            :model-id="id"
+                            :model-type="type"
+                            :initial-is-favorited="isFavorited"
+                            :show-label="true"
+                            :key="id"
+                        />
                     </div>
+
+
+                    <nav class="mt-6">
+                        <div class="space-y-1">
+                            <Link
+                                v-for="(link, index) in links"
+                                :key="index"
+                                :href="link.url"
+                                :class="[
+                                    'w-full flex items-center py-2 px-3 text-sm font-medium rounded-lg transition-colors',
+                                    $page.url === link.url 
+                                        ? 'bg-primary text-primary-foreground hover:bg-primary/90'
+                                        : 'hover:bg-muted'
+                                ]"
+                            >
+                                {{ __(`stickybar.${link.text.toLowerCase().replace(" ", "_")}`) }}
+                            </Link>
+                        </div>
+                    </nav>
                 </div>
+            
 
                 <!-- Decorative background elements -->
                 <div class="absolute top-0 left-0 w-full h-full overflow-hidden opacity-10">

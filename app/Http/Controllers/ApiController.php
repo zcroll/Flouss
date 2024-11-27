@@ -25,6 +25,32 @@ class ApiController extends Controller
             ->make();
     }
 
+    public function getWelcomeMessage()
+    {
+        $user = Auth::user();
+        return app()->getLocale() === 'fr' ? 
+            "👋 Bonjour {$user->name}! Comment puis-je vous aider aujourd'hui avec votre développement de carrière?" :
+            "👋 Hello {$user->name}! How can I help you with your career development today?";
+    }
+
+    public function getInitialMessage()
+    {
+        $userId = Auth::id();
+        $welcomeMessage = $this->getWelcomeMessage();
+        
+        // Store welcome message in chat history
+        ChatHistory::create([
+            'user_id' => $userId,
+            'message' => 'SYSTEM_WELCOME',
+            'response' => $welcomeMessage
+        ]);
+
+        return response()->json([
+            'aiMessage' => $welcomeMessage,
+            'success' => true,
+        ]);
+    }
+
     public function sendMessage(Request $request)
     {
         Log::info('Received request:', $request->all());
@@ -35,9 +61,29 @@ class ApiController extends Controller
 
         // Get user's assessment results for context
         $userId = Auth::id();
+        $user = Auth::user();
         $firstScore = ResultResource::collection(Result::with('user')->where('user_id', $userId)->latest()->get())->first();
 
-        $systemContext = 'You are a helpful AI assistant focused on career guidance and professional development. You have access to the user\'s assessment results, personality archetype, and career matches. Use this information to provide personalized advice and insights.
+        // Check if user has taken the personality test
+        $noTestMessage = app()->getLocale() === 'fr' ? 
+            "Je remarque que vous n'avez pas encore passé notre test de personnalité. Pour vous donner des conseils plus personnalisés sur votre carrière, je vous encourage vivement à prendre quelques minutes pour compléter le test. Cela me permettra de mieux comprendre vos forces et vos préférences professionnelles. En attendant, je ferai de mon mieux pour vous aider avec des conseils généraux. Souhaitez-vous que je vous explique comment accéder au test?" :
+            "I notice you haven't taken our personality test yet. To provide you with more personalized career advice, I strongly encourage you to take a few minutes to complete the test. This will help me better understand your strengths and career preferences. In the meantime, I'll do my best to help you with general advice. Would you like me to explain how to access the test?";
+
+        $systemContext = app()->getLocale() === 'fr' ? 
+            "Bonjour {$user->name}! Je suis votre assistant IA personnel axé sur l'orientation professionnelle et le développement professionnel. " . (!$firstScore ? $noTestMessage : "Je suis là pour vous aider avec des conseils personnalisés basés sur vos résultats d'évaluation, votre archétype de personnalité et vos correspondances professionnelles.") . "
+
+Formatez vos réponses de manière claire et organisée en utilisant des émojis au début de chaque point. Présentez les informations sur la carrière comme dans cet exemple:
+
+🧁 Boulanger
+Apprendre les techniques de boulangerie à travers des cours
+Pratiquer des recettes à la maison
+Rejoindre des communautés de boulangers
+
+comme ceci.
+
+Gardez les explications simples et directes, en utilisant des émojis pour séparer visuellement les sujets. Évitez d'utiliser des caractères de formatage spéciaux comme #, **, ou -. Chaque point doit être sur une nouvelle ligne avec juste l'emoji au début." :
+            
+            "Hello {$user->name}! I'm your personal AI assistant focused on career guidance and professional development. " . (!$firstScore ? $noTestMessage : "I'm here to help you with personalized advice based on your assessment results, personality archetype, and career matches.") . "
 
 Format your responses in a clean, organized way using emojis at the start of each point. Present career information like this example:
 
@@ -48,15 +94,7 @@ Join baking communities
 
 like this.
 
-Keep explanations simple and direct, using emojis to visually separate topics. Avoid using any special formatting characters like #, **, or -. Each point should be on a new line with just the emoji at the start.
-
-When giving advice:
-- Consider their personality archetype and traits
-- Reference their top career matches
-- Provide actionable steps based on their profile
-- Tailor suggestions to their strengths
-
-Show all the data provided in the context and use it to personalize your responses.';
+Keep explanations simple and direct, using emojis to visually separate topics. Avoid using any special formatting characters like #, **, or -. Each point should be on a new line with just the emoji at the start.";
 
         if ($firstScore) {
             $archetype = $firstScore->Archetype ?? null;
@@ -77,15 +115,21 @@ Show all the data provided in the context and use it to personalize your respons
             $Archetype = DB::table('persona')->where('name', $archetype[0] ?? '')->first();
 
             if (!empty($jobMatches)) {
-                $systemContext .= " Based on their assessment, their top career matches include: " . implode(", ", $jobMatches) . ".";
+                $systemContext .= app()->getLocale() === 'fr' ? 
+                    " Selon leur évaluation, leurs meilleures correspondances professionnelles incluent: " . implode(", ", $jobMatches) . "." :
+                    " Based on their assessment, their top career matches include: " . implode(", ", $jobMatches) . ".";
             }
 
             if ($Archetype) {
-                $systemContext .= " Their personality archetype is {$Archetype->name}.";
+                $systemContext .= app()->getLocale() === 'fr' ? 
+                    " Leur archétype de personnalité est {$Archetype->name}." :
+                    " Their personality archetype is {$Archetype->name}.";
 
                 if (!empty($Archetype->scales)) {
                     $scales = json_decode($Archetype->scales, true);
-                    $systemContext .= " Their key personality traits are:";
+                    $systemContext .= app()->getLocale() === 'fr' ? 
+                        " Leurs principaux traits de personnalité sont:" :
+                        " Their key personality traits are:";
                     foreach ($scales as $scale) {
                         $systemContext .= " {$scale['trait']}: {$scale['score']}%,";
                     }
@@ -99,12 +143,14 @@ Show all the data provided in the context and use it to personalize your respons
         }
 
         try {
+            $messages = [
+                ['role' => 'system', 'content' => $systemContext],
+                ['role' => 'user', 'content' => $validated['message']],
+            ];
+
             $response = $this->client->chat()->create([
                 'model' => 'gpt-4o-mini',
-                'messages' => [
-                    ['role' => 'system', 'content' => $systemContext],
-                    ['role' => 'user', 'content' => $validated['message']],
-                ],
+                'messages' => $messages,
             ]);
 
             Log::info('OpenAI response:', (array) $response);
@@ -127,7 +173,9 @@ Show all the data provided in the context and use it to personalize your respons
             Log::error('OpenAI request failed:', ['error' => $e->getMessage()]);
 
             return response()->json([
-                'aiMessage' => 'Failed to process your request. Please try again.',
+                'aiMessage' => app()->getLocale() === 'fr' ? 
+                    'Échec du traitement de votre demande. Veuillez réessayer.' :
+                    'Failed to process your request. Please try again.',
                 'success' => false,
             ], 500);
         }

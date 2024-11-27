@@ -151,4 +151,8 @@ Route::get('/ruller', function () {
 
 Route::get('/api',[ApiController::class,'index']);
 
+Route::get('/test/archetype-themes', function () {
+    return Inertia::render('Test/ArchetypeThemeTest');
+})->middleware(['auth']);
+
 

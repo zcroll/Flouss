@@ -21,20 +21,17 @@
             <div class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white shadow-2xl">
 
 
-              <nav class="flex items-center space-x-2 text-sm mb-8 font-['aktiv-grotesk','Helvetica_Neue',Helvetica,Arial,sans-serif]">
-                <Link :href="route('dashboard')" class="text-[#53777a] font-medium border-b-2 border-[#53777a] transition-all duration-200 ease-in-out hover:text-blue-600 hover:border-blue-600">{{ __('Home') }}</Link>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                </svg>
-                <Link :href="route('jobs.index')" class="text-[#53777a] font-medium border-b-2 border-[#53777a] transition-all duration-200 ease-in-out hover:text-blue-600 hover:border-blue-600">{{ __('Jobs') }}</Link>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                </svg>
-                <span class="text-gray-400 font-medium border-b-2 border-gray-400 transition-all duration-200 ease-in-out hover:text-blue-600 hover:border-blue-600">{{ occupation.name }}</span>
-            </nav>
+                <Breadcrumbs 
+            :items="[
+              { name: 'Home', route: 'dashboard' },
+              { name: 'Jobs', route: 'jobs.index' },
+              { name: occupation.name, route: 'career', params: { id: occupation.id } },
+              { name: 'Overview' }
+            ]"
+          />
                 <!-- Main Role Description Section -->
                 <section class="space-y-8">
-                    <h2 class="custom-heading">{{ __('career.what_is_a') }} {{occupation.name}} ?</h2>
+                    <h2 class="heading-type">{{ __('career.what_is_a') }} {{occupation.name}} ?</h2>
 
                     <div v-for="(info, index) in jobInfoDetail" :key="info.id" class="space-y-6">
                         <div class="space-y-4">
@@ -131,6 +128,7 @@ import StickySidebar from "@/Pages/lib/StickySidebar.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link } from '@inertiajs/vue3';
 import BackToTop from "@/Components/helpers/BackToTop.vue";
+import Breadcrumbs from '@/Components/helpers/Breadcrumbs.vue'
 defineProps({
     occupation: {
         type: Object,
@@ -161,46 +159,5 @@ const jobInfo = computed(() => props.jobInfoDetail.description);
 
 <style scoped>
 /* add your styles here */
-body {
-    font-family: 'aktiv-grotesk-std', 'aktiv-grotesk', 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
-    font-style: normal;
-    font-weight: normal;
-
-    margin: 0;
-    padding: 0;
-}
-
-
-
-/* Custom list-style for larger bullets */
-ul.list-custom {
-    list-style: none; /* Remove default bullets */
-    padding-left: 1.5rem; /* Adjust padding for custom bullets */
-}
-
-ul.list-custom li {
-    position: relative;
-    padding-left: 2rem; /* Space between bullet and text */
-}
-
-ul.list-custom li::before {
-    content: '•'; /* Bullet character */
-    position: absolute;
-    left: 0;
-    font-size: 2.1rem; /* Adjust size of the bullet */
-    color: #a36fb2; /* Adjust bullet color */
-}
-
-.trait-type{
-    box-sizing: border-box;
-    background-color: transparent;
-    text-decoration: none;
-    transition:
-        color 0.2s ease-in-out, border-bottom 0.2s ease-in-out;
-    border-bottom: 0px;
-    color: rgb(36, 36, 36);
-    font-weight: 300;
-    font-family:
-        aktiv-grotesk, "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
+@import '/public/css/items_description.css';
 </style>

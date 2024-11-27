@@ -21,9 +21,9 @@ return [
     'Organization' => 'Organisations',
     'Career_Test' => 'Test de Carrière',
     'take_test' => 'Passez le test gratuit',
-    'splash_callout' => 'Dites bonjour à Gen.Z, la principale plateforme d\'avancement académique et professionnel au monde.',
-    'unlock_future' => 'Déverrouillez le futur qui est en vous',
-    'get_started' => 'Commencer',
+    'splash_callout' => 'Dites Bonjour à Gen.Z, la principale plateforme d\'avancement académique et professionnel au Maroc.',
+    'unlock_future' => 'Une Orientation éclairée... Futur Brillant !',
+    'get_started' => 'Commencer à explorer',
     'learn_more' => 'En savoir plus sur Gen.Z',
 ];
                     

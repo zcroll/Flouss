@@ -223,12 +223,19 @@ def main():
         if not all(isinstance(score, int) and 1 <= score <= 5 
                   for score in interest_scores.values()):
             raise ValueError("Invalid interest scores. Scores must be integers between 1 and 5")
+        
+
         # Get database config from Laravel .env
         db_config = {
+            # 'host': os.getenv('DB_HOST', '127.0.0.1'),
+            # 'user': os.getenv('DB_USERNAME', 'u723210868_gennzsite'),
+            # 'password': os.getenv('DB_PASSWORD', 'Gennzsite1'),
+            # 'database': os.getenv('DB_DATABASE', 'u723210868_gennzsite')
+
             'host': os.getenv('DB_HOST', '127.0.0.1'),
-            'user': os.getenv('DB_USERNAME', 'u723210868_gennzsite'),
-            'password': os.getenv('DB_PASSWORD', 'Gennzsite1'),
-            'database': os.getenv('DB_DATABASE', 'u723210868_gennzsite')
+            'user': os.getenv('DB_USERNAME', 'root'),
+            'password': os.getenv('DB_PASSWORD', ''),
+            'database': os.getenv('DB_DATABASE', 'theproject2')
         }
 
 

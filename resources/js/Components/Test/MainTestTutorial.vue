@@ -54,7 +54,7 @@
           </div>
           <div v-if="currentStep === 2" class="space-y-4">
             <div class="text-lg">{{ __('test.example_question') }}</div>
-            <div class="flex justify-between text-zinc-400">
+            <div class="flex justify-between text-zinc-400 text-xs sm:text-base">
               <span>{{ __('test.hate_it') }}</span>
               <span>{{ __('test.dislike_it') }}</span>
               <span>{{ __('test.neutral') }}</span>
@@ -63,20 +63,19 @@
             </div>
           </div>
         </div>
-
-        <div class="flex justify-center gap-4 mt-16">
+        <div class="flex justify-center gap-4 mt-16 mb-8 sm:mb-0">
           <div class="flex" :class="{ 'justify-between w-full': currentStep > 0, 'justify-center': currentStep === 0 }">
             <button 
               v-if="currentStep > 0"
               @click="handlePrevious"
-              class="px-8 py-3 rounded-lg font-light text-lg transition-colors bg-zinc-300 text-zinc-900 hover:bg-zinc-950 hover:text-zinc-50"
+              class="px-4 sm:px-8 py-2 sm:py-3 rounded-lg font-light text-base sm:text-lg transition-colors bg-zinc-300 text-zinc-900 hover:bg-zinc-950 hover:text-zinc-50"
             >
               {{ __('test.back') }}
             </button>
             
             <button 
               @click="handleNext"
-              class="px-8 py-3 rounded-lg font-light text-lg transition-colors bg-[#C35B8A] text-white hover:bg-[#B04B7A]"
+              class="px-4 sm:px-8 py-2 sm:py-3 rounded-lg font-light text-base sm:text-lg transition-colors bg-[#C35B8A] text-white hover:bg-[#B04B7A]"
             >
               {{ currentStep === tutorialSteps.length - 1 ? __('test.start_assessment') : __('test.next') }}
             </button>

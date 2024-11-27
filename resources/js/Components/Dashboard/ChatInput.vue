@@ -32,7 +32,7 @@
                :class="{ 'opacity-0 scale-95': !showQuestions, 'opacity-100 scale-100': showQuestions }">
             <div class="p-4">
               <div class="flex justify-between items-center mb-4">
-                <h3 class="text-stone-300 font-medium">Suggested Questions</h3>
+                <h3 class="text-stone-300 font-medium">{{ __('dashboard.suggested_questions') }}</h3>
                 <button @click="closeQuestions" type="button" class="p-1 hover:bg-stone-800 rounded-lg transition-colors">
                   <svg class="w-5 h-5 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />

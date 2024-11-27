@@ -56,26 +56,31 @@
                 </div>
               </div>
               <div class="Discovery__sidebar">
-                <div>
+                <div v-if="screenWidth > 768">
                   <img
                     :src="'https://res.cloudinary.com/hnpb47ejt/image/upload/q_auto,f_auto,w_480/v1568404399/ux8i7elvayqifan41pj8'"
                     alt="Gen.Z Assessment" class="">
                   <div class="Discovery__sidebar__content">
-                    <h3 class="">Your magic 🤩💫</h3>
                     <!-- <p class="">Are you {{ ArchetypeData.name.charAt(0).toLowerCase() === 'a' || ArchetypeData.name.charAt(0).toLowerCase() === 'e' || ArchetypeData.name.charAt(0).toLowerCase() === 'i' || ArchetypeData.name.charAt(0).toLowerCase() === 'o' || ArchetypeData.name.charAt(0).toLowerCase() === 'u' ? 'an' : 'a' }} {{ ArchetypeData.name }} {{ArchetypeData.personality_paragraph}}.</p> -->
 
                   </div>
                 </div>
               </div>
-              <div class="Discovery__related">
-                <h2 class="Discovery__related__subheading">{{ __("results.Insights") }}</h2>
-                <div v-for="(insights, category) in Insights" :key="category">
-                  <h3 class="custom-h3">{{ formatCategory(category) }}</h3>
-                  <ul class="Discovery__related__description">
-                    <li v-for="(insight, index) in insights" :key="index">
-                      <span class="custom-li">{{ insight }}</span>
-                    </li>
-                  </ul>
+              <div class="Discovery__insights">
+                <h2 class="Discovery__insights-title">{{ __("results.Insights") }}</h2>
+                <div v-for="(insights, category) in Insights" 
+                     :key="category" 
+                     class="Discovery__insights-category">
+                    <h3 class="Discovery__insights-category-title">
+                        {{ formatCategory(category) }}
+                    </h3>
+                    <ul class="Discovery__insights-list">
+                        <li v-for="(insight, index) in insights" 
+                            :key="index" 
+                            class="Discovery__insights-item">
+                            {{ insight }}
+                        </li>
+                    </ul>
                 </div>
               </div>
             </section>
@@ -117,6 +122,6 @@ export default {
 </script>
 
 <style scoped>
-@import 'public/css/personnalityRepport.css';
+@import '/public/css/personnalityRepport.css';
 </style>
 

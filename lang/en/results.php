@@ -29,4 +29,5 @@ return [
     'more_social_than' => 'In fact, you\'re more social than 93% of the population.',
     'learn_what_makes_unique' => 'Learn what makes you unique and how you compare to the rest of the world.',
     'personality_report' => 'Personality Report',
+    'see_more' => 'See More',
 ];

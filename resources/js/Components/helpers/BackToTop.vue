@@ -3,7 +3,7 @@
         src="/icons8-arrow-100.png"
         alt="Back to Top"
         class="back-to-top"
-        v-if="showBackToTop"
+        v-if="showBackToTop && !isMobile"
         @click="scrollToTop"
     />
 </template>
@@ -12,6 +12,7 @@
 import { ref, onMounted, onUnmounted } from "vue";
 
 const showBackToTop = ref(false);
+const isMobile = ref(false);
 
 const handleScroll = () => {
     showBackToTop.value = window.pageYOffset > 300;
@@ -21,12 +22,19 @@ const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
+const checkMobile = () => {
+    isMobile.value = window.innerWidth < 768;
+};
+
 onMounted(() => {
     window.addEventListener("scroll", handleScroll);
+    window.addEventListener("resize", checkMobile);
+    checkMobile(); // Check on initial load
 });
 
 onUnmounted(() => {
     window.removeEventListener("scroll", handleScroll);
+    window.removeEventListener("resize", checkMobile);
 });
 </script>
 

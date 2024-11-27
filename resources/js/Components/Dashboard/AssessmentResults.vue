@@ -1,7 +1,7 @@
 <template>
   <div v-if="hasResult" class="lg:col-span-2 bg-white rounded-xl p-6 border border-gray-200">
-    <div class="flex justify-between items-center mb-6">
-      <h2 class="text-2xl font-semibold text-gray-900">{{ __('dashboard.your_assessment_results') }}</h2>
+    <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+      <h2 class="text-xl sm:text-2xl font-semibold text-gray-900">{{ __('dashboard.your_assessment_results') }}</h2>
       <Link href="/results"
         class="px-3 py-1.5 text-sm bg-gray-900 hover:bg-gray-700 text-white rounded-xl transition-colors duration-200 w-auto text-center">
         {{ __('dashboard.view_full_results') }}
@@ -34,7 +34,7 @@
               <svg class="w-3 h-3 sm:w-4 sm:h-4 text-[#E05B42]" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0114 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
               </svg>
-              <span class="text-gray-600 text-xs sm:text-sm font-medium">Personality Type</span>
+              <span class="text-gray-600 text-xs sm:text-sm font-medium">{{ __('dashboard.personality_type') }}</span>
             </div>
             <p class="text-sm sm:text-base text-gray-700 font-bold leading-relaxed tracking-wide">
               {{ archetype?.rationale || 'No rationale available' }}

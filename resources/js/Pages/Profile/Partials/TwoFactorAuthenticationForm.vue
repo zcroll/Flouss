@@ -115,25 +115,25 @@ const disableTwoFactorAuthentication = () => {
         </template>
 
         <template #content>
-            <h3 v-if="twoFactorEnabled && ! confirming" class="text-lg font-medium text-stone-300">
+            <h3 v-if="twoFactorEnabled && ! confirming" class="text-lg font-medium text-zinc-300">
                 {{ __('profile.two_factor_enabled') }}
             </h3>
 
-            <h3 v-else-if="twoFactorEnabled && confirming" class="text-lg font-medium text-stone-300">
+            <h3 v-else-if="twoFactorEnabled && confirming" class="text-lg font-medium text-zinc-300">
                 {{ __('profile.finish_enabling_2fa') }}
             </h3>
 
-            <h3 v-else class="text-lg font-medium text-stone-300">
+            <h3 v-else class="text-lg font-medium text-zinc-300">
                 {{ __('profile.not_enabled_2fa') }}
             </h3>
 
-            <div class="mt-3 max-w-xl text-sm text-stone-300">
+            <div class="mt-3 max-w-xl text-sm text-zinc-300">
                 {{ __('profile.two_factor_explanation') }}
             </div>
 
             <div v-if="twoFactorEnabled">
                 <div v-if="qrCode">
-                    <div class="mt-4 max-w-xl text-sm text-stone-300">
+                    <div class="mt-4 max-w-xl text-sm text-zinc-300">
                         <p v-if="confirming" class="font-semibold">
                             {{ __('profile.finish_enabling_two_factor_instructions') }}
                         </p>
@@ -143,30 +143,30 @@ const disableTwoFactorAuthentication = () => {
                         </p>
                     </div>
 
-                    <div class="mt-4 p-2 inline-block bg-stone-800" v-html="qrCode" />
+                    <div class="mt-4 p-2 inline-block bg-zinc-800" v-html="qrCode" />
 
-                    <div v-if="setupKey" class="mt-4 max-w-xl text-sm text-stone-300">
+                    <div v-if="setupKey" class="mt-4 max-w-xl text-sm text-zinc-300">
                         <p class="font-semibold">
                             {{ __('profile.setup_key') }}: <span v-html="setupKey"></span>
                         </p>
                     </div>
 
                     <div v-if="confirming" class="mt-4">
-                        <InputLabel for="code" :value="__('profile.code')" class="text-stone-300" />
+                        <InputLabel for="code" :value="__('profile.code')" class="text-zinc-300" />
 
                         <TextInput
                             id="code"
                             v-model="confirmationForm.code"
                             type="text"
                             name="code"
-                            class="block mt-1 w-1/2 bg-stone-700 text-stone-300"
+                            class="block mt-1 w-1/2 bg-zinc-700 text-zinc-300"
                             inputmode="numeric"
                             autofocus
                             autocomplete="one-time-code"
                             @keyup.enter="confirmTwoFactorAuthentication"
                         />
 
-                        <InputError :message="confirmationForm.errors.code" class="mt-2 text-stone-300" />
+                        <InputError :message="confirmationForm.errors.code" class="mt-2 text-zinc-300" />
                     </div>
                 </div>
 
@@ -177,7 +177,7 @@ const disableTwoFactorAuthentication = () => {
                         </p>
                     </div>
 
-                    <div class="grid gap-1 max-w-xl mt-4 px-4 py-4 font-mono text-sm bg-stone-800 text-stone-300 rounded-lg">
+                    <div class="grid gap-1 max-w-xl mt-4 px-4 py-4 font-mono text-sm bg-stone-800 text-zinc-300 rounded-lg">
                         <div v-for="code in recoveryCodes" :key="code">
                             {{ code }}
                         </div>

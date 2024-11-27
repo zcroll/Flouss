@@ -1,42 +1,107 @@
 <template>
-  <AppLayout
-    name="Jobs"
-  >
+  <AppLayout name="Jobs">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div class="flex flex-col gap-6">
-        <!-- Filter sidebar -->
+        <!-- Filter section -->
         <div class="w-full">
-          <div class="bg-white border-2 border-[#db492b]/20 rounded-2xl p-6 shadow-lg shadow-[#db492b]/5">
+          <!-- Desktop Filters -->
+          <div class="hidden sm:block bg-white border-2 border-[#db492b]/20 rounded-2xl p-6 shadow-lg shadow-[#db492b]/5">
             <div class="flex gap-4">
               <div class="flex-1">
-                <label for="search" class="block text-sm font-semibold text-gray-700 mb-1">{{ __('jobs.search') }}</label>
-                <input
-                  id="search"
-                  v-model="searchQuery"
-                  type="text"
-                  :placeholder="__('jobs.search_jobs')"
+                <label for="search-desktop" class="block text-sm font-semibold text-gray-700 mb-1">{{ __('jobs.search') }}</label>
+                <input id="search-desktop" v-model="searchQuery" type="text" :placeholder="__('jobs.search_jobs')"
                   class="w-full px-4 py-2.5 text-gray-900 placeholder-gray-500 bg-white border border-[#db492b]/20 rounded-xl shadow-sm focus:ring-2 focus:ring-[#db492b]/20 focus:border-[#db492b] transition duration-200"
-                  @input="debouncedSearch"
-                />
+                  @input="debouncedSearch" />
               </div>
 
-              <div class="flex-1 ">
+              <div class="flex-1">
                 <label class="block text-sm font-semibold text-gray-700 mb-1">{{ __('jobs.education_levels') }}</label>
-                <CustomMultiSelect
-                  v-model="selectedEducationLevels"
-                  :options="educationLevelOptions"
-                  :placeholder="__('jobs.select_education_levels')"
-  
-                />
+                <CustomMultiSelect v-model="selectedEducationLevels" :options="educationLevelOptions"
+                  :placeholder="__('jobs.select_education_levels')" />
               </div>
+
               <div class="flex items-end mb-1">
-                <button
-                  @click="resetFilters"
+                <button @click="resetFilters"
                   class="px-6 py-2.5 bg-[#db492b] text-white font-semibold rounded-xl hover:bg-[#db492b]/90 focus:ring-2 focus:ring-[#db492b]/50 focus:ring-offset-2 transition duration-200">
                   {{ __('jobs.reset_filters') }}
                 </button>
               </div>
             </div>
+          </div>
+
+          <!-- Mobile Filters -->
+          <div class="sm:hidden">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" class="w-full flex justify-between items-center">
+                  <span class="flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                            d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                    </svg>
+                    {{ __('jobs.filters') }}
+                  </span>
+                  <div class="flex items-center gap-1">
+                    <span v-if="activeFiltersCount" class="bg-[#db492b] text-white text-xs font-medium px-2 py-0.5 rounded-full">
+                      {{ activeFiltersCount }}
+                    </span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="bottom" class="h-[90vh] rounded-t-[20px]">
+                <SheetHeader>
+                  <SheetTitle class="text-lg font-semibold">{{ __('jobs.filters') }}</SheetTitle>
+                </SheetHeader>
+                <div class="mt-6 space-y-6">
+                  <!-- Search -->
+                  <div>
+                    <label for="search-mobile" class="block text-sm font-medium text-gray-700 mb-2">
+                      {{ __('jobs.search') }}
+                    </label>
+                    <input
+                      id="search-mobile"
+                      v-model="searchQuery"
+                      type="text"
+                      :placeholder="__('jobs.search_jobs')"
+                      class="w-full px-4 py-2.5 text-gray-900 placeholder-gray-500 bg-white border border-[#db492b]/20 rounded-xl shadow-sm focus:ring-2 focus:ring-[#db492b]/20 focus:border-[#db492b] transition duration-200"
+                      @input="debouncedSearch"
+                    />
+                  </div>
+
+                  <!-- Education Levels -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                      {{ __('jobs.education_levels') }}
+                    </label>
+                    <CustomMultiSelect
+                      v-model="selectedEducationLevels"
+                      :options="educationLevelOptions"
+                      :placeholder="__('jobs.select_education_levels')"
+                    />
+                  </div>
+
+                  <!-- Apply/Reset Buttons -->
+                  <div class="flex gap-3 mt-8">
+                    <Button 
+                      variant="outline" 
+                      class="flex-1"
+                      @click="resetFilters"
+                    >
+                      {{ __('jobs.reset_filters') }}
+                    </Button>
+                    <Button 
+                      class="flex-1 bg-[#db492b] hover:bg-[#db492b]/90"
+                      @click="applyFilters"
+                    >
+                      {{ __('jobs.search') }}
+                    </Button>
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
 
@@ -87,30 +152,30 @@
             only: ['jobs'],
             preserveUrl: true,
           }">
-            <div class="mt-6 text-center">
-              <div class="loading-dots">
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
+            <template #default>
+              <div class="flex justify-center py-4">
+                <div class="animate-pulse text-gray-500">
+                </div>
               </div>
-            </div>
+            </template>
           </WhenVisible>
           <BackToTop />
         </div>
       </div>
     </div>
-  </AppLayout
-    >
+  </AppLayout>
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onUnmounted } from 'vue';
+import { ref, watch, onMounted, onUnmounted, computed } from 'vue';
 import { router, Link, usePage } from '@inertiajs/vue3';
 import AppLayout from "@/Layouts/AppLayout.vue";
 import CustomMultiSelect from '@/Components/helpers/CustomMultiSelect.vue';
 import debounce from 'lodash/debounce';
-// import BackToTop from '@/Components/BackToTop.vue';
 import { WhenVisible } from '@inertiajs/vue3';
+import BackToTop from '@/Components/helpers/BackToTop.vue';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/Components/ui/sheet"
+import { Button } from "@/Components/ui/button"
 
 const props = defineProps({
   jobs: Object,
@@ -118,6 +183,8 @@ const props = defineProps({
   language: String
 });
 
+// Add showFilters ref
+const showFilters = ref(false);
 const searchQuery = ref(props.filters.q || '');
 const selectedEducationLevels = ref(props.filters.education ? props.filters.education.map(level => ({
   value: level,
@@ -138,22 +205,20 @@ const debouncedSearch = debounce(() => {
   applyFilters();
 }, 300);
 
-function formatSalary(salary) {
-  return Math.floor(salary).toFixed(2);
-}
+const jobs = ref(props.jobs);
+const page = ref(1);
+const isLoading = ref(false);
+const hasMorePages = ref(true);
 
-watch(searchQuery, (value) => {
-  debouncedSearch();
-});
-
+// Watch for language changes
 watch(() => props.language, (newLanguage, oldLanguage) => {
   if (newLanguage !== oldLanguage) {
-    // Reset filters and reload data
     searchQuery.value = "";
     selectedEducationLevels.value = [];
     selectedSort.value = "";
     page.value = 1;
     hasMorePages.value = true;
+    showFilters.value = false; // Reset filter visibility
 
     router.visit(window.location.pathname, {
       preserveState: false,
@@ -163,10 +228,10 @@ watch(() => props.language, (newLanguage, oldLanguage) => {
   }
 });
 
-const jobs = ref(props.jobs);
-const page = ref(1);
-const isLoading = ref(false);
-const hasMorePages = ref(true);
+// Watch for search query changes
+watch(searchQuery, (value) => {
+  debouncedSearch();
+});
 
 const loadMore = () => {
   if (isLoading.value || !hasMorePages.value) return;
@@ -207,6 +272,10 @@ const applyFilters = () => {
       jobs.value = usePage().props.jobs;
       page.value = 1;
       hasMorePages.value = true;
+      // Optionally close filters on mobile after applying
+      if (window.innerWidth < 640) {
+        showFilters.value = false;
+      }
     },
   });
 };
@@ -215,6 +284,7 @@ const resetFilters = () => {
   searchQuery.value = '';
   selectedEducationLevels.value = [];
   selectedSort.value = '';
+  showFilters.value = false; // Close filters panel after reset
 
   router.visit(window.location.pathname, {
     preserveState: true,
@@ -235,16 +305,24 @@ onUnmounted(() => {
 
 const handleScroll = () => {
   const scrollPosition = window.innerHeight + window.pageYOffset;
-  const triggerPosition = document.documentElement.offsetHeight - 200;
+  const triggerPosition = document.documentElement.offsetHeight - 800; // Increased trigger distance
 
   if (scrollPosition >= triggerPosition) {
     loadMore();
   }
 };
 
-watch([selectedEducationLevels, selectedSort], () => {
+// Watch for education levels changes
+watch([selectedEducationLevels], () => {
   applyFilters();
 }, { deep: true });
+
+const activeFiltersCount = computed(() => {
+  let count = 0;
+  if (searchQuery.value) count++;
+  if (selectedEducationLevels.value.length) count++;
+  return count;
+});
 </script>
 <style scoped>
 @import '/public/css/listing_page.css';

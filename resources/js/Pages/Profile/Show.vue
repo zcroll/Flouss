@@ -25,7 +25,7 @@ defineProps({
         </template>
 
         <div>
-            <div class="max-w-8xl mx-auto py-10 sm:px-6 lg:px-8 bg-stone-900">
+            <div class="max-w-8xl mx-auto py-10 sm:px-6 lg:px-8 bg-gray-950">
                 <div v-if="$page.props.jetstream.canUpdateProfileInformation">
                     <UpdateProfileInformationForm :user="$page.props.auth.user" />
 

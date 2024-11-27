@@ -6,6 +6,7 @@
       <button v-if="!showAllJobs && hasMoreJobs" 
         class="Button DashboardPage__button DashboardPage__button--careers"
         @click="$emit('toggle-show-more')">
+        {{ __("results.See_more_matches") }}
         <span class="Button-icon">
           <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down"
             class="svg-inline--fa fa-chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
@@ -14,7 +15,6 @@
             </path>
           </svg>
         </span>
-        {{ __("results.See_more_matches") }}
       </button>
     </div>
   </div>
@@ -40,3 +40,4 @@ const props = defineProps({
 
 defineEmits(['select-job', 'toggle-show-more']);
 </script> 
+

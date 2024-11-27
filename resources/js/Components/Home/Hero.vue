@@ -21,7 +21,7 @@
                 <p class="home__splash__callout__p" ref="text">{{ __('navigation.splash_callout') }}<br></p>
                 <div class="dynabutton">
                     <div class="dynabutton__embed w-embed">
-                        <Link :href="route('main-test')" class="alansbutt w-button" ref="button">{{ __('navigation.get_started') }}</Link>
+                        <Link :href="route('degrees.index')" class="alansbutt w-button" ref="button">{{ __('navigation.get_started') }}</Link>
                     </div>
                 </div>
                 <Link :href="route('Career-Test')" class="alanslink" ref="link">{{ __('navigation.learn_more') }}</Link>

@@ -16,29 +16,21 @@
         :isFavorited="occupation.is_favorited"
       >
         <div class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white shadow ">
-          <nav class="flex items-center space-x-2 text-sm mb-8 font-['aktiv-grotesk','Helvetica_Neue',Helvetica,Arial,sans-serif]">
-                <Link :href="route('dashboard')" class="text-[#53777a] font-medium border-b-2 border-[#53777a] transition-all duration-200 ease-in-out hover:text-blue-600 hover:border-blue-600">{{ __('Home') }}</Link>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                </svg>
-                <Link :href="route('jobs.index')" class="text-[#53777a] font-medium border-b-2 border-[#53777a] transition-all duration-200 ease-in-out hover:text-blue-600 hover:border-blue-600">{{ __('Jobs') }}</Link>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                </svg>
-                <Link :href="route('career', { id: occupation.slug })" class="text-[#53777a] font-medium border-b-2 border-[#53777a] transition-all duration-200 ease-in-out hover:text-blue-600 hover:border-blue-600">{{ occupation.name }}</Link>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                </svg>
-                <span class="text-gray-400 font-medium border-b-2 border-gray-400 transition-all duration-200 ease-in-out hover:text-blue-600 hover:border-blue-600">{{ __('How to Become') }}</span>
-            </nav>
-
+          <Breadcrumbs 
+            :items="[
+              { name: 'Home', route: 'dashboard' },
+              { name: 'Jobs', route: 'jobs.index' },
+              { name: occupation.name, route: 'career', params: { id: occupation.id } },
+              { name: 'How to Become' }
+            ]"
+          />
 
           <section id="step-1" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0">
 
-            <h2 class="custom-heading mb-8" itemProp="name">Steps to become a {{ occupation.name }}</h2>
+            <h2 class="heading-type pb-5" itemProp="name">Steps to become a {{ occupation.name }}</h2>
             <div v-if="howToBecome.steps && howToBecome.steps.length > 0" class="space-y-4 mb-8">
               <ul class="list-custom">
-                <li v-for="(step, index) in howToBecome.steps" :key="index" class="text-lg py-1 text-gray-700 leading-relaxed">
+                <li v-for="(step, index) in howToBecome.steps" :key="index" class="text-l text-gray-700 pt-3">
                   {{ step.title }}
                 </li>
               </ul>
@@ -50,16 +42,28 @@
 
           <section id="step-2" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0">
 
-            <h2 class="custom-heading mb-8" itemProp="name">Degrees</h2>
+            <h2 class="heading-type pb-5" itemProp="name">Degrees</h2>
             <div v-if="jobDegrees && jobDegrees.length > 0" class="space-y-4 mb-8">
               <div>
-                <li v-for="(degree, index) in jobDegrees" :key="index" class="flex border-b border-gray-200 p-5 rounded-3xl items-center space-x-4 text-lg m-5 text-gray-700 leading-relaxed">
-                  <img v-if="degree.image" :src="degree.image" :alt="degree.title" class="w-12 h-12 object-cover rounded-full">
-                  <div>
-                    <Link v-if="degree.slug" :href="route('degree.index', { slug: degree.slug })">{{ degree.title }}</Link>
-                    <span v-else>{{ degree.title }}</span>
-                  </div>
-                </li>
+                <ul class="space-y-4">
+                  <li v-for="(degree, index) in jobDegrees" :key="index" class="flex items-center space-x-4 p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow duration-200">
+                    <img v-if="degree.image" :src="degree.image" :alt="degree.title" class="w-16 h-16 object-cover rounded-lg shadow-sm">
+                    <div class="flex-1">
+                      <Link 
+                        v-if="degree.slug" 
+                        :href="route('degree.index', { slug: degree.slug })"
+                        class="text-lg font-medium text-gray-900transition-colors duration-200"
+                      >
+                        {{ degree.title }}
+                      </Link>
+                      <span v-else class="text-lg font-medium text-gray-900">{{ degree.title }}</span>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </li>
+                </ul>
+
               </div>
             </div>
             <div v-else class="space-y-4 mb-8">
@@ -71,7 +75,7 @@
 
           <section v-if="howToBecome.associations && howToBecome.associations.length > 0" id="step-4" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0">
             <span class="Tag">Step 4</span>
-            <h2 class="custom-heading mb-8" itemProp="name">Associations</h2>
+            <h2 class="heading-type pb-5" itemProp="name">Associations</h2>
             <div class="space-y-4 mb-8">
               <ul class="list-custom">
                 <li v-for="(association, index) in howToBecome.associations" :key="index" class="text-lg py-1text-gray-700 leading-relaxed">
@@ -93,6 +97,7 @@ import AppLayout from '@/Layouts/AppLayout.vue'
 import StickySidebar from '@/Pages/lib/StickySidebar.vue'
 import { Link } from '@inertiajs/vue3'
 import BackToTop from "@/Components/helpers/BackToTop.vue";
+import Breadcrumbs from '@/Components/helpers/Breadcrumbs.vue'
 
 export default defineComponent({
   components: {
@@ -100,6 +105,7 @@ export default defineComponent({
     AppLayout,
     StickySidebar,
     Link,
+    Breadcrumbs,
   },
   props: {
     occupation: Object,
@@ -111,37 +117,5 @@ export default defineComponent({
 </script>
 
 <style scoped>
-body {
-  font-family: 'aktiv-grotesk-std', 'aktiv-grotesk', 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
-}
-
-/* Custom list-style for larger bullets */
-ul.list-custom {
-  list-style: none;
-  padding-left: 1.5rem;
-}
-
-ul.list-custom li {
-  position: relative;
-  padding-left: 2rem;
-}
-
-ul.list-custom li::before {
-  content: '•';
-  position: absolute;
-  left: 0;
-  top: -10px;
-  font-size: 2.1rem;
-  color: #a36fb2;
-}
-
-.trait-type {
-  background-color: transparent;
-  text-decoration: none;
-  transition: color 0.2s ease-in-out, border-bottom 0.2s ease-in-out;
-  border-bottom: 0px;
-  color: rgb(36, 36, 36);
-  font-weight: 300;
-  font-family: aktiv-grotesk, "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
+@import '/public/css/items_description.css';
 </style>

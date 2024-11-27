@@ -357,7 +357,6 @@ html[data-w-dynpage] [data-w-cloak] {
 }
 h1,
 h2,
-h3,
 h4,
 h5,
 h6 {
@@ -374,11 +373,7 @@ h2 {
   font-size: 32px;
   line-height: 36px;
 }
-h3 {
-  margin-top: 20px;
-  font-size: 24px;
-  line-height: 30px;
-}
+
 h4 {
   margin-top: 10px;
   font-size: 18px;
@@ -393,10 +388,6 @@ h6 {
   margin-top: 10px;
   font-size: 12px;
   line-height: 18px;
-}
-p {
-  margin-top: 0;
-  margin-bottom: 10px;
 }
 blockquote {
   border-left: 5px solid #e2e2e2;
@@ -3082,7 +3073,7 @@ textarea.w-select {
 }
 .home__splash__image__img {
   z-index: 2;
-  width: 70%;
+  width: 40%;
   max-width: none;
   margin-left: 25vw;
   position: relative;
@@ -4808,44 +4799,7 @@ textarea.w-select {
 .ctablock__bullet {
   display: inline-block;
 }
-.lrgrid {
-  padding-top: 100px;
-  padding-bottom: 50px;
-  position: relative;
-}
-.lrgrid.discordwhat--reverse {
-  background-image: url(https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/5f23528cd1047139867f1f1f_Mask%20Group%20\(
-          21\
-      ).png);
-  background-position: 100% 100%;
-  background-repeat: no-repeat;
-  padding-top: 20px;
-  padding-bottom: 20px;
-}
-.lrgrid.discordwhat--reverse._3 {
-  background-image: url(https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/5f2352cba199f838bf11e745_Mask%20Group%20\(
-          22\
-      ).png);
-  background-position: 100% 100%;
-  padding-top: 20px;
-  padding-bottom: 20px;
-}
-.lrgrid.discordwhat--forward._1 {
-  background-image: url(https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/5f2352755c771354e880537a_Mask%20Group%20\(
-          20\
-      ).png);
-  background-position: 0 100%;
-  background-repeat: no-repeat;
-  background-size: auto 100%;
-  padding-top: 20px;
-  padding-bottom: 20px;
-}
-.lrgrid.discordwhat--forward._4 {
-  background-image: url(https://uploads-ssl.webflow.com/5ce8520e4bc6885dbf33246c/5f20b464e8240e8bf957f1b5_Mask%20Group%20\(
-          11\
-      ).png);
-  padding-top: 20px;
-}
+
 .lrgrid__grid {
   min-height: 80vh;
   display: flex;
@@ -5832,6 +5786,7 @@ textarea.w-select {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      margin-left: 10%;
   }
   .home__splash__image__img {
       width: 35%;

@@ -96,7 +96,7 @@ const clearPhotoFileInput = () => {
                     @change="updatePhotoPreview"
                 >
 
-                <label class="block font-medium text-sm text-stone-300" for="photo">
+                <label class="block font-medium text-sm text-slate-300" for="photo">
                     {{ __('profile.photo') }}
                 </label>
 
@@ -131,12 +131,12 @@ const clearPhotoFileInput = () => {
 
             <!-- Name -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="name" :value="__('profile.name')" class="text-stone-300" />
+                <InputLabel for="name" :value="__('profile.name')" class="text-slate-100" />
                 <TextInput
                     id="name"
                     v-model="form.name"
                     type="text"
-                    class="mt-1 block w-full bg-stone-700 text-stone-300"
+                    class="mt-1 block w-full bg-zinc-700 text-slate-100"
                     autocomplete="name"
                 />
                 <InputError :message="form.errors.name" class="mt-2" />
@@ -144,19 +144,19 @@ const clearPhotoFileInput = () => {
 
             <!-- Email -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="email" :value="__('profile.email')" class="text-stone-300" />
+                <InputLabel for="email" :value="__('profile.email')" class="text-slate-100" />
                 <TextInput
                     id="email"
                     v-model="form.email"
                     type="email"
-                    class="mt-1 block w-full bg-stone-700 text-stone-300"
+                    class="mt-1 block w-full bg-zinc-700 text-slate-100"
                 />
                 <InputError :message="form.errors.email" class="mt-2" />
             </div>
         </template>
 
         <template #actions>
-            <ActionMessage :on="form.recentlySuccessful" class="mr-3 text-stone-300">
+            <ActionMessage :on="form.recentlySuccessful" class="mr-3 text-slate-100">
                 {{ __('profile.saved') }}
             </ActionMessage>
 

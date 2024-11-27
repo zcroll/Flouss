@@ -21,8 +21,8 @@ return [
     'Career_Test' => 'Career Test',
     'Organization' => 'For Organizations',
     'take_test' => 'Take the free test',
-    'splash_callout' => 'Say hello to Gen.Z, the world’s leading academic and professional orientation advancement platform.',
-    'unlock_future' => 'Unlock the future you',
-    'get_started' => 'Get Started',
+    'splash_callout' => 'Say hello to Gen.Z, Morocco\'s leading academic and professional orientation advancement platform.',
+    'unlock_future' => 'Clear Orientation, Bright Future !',
+    'get_started' => 'Start Exploring',
     'learn_more' => 'Learn More About Gen.Z',
 ];

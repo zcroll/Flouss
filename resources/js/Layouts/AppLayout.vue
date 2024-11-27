@@ -1,6 +1,16 @@
 <script setup>
 import { ref } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
+import { 
+    HomeIcon, 
+    BriefcaseIcon, 
+    UserIcon, 
+    AcademicCapIcon,
+    BuildingOfficeIcon,
+    DocumentTextIcon,
+    BookOpenIcon,
+    ClipboardDocumentListIcon
+} from '@heroicons/vue/24/outline';
 import ApplicationMark from '@/Components/helpers/ApplicationMark.vue';
 import Dropdown from '@/Components/helpers/Dropdown.vue';
 import DropdownLink from '@/Components/helpers/DropdownLink.vue';
@@ -9,6 +19,7 @@ import ResponsiveNavLink from '@/Components/helpers/ResponsiveNavLink.vue';
 import Header from "@/Components/helpers/Header.vue";
 import Footer from "@/Components/helpers/Footer.vue";
 import LanguageSelector from '@/Components/helpers/LanguageSelector.vue';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/Components/ui/sheet"
 import __ from '@/lang';
 
 const props = defineProps({
@@ -20,6 +31,7 @@ const props = defineProps({
 });
 
 const showingNavigationDropdown = ref(false);
+const isOpen = ref(false);
 
 const switchToTeam = (team) => {
     router.put(route('current-team.update'), {
@@ -44,40 +56,40 @@ const navigation = [
 <template >
     <div >
         <Head :title="title" />
-        <div class="min-h-screen relative" style="background-image: linear-gradient(#ffffff, #ddd3ed);">
+        <div class="min-h-screen relative sm:pb-0" style="background-image: linear-gradient(#ffffff, #ddd3ed);">
 
             <Header>
                 <template #navigation>
                     <nav class="top-0 left-0 right-0 z-10 fixed" style="background: linear-gradient(0deg, #00000000 0%, #0c0a09 3%);">
                         <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
-                            <div class="flex justify-between items-center w-full">
+                            <div class="flex justify-between items-center w-full h-[50px]">
 
-                            <div class="flex">
-                                <div class="flex-shrink-0">
+                            <div class="flex h-full">
+                                <div class="flex-shrink-0 flex items-center">
                                     <Link :href="route('home')">
                                         <ApplicationMark class="block" />
                                     </Link>
                                 </div>
                                 <!-- Navigation Links -->
-                                <div class="hidden sm:-my-px sm:ml-32 sm:flex items-center justify-between w-full">
-                                    <div class="flex space-x-8">
-                                        <NavLink :href="route('dashboard')" :active="route().current('dashboard')" class="btn_link">
+                                <div class="hidden sm:-my-px sm:ml-32 sm:flex items-center justify-between w-full h-full">
+                                    <div class="flex space-x-8 h-full items-center">
+                                        <NavLink :href="route('dashboard')" :active="route().current('dashboard')" class="btn_link h-[10px] flex items-center">
                                             {{ __('navigation.dashboard') }}
                                         </NavLink>
-                                        <NavLink :href="route('results')" :active="route().current('results')" class="btn_link ">
+                                        <NavLink :href="route('results')" :active="route().current('results')" class="btn_link h-[30px] flex items-center">
                                             {{ __('navigation.results') }}
                                         </NavLink>
-                                        <NavLink :href="route('jobs.index')" :active="route().current('jobs.index')" class="btn_link">
+                                        <NavLink :href="route('jobs.index')" :active="route().current('jobs.index')" class="btn_link h-[30px] flex items-center">
                                             {{ __('navigation.jobs') }}
                                         </NavLink>
-                                        <NavLink :href="route('degrees.index')" :active="route().current('degrees.index')" class="btn_link">
+                                        <NavLink :href="route('degrees.index')" :active="route().current('degrees.index')" class="btn_link h-[30px] flex items-center">
                                             {{ __('navigation.degrees') }}
                                         </NavLink>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="hidden sm:flex sm:items-center sm:ml-6">
+                            <div class="hidden sm:flex sm:items-center sm:ml-6 h-full">
                                 <!-- Language Selector -->
                                 <LanguageSelector :languages="$page.props.languages" :selectedLanguage="$page.props.language" />
 
@@ -139,7 +151,7 @@ const navigation = [
                                                 <img class="h-8 w-8 rounded-full object-cover" :src="$page.props.auth.user.profile_photo_url" :alt="$page.props.auth.user.name" />
                                             </button>
                                             <span v-else class="inline-flex rounded-md">
-                                                <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition ease-in-out duration-150">
+                                                <button type="button" class="inline-flex h-[30px] items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition ease-in-out duration-150">
                                                     {{ $page.props.auth.user.name }}
                                                     <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
@@ -174,86 +186,44 @@ const navigation = [
 
                             <!-- Mobile Menu Button -->
                             <div class="sm:hidden">
-                                <button @click="showingNavigationDropdown = !showingNavigationDropdown"
-                                        class="inline-flex items-center justify-center p-2 rounded-full bg-stone-800/50 text-stone-300 hover:text-amber-500 hover:bg-stone-700/50 transition-all duration-200">
-                                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                                        <path :class="{'hidden': showingNavigationDropdown, 'inline-flex': !showingNavigationDropdown }"
-                                              stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                              d="M4 6h16M4 12h16M4 18h16" />
-                                        <path :class="{'hidden': !showingNavigationDropdown, 'inline-flex': showingNavigationDropdown }"
-                                              stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                              d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <!-- Mobile Navigation Menu -->
-                    <div :class="{'block': showingNavigationDropdown, 'hidden': !showingNavigationDropdown}"
-                         class="sm:hidden fixed inset-0 z-50">
-                        <div class="fixed inset-0 bg-stone-900/90 backdrop-blur-sm"
-                             @click="showingNavigationDropdown = false">
-                            <div class="absolute right-0 h-full w-64 bg-stone-800 shadow-xl">
-                                <div class="p-6">
-                                    <!-- User Info -->
-                                    <div class="flex items-center mb-6 pb-6 border-b border-stone-700">
-                                        <img class="h-10 w-10 rounded-full object-cover"
-                                             :src="$page.props.auth.user.profile_photo_url"
+                                <Sheet v-model:open="isOpen">
+                                    <SheetTrigger class="inline-flex items-center justify-center p-1 rounded-full border-2 border-stone-300/20 hover:border-amber-500/50 transition-all duration-200">
+                                        <img class="h-6 w-6 rounded-full object-cover" 
+                                             :src="$page.props.auth.user.profile_photo_url" 
                                              :alt="$page.props.auth.user.name" />
-                                        <div class="ml-3">
-                                            <div class="font-medium text-stone-100">{{ $page.props.auth.user.name }}</div>
-                                            <div class="text-xs text-stone-400">{{ $page.props.auth.user.email }}</div>
+                                    </SheetTrigger>
+                                    <SheetContent side="top" class="w-[250px] bg-stone-950/95 backdrop-blur-xl border-l border-stone-800">
+                                        <SheetHeader>
+                                            <Link :href="route('profile.show')" 
+                                                  class="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-stone-800/50 text-gray-900 transition-colors"
+                                                  @click="isOpen = false">
+                                                <UserIcon class="w-4 h-4" />
+                                                <span class="text-sm">{{ __('navigation.profile') }}</span>
+                                            </Link>
+                                            <div class="border-t border-gray-200 my-1.5"></div>
+                                            <LanguageSelector 
+                                                :languages="$page.props.languages" 
+                                                :selectedLanguage="$page.props.language"
+                                                :isMobile="true" 
+                                            />
+                                        </SheetHeader>
+                                        <div class="flex flex-col gap-1.5">
+                                            <div class="border-t border-gray-200 my-1.5"></div>
+                                            <form @submit.prevent="logout">
+                                                <button type="submit" 
+                                                        class="w-full flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-stone-800/50 text-red-400 transition-colors text-sm"
+                                                        @click="isOpen = false">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                                    </svg>
+                                                    <span>{{ __('navigation.log_out') }}</span>
+                                                </button>
+                                            </form>
                                         </div>
-                                    </div>
-
-                                    <!-- Navigation Links -->
-                                    <div class="space-y-3">
-                                        <ResponsiveNavLink :href="route('dashboard')"
-                                                         :active="route().current('dashboard')"
-                                                         class="block px-3 py-2 rounded-lg text-stone-300 hover:bg-stone-700 hover:text-amber-500 transition-colors">
-                                            {{ __('navigation.dashboard') }}
-                                        </ResponsiveNavLink>
-                                        <ResponsiveNavLink :href="route('results')"
-                                                         :active="route().current('results')"
-                                                         class="block px-3 py-2 rounded-lg text-stone-300 hover:bg-stone-700 hover:text-amber-500 transition-colors">
-                                            {{ __('navigation.results') }}
-                                        </ResponsiveNavLink>
-                                        <ResponsiveNavLink :href="route('jobs.index')"
-                                                         :active="route().current('jobs.index')"
-                                                         class="block px-3 py-2 rounded-lg text-stone-300 hover:bg-stone-700 hover:text-amber-500 transition-colors">
-                                            {{ __('navigation.jobs') }}
-                                        </ResponsiveNavLink>
-                                        <ResponsiveNavLink :href="route('degrees.index')"
-                                                         :active="route().current('degrees.index')"
-                                                         class="block px-3 py-2 rounded-lg text-stone-300 hover:bg-stone-700 hover:text-amber-500 transition-colors">
-                                            {{ __('navigation.degrees') }}
-                                        </ResponsiveNavLink>
-                                        <ResponsiveNavLink v-if="isOver10Days"
-                                                         :href="route('activities')"
-                                                         :active="route().current('activities')"
-                                                         class="block px-3 py-2 rounded-lg text-stone-300 hover:bg-stone-700 hover:text-amber-500 transition-colors">
-                                            {{ __('navigation.career_test') }}
-                                        </ResponsiveNavLink>
-                                    </div>
-
-                                    <!-- Settings Links -->
-                                    <div class="mt-6 pt-6 border-t border-stone-700">
-                                        <ResponsiveNavLink :href="route('profile.show')"
-                                                         :active="route().current('profile.show')"
-                                                         class="block px-3 py-2 rounded-lg text-stone-300 hover:bg-stone-700 hover:text-amber-500 transition-colors">
-                                            {{ __('navigation.profile') }}
-                                        </ResponsiveNavLink>
-                                        <form @submit.prevent="logout" class="mt-3">
-                                            <ResponsiveNavLink as="button"
-                                                             class="w-full text-left px-3 py-2 rounded-lg text-stone-300 hover:bg-stone-700 hover:text-amber-500 transition-colors">
-                                                {{ __('navigation.log_out') }}
-                                            </ResponsiveNavLink>
-                                        </form>
-                                    </div>
-                                </div>
+                                    </SheetContent>
+                                </Sheet>
                             </div>
+
                         </div>
                     </div>
 
@@ -265,6 +235,45 @@ const navigation = [
         <main>
             <slot />
         </main>
+
+        <!-- Mobile Bottom Navigation -->
+        <nav class="sm:hidden fixed bottom-0 left-0 right-0 bg-stone-950 backdrop-blur-lg border-t border-stone-800 z-50">
+            <div class="flex items-center justify-around px-3 py-3">
+                <!-- Dashboard -->
+                <Link :href="route('dashboard')" 
+                      class="flex flex-col items-center space-y-1">
+                    <HomeIcon class="w-6 h-6" :class="{'text-[#db492b]': route().current('dashboard'), 'text-stone-400': !route().current('dashboard')}" />
+                </Link>
+
+                <!-- Results -->
+                <Link :href="route('results')" 
+                      class="flex flex-col items-center space-y-1">
+                    <DocumentTextIcon class="w-6 h-6" :class="{'text-[#db492b]': route().current('results'), 'text-stone-400': !route().current('results')}" />
+                </Link>
+
+                <!-- Jobs -->
+                <Link :href="route('jobs.index')" 
+                      class="flex flex-col items-center space-y-1">
+                    <BriefcaseIcon class="w-6 h-6" :class="{'text-[#db492b]': route().current('jobs.index'), 'text-stone-400': !route().current('jobs.index')}" />
+                </Link>
+
+                <!-- Degrees -->
+                <Link :href="route('degrees.index')" 
+                      class="flex flex-col items-center space-y-1">
+                    <AcademicCapIcon class="w-6 h-6" :class="{'text-[#db492b]': route().current('degrees.index'), 'text-stone-400': !route().current('degrees.index')}" />
+                </Link>
+
+                <!-- Career Test (if over 10 days) -->
+                <Link v-if="isOver10Days" 
+                      :href="route('activities')" 
+                      class="flex flex-col items-center space-y-1">
+                    <ClipboardDocumentListIcon class="w-6 h-6" :class="{'text-[#db492b]': route().current('activities'), 'text-stone-400': !route().current('activities')}" />
+                    <span class="text-xs" :class="{'text-amber-500': route().current('activities'), 'text-stone-400': !route().current('activities')}">
+                        {{ __('navigation.career_test') }}
+                    </span>
+                </Link>
+            </div>
+        </nav>
     </div>
 
     <!-- Footer -->

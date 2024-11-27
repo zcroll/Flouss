@@ -570,31 +570,31 @@ svg:not(:root).svg-inline--fa,svg:not(:host).svg-inline--fa{
 }
 
 .degree-card__content {
-  @apply relative p-6 flex flex-col gap-4;
+  @apply relative p-4 flex flex-col gap-3;
 }
 
 .degree-card__header {
-  @apply flex items-center gap-4;
+  @apply flex items-center gap-3;
 }
 
 .degree-card__image {
-  @apply w-16 h-16 rounded-lg object-cover flex-shrink-0;
+  @apply w-12 h-12 rounded-lg object-cover flex-shrink-0;
 }
 
 .degree-card__title-section {
-  @apply flex-1 flex items-center min-h-[4rem];
+  @apply flex-1 flex items-center min-h-[3rem];
 }
 
 .degree-card__title {
-  @apply text-lg font-semibold text-gray-900 leading-tight;
+  @apply text-base font-semibold text-gray-900 leading-tight;
 }
 
 .degree-card__level {
-  @apply text-sm font-medium text-[#db492b];
+  @apply text-xs font-medium text-[#db492b];
 }
 
 .degree-card__stats {
-  @apply grid grid-cols-2 gap-4 mt-2 border-t border-gray-100 pt-4;
+  @apply grid grid-cols-2 gap-3 mt-2 border-t border-gray-100 pt-3;
 }
 
 .degree-card__stat {
@@ -602,19 +602,19 @@ svg:not(:root).svg-inline--fa,svg:not(:host).svg-inline--fa{
 }
 
 .degree-card__stat-label {
-  @apply text-sm font-medium text-gray-500 mb-1;
+  @apply text-xs font-medium text-gray-500 mb-0.5;
 }
 
 .degree-card__stat-value {
-  @apply text-base font-semibold text-gray-900;
+  @apply text-sm font-semibold text-gray-900;
 }
 
 .degree-card__footer {
-  @apply flex flex-wrap gap-2 mt-2;
+  @apply flex flex-wrap gap-1.5 mt-2;
 }
 
 .degree-card__badge {
-  @apply px-2.5 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded-full;
+  @apply px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-700 rounded-full;
 }
 
 .degree-card__link {
@@ -628,13 +628,13 @@ svg:not(:root).svg-inline--fa,svg:not(:host).svg-inline--fa{
 
 /* Update grid layout for better spacing */
 .degrees-grid {
-  @apply grid gap-6;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  @apply grid gap-4;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 }
 
 @media (min-width: 768px) {
   .degrees-grid {
-    @apply gap-8;
+    @apply gap-6;
   }
 }
 

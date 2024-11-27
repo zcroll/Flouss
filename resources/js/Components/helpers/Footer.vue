@@ -1,5 +1,10 @@
 <template>
-        <footer class="bg-black">
+        <footer 
+          v-if="!route().current('jobs.index') && 
+                !route().current('degrees.index') && 
+                !isMobile" 
+          class="bg-black"
+        >
             <div class="mx-auto max-w-7xl overflow-hidden px-6 py-20 sm:py-24 lg:px-8">
                 <nav class="-mb-6 columns-2 sm:flex sm:justify-center sm:space-x-12" aria-label="Footer">
                     <div v-for="item in navigation" :key="item.name" class="pb-6">
@@ -17,7 +22,11 @@
         </footer>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted, onUnmounted } from 'vue'
+
+const isMobile = ref(false)
+
 const navigation = [
     { name: 'Dashboard', href: route('dashboard'), current: route().current('dashboard') },
     { name: 'Results', href: route('results'), current: route().current('results') },
@@ -28,5 +37,16 @@ const socialLinks = [
     // ... (keep your existing social links)
 ];
 
+const checkIfMobile = () => {
+    isMobile.value = window.innerWidth < 768;
+};
 
+onMounted(() => {
+    checkIfMobile()
+    window.addEventListener('resize', checkIfMobile)
+})
+
+onUnmounted(() => {
+    window.removeEventListener('resize', checkIfMobile)
+})
 </script>

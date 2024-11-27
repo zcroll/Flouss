@@ -12,7 +12,7 @@ return [
     'select_sorting_option' => 'Select sorting option',
     'highest_salary' => 'Highest Salary',
     'highest_satisfaction' => 'Highest Satisfaction',
-    'reset_filters' => 'Reset Filters',
+    'reset_filters' => 'Reset',
     'no_degrees_found' => 'No degrees found matching your criteria',
     'hidden' => 'hidden',
     'associate' => 'Associate',

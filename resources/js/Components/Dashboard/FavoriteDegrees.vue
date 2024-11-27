@@ -9,7 +9,7 @@
     <div v-if="favoriteDegrees.length > 0"
       class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 max-h-[200px] overflow-y-auto custom-scrollbar">
       <div v-for="degree in favoriteDegrees" :key="degree.id"
-        class="group bg-stone-700/50 hover:bg-stone-700 rounded-xl p-3 sm:p-4 transition-all duration-300">
+        class="bg-stone-700/50 hover:bg-stone-700 rounded-xl p-3 sm:p-4 transition-all duration-300">
         <Link :href="`/degree/${degree.slug}`" class="flex items-center justify-between">
           <div>
             <h3 class="text-base sm:text-lg font-medium text-stone-100">{{ degree.name }}</h3>
