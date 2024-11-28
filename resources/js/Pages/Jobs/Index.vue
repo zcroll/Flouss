@@ -1,5 +1,8 @@
+
 <template>
-  <AppLayout name="Jobs">
+  <AppLayout
+    name="Jobs"
+  >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div class="flex flex-col gap-6">
         <!-- Filter section -->
@@ -51,7 +54,7 @@
                   </div>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="bottom" class="h-[90vh] rounded-t-[20px]">
+              <SheetContent side="top" class="h-[90vh] rounded-t-[20px]">
                 <SheetHeader>
                   <SheetTitle class="text-lg font-semibold">{{ __('jobs.filters') }}</SheetTitle>
                 </SheetHeader>
@@ -107,7 +110,7 @@
 
         <!-- Main content -->
         <div class="w-full lg:w-4/4">
-          <div class="Listings__Results" role="feed" aria-busy="false" aria-live="assertive" aria-atomic="true">
+          <div class="Listings__Results min-h-[800px]" role="feed" aria-busy="false" aria-live="assertive" aria-atomic="true">
             <div class="">
               <div v-if="jobs.data.length > 0" class="degrees-grid">
                 <article v-for="(job, index) in jobs.data" :key="job.id" 
@@ -153,17 +156,15 @@
             preserveUrl: true,
           }">
             <template #default>
-              <div class="flex justify-center py-4">
-                <div class="animate-pulse text-gray-500">
-                </div>
-              </div>
+              <div></div>
             </template>
           </WhenVisible>
           <BackToTop />
         </div>
       </div>
     </div>
-  </AppLayout>
+  </AppLayout
+    >
 </template>
 
 <script setup>
@@ -305,7 +306,7 @@ onUnmounted(() => {
 
 const handleScroll = () => {
   const scrollPosition = window.innerHeight + window.pageYOffset;
-  const triggerPosition = document.documentElement.offsetHeight - 800; // Increased trigger distance
+  const triggerPosition = document.documentElement.offsetHeight - 400;
 
   if (scrollPosition >= triggerPosition) {
     loadMore();
@@ -327,3 +328,4 @@ const activeFiltersCount = computed(() => {
 <style scoped>
 @import '/public/css/listing_page.css';
 </style>
+

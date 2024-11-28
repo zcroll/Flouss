@@ -1,3 +1,4 @@
+
 <template>
   <AppLayout name="Degrees">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -56,7 +57,7 @@
                   </div>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="bottom" class="h-[90vh] rounded-t-[20px]">
+              <SheetContent side="top" class="h-[90vh] rounded-t-[20px]">
                 <SheetHeader>
                   <SheetTitle class="text-lg font-semibold">{{ __('degrees.filters') }}</SheetTitle>
                 </SheetHeader>
@@ -116,7 +117,7 @@
 
         <!-- Main content -->
         <div class="w-full">
-          <div class="Listings__Results" role="feed" aria-busy="false" aria-live="assertive" aria-atomic="true">
+          <div class="Listings__Results min-h-[800px]" role="feed" aria-busy="false" aria-live="assertive" aria-atomic="true">
             <div class="">
               <div v-if="degrees.data.length > 0" class="degrees-grid">
                 <article v-for="(degree, index) in degrees.data" :key="degree.id" 
@@ -162,6 +163,8 @@
             only: ['degrees'],
             preserveUrl: true,
           }">
+            <div class="mt-6 text-center">
+            </div>
           </WhenVisible>
           <BackToTop />
         </div>
@@ -317,7 +320,7 @@ watch(
 
 const handleScroll = () => {
   const scrollPosition = window.innerHeight + window.pageYOffset;
-  const triggerPosition = document.documentElement.offsetHeight - 200;
+  const triggerPosition = document.documentElement.offsetHeight - 400;
 
   if (scrollPosition >= triggerPosition) {
     loadMore();
@@ -344,3 +347,4 @@ const activeFiltersCount = computed(() => {
 <style scoped>
 @import '/public/css/listing_page.css';
 </style>
+

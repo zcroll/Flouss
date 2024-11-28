@@ -1,3 +1,4 @@
+
 <template>
     <div class="report-card" :class="colorScheme">
         <div class="report-content-wrapper">
@@ -6,7 +7,16 @@
           <div class="text-content">
             <div class="text-wrapper" style="text-align: center;">
               <div class="avatar">
-                <component :is="archetypeComponent" style="width: 100%;"/>
+                <component 
+                  v-if="archetype && archetype.slug"
+                  :is="getAvatarComponent(archetype.slug)"
+                  style="width: 100%;"
+                />
+                <component 
+                  v-else
+                  :is="getAvatarComponent('Default')"
+                  style="width: 100%;"
+                />
               </div>
               
               <div class="text-button-container">
@@ -41,7 +51,7 @@
                 >
                   <div class="avatar-thumbnail-wrapper">
                     <component 
-                      :is="getAvatarComponent(avatar.slug)" 
+                      :is="getAvatarComponent(avatar.slug)"
                       class="avatar-thumbnail-image"
                     />
                   </div>
@@ -74,7 +84,10 @@
                 </div>
                 <div class="avatar-section" style="flex: 1; display: flex; justify-content: center;">
                     <div class="avatar">
-                        <component :is="archetypeComponent" style="width: 100%;" />
+                        <component 
+                            :is="getAvatarComponent(archetype.slug)"
+                            style="width: 100%;"
+                        />
                     </div>
                 </div>
             </div>
@@ -92,7 +105,6 @@ export default defineComponent({
   name: 'Folder',
   components: {
     Link,
-    ArchetypeAvatar: defineAsyncComponent(() => import(`@/Components/Result/Archetype_Avatar/${this.archetype.slug}.vue`)),
   },
   props: {
     userId: {
@@ -142,11 +154,6 @@ export default defineComponent({
     };
   },
   computed: {
-    archetypeComponent() {
-      return defineAsyncComponent(() =>
-        import(`@/Components/Result/Archetype_Avatar/${this.archetype.slug}.vue`)
-      );
-    },
     colorScheme() {
       const colorMap = {
         'Advocat': 'green-theme',
@@ -186,13 +193,14 @@ export default defineComponent({
   },
   methods: {
     getAvatarComponent(slug) {
-      return defineAsyncComponent(() =>
-        import(`@/Components/Result/Archetype_Avatar/${slug}.vue`)
+      return defineAsyncComponent(() => 
+        import(`./Archetype_Avatar/${slug}.vue`)
+          .catch(() => import('./Archetype_Avatar/Default.vue'))
       );
     },
     selectAvatar(slug) {
       console.log(`Selected avatar: ${slug}`);
-    },
+    }
   },
   mounted() {
     window.addEventListener('resize', () => {
@@ -212,4 +220,5 @@ export default defineComponent({
 @import 'public/css/folder.css';
 @import 'public/css/career_list.css';
 </style>
+
 
