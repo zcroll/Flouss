@@ -3,31 +3,38 @@
     aria-live="assertive">
     <div>
       <BackButton 
-        :loading="hollandCodeStore.loading" 
-        :disabled="!hollandCodeStore.currentItemIndex" 
+        :loading="store.loading" 
+        :disabled="!currentItemIndex" 
         @go-back="handleGoBack"
       />
 
       <form @submit.prevent="submitAnswer" ref="formRef">
-        <h4 v-if="hollandCodes?.lead_in_text">
-          {{ hollandCodes.lead_in_text }}
+        <h4 v-if="testData?.lead_in_text">
+          {{ testData.lead_in_text }}
         </h4>
         <h3 aria-hidden="true" v-if="currentItem">
           {{ currentItem.text }}
         </h3>
 
-        <AnswerOptions v-if="currentItem && optionSet" :current-item="currentItem" :options="optionSet.options"
-          :test-stage="testStage" v-model="form.answer" :store="hollandCodeStore" @submit="submitAnswer" />
+        <AnswerOptions 
+          v-if="currentItem && optionSet" 
+          :current-item="currentItem" 
+          :options="optionSet.options"
+          :test-stage="testStage" 
+          v-model="form.answer" 
+          :store="store" 
+          @submit="submitAnswer" 
+        />
 
         <div class="Assessment__Question__actions">
           <button 
             type="button" 
             class="Assessment__Question__skip" 
             data-testid="skip-question"
-            :disabled="hollandCodeStore.loading"
+            :disabled="store.loading"
             @click="handleSkip"
           >
-            {{ hollandCodeStore.loading ? 'Skipping...' : 'Skip question' }}
+            {{ store.loading ? 'Skipping...' : 'Skip question' }}
           </button>
         </div>
       </form>
@@ -41,7 +48,7 @@ import BackButton from './BackButton.vue';
 import AnswerOptions from './AnswerOptions.vue';
 
 const props = defineProps({
-  hollandCodes: {
+  testData: {
     type: Object,
     required: true
   },
@@ -57,7 +64,7 @@ const props = defineProps({
     type: String,
     required: true
   },
-  hollandCodeStore: {
+  store: {
     type: Object,
     required: true
   },
@@ -71,8 +78,8 @@ const formRef = ref(null);
 
 // Computed property for current option set
 const optionSet = computed(() => {
-  if (props.hollandCodes?.option_sets?.length > 0) {
-    return props.hollandCodes.option_sets[0];
+  if (props.testData?.option_sets?.length > 0) {
+    return props.testData.option_sets[0];
   }
   return null;
 });
@@ -80,7 +87,7 @@ const optionSet = computed(() => {
 onMounted(() => {
   if (props.currentItem) {
     props.form.itemId = props.currentItem.id;
-    props.form.category = 'holland_codes';
+    props.form.category = props.testStage;
   }
 });
 
@@ -88,7 +95,7 @@ onMounted(() => {
 watch(() => props.currentItem, (newItem) => {
   if (newItem) {
     props.form.itemId = newItem.id;
-    props.form.category = 'holland_codes';
+    props.form.category = props.testStage;
   }
 }, { immediate: true });
 
@@ -100,7 +107,7 @@ const submitAnswer = () => {
       emit('submit');
     }
   } catch (error) {
-    props.hollandCodeStore.logError('submission', error);
+    console.error('Error submitting answer:', error);
   }
 };
 
@@ -109,7 +116,6 @@ const handleGoBack = () => {
 };
 
 const handleSkip = () => {
-  if (props.hollandCodeStore.loading) return;
   emit('skip');
 };
 

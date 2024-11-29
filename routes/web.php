@@ -25,6 +25,8 @@ use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\Test\HollandCodeController;
 use App\Http\Controllers\Test\BasicInterestController;
 use App\Http\Controllers\Test\TestStageController;
+use App\Http\Controllers\Test\WorkplaceController;
+use App\Http\Controllers\Test\PersonalityController;
 
 // Google Login Routes (place these BEFORE any auth middleware groups)
 Route::get('auth/google', [App\Http\Controllers\Auth\GoogleController::class, 'redirectToGoogle'])
@@ -90,6 +92,15 @@ Route::middleware([
         Route::get('/etablissements', [FormationFilterController::class, 'getEtablissements'])->name('etablissements.list');
         Route::get('/degrees', [DegreeFilterController::class, 'index'])->name('degrees.index');
         Route::get('/jobs', [JobFilterController::class, 'index'])->name('jobs.index');
+
+        // Test Routes
+        Route::get('/holland-codes', [HollandCodeController::class, 'index'])->name('holland-codes.index');
+        Route::get('/basic-interests', [BasicInterestController::class, 'index'])->name('basic-interests.index');
+        Route::get('/workplace', [WorkplaceController::class, 'index'])->name('workplace.index');
+        Route::get('/personality', [PersonalityController::class, 'index'])->name('personality.index');
+        
+        // Stage transition
+        Route::post('/test/change-stage', [TestStageController::class, 'changeStage'])->name('test.change-stage');
 
         // Chat routes
         Route::post('/chat', [ApiController::class, 'sendMessage'])->name('chat.send');

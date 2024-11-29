@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { router } from '@inertiajs/vue3';
+import { useTestProgressStore } from './testProgressStore'; // Assuming this is where useTestProgressStore is defined
 
 export const useHollandCodeStore = defineStore('hollandCode', {
   state: () => ({
@@ -83,8 +84,30 @@ export const useHollandCodeStore = defineStore('hollandCode', {
           ])
         );
       }
+
+      // Update completion status and notify progress store
+      const wasComplete = this.isTestComplete;
+      this.isTestComplete = progress.completed || false;
+      
+      // If completion status changed to true, update progress store
+      if (!wasComplete && this.isTestComplete) {
+        const progressStore = useTestProgressStore();
+        progressStore.updateStageProgress('holland_codes', {
+          completed: true,
+          currentIndex: this.currentItemIndex,
+          validResponses: Object.values(this.responses).filter(v => v !== null).length,
+          percentage: this.getProgressPercentage()
+        });
+      }
       
       this.setCurrentItem();
+    },
+
+    getProgressPercentage() {
+      if (!this.responses) return 0;
+      const totalResponses = Object.values(this.responses).filter(v => v !== null).length;
+      const totalQuestions = this.hollandCodesData.items?.length || 0;
+      return totalQuestions > 0 ? Math.round((totalResponses / totalQuestions) * 100) : 0;
     },
 
     updateProgressPercentage() {
@@ -99,12 +122,14 @@ export const useHollandCodeStore = defineStore('hollandCode', {
       
       // Update completion status
       this.progress.completed = this.currentItemIndex >= totalItems;
+      this.isTestComplete = this.progress.completed;
       
       console.log('Progress updated:', {
         currentIndex: this.currentItemIndex,
         totalItems,
         percentage: this.progress.progress_percentage,
-        completed: this.progress.completed
+        completed: this.progress.completed,
+        isTestComplete: this.isTestComplete
       });
     },
 

@@ -85,11 +85,19 @@ export const useTestProgressStore = defineStore('testProgress', {
             currentState: { ...stageData }
           });
 
+          // Update progress data
           stageData.currentIndex = progressData.currentIndex || 0;
           stageData.validResponses = progressData.validResponses || 0;
           stageData.percentage = progressData.percentage || 0;
-          stageData.completed = progressData.completed || false;
-          stageData.canTransition = progressData.completed || false;
+          
+          // Handle completion status
+          if (progressData.completed) {
+            console.log('Marking stage complete:', stage, progressData);
+            this.markStageComplete(stage);
+          } else {
+            stageData.completed = false;
+            stageData.canTransition = false;
+          }
 
           this.logDebug(stage, 'updateProgress:after', {
             previous: previousState,
@@ -153,23 +161,35 @@ export const useTestProgressStore = defineStore('testProgress', {
 
     setCurrentStage(stage) {
       if (this.stages[stage]) {
-        const previousStage = this.stages[this.currentStage];
-        const previousStageName = this.currentStage;
+        const previousStage = this.currentStage;
+        const previousStageData = this.stages[previousStage];
         
-        if (previousStage && !previousStage.completed) {
-          previousStage.canTransition = false;
-          this.logDebug(previousStageName, 'setCurrentStage:resetPrevious', {
-            stage: previousStageName,
-            completed: previousStage.completed,
-            canTransition: previousStage.canTransition
-          });
-        }
-        
+        // Log the transition
+        this.logDebug('transition', 'setCurrentStage:start', {
+          from: previousStage,
+          to: stage,
+          previousStageState: { ...previousStageData },
+          nextStageState: { ...this.stages[stage] }
+        });
+
+        // Update the current stage
         this.currentStage = stage;
-        this.logDebug(stage, 'setCurrentStage:new', {
-          previousStage: previousStageName,
-          newStage: stage,
-          stageData: { ...this.stages[stage] }
+
+        // Ensure proper state of stages
+        if (previousStageData) {
+          if (!previousStageData.completed) {
+            previousStageData.canTransition = false;
+          }
+        }
+
+        // Log the completion
+        this.logDebug('transition', 'setCurrentStage:complete', {
+          currentStage: this.currentStage,
+          previousStage: previousStage,
+          stageStates: {
+            previous: { ...previousStageData },
+            current: { ...this.stages[stage] }
+          }
         });
       }
     },

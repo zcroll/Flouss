@@ -79,9 +79,11 @@ class TestStageController extends Controller
     private function getStageController($stage)
     {
         return match($stage) {
-            'basic_interest' => new BasicInterestController(),
+            'basic_interests' => new BasicInterestController(),
             'holland_codes' => new HollandCodeController(),
-            default => throw new \Exception('Invalid stage')
+            'workplace' => new WorkplaceController(),
+            'personality' => new PersonalityController(),
+            default => throw new \Exception('Invalid stage: ' . $stage)
         };
     }
 } 
