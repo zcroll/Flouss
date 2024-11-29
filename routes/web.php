@@ -96,6 +96,7 @@ Route::middleware([
         // Test Routes
         Route::get('/holland-codes', [MainTestController::class, 'index'])->name('holland-codes.index');
         Route::post('/test/change-stage', [TestStageController::class, 'changeStage'])->name('test.change-stage');
+        Route::post('/test/store-response', [TestStageController::class, 'storeResponse'])->name('test.store-response');
 
         // Chat routes
         Route::post('/chat', [ApiController::class, 'sendMessage'])->name('chat.send');
@@ -107,34 +108,17 @@ Route::middleware([
         Route::middleware(['auth'])->group(function () {
             // Holland Codes SPA routes
             Route::prefix('holland-codes')->group(function () {
-                // Main SPA route
-                Route::get('/', [HollandCodeController::class, 'index'])
-                    ->name('holland-codes.index');
-                
-                // Store response endpoint
-                Route::post('/store-response', [HollandCodeController::class, 'storeResponse'])
-                    ->name('holland-codes.store-response');
-                
-                // Go back endpoint
-                Route::post('/go-back', [HollandCodeController::class, 'goBack'])
-                    ->name('holland-codes.go-back');
+                Route::get('/', [HollandCodeController::class, 'index'])->name('holland-codes.index');
+                Route::post('/', [HollandCodeController::class, 'storeResponse'])->name('holland-codes.store');
+                Route::post('/go-back', [HollandCodeController::class, 'goBack'])->name('holland-codes.go-back');
             });
 
-            // Basic Interest routes
-            Route::prefix('basic-interest')->group(function () {
-                Route::get('/', [BasicInterestController::class, 'index'])
-                    ->name('basic-interest.index');
-                
-                Route::post('/store-response', [BasicInterestController::class, 'storeResponse'])
-                    ->name('basic-interest.store-response');
-                
-                Route::post('/go-back', [BasicInterestController::class, 'goBack'])
-                    ->name('basic-interest.go-back');
+            // Basic Interests SPA routes
+            Route::prefix('basic-interests')->group(function () {
+                Route::get('/', [BasicInterestController::class, 'index'])->name('basic-interests.index');
+                Route::post('/', [BasicInterestController::class, 'storeResponse'])->name('basic-interests.store');
+                Route::post('/go-back', [BasicInterestController::class, 'goBack'])->name('basic-interests.go-back');
             });
-
-            // Add stage transition route
-            Route::post('/test/change-stage', [TestStageController::class, 'changeStage'])
-                ->name('test.change-stage');
         });
     });
 });

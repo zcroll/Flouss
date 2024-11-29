@@ -184,7 +184,7 @@ export const useTestStageStore = defineStore('testStage', {
             console.log('Initializing stage:', { stage, data });
             
             const progressStore = useTestProgressStore();
-            progressStore.updateProgress(stage, data?.progress || {});
+            progressStore.updateStageProgress(stage, data?.progress || {});
 
             switch(stage) {
                 case 'basic_interests':

@@ -126,45 +126,72 @@ export const useBasicInterestStore = defineStore('basicInterest', {
             });
         },
 
-        async submitAnswer(form) {
-            try {
-                this.loading = true;
-                this.logDebug('submitAnswer:start', { form });
+        submitAnswer(form) {
+            this.logDebug('submitAnswer', { form });
+            
+            if (this.loading) return;
+            this.loading = true;
+            this.error = null;
 
-                await router.post('/basic-interest/store-response', form, {
+            const response = form.answer;
+            const itemId = form.itemId;
+
+            try {
+                // Store response locally first
+                this.responses[itemId] = response;
+                
+                // Update progress
+                this.progress.responses = { ...this.responses };
+                this.progress.validResponses = Object.values(this.responses).filter(v => v !== null).length;
+                this.progress.progress_percentage = (this.progress.validResponses / this.progress.totalQuestions) * 100;
+                
+                // Make API request
+                router.post('/basic-interests', {
+                    itemId,
+                    answer: response,
+                    type: 'answered',
+                    category: 'basic_interests',
+                    testStage: 'basic_interests'
+                }, {
                     preserveState: true,
                     preserveScroll: true,
-                    preserveUrl: true,
                     onSuccess: (page) => {
+                        this.logDebug('submitAnswer:success', { page });
+                        
                         if (page.props.progress) {
-                            this.logDebug('submitAnswer:success', {
-                                progress: page.props.progress,
-                                form
-                            });
-                            
-                            // Store response before updating progress
-                            this.responses[form.itemId] = form.answer;
                             this.setProgress(page.props.progress);
+                        }
+                        
+                        // Move to next question if available
+                        if (this.currentItemIndex < this.basicInterestData.items.length - 1) {
+                            this.currentItemIndex++;
+                            this.setCurrentItem();
+                        } else {
+                            this.progress.completed = true;
+                        }
+
+                        if (page.props.error) {
+                            this.error = page.props.error;
                         }
                     },
                     onError: (errors) => {
-                        console.error('Basic interest submission error:', errors);
-                        this.error = errors?.message || 'Failed to submit answer';
-                    },
-                    onFinish: () => {
-                        this.loading = false;
+                        this.logDebug('submitAnswer:error', { errors });
+                        this.error = 'Failed to submit answer';
+                        // Rollback local changes on error
+                        delete this.responses[itemId];
                     }
                 });
             } catch (error) {
-                console.error('Basic interest submission failed:', error);
+                this.logDebug('submitAnswer:error', { error });
                 this.error = error.message;
+            } finally {
                 this.loading = false;
             }
         },
 
         async goBack() {
-            if (this.currentItemIndex <= 0 || this.loading) return;
-
+            if (this.currentItemIndex <= 0) return;
+            
             try {
                 this.loading = true;
                 this.logDebug('goBack:start', {
@@ -172,7 +199,7 @@ export const useBasicInterestStore = defineStore('basicInterest', {
                     responses: this.responses
                 });
 
-                await router.post('/basic-interest/go-back', {}, {
+                await router.post('/basic-interests/go-back', {}, {
                     preserveState: true,
                     preserveScroll: true,
                     preserveUrl: true,

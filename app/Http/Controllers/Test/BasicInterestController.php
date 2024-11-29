@@ -100,20 +100,7 @@ class BasicInterestController extends Controller
                 'testStage' => 'required|string'
             ]);
 
-            \Log::info('BasicInterestController: Received response', $validated);
-
-            // Get total questions count from the database
-            $basicInterest = ItemSet::with('items')->where('title', 'Self Reported Interests')->first();
-            if (!$basicInterest) {
-                throw new \Exception('Basic Interest ItemSet not found');
-            }
-            $totalQuestions = $basicInterest->items->count();
-
-            if ($totalQuestions === 0) {
-                throw new \Exception('No questions found in Basic Interest ItemSet');
-            }
-
-            \Log::info('BasicInterestController: Total questions count', ['count' => $totalQuestions]);
+            \Log::info('BasicInterestController: Received response:', $validated);
 
             // Get current progress from session
             $progress = Session::get(self::SESSION_KEY, [
@@ -123,59 +110,70 @@ class BasicInterestController extends Controller
                 'progress_percentage' => 0
             ]);
 
-            // Store response
+            // Store response (0 for skipped, actual value for answered)
             $progress['responses'][$validated['itemId']] = $validated['type'] === 'skipped' 
                 ? 0 
                 : $validated['answer'];
 
-            // Count valid responses (not counting skipped ones)
-            $validResponses = count(array_filter($progress['responses'], function($answer) {
-                return $answer > 0;
-            }));
+            // Get total questions count
+            $basicInterest = ItemSet::where('title', 'Self Reported Interests')->first();
+            $totalQuestions = $basicInterest->items->count();
 
-            \Log::info('BasicInterestController: Response counts', [
-                'totalResponses' => count($progress['responses']),
-                'validResponses' => $validResponses,
-                'totalQuestions' => $totalQuestions
-            ]);
+            // Increment current index
+            $progress['current_index']++;
 
-            // Update current index to match the number of valid responses
-            $progress['current_index'] = $validResponses;
+            // Calculate progress based on current index
+            $progress['progress_percentage'] = $totalQuestions > 0 
+                ? round(($progress['current_index'] / $totalQuestions) * 100) 
+                : 0;
 
-            // Calculate progress based on valid responses
-            $progress['progress_percentage'] = round(($validResponses / $totalQuestions) * 100);
+            // Update completed status
+            $isCompleted = $progress['current_index'] >= $totalQuestions;
+            $progress['completed'] = $isCompleted;
 
-            // Update completed status based on valid responses matching total questions
-            $progress['completed'] = $validResponses >= $totalQuestions;
-
-            \Log::info('BasicInterestController: Storing response', [
+            \Log::info('BasicInterestController: Storing response:', [
                 'currentIndex' => $progress['current_index'],
                 'totalQuestions' => $totalQuestions,
-                'validResponses' => $validResponses,
                 'percentage' => $progress['progress_percentage'],
-                'completed' => $progress['completed']
+                'type' => $validated['type'],
+                'answer' => $validated['answer'],
+                'storedAnswer' => $progress['responses'][$validated['itemId']],
+                'completed' => $isCompleted
             ]);
 
             Session::put(self::SESSION_KEY, $progress);
 
-            if ($request->wantsJson()) {
-                return response()->json(['progress' => $progress]);
-            }
+            // Get complete basic interest data for the response
+            $basicInterest = ItemSet::with([
+                'items:id,text,help_text,option_set_id,itemset_id',
+                'items.optionSet:id,name,help_text,type',
+                'items.optionSet.options:id,text,help_text,value,option_set_id'
+            ])
+            ->where('title', 'Self Reported Interests')
+            ->first();
 
-            return back()->with([
+            return Inertia::render('Test/MainTest', [
+                'basicInterest' => [
+                    'id' => $basicInterest->id,
+                    'title' => $basicInterest->title,
+                    'items' => $basicInterest->items,
+                    'option_sets' => $basicInterest->items->pluck('optionSet')->unique(),
+                    'total_questions' => $totalQuestions
+                ],
                 'progress' => $progress,
-                'testStage' => 'basic_interest'
+                'testStage' => 'basic_interests',
+                'isCompleted' => $isCompleted
             ]);
 
         } catch (\Exception $e) {
             \Log::error('BasicInterestController: Error storing response', [
-                'error' => $e->getMessage(),
+                'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
             
             return Inertia::render('Test/MainTest', [
                 'error' => 'Failed to store response: ' . $e->getMessage(),
-                'testStage' => 'basic_interest'
+                'testStage' => 'basic_interests'
             ]);
         }
     }
