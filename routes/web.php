@@ -94,12 +94,7 @@ Route::middleware([
         Route::get('/jobs', [JobFilterController::class, 'index'])->name('jobs.index');
 
         // Test Routes
-        Route::get('/holland-codes', [HollandCodeController::class, 'index'])->name('holland-codes.index');
-        Route::get('/basic-interests', [BasicInterestController::class, 'index'])->name('basic-interests.index');
-        Route::get('/workplace', [WorkplaceController::class, 'index'])->name('workplace.index');
-        Route::get('/personality', [PersonalityController::class, 'index'])->name('personality.index');
-        
-        // Stage transition
+        Route::get('/holland-codes', [MainTestController::class, 'index'])->name('holland-codes.index');
         Route::post('/test/change-stage', [TestStageController::class, 'changeStage'])->name('test.change-stage');
 
         // Chat routes

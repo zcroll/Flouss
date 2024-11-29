@@ -14,7 +14,7 @@ export const useTestStageStore = defineStore('testStage', {
                 description: 'Discover your career interests and personality type',
                 nextStage: 'basic_interests',
                 nextStageName: 'Basic Interest Assessment',
-                route: 'test.holland-codes.index',
+                route: 'holland-codes.index',
                 storeKey: 'hollandCodes'
             },
             'basic_interests': {
@@ -22,7 +22,7 @@ export const useTestStageStore = defineStore('testStage', {
                 description: 'Explore your specific areas of interest',
                 nextStage: 'workplace',
                 nextStageName: 'Workplace Assessment',
-                route: 'test.basic-interests.index',
+                route: 'holland-codes.index',
                 storeKey: 'basicInterest'
             },
             'workplace': {
@@ -30,7 +30,7 @@ export const useTestStageStore = defineStore('testStage', {
                 description: 'Understand your ideal work environment',
                 nextStage: 'personality',
                 nextStageName: 'Personality Assessment',
-                route: 'test.workplace.index',
+                route: 'holland-codes.index',
                 storeKey: 'workplace'
             },
             'personality': {
@@ -38,7 +38,7 @@ export const useTestStageStore = defineStore('testStage', {
                 description: 'Discover your personality traits',
                 nextStage: null,
                 nextStageName: null,
-                route: 'test.personality.index',
+                route: 'holland-codes.index',
                 storeKey: 'personality'
             }
         },
