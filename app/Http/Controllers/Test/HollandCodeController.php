@@ -134,7 +134,7 @@ class HollandCodeController extends Controller
             ]);
 
             // Calculate archetype if progress is sufficient
-            if ($progress['progress_percentage'] > 70) {
+            if ($progress['progress_percentage'] > 90) {
                 // Only include non-skipped responses for archetype calculation
                 $formattedResponses = [];
                 foreach ($progress['responses'] as $itemId => $answer) {

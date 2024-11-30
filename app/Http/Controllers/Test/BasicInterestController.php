@@ -7,6 +7,10 @@ use App\Models\ItemSet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
+use log;
+
 
 class BasicInterestController extends Controller
 {
@@ -112,8 +116,7 @@ class BasicInterestController extends Controller
             ]); 
 
             // ds('progress', $progress['responses']);
-            $data = $this->formatResponse($progress['responses']);
-            \Log::info('BasicInterestController: Formatted responses:', $data);
+            
 
             // Store response (0 for skipped, actual value for answered)
             $progress['responses'][$validated['itemId']] = $validated['type'] === 'skipped' 
@@ -148,29 +151,34 @@ class BasicInterestController extends Controller
 
             Session::put(self::SESSION_KEY, $progress);
 
+            
             // Get complete basic interest data for the response
             $basicInterest = ItemSet::with([
               'items:id,text,help_text,option_set_id,is_completed,career_id,degree_id,image_url,image_colour,itemset_id',
               'items.optionSet:id,name,help_text,type',
               'items.optionSet.options:id,text,help_text,value,reverse_coded_value,option_set_id'
-          ])
-
-            ->where('title', 'Self Reported Interests')
-            ->first();
-
+              ])
+              
+              ->where('title', 'Self Reported Interests')
+              ->first();
+              
+              if ($progress['progress_percentage'] > 70) {
+                  $data = $this->formatResponse($progress['responses']);
+                  \Log::info('BasicInterestController: Formatted responses:', $data);
+                  $job = $this->matchJobs($data);
+                  $progress['jobMatching'] = $job;
+                  ds('job', $job);
+              }
 
             return Inertia::render('Test/MainTest', [
                 'basicInterest' => [
                     'id' => $basicInterest->id,
                     'title' => $basicInterest->title,
-                    'items' => $basicInterest->items,
                     'lead_in_text' => $basicInterest->lead_in_text,
-                    'option_sets' => $basicInterest->items->pluck('optionSet')->unique(),
-                    'total_questions' => $totalQuestions
+                    'items' => $basicInterest->items,
+                    'option_sets' => $basicInterest->items->pluck('optionSet')->unique()
                 ],
-                'progress' => $progress,
-                'testStage' => 'basic_interests',
-                'isCompleted' => $isCompleted
+                'progress' => $progress
             ]);
 
         } catch (\Exception $e) {
@@ -264,5 +272,31 @@ class BasicInterestController extends Controller
         }
 
         return $formattedResponses;
+    }
+    private function matchJobs($interest_scores)
+    {
+      $pythonPath = 'python3';
+      $scriptPath = app_path('/python/test.py');
+              try {
+            $process = new Process([
+                $pythonPath,
+                $scriptPath,
+                json_encode($interest_scores)
+            ]);
+
+            $process->setTimeout(300);
+            $process->run();
+
+            if (!$process->isSuccessful()) {
+                Log::error('Python script failed', ['error' => $process->getErrorOutput()]);
+                throw new ProcessFailedException($process);
+            }
+
+            return json_decode($process->getOutput(), true);
+
+        } catch (\Exception $e) {
+            Log::error('Job matching failed', ['error' => $e->getMessage()]);
+            return ['error' => 'Failed to process job matching'];
+        }
     }
 } 

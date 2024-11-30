@@ -34,7 +34,7 @@ class JobMatcher:
         self.cursor = self.conn.cursor(dictionary=True)
         self.interest_scores = interest_scores
 
-    def get_jobs_by_fields(self, fields: Tuple[str, str], limit: int = 30) -> List[Dict]:
+    def get_jobs_by_fields(self, fields: Tuple[str, str], limit: int = 10) -> List[Dict]:
         """Fetch jobs that combine both fields in the tuple."""
         field1, field2 = fields
         query = """
@@ -104,18 +104,18 @@ class JobMatcher:
             final_matches.extend(data_cache[sorted_pairs[2]])
             duplicate_tracker.update(job['job_id'] for pair in sorted_pairs for job in data_cache[pair])
         
-        if len(final_matches) >= 30:
-            final_matches = final_matches[:30]
+        if len(final_matches) >= 10:
+            final_matches = final_matches[:10]
         else:
             for pair in data_cache:
                 final_matches.extend(job for job in data_cache[pair] if job['job_id'] not in duplicate_tracker)
                 duplicate_tracker.update(job['job_id'] for job in data_cache[pair])
-                if len(final_matches) >= 30:
-                    final_matches = final_matches[:30]
+                if len(final_matches) >= 10:
+                    final_matches = final_matches[:10]
                     break
         
         # Phase 2: Supplementary Data Selection with Fallback
-        if len(final_matches) < 30:
+        if len(final_matches) < 10:
             pairs = [(interest1, interest2) 
                      for interest1 in high_score_interests 
                      for interest2 in second_highest_interests]
@@ -130,20 +130,20 @@ class JobMatcher:
             for pair in sorted_pairs:
                 final_matches.extend(data_cache[pair])
                 duplicate_tracker.update(job['job_id'] for job in data_cache[pair])
-                if len(final_matches) >= 30:
-                    final_matches = final_matches[:30]
+                if len(final_matches) >= 10:
+                    final_matches = final_matches[:10]
                     break
             
-            if len(final_matches) < 30:
+            if len(final_matches) < 10:
                 for pair in sorted_pairs:
                     final_matches.extend(job for job in data_cache[pair] if job['job_id'] not in duplicate_tracker)
                     duplicate_tracker.update(job['job_id'] for job in data_cache[pair])
-                    if len(final_matches) >= 30:
-                        final_matches = final_matches[:30]
+                    if len(final_matches) >= 10:
+                        final_matches = final_matches[:10]
                         break
         
         # Phase 3: Tertiary Data Selection with Fallback
-        if len(final_matches) < 30:
+        if len(final_matches) < 10:
             pairs = [(interest1, interest2)
                      for interest1 in high_score_interests
                      for interest2 in third_highest_interests]
@@ -158,20 +158,20 @@ class JobMatcher:
             for pair in sorted_pairs:
                 final_matches.extend(data_cache[pair])
                 duplicate_tracker.update(job['job_id'] for job in data_cache[pair])
-                if len(final_matches) >= 30:
-                    final_matches = final_matches[:30]
+                if len(final_matches) >= 10:
+                    final_matches = final_matches[:10]
                     break
             
-            if len(final_matches) < 30:
+            if len(final_matches) < 10:
                 for pair in sorted_pairs:
                     final_matches.extend(job for job in data_cache[pair] if job['job_id'] not in duplicate_tracker)
                     duplicate_tracker.update(job['job_id'] for job in data_cache[pair])
-                    if len(final_matches) >= 30:
-                        final_matches = final_matches[:30]
+                    if len(final_matches) >= 10:
+                        final_matches = final_matches[:10]
                         break
         
         # Phase 4: Quaternary Data Selection with Fallback
-        if len(final_matches) < 30:
+        if len(final_matches) < 10:
             pairs = [(interest1, interest2)
                      for interest1 in high_score_interests
                      for interest2 in fourth_highest_interests]
@@ -186,16 +186,16 @@ class JobMatcher:
             for pair in sorted_pairs:
                 final_matches.extend(data_cache[pair])
                 duplicate_tracker.update(job['job_id'] for job in data_cache[pair])
-                if len(final_matches) >= 30:
-                    final_matches = final_matches[:30]
+                if len(final_matches) >= 10:
+                    final_matches = final_matches[:10]
                     break
             
-            if len(final_matches) < 30:
+            if len(final_matches) < 10:
                 for pair in sorted_pairs:
                     final_matches.extend(job for job in data_cache[pair] if job['job_id'] not in duplicate_tracker)
                     duplicate_tracker.update(job['job_id'] for job in data_cache[pair])
-                    if len(final_matches) >= 30:
-                        final_matches = final_matches[:30]
+                    if len(final_matches) >= 10:
+                        final_matches = final_matches[:10]
                         break
         
         return {

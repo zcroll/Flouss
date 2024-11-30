@@ -19,7 +19,8 @@ export const useBasicInterestStore = defineStore('basicInterest', {
             completed: false,
             progress_percentage: 0,
             validResponses: 0,
-            totalQuestions: 27
+            totalQuestions: 27,
+            jobMatching: null
         },
         loading: false,
         error: null,
@@ -75,8 +76,13 @@ export const useBasicInterestStore = defineStore('basicInterest', {
                 completed: false, // Will be set based on validation
                 progress_percentage: progress.progress_percentage || 0,
                 validResponses: progress.validResponses || 0,
-                totalQuestions
+                totalQuestions,
+                jobMatching: progress.jobMatching || null
             };
+
+            this.logDebug('setProgress:jobMatching', {
+                jobMatching: this.progress.jobMatching
+            });
 
             // Update responses
             if (progress.responses) {
@@ -251,6 +257,13 @@ export const useBasicInterestStore = defineStore('basicInterest', {
             }
             
             return hasAllResponses;
+        },
+        hasJobMatching: (state) => {
+            return state.progress.jobMatching !== null;
+        },
+        
+        getJobMatching: (state) => {
+            return state.progress.jobMatching;
         }
     }
 }); 
