@@ -31,7 +31,7 @@
         </section>
         <section v-else class="Assessment" tabindex="-1" data-testid="assessment-test">
           <section class="Assessment__ItemSetLeadIn" v-if="!isComplete">
-            {{ currentStore?.testData?.lead_in_text }}
+            {{ currentTestData.lead_in_text }}
           </section>
 
           <div class="Assessment__scroll-container">

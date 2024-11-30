@@ -61,6 +61,7 @@ class BasicInterestController extends Controller
                     'id' => $basicInterest->id,
                     'title' => $basicInterest->title,
                     'items' => $basicInterest->items,
+                    'lead_in_text' => $basicInterest->lead_in_text,
                     'option_sets' => $basicInterest->items->pluck('optionSet')->unique(),
                     'total_questions' => $totalQuestions
                 ],
@@ -110,7 +111,9 @@ class BasicInterestController extends Controller
                 'progress_percentage' => 0
             ]); 
 
-            ds('progress', $progress);
+            // ds('progress', $progress['responses']);
+            $data = $this->formatResponse($progress['responses']);
+            \Log::info('BasicInterestController: Formatted responses:', $data);
 
             // Store response (0 for skipped, actual value for answered)
             $progress['responses'][$validated['itemId']] = $validated['type'] === 'skipped' 
@@ -147,18 +150,21 @@ class BasicInterestController extends Controller
 
             // Get complete basic interest data for the response
             $basicInterest = ItemSet::with([
-                'items:id,text,help_text,option_set_id,itemset_id',
-                'items.optionSet:id,name,help_text,type',
-                'items.optionSet.options:id,text,help_text,value,option_set_id'
-            ])
+              'items:id,text,help_text,option_set_id,is_completed,career_id,degree_id,image_url,image_colour,itemset_id',
+              'items.optionSet:id,name,help_text,type',
+              'items.optionSet.options:id,text,help_text,value,reverse_coded_value,option_set_id'
+          ])
+
             ->where('title', 'Self Reported Interests')
             ->first();
+
 
             return Inertia::render('Test/MainTest', [
                 'basicInterest' => [
                     'id' => $basicInterest->id,
                     'title' => $basicInterest->title,
                     'items' => $basicInterest->items,
+                    'lead_in_text' => $basicInterest->lead_in_text,
                     'option_sets' => $basicInterest->items->pluck('optionSet')->unique(),
                     'total_questions' => $totalQuestions
                 ],
@@ -244,5 +250,19 @@ class BasicInterestController extends Controller
                 'testStage' => 'basic_interest'
             ]);
         }
+    }
+
+
+    public function formatResponse($progress)
+    {
+        $items = \App\Models\Item::whereIn('id', array_keys($progress))->pluck('text', 'id');
+        
+        $formattedResponses = [];
+        foreach ($progress as $itemId => $response) {
+            $name = $items[$itemId] ?? 'Unknown';
+            $formattedResponses[$name] = (int) $response;
+        }
+
+        return $formattedResponses;
     }
 } 
