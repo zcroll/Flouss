@@ -108,7 +108,9 @@ class BasicInterestController extends Controller
                 'responses' => [],
                 'completed' => false,
                 'progress_percentage' => 0
-            ]);
+            ]); 
+
+            ds('progress', $progress);
 
             // Store response (0 for skipped, actual value for answered)
             $progress['responses'][$validated['itemId']] = $validated['type'] === 'skipped' 

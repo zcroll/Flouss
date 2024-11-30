@@ -73,7 +73,7 @@ export const useBasicInterestStore = defineStore('basicInterest', {
                 current_index: progress.current_index || 0,
                 responses: progress.responses || {},
                 completed: false, // Will be set based on validation
-                progress_percentage: progress.percentage || 0,
+                progress_percentage: progress.progress_percentage || 0,
                 validResponses: progress.validResponses || 0,
                 totalQuestions
             };

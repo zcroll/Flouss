@@ -203,7 +203,7 @@ export const useHollandCodeStore = defineStore('hollandCode', {
           answer: form.type === 'skipped' ? 0 : form.answer // Ensure skipped questions have answer = 0
         };
 
-        await router.post(route('holland-codes.store-response'), formData, {
+        await router.post(route('holland-codes.store'), formData, {
           preserveState: true,
           preserveScroll: true,
           preserveUrl: true,
