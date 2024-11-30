@@ -1,5 +1,4 @@
 <template>
-
   <section class="Discovery" aria-live="polite" aria-atomic="true" aria-relevant="text" role="presentation">
     <div class="DiscoveryButton__inner">
       <div class="DiscoveryConfetti" id="dicovery-confetti" data-testid="dicovery-confetti" aria-hidden="true">
@@ -48,32 +47,62 @@
       </button>
     </div>
     <div id="discovery-dialog-container" class="yodel dialog-container Dialog-container">
-      <Archetype v-if="showArchetype" :archetype-discovery="archetypeDiscovery" @close="handleClose" />
+      <Archetype v-if="showArchetype && !showJobMatches" :archetype-discovery="archetypeDiscovery" @close="handleClose" />
+      <MatchJob v-if="showJobMatches" @close="handleClose" />
     </div>
   </section>
 </template>
 
 <script setup>
+import { ref, computed, watch } from 'vue';
 import Archetype from '../helpers/Archetype.vue';
-import { ref } from 'vue';
+import MatchJob from '../Test/matchjob.vue';
+import { useBasicInterestStore } from '@/stores/basicInterestStore';
+import { storeToRefs } from 'pinia';
+
+const store = useBasicInterestStore();
+const { progress } = storeToRefs(store);
+
+const showArchetype = ref(false);
+const showJobMatches = ref(false);
 
 const props = defineProps({
   archetypeDiscovery: {
     type: Object,
+    required: false,
+    default: () => ({})
+  },
+  currentStage: {
+    type: String,
     required: true
   }
 });
 
-const emit = defineEmits(['close']);
-const showArchetype = ref(false);
+// Show job matches when basic interests is completed
+const shouldShowJobMatches = computed(() => {
+  return props.currentStage === 'basic_interests' && 
+         progress.value?.progress_percentage > 70 &&
+         progress.value?.jobMatching;
+});
 
-const handleShowArchetype = () => {
-  showArchetype.value = true;
-};
+// Watch for changes in shouldShowJobMatches
+watch(shouldShowJobMatches, (newValue) => {
+  if (newValue) {
+    showJobMatches.value = true;
+    showArchetype.value = false;
+  }
+});
 
 const handleClose = () => {
   showArchetype.value = false;
+  showJobMatches.value = false;
   emit('close');
+};
+
+const emit = defineEmits(['close']);
+
+const handleShowArchetype = () => {
+  showArchetype.value = true;
 };
 </script>
 

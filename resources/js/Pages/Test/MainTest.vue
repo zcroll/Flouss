@@ -48,6 +48,7 @@
             <Discovery
               v-if="isComplete && testStageStore.currentStage === 'holland_codes' && hollandCodeStore?.progress?.archetypeDiscovery"
               :archetype-discovery="hollandCodeStore.progress.archetypeDiscovery" 
+              :current-stage="testStageStore.currentStage"
               @close="handleDiscoveryClose" 
             />
 

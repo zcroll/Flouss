@@ -1,7 +1,7 @@
 <template>
   <div class="Assessment__Item Assessment__RadioItem Assessment__RadioItem--active" :data-i="'i'" aria-atomic="true"
     aria-live="assertive">
-    <div>
+    <div v-if="!store.progress.completed">
       <BackButton 
         :loading="store.loading" 
         :disabled="!currentItemIndex" 
@@ -39,13 +39,31 @@
         </div>
       </form>
     </div>
+
+    <div v-else class="Assessment__completion">
+      <div class="Assessment__completion-content">
+        <h2>Basic Interests Assessment Complete!</h2>
+        <p>Great job! You've completed the Basic Interests assessment.</p>
+        <div class="Assessment__completion-actions">
+          <NextStep 
+            :test-stage="testStage"
+            :is-completed="true"
+            @proceed="handleProceed"
+          />
+        </div>
+      </div>
+      <MatchJob v-if="store.progress.jobMatching" @close="closeJobMatches" />
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
+import { storeToRefs } from 'pinia';
 import BackButton from './BackButton.vue';
 import AnswerOptions from './AnswerOptions.vue';
+import NextStep from './NextStep.vue';
+import MatchJob from './matchjob.vue';
 
 const props = defineProps({
   testData: {
@@ -75,6 +93,10 @@ const props = defineProps({
 });
 
 const formRef = ref(null);
+const showJobMatches = ref(false);
+
+// Get reactive store properties
+const { progress } = storeToRefs(props.store);
 
 // Computed property for current option set
 const optionSet = computed(() => {
@@ -84,6 +106,13 @@ const optionSet = computed(() => {
   return null;
 });
 
+// Watch for test completion
+watch(() => progress.value?.completed, (newValue) => {
+  if (newValue && progress.value?.jobMatching) {
+    showJobMatches.value = true;
+  }
+});
+
 onMounted(() => {
   if (props.currentItem) {
     props.form.itemId = props.currentItem.id;
@@ -91,33 +120,30 @@ onMounted(() => {
   }
 });
 
-// Watch for changes in current item
-watch(() => props.currentItem, (newItem) => {
-  if (newItem) {
-    props.form.itemId = newItem.id;
-    props.form.category = props.testStage;
-  }
-}, { immediate: true });
-
-const emit = defineEmits(['submit', 'go-back', 'skip']);
-
-const submitAnswer = () => {
-  try {
-    if (props.form.answer !== null) {
-      emit('submit');
-    }
-  } catch (error) {
-    console.error('Error submitting answer:', error);
-  }
+const submitAnswer = async () => {
+  if (props.store.loading) return;
+  await props.store.submitAnswer(props.form);
+  props.form.answer = null;
 };
 
 const handleGoBack = () => {
-  emit('go-back');
+  props.store.goBack();
 };
 
 const handleSkip = () => {
-  emit('skip');
+  props.form.type = 'skipped';
+  submitAnswer();
 };
+
+const handleProceed = () => {
+  emit('proceed');
+};
+
+const closeJobMatches = () => {
+  showJobMatches.value = false;
+};
+
+const emit = defineEmits(['proceed']);
 
 defineExpose({ formRef });
 </script>
@@ -125,34 +151,53 @@ defineExpose({ formRef });
 <style scoped>
 .Assessment__Item {
   position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.Assessment__completion {
+  text-align: center;
+  padding: 2rem;
+}
+
+.Assessment__completion-content {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.Assessment__completion-content h2 {
+  font-size: 1.8rem;
+  color: #2d3748;
+  margin-bottom: 1rem;
+}
+
+.Assessment__completion-content p {
+  color: #4a5568;
   margin-bottom: 2rem;
 }
 
-/* ... */
-
-.Assessment__RadioItem__skip {
-  margin-top: 1rem;
-  color: #6b7280;
-  font-size: 0.875rem;
-  text-decoration: underline;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-.Assessment__RadioItem__skip:hover {
-  color: #4f46e5;
+.Assessment__completion-actions {
+  margin-top: 2rem;
 }
 
 .Assessment__Question__actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 1rem;
+  margin-top: 2rem;
+  text-align: center;
 }
 
+.Assessment__Question__skip {
+  background: none;
+  border: none;
+  color: #4a5568;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
 
-.Assessment__Question__skip:hover:not(:disabled) {
-  opacity: 1;
+.Assessment__Question__skip:hover {
+  color: #2d3748;
 }
 
 .Assessment__Question__skip:disabled {
