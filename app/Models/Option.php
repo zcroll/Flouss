@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Option extends Model
 {
+    protected $table = 'options';
     protected $fillable = [
         'text',
         'help_text',
@@ -24,4 +25,4 @@ class Option extends Model
     {
         return $this->belongsTo(OptionSet::class);
     }
-} 
+}

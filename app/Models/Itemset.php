@@ -3,15 +3,21 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Itemset extends Model
+class ItemSet extends Model
 {
-    public $timestamps = false;
-
+    protected $table = 'itemsets';
+    
     protected $fillable = [
         'type',
         'title',
         'lead_in_text',
-        'url',
+        'url'
     ];
-}
+
+    public function items(): HasMany
+    {
+        return $this->hasMany(Item::class, 'itemset_id');
+    }
+} 
