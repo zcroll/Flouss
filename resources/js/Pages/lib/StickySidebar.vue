@@ -24,7 +24,7 @@
             <div v-if="isSmallScreen"
                  class="fixed top-0 left-0 right-0 bg-[#353535] text-white shadow-lg z-50 rounded-b-2xl">
                 <div class="flex items-center justify-between px-3 py-2 border-b border-gray-700">
-                    <img :src="image" alt="Icon" class="w-8 h-8 rounded-full"/>
+                    <img :src="image" alt="Icon" class="w-8 h-8 rounded-md"/>
 
                     <h3 class="text-sm font-bold ml-2 flex-1 truncate">{{ title }}</h3>
                     <FavoriteButton
