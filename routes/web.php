@@ -121,6 +121,12 @@ Route::middleware([
                 Route::post('/go-back', [BasicInterestController::class, 'goBack'])->name('basic-interests.go-back');
             });
         });
+
+        // Test Stage Management Routes
+        Route::prefix('test-stage')->group(function () {
+            Route::get('/current', [TestStageController::class, 'getCurrentStage']);
+            Route::post('/change', [TestStageController::class, 'changeStage']);
+        });
     });
 });
 
@@ -176,5 +182,3 @@ Route::get('/ruller', function () {
 });
 
 Route::get('/api',[ApiController::class,'index']);
-
-

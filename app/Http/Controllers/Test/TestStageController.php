@@ -9,10 +9,15 @@ use Inertia\Inertia;
 
 class TestStageController extends Controller
 {
+    private $stages = [
+        'holland_codes',
+        'basic_interests'
+    ];
+
     public function changeStage(Request $request)
     {
         \Log::info('TestStageController: Starting stage change', $request->all());
-        
+
         try {
             $validated = $request->validate([
                 'fromStage' => 'required|string',
@@ -24,7 +29,7 @@ class TestStageController extends Controller
             // Get the session key from the appropriate controller
             $sessionKey = $this->getSessionKey($validated['fromStage']);
             
-            // Verify previous stage completion
+            // Get progress for current stage
             $fromStageProgress = Session::get($sessionKey, [
                 'completed' => false
             ]);
@@ -36,38 +41,37 @@ class TestStageController extends Controller
             ]);
 
             if (!$fromStageProgress['completed']) {
-                \Log::warning('TestStageController: Previous stage not completed', [
-                    'stage' => $validated['fromStage'],
-                    'progress' => $fromStageProgress,
-                    'sessionKey' => $sessionKey
-                ]);
-                
-                return Inertia::render('Test/MainTest', [
+                return response()->json([
                     'error' => 'Previous stage not completed',
-                    'testStage' => $validated['fromStage']
-                ]);
+                    'currentStage' => $validated['fromStage'],
+                    'progress' => $fromStageProgress
+                ], 400);
             }
+            ds(['currentStage'=>$validated['toStage']]);
 
-            // Get data for the next stage
-            \Log::info('TestStageController: Getting next stage controller', [
-                'stage' => $validated['toStage']
+            // Store the current stage in session
+            Session::put('current_test_stage', $validated['toStage']);
+            \Log::info('TestStageController: Updated current_test_stage', ['stage' => $validated['toStage']]);
+
+            // Get stage-specific data for the new stage
+            $stageData = $this->getStageData($validated['toStage']);
+            
+            return response()->json([
+                'success' => true,
+                'currentStage' => $validated['toStage'],
+                'stageData' => $stageData
             ]);
-            
-            $controller = $this->getStageController($validated['toStage']);
-            
-            // Instead of trying to extract props, just let the next stage's controller handle the rendering
-            return $controller->index();
 
         } catch (\Exception $e) {
             \Log::error('TestStageController: Stage transition failed', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            
-            return Inertia::render('Test/MainTest', [
-                'error' => 'Stage transition failed: ' . $e->getMessage(),
-                'testStage' => $validated['fromStage'] ?? 'holland_codes'
-            ]);
+
+            return response()->json([
+                'error' => 'Failed to change stage',
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 
@@ -96,7 +100,7 @@ class TestStageController extends Controller
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            
+
             return Inertia::render('Test/MainTest', [
                 'error' => 'Failed to store response: ' . $e->getMessage(),
                 'testStage' => $request->input('testStage', 'holland_codes')
@@ -104,24 +108,126 @@ class TestStageController extends Controller
         }
     }
 
-    private function getSessionKey($stage)
+    public function getCurrentStage()
     {
-        return $stage . '_progress';
+        $currentStage = Session::get('current_test_stage');
+        
+        // If no stage is set in session, determine the appropriate stage
+        if (!$currentStage) {
+            // Check holland_codes_progress first
+            $hollandProgress = Session::get('holland_codes_progress');
+            if (!$hollandProgress || !($hollandProgress['completed'] ?? false)) {
+                $currentStage = 'holland_codes';
+            } else {
+                // Check basic_interests_progress
+                $basicProgress = Session::get('basic_interest_progress');
+                if (!$basicProgress || !($basicProgress['completed'] ?? false)) {
+                    $currentStage = 'basic_interests';
+                } else {
+                    $currentStage = 'holland_codes'; // Default if all complete
+                }
+            }
+            
+            // Store the determined stage
+            Session::put('current_test_stage', $currentStage);
+        }
+
+        \Log::info('TestStageController: Getting current stage', [
+            'stage' => $currentStage,
+            'session_id' => Session::getId()
+        ]);
+        
+        // Get the stage-specific data
+        $stageData = $this->getStageData($currentStage);
+        
+        return response()->json([
+            'currentStage' => $currentStage,
+            'stageData' => $stageData
+        ]);
     }
 
-    protected function getStageController($stage)
+    public function getNextStage($currentStage)
     {
-        switch ($stage) {
-            case 'holland_codes':
-                return new HollandCodeController();
-            case 'basic_interests':
-                return new BasicInterestController();
-            case 'workplace':
-                return new WorkplaceController();
-            case 'personality':
-                return new PersonalityController();
-            default:
-                return null;
+        $currentIndex = array_search($currentStage, $this->stages);
+        if ($currentIndex !== false && $currentIndex < count($this->stages) - 1) {
+            return $this->stages[$currentIndex + 1];
         }
+        return null;
     }
-} 
+
+    public function getPreviousStage($currentStage)
+    {
+        $currentIndex = array_search($currentStage, $this->stages);
+        if ($currentIndex !== false && $currentIndex > 0) {
+            return $this->stages[$currentIndex - 1];
+        }
+        return null;
+    }
+
+    private function getSessionKey($stage)
+    {
+        $keyMap = [
+            'holland_codes' => 'holland_codes_progress',
+            'basic_interests' => 'basic_interest_progress',
+            'workplace' => 'workplace_progress',
+            'personality' => 'personality_progress'
+        ];
+
+        return $keyMap[$stage] ?? null;
+    }
+
+    private function getStageController($stage)
+    {
+        $controllerMap = [
+            'holland_codes' => app(HollandCodeController::class),
+            'basic_interests' => app(BasicInterestController::class)
+        ];
+
+        return $controllerMap[$stage] ?? null;
+    }
+
+    private function getStageData($stage)
+    {
+        $stageData = [];
+        
+        switch ($stage) {
+            case 'basic_interests':
+                $progress = Session::get('basic_interest_progress', [
+                    'current_index' => 0,
+                    'responses' => [],
+                    'completed' => false,
+                    'progress_percentage' => 0
+                ]);
+                
+                \Log::info('TestStageController: Basic Interest progress', [
+                    'progress' => $progress,
+                    'session_id' => Session::getId()
+                ]);
+                
+                $stageData = [
+                    'progress' => $progress
+                ];
+                break;
+                
+            case 'holland_codes':
+                $progress = Session::get('holland_codes_progress', [
+                    'current_index' => 0,
+                    'responses' => [],
+                    'completed' => false,
+                    'progress_percentage' => 0
+                ]);
+                
+                \Log::info('TestStageController: Holland Codes progress', [
+                    'progress' => $progress,
+                    'session_id' => Session::getId()
+                ]);
+                
+                $stageData = [
+                    'progress' => $progress
+                ];
+                break;
+        }
+        
+        return $stageData;
+    }
+}

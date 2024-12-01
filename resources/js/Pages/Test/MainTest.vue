@@ -48,9 +48,9 @@
             <Discovery
               v-if="isComplete && testStageStore.currentStage === 'holland_codes' && hollandCodeStore?.progress?.archetypeDiscovery"
               :archetype-discovery="hollandCodeStore.progress.archetypeDiscovery" 
-              :current-stage="testStageStore.currentStage"
-              @close="handleDiscoveryClose" 
             />
+            <Discovery               @close="handleDiscoveryClose" 
+ />
 
             <section class="discovery"
               v-if="isComplete">
@@ -138,6 +138,7 @@ const error = computed(() => currentStore.value?.error || null);
 const isReady = computed(() => currentStore.value && currentTestData.value);
 
 onMounted(async () => {
+  await testStageStore.initialize();
   try {
     if (testStageStore.currentStage === 'basic_interests') {
       await basicInterestStore.initialize();

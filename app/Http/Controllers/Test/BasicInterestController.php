@@ -18,16 +18,16 @@ class BasicInterestController extends Controller
 
     public function index()
     {
-        \Log::info('BasicInterestController: Starting index method');
+        // \Log::info('BasicInterestController: Starting index method');
         
-        if (!request()->header('X-Inertia')) {
-            \Log::info('BasicInterestController: Non-Inertia request');
-            return Inertia::render('Test/MainTest', [
-                'basicInterest' => null,
-                'progress' => null,
-                'testStage' => 'basic_interest'
-            ]);
-        }
+        // if (!request()->header('X-Inertia')) {
+        //     \Log::info('BasicInterestController: Non-Inertia request');
+        //     return Inertia::render('Test/MainTest', [
+        //         'basicInterest' => null,
+        //         'progress' => null,
+        //         'testStage' => 'basic_interest'
+        //     ]);
+        // }
 
         try {
             $progress = Session::get(self::SESSION_KEY, [
@@ -162,7 +162,7 @@ class BasicInterestController extends Controller
               ->where('title', 'Self Reported Interests')
               ->first();
               
-              if ($progress['progress_percentage'] > 70) {
+              if ($progress['progress_percentage'] > 20) {
                   $data = $this->formatResponse($progress['responses']);
                   \Log::info('BasicInterestController: Formatted responses:', $data);
                   $job = $this->matchJobs($data);

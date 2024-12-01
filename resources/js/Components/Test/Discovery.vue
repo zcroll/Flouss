@@ -1,4 +1,10 @@
 <template>
+
+
+<link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css">
+ <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/assessments.ba16abcb0f5b.css">
+
+
   <section class="Discovery" aria-live="polite" aria-atomic="true" aria-relevant="text" role="presentation">
     <div class="DiscoveryButton__inner">
       <div class="DiscoveryConfetti" id="dicovery-confetti" data-testid="dicovery-confetti" aria-hidden="true">
@@ -27,7 +33,7 @@
       <button class="DiscoveryButton DiscoveryButton--degree-match DiscoveryButton--is-alive"
         data-dialog-target="dialog-discovery"
         aria-label="We've made a new discovery: Click here for your degree matches!. " aria-owns="#dialog-discovery"
-        tabindex="0" :style="{ backgroundImage: `url(${archetypeDiscovery.image_url})` }" @click="handleShowArchetype">
+        tabindex="0" @click="handleShowArchetype">
         <h3 class="DiscoveryButton__title" aria-hidden="true">Click here for your degree matches!</h3>
         <svg aria-hidden="true" focusable="false" data-prefix="fal" data-icon="chevron-up"
           class="svg-inline--fa fa-chevron-up DiscoveryButton__arrow" role="img" xmlns="http://www.w3.org/2000/svg"
@@ -47,66 +53,38 @@
       </button>
     </div>
     <div id="discovery-dialog-container" class="yodel dialog-container Dialog-container">
-      <Archetype v-if="showArchetype && !showJobMatches" :archetype-discovery="archetypeDiscovery" @close="handleClose" />
-      <MatchJob v-if="showJobMatches" @close="handleClose" />
+      <!-- <Archetype v-if="showArchetype" :archetype-discovery="archetypeDiscovery" @close="handleClose" /> -->
+      <MatchResult v-if="showArchetype" :archetype-discovery="archetypeDiscovery" @close="handleClose" />
     </div>
   </section>
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
 import Archetype from '../helpers/Archetype.vue';
-import MatchJob from '../Test/matchjob.vue';
-import { useBasicInterestStore } from '@/stores/basicInterestStore';
-import { storeToRefs } from 'pinia';
-
-const store = useBasicInterestStore();
-const { progress } = storeToRefs(store);
-
-const showArchetype = ref(false);
-const showJobMatches = ref(false);
+import { ref } from 'vue';
+import MatchResult from './MatchResult.vue';
 
 const props = defineProps({
   archetypeDiscovery: {
     type: Object,
-    required: false,
-    default: () => ({})
-  },
-  currentStage: {
-    type: String,
     required: true
   }
 });
 
-// Show job matches when basic interests is completed
-const shouldShowJobMatches = computed(() => {
-  return props.currentStage === 'basic_interests' && 
-         progress.value?.progress_percentage > 70 &&
-         progress.value?.jobMatching;
-});
-
-// Watch for changes in shouldShowJobMatches
-watch(shouldShowJobMatches, (newValue) => {
-  if (newValue) {
-    showJobMatches.value = true;
-    showArchetype.value = false;
-  }
-});
-
-const handleClose = () => {
-  showArchetype.value = false;
-  showJobMatches.value = false;
-  emit('close');
-};
-
 const emit = defineEmits(['close']);
+const showArchetype = ref(false);
 
 const handleShowArchetype = () => {
   showArchetype.value = true;
 };
+
+const handleClose = () => {
+  showArchetype.value = false;
+  emit('close');
+};
 </script>
 
-<style scoped>
+<style >
 @import url('https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css');
 @import url('https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/assessments.ba16abcb0f5b.css')
 </style>

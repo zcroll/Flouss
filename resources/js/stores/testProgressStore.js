@@ -61,66 +61,73 @@ export const useTestProgressStore = defineStore('testProgress', {
 
     markStageComplete(stage) {
       if (this.stages[stage]) {
-        const previousState = { ...this.stages[stage] };
-        
+        this.logDebug(stage, 'markComplete:before', {
+          stage,
+          currentState: { ...this.stages[stage] }
+        });
+
         this.stages[stage].completed = true;
         this.stages[stage].canTransition = true;
-        
-        this.logDebug(stage, 'markStageComplete', {
-          previous: previousState,
-          current: { ...this.stages[stage] }
+        this.stages[stage].percentage = 100;
+
+        // If this is holland_codes and we're in basic_interests, ensure it stays completed
+        if (stage === 'holland_codes' && this.currentStage === 'basic_interests') {
+          this.stages[stage].completed = true;
+          this.stages[stage].canTransition = true;
+        }
+
+        this.logDebug(stage, 'markComplete:after', {
+          stage,
+          newState: { ...this.stages[stage] }
         });
       }
     },
 
     updateStageProgress(stage, progressData) {
-      if (this.stages[stage]) {
-        const previousState = { ...this.stages[stage] };
-        const stageData = this.stages[stage];
+      if (!this.stages[stage]) return;
 
-        // Update with controller data if provided
-        if (typeof progressData === 'object') {
-          this.logDebug(stage, 'updateProgress:before', {
-            progressData,
-            currentState: { ...stageData }
-          });
+      const previousState = { ...this.stages[stage] };
+      const stageData = this.stages[stage];
 
-          // Update progress data
-          stageData.currentIndex = progressData.currentIndex || 0;
-          stageData.validResponses = progressData.validResponses || 0;
-          stageData.percentage = progressData.percentage || 0;
-          
-          // Handle completion status
-          if (progressData.completed) {
-            console.log('Marking stage complete:', stage, progressData);
-            this.markStageComplete(stage);
-          } else {
-            stageData.completed = false;
-            stageData.canTransition = false;
-          }
+      this.logDebug(stage, 'updateProgress:start', {
+        stage,
+        progressData,
+        currentState: { ...stageData }
+      });
 
-          this.logDebug(stage, 'updateProgress:after', {
-            previous: previousState,
-            current: { ...stageData },
-            changes: {
-              currentIndex: stageData.currentIndex !== previousState.currentIndex,
-              validResponses: stageData.validResponses !== previousState.validResponses,
-              percentage: stageData.percentage !== previousState.percentage,
-              completed: stageData.completed !== previousState.completed,
-              canTransition: stageData.canTransition !== previousState.canTransition
-            }
-          });
-        } 
-        // Handle legacy percentage-only updates
-        else if (typeof progressData === 'number') {
-          this.logDebug(stage, 'updateProgress:legacy', {
-            progressData,
-            currentState: { ...stageData }
-          });
+      // If we're in basic_interests, ensure holland_codes stays completed
+      if (this.currentStage === 'basic_interests' && stage === 'holland_codes') {
+        stageData.completed = true;
+        stageData.canTransition = true;
+        stageData.percentage = 100;
+        return;
+      }
 
-          stageData.percentage = progressData;
-          stageData.completed = progressData >= 100;
-          stageData.canTransition = progressData >= 100;
+      // Update with controller data if provided
+      if (typeof progressData === 'object') {
+        // Update progress data
+        stageData.currentIndex = progressData.current_index || progressData.currentIndex || 0;
+        stageData.validResponses = progressData.valid_responses || progressData.validResponses || 0;
+        stageData.percentage = progressData.progress_percentage || progressData.percentage || 0;
+        
+        // Handle completion status
+        if (progressData.completed) {
+          this.markStageComplete(stage);
+        } else {
+          stageData.completed = false;
+          stageData.canTransition = false;
+        }
+
+        this.logDebug(stage, 'updateProgress:after', {
+          previous: previousState,
+          current: { ...stageData }
+        });
+      } 
+      // Handle legacy percentage-only updates
+      else if (typeof progressData === 'number') {
+        stageData.percentage = progressData;
+        if (progressData >= 100) {
+          this.markStageComplete(stage);
         }
       }
     },
@@ -160,38 +167,26 @@ export const useTestProgressStore = defineStore('testProgress', {
     },
 
     setCurrentStage(stage) {
-      if (this.stages[stage]) {
-        const previousStage = this.currentStage;
-        const previousStageData = this.stages[previousStage];
-        
-        // Log the transition
-        this.logDebug('transition', 'setCurrentStage:start', {
-          from: previousStage,
-          to: stage,
-          previousStageState: { ...previousStageData },
-          nextStageState: { ...this.stages[stage] }
-        });
+      if (!this.stages[stage]) return;
 
-        // Update the current stage
-        this.currentStage = stage;
+      this.logDebug(stage, 'setCurrentStage:before', {
+        fromStage: this.currentStage,
+        toStage: stage
+      });
 
-        // Ensure proper state of stages
-        if (previousStageData) {
-          if (!previousStageData.completed) {
-            previousStageData.canTransition = false;
-          }
-        }
-
-        // Log the completion
-        this.logDebug('transition', 'setCurrentStage:complete', {
-          currentStage: this.currentStage,
-          previousStage: previousStage,
-          stageStates: {
-            previous: { ...previousStageData },
-            current: { ...this.stages[stage] }
-          }
-        });
+      // If moving to basic_interests, ensure holland_codes is marked as complete
+      if (stage === 'basic_interests') {
+        this.stages['holland_codes'].completed = true;
+        this.stages['holland_codes'].canTransition = true;
+        this.stages['holland_codes'].percentage = 100;
       }
+
+      this.currentStage = stage;
+
+      this.logDebug(stage, 'setCurrentStage:after', {
+        currentStage: this.currentStage,
+        stageState: { ...this.stages[stage] }
+      });
     },
 
     resetStageTransition(stage) {

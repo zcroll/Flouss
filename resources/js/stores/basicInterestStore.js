@@ -47,13 +47,13 @@ export const useBasicInterestStore = defineStore('basicInterest', {
                     items: data.basicInterest.items || [],
                     option_sets: data.basicInterest.option_sets || []
                 };
-                
-                if (data.progress) {
-                    this.setProgress(data.progress);
-                }
-                
-                this.setCurrentItem();
             }
+            
+            if (data.progress) {
+                this.setProgress(data.progress);
+            }
+
+            this.setCurrentItem();
         },
 
         setProgress(progress) {
@@ -207,7 +207,46 @@ export const useBasicInterestStore = defineStore('basicInterest', {
                 this.error = error.message;
                 this.loading = false;
             }
-        }
+        },
+
+        async fetchData() {
+            try {
+                this.loading = true;
+                this.error = null;
+                this.logDebug('fetchData', { message: 'Starting fetch' });
+
+                const response = await router.get(route('basic-interests.index'), {}, {
+                    preserveState: true,
+                    preserveScroll: true,
+                    onSuccess: (page) => {
+                        this.logDebug('fetchData', { 
+                            message: 'Fetch successful',
+                            data: page.props 
+                        });
+                        
+                        this.initialize(page.props);
+                    },
+                    onError: (errors) => {
+                        this.error = 'Failed to fetch basic interest data';
+                        this.logDebug('fetchData', { 
+                            message: 'Fetch failed',
+                            errors 
+                        });
+                    }
+                });
+
+                return response;
+            } catch (error) {
+                this.error = 'Failed to fetch basic interest data';
+                this.logDebug('fetchData', { 
+                    message: 'Fetch error',
+                    error 
+                });
+                throw error;
+            } finally {
+                this.loading = false;
+            }
+        },
     },
 
     getters: {
