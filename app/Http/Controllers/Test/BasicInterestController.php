@@ -161,6 +161,9 @@ class BasicInterestController extends Controller
               
               ->where('title', 'Self Reported Interests')
               ->first();
+
+
+              ds('basicInterest', $basicInterest->items->count());
               
               if ($progress['progress_percentage'] > 20) {
                   $data = $this->formatResponse($progress['responses']);

@@ -46,11 +46,15 @@
             </div>
 
             <Discovery
-              v-if="isComplete && testStageStore.currentStage === 'holland_codes' && hollandCodeStore?.progress?.archetypeDiscovery"
-              :archetype-discovery="hollandCodeStore.progress.archetypeDiscovery" 
+              v-if="isComplete && (
+                (testStageStore.currentStage === 'holland_codes' && hollandCodeStore?.progress?.archetypeDiscovery) ||
+                (testStageStore.currentStage === 'basic_interests' && basicInterestStore?.progress?.jobMatching)
+              )"
+              :archetype-discovery="hollandCodeStore?.progress?.archetypeDiscovery"
+              :job-matching="basicInterestStore?.progress?.jobMatching"
+              :current-stage="testStageStore.currentStage"
+              @close="handleDiscoveryClose"
             />
-            <Discovery               @close="handleDiscoveryClose" 
- />
 
             <section class="discovery"
               v-if="isComplete">
@@ -84,6 +88,7 @@ import { useTestStageStore } from "@/stores/testStageStore";
 import { useBasicInterestStore } from "@/stores/basicInterestStore";
 import Discovery from "@/Components/Test/Discovery.vue";
 import BackButton from "@/Components/Test/BackButton.vue";
+import MatchResult from "@/Components/Test/MatchResult.vue";
 
 const hollandCodeStore = useHollandCodeStore();
 const testStageStore = useTestStageStore();
@@ -181,7 +186,9 @@ const skipQuestion = () => {
 };
 
 const handleDiscoveryClose = () => {
-  if (testStageStore.currentStage === 'holland_codes') {
+  if (testStageStore.currentStage === 'basic_interests') {
+    basicInterestStore.jobMatching = null;
+  } else if (testStageStore.currentStage === 'holland_codes') {
     hollandCodeStore.progress.archetypeDiscovery = null;
   }
 };

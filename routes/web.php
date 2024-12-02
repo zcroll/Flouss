@@ -46,6 +46,7 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
