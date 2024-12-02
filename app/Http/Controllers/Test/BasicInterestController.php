@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Test;
 
 use App\Http\Controllers\Controller;
 use App\Models\ItemSet;
+use App\Models\JobInfo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
@@ -53,12 +54,16 @@ class BasicInterestController extends Controller
             }
 
             $totalQuestions = $basicInterest->items->count();
+            $isCompleted = $progress['current_index'] >= $totalQuestions;
+
             \Log::info('BasicInterestController: Total questions count', ['count' => $totalQuestions]);
 
             if ($totalQuestions === 0) {
                 \Log::error('BasicInterestController: No questions found in Basic Interest ItemSet');
                 throw new \Exception('No questions found in Basic Interest ItemSet');
             }
+
+            ds(['iscomplated'=>$progress['completed']]);
 
             $response = [
                 'basicInterest' => [
@@ -70,6 +75,7 @@ class BasicInterestController extends Controller
                     'total_questions' => $totalQuestions
                 ],
                 'progress' => $progress,
+                'isCompleted' => $isCompleted,
                 'testStage' => 'basic_interest'
             ];
 
@@ -115,9 +121,6 @@ class BasicInterestController extends Controller
                 'progress_percentage' => 0
             ]); 
 
-            // ds('progress', $progress['responses']);
-            
-
             // Store response (0 for skipped, actual value for answered)
             $progress['responses'][$validated['itemId']] = $validated['type'] === 'skipped' 
                 ? 0 
@@ -129,49 +132,64 @@ class BasicInterestController extends Controller
 
             // Increment current index
             $progress['current_index']++;
+            
 
-            // Calculate progress based on current index
-            $progress['progress_percentage'] = $totalQuestions > 0 
-                ? round(($progress['current_index'] / $totalQuestions) * 100) 
-                : 0;
+            // \Log::info('BasicInterestController: Progress updated:', $progress);
 
-            // Update completed status
-            $isCompleted = $progress['current_index'] >= $totalQuestions;
-            $progress['completed'] = $isCompleted;
+            // Get completion status using the getter method
+            $completionStatus = $this->getCompletionStatus($progress, $totalQuestions);
+            
+            // Update progress with completion status
+            $progress = array_merge($progress, $completionStatus);
 
             \Log::info('BasicInterestController: Storing response:', [
                 'currentIndex' => $progress['current_index'],
                 'totalQuestions' => $totalQuestions,
+                'validResponses' => $progress['validResponses'],
                 'percentage' => $progress['progress_percentage'],
+                'isComplete' => $progress['isComplete'],
                 'type' => $validated['type'],
                 'answer' => $validated['answer'],
-                'storedAnswer' => $progress['responses'][$validated['itemId']],
-                'completed' => $isCompleted
+                'storedAnswer' => $progress['responses'][$validated['itemId']]
             ]);
+
+            if ($progress['progress_percentage'] > 90) {
+                // Only include non-skipped responses for job matching
+                $formattedResponses = [];
+                foreach ($progress['responses'] as $itemId => $answer) {
+                    if ($answer > 0) { // Skip answers with value 0
+                        $formattedResponses[$itemId] = $answer;
+                    }
+                }
+                
+                if (!empty($formattedResponses)) {
+                    $data = $this->formatResponse($formattedResponses);
+                    \Log::info('BasicInterestController: Formatted responses:', $data);
+                    $pythonJobResults = $this->matchJobs($data);
+
+                    // Extract job IDs from Python results
+                    $jobIds = array_column($pythonJobResults['job_matches'], 'job_id');
+
+                    // Get the actual job records from database
+                    $job = JobInfo::whereIn('id', $jobIds)->get();
+                    $progress['jobMatching'] = $job;
+                }
+            }
 
             Session::put(self::SESSION_KEY, $progress);
 
-            
             // Get complete basic interest data for the response
             $basicInterest = ItemSet::with([
-              'items:id,text,help_text,option_set_id,is_completed,career_id,degree_id,image_url,image_colour,itemset_id',
-              'items.optionSet:id,name,help_text,type',
-              'items.optionSet.options:id,text,help_text,value,reverse_coded_value,option_set_id'
-              ])
-              
-              ->where('title', 'Self Reported Interests')
-              ->first();
+                'items:id,text,help_text,option_set_id,is_completed,career_id,degree_id,image_url,image_colour,itemset_id',
+                'items.optionSet:id,name,help_text,type',
+                'items.optionSet.options:id,text,help_text,value,reverse_coded_value,option_set_id'
+            ])
+            ->where('title', 'Self Reported Interests')
+            ->first();
 
-
-              ds('basicInterest', $basicInterest->items->count());
-              
-              if ($progress['progress_percentage'] > 20) {
-                  $data = $this->formatResponse($progress['responses']);
-                  \Log::info('BasicInterestController: Formatted responses:', $data);
-                  $job = $this->matchJobs($data);
-                  $progress['jobMatching'] = $job;
-                  ds('job', $job);
-              }
+            if ($request->wantsJson()) {
+                return response()->json(['progress' => $progress]);
+            }
 
             return Inertia::render('Test/MainTest', [
                 'basicInterest' => [
@@ -181,9 +199,9 @@ class BasicInterestController extends Controller
                     'items' => $basicInterest->items,
                     'option_sets' => $basicInterest->items->pluck('optionSet')->unique()
                 ],
-                'progress' => $progress
+                'progress' => $progress,
+                'testStage' => $basicInterest->title,
             ]);
-
         } catch (\Exception $e) {
             \Log::error('BasicInterestController: Error storing response', [
                 'message' => $e->getMessage(),
@@ -263,6 +281,23 @@ class BasicInterestController extends Controller
         }
     }
 
+
+    protected function getCompletionStatus($progress, $totalQuestions)
+    {
+        // Count valid responses (non-skipped answers)
+        $validResponses = count(array_filter($progress['responses'], function($answer) {
+            return $answer > 0;
+        }));
+
+        return [
+            'validResponses' => $validResponses,
+            'totalQuestions' => $totalQuestions,
+            'isComplete' => $validResponses >= ($totalQuestions - 1), // Allow one skip
+            'progress_percentage' => $totalQuestions > 0 
+                ? round(($progress['current_index'] / $totalQuestions) * 100) 
+                : 0
+        ];
+    }
 
     public function formatResponse($progress)
     {

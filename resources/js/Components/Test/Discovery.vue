@@ -10,6 +10,7 @@
         class="DiscoveryButton"
         @click="handleShowResults"
         v-if="!showArchetype"
+        :style="isHollandCodes ? { backgroundImage: `url(${archetypeDiscovery.image_url})` } : { backgroundImage: 'url(https://res.cloudinary.com/hnpb47ejt/image/upload/v1561590833/flch4qwruatfzibnlgs1.svg)' }"
         data-testid="discovery-button"
         type="button"
         tabindex="0"

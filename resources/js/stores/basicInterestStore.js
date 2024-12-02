@@ -24,7 +24,8 @@ export const useBasicInterestStore = defineStore('basicInterest', {
         },
         loading: false,
         error: null,
-        debug: true
+        debug: true,
+        isCompleted: false
     }),
 
     actions: {
@@ -53,6 +54,12 @@ export const useBasicInterestStore = defineStore('basicInterest', {
                 this.setProgress(data.progress);
             }
 
+            // Set isCompleted from the server response
+            if (data.isCompleted !== undefined) {
+                this.isCompleted = data.isCompleted;
+                this.logDebug('initialize:isCompleted', { isCompleted: this.isCompleted });
+            }
+
             this.setCurrentItem();
         },
 
@@ -73,30 +80,49 @@ export const useBasicInterestStore = defineStore('basicInterest', {
             this.progress = {
                 current_index: progress.current_index || 0,
                 responses: progress.responses || {},
-                completed: progress.completed || false,
+                completed: false, // Will be set based on validation
                 progress_percentage: progress.progress_percentage || 0,
-                validResponses: Object.values(progress.responses || {}).filter(v => v > 0).length,
+                validResponses: progress.validResponses || 0,
                 totalQuestions,
                 jobMatching: progress.jobMatching || null
             };
 
-            // Check if test should be completed
-            if (this.progress.progress_percentage >= 100 || this.progress.validResponses >= totalQuestions) {
-                this.progress.completed = true;
-                this.currentItem = null;
+            this.logDebug('setProgress:jobMatching', {
+                jobMatching: this.progress.jobMatching
+            });
+
+            // Update responses
+            if (progress.responses) {
+                this.responses = Object.fromEntries(
+                    Object.entries(progress.responses).map(([key, value]) => [
+                        key,
+                        value !== null ? parseInt(value) : null
+                    ])
+                );
             }
 
+            // Calculate valid responses count
+            const validResponsesCount = Object.values(this.responses).filter(v => v > 0).length;
+            this.progress.validResponses = validResponsesCount;
+
+            // Update isCompleted based on server response or completion status
+            this.isCompleted = progress.isCompleted || (this.progress.current_index >= totalQuestions);
+
+            // Update completion status based on valid responses
+            this.progress.completed = validResponsesCount >= totalQuestions;
+
+            // Update current index to match controller
+            this.currentItemIndex = Math.min(progress.current_index || 0, totalQuestions - 1);
+            
             this.logDebug('setProgress:after', {
                 oldProgress,
                 newProgress: { ...this.progress },
-                validResponses: this.progress.validResponses,
+                validResponsesCount,
                 totalQuestions,
                 completed: this.progress.completed
             });
             
-            if (!this.progress.completed) {
-                this.setCurrentItem();
-            }
+            this.setCurrentItem();
         },
 
         setCurrentItem() {
@@ -130,6 +156,11 @@ export const useBasicInterestStore = defineStore('basicInterest', {
                 // Store response locally first
                 this.responses[itemId] = response;
                 
+                // Update progress
+                this.progress.responses = { ...this.responses };
+                this.progress.validResponses = Object.values(this.responses).filter(v => v !== null).length;
+                this.progress.progress_percentage = (this.progress.validResponses / this.progress.totalQuestions) * 100;
+                
                 // Make API request
                 router.post('/basic-interests', {
                     itemId,
@@ -145,12 +176,14 @@ export const useBasicInterestStore = defineStore('basicInterest', {
                         
                         if (page.props.progress) {
                             this.setProgress(page.props.progress);
-                            
-                            // Check completion after progress update
-                            if (page.props.progress.progress_percentage >= 100) {
-                                this.progress.completed = true;
-                                this.currentItem = null;
-                            }
+                        }
+                        
+                        // Move to next question if available
+                        if (this.currentItemIndex < this.basicInterestData.items.length - 1) {
+                            this.currentItemIndex++;
+                            this.setCurrentItem();
+                        } else {
+                            this.progress.completed = true;
                         }
 
                         if (page.props.error) {
@@ -251,9 +284,7 @@ export const useBasicInterestStore = defineStore('basicInterest', {
 
     getters: {
         isComplete: (state) => {
-            const validResponses = Object.values(state.responses).filter(v => v > 0).length;
-            const totalQuestions = state.basicInterestData?.items?.length || state.progress.totalQuestions;
-            return validResponses >= totalQuestions;
+            return state.progress.completed;
         },
         progressPercentage: (state) => state.progress.progress_percentage,
         validResponsesCount: (state) => Object.values(state.responses).filter(v => v > 0).length,
