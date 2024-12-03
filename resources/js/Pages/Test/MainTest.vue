@@ -1,5 +1,17 @@
 <template>
   <section class="Roadmap" data-testid="roadmap">
+    <!-- <div v-if="debug" style="padding: 10px; background: #f5f5f5;">
+      <pre>{{ {
+        currentStage: testStageStore?.currentStage,
+        hasData: !!currentTestData.value,
+        hasStore: !!currentStore.value,
+        isReady: isReady,
+        loading: loading.value,
+        error: error.value,
+        leadInText: currentTestData.value?.lead_in_text
+      } }}</pre>
+    </div> -->
+
     <div v-if="error" class="error-container">
       <div class="error-alert">
         {{ error }}
@@ -8,15 +20,15 @@
 
     <div class="assessment-with-progress">
       <SidebarMainTest :progress="{
-        hollandCodes: Number(hollandCodeStore?.progress?.progress_percentage || 0),
+        hollandCodes: Number(hollandCodeStore?.progress?.progress_percentage ?? 0),
         basicInterest: {
-          currentIndex: basicInterestStore?.progress?.current_index || 0,
-          validResponses: basicInterestStore.validResponsesCount,
-          percentage: basicInterestStore.progressPercentage,
-          completed: basicInterestStore.isComplete
+          currentIndex: basicInterestStore?.progress?.current_index ?? 0,
+          validResponses: basicInterestStore?.validResponsesCount ?? 0,
+          percentage: basicInterestStore?.progressPercentage ?? 0,
+          completed: basicInterestStore?.isComplete ?? false
         },
         completed: isComplete && canProceed
-      }" :test-stage="testStageStore.currentStage" />
+      }" :test-stage="testStageStore?.currentStage" />
 
       <div class="assessment Roadmap__inner">
         <section v-if="!isReady || loading" class="Assessment">
@@ -30,8 +42,13 @@
           </div>
         </section>
         <section v-else class="Assessment" tabindex="-1" data-testid="assessment-test">
+          <!-- <div v-if="debug" style="padding: 10px; background: #f5f5f5;">
+            <p>Lead in text: {{ currentTestData?.lead_in_text }}</p>
+            <p>Current item: {{ currentItem?.id }}</p>
+          </div> -->
+
           <section class="Assessment__ItemSetLeadIn" v-if="!isComplete">
-            {{ currentTestData.lead_in_text }}
+            {{ currentTestData?.lead_in_text }}
           </section>
 
           <div class="Assessment__scroll-container">
@@ -103,52 +120,66 @@ const form = useForm({
 });
 
 const currentStore = computed(() => {
+  if (!testStageStore?.currentStage) return null;
+  
   switch (testStageStore.currentStage) {
     case 'basic_interests':
-      return basicInterestStore;
+      return basicInterestStore || null;
     case 'holland_codes':
-      return hollandCodeStore;
+      return hollandCodeStore || null;
     default:
       return null;
   }
 });
 
 const currentTestData = computed(() => {
+  if (!testStageStore?.currentStage) return null;
+  
   switch (testStageStore.currentStage) {
     case 'basic_interests':
-      return basicInterestStore.basicInterestData;
+      return basicInterestStore?.data || null;
     case 'holland_codes':
-      return hollandCodeStore.hollandCodesData;
+      return hollandCodeStore?.data || null;
     default:
       return null;
   }
 });
 
-const currentItem = computed(() => currentStore.value?.currentItem || null);
-const currentItemIndex = computed(() => currentStore.value?.currentItemIndex || 0);
+const currentItem = computed(() => currentStore.value?.currentItem ?? null);
+const currentItemIndex = computed(() => currentStore.value?.currentItemIndex ?? 0);
+
 const isComplete = computed(() => {
+  if (!testStageStore?.currentStage) return false;
+  
   if (testStageStore.currentStage === 'holland_codes') {
-    return hollandCodeStore.isTestComplete;
+    return hollandCodeStore?.isTestComplete ?? false;
   }
-  return currentStore.value?.isComplete || false;
+  return currentStore.value?.isComplete ?? false;
 });
+
 const canProceed = computed(() => {
+  if (!testStageStore?.currentStage) return false;
+  
   if (testStageStore.currentStage === 'holland_codes') {
-    return hollandCodeStore.isTestComplete;
+    return hollandCodeStore?.isTestComplete ?? false;
   }
-  return currentStore.value?.canProceed || false;
+  return currentStore.value?.canProceed ?? false;
 });
-const loading = computed(() => currentStore.value?.loading || false);
-const error = computed(() => currentStore.value?.error || null);
-const isReady = computed(() => currentStore.value && currentTestData.value);
+
+const loading = computed(() => currentStore.value?.loading ?? false);
+const error = computed(() => currentStore.value?.error ?? null);
+const isReady = computed(() => !!currentStore.value && !!currentTestData.value);
+
+const debug = ref(true);
 
 onMounted(async () => {
-  await testStageStore.initialize();
   try {
-    if (testStageStore.currentStage === 'basic_interests') {
-      await basicInterestStore.initialize();
-    } else if (testStageStore.currentStage === 'holland_codes') {
-      await hollandCodeStore.fetchHollandCodes();
+    await testStageStore?.initialize();
+    
+    if (testStageStore?.currentStage === 'basic_interests') {
+      await basicInterestStore?.fetchData();
+    } else if (testStageStore?.currentStage === 'holland_codes') {
+      await hollandCodeStore?.fetchHollandCodes();
     }
   } catch (error) {
     console.error('Error initializing test:', error);
@@ -158,7 +189,7 @@ onMounted(async () => {
 const retryFetch = async () => {
   try {
     if (testStageStore.currentStage === 'basic_interests') {
-      await basicInterestStore.initialize();
+      await basicInterestStore.fetchData();
     } else if (testStageStore.currentStage === 'holland_codes') {
       await hollandCodeStore.fetchHollandCodes();
     }
@@ -168,11 +199,17 @@ const retryFetch = async () => {
 };
 
 const submitAnswer = async () => {
-  if (!currentStore.value) return;
+  const store = currentStore.value;
+  if (!store || loading.value) return;
   
-  form.testStage = testStageStore.currentStage;
-  await currentStore.value.submitAnswer(form);
-  form.answer = null;
+  try {
+    form.testStage = testStageStore?.currentStage;
+    await store.submitAnswer(form);
+  } catch (err) {
+    console.error('Error submitting answer:', err);
+  } finally {
+    form.answer = null;
+  }
 };
 
 const goBack = () => {
@@ -205,6 +242,22 @@ const continueToNextSection = async () => {
     console.error('Failed to continue to next section:', error);
   }
 };
+
+watch(() => currentTestData.value, (newData) => {
+  console.log('currentTestData changed:', {
+    data: newData,
+    stage: testStageStore.currentStage,
+    storeData: currentStore.value?.data
+  });
+}, { immediate: true });
+
+watch(() => currentStore.value, (newStore) => {
+  console.log('currentStore changed:', {
+    store: newStore,
+    data: newStore?.data,
+    currentItem: newStore?.currentItem
+  });
+}, { immediate: true });
 </script>
 
 <style>
