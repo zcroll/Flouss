@@ -11,233 +11,98 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use App\Traits\ArchetypeFinder;
 
-class HollandCodeController extends Controller
+class HollandCodeController extends BaseTestController
 {
     use ArchetypeFinder;
 
-    protected const SESSION_KEY = 'holland_codes_progress';
+    protected $sessionKey = 'holland_codes_progress';
+    protected $testStage = 'holland_codes';
+    protected $itemSetTitle = 'Hollands codes';
 
-    public function index()
+    protected function handleNearCompletion(array $progress): array
     {
-        // Initial page load without X-Inertia header
-        if (!request()->header('X-Inertia')) {
-            return Inertia::render('Test/MainTest', [
-                'hollandCodes' => null,
-                'progress' => null,
-                'testStage' => 'holland_codes'
-            ]);
-        }
-
-        try {
-            // Get progress from session
-            $progress = Session::get(self::SESSION_KEY, [
-                'current_index' => 0,
-                'responses' => [],
-                'completed' => false
-            ]);
-
-            // Fetch Holland Codes data only for Inertia requests
-            $hollandCodes = ItemSet::with([
-                'items:id,text,help_text,option_set_id,is_completed,career_id,degree_id,image_url,image_colour,itemset_id',
-                'items.optionSet:id,name,help_text,type',
-                'items.optionSet.options:id,text,help_text,value,reverse_coded_value,option_set_id'
-            ])
-            ->where('title', 'Hollands codes')
-            ->first();
-
-            if (!$hollandCodes) {
-                return Inertia::render('Test/MainTest', [
-                    'error' => 'No Holland Code items found',
-                    'testStage' => 'holland_codes'
-                ]);
+        $formattedResponses = [];
+        foreach ($progress['responses'] as $itemId => $answer) {
+            if ($answer > 0) {
+                $formattedResponses[$itemId] = [
+                    'itemId' => $itemId,
+                    'answer' => $answer,
+                    'type' => 'answered',
+                    'category' => 'holland_codes'
+                ];
             }
-
-            $totalQuestions = $hollandCodes->items->count();
-            $isCompleted = $progress['current_index'] >= $totalQuestions;
-            
-            // Update the completed flag in the session
-            $progress['completed'] = $isCompleted;
-            Session::put(self::SESSION_KEY, $progress);
-
-            return Inertia::render('Test/MainTest', [
-                'hollandCodes' => [
-                    'id' => $hollandCodes->id,
-                    'type' => $hollandCodes->type,
-                    'title' => $hollandCodes->title,
-                    'lead_in_text' => $hollandCodes->lead_in_text,
-                    'items' => $hollandCodes->items,
-                    'option_sets' => $hollandCodes->items->pluck('optionSet')->unique()
-                ],
-                'progress' => $progress,
-                'testStage' => $hollandCodes->title,
-                'isCompleted' => $isCompleted
-            ]);
-
-        } catch (\Exception $e) {
-            return Inertia::render('Test/MainTest', [
-                'error' => 'An error occurred while fetching Holland Codes',
-                'testStage' => 'holland_codes'
-            ]);
         }
+        
+        if (!empty($formattedResponses)) {
+            $formattedProgress = ['responses' => $formattedResponses];
+            $formattedResponses = $this->formatResponsesWithTraits($formattedProgress);
+            $archetypeResults = $this->getArchetypeAndTopScores($formattedResponses['scores']);
+
+            if (!empty($archetypeResults) && isset($archetypeResults['archetypes'][0])) {
+                $progress['archetypeResults'] = $archetypeResults;
+                
+                $archetypeName = $archetypeResults['archetypes'][0];
+                $archetypeDiscovery = DB::table('archetype_discoveries')
+                    ->where('slug', '=', strtolower($archetypeName))
+                    ->first();
+                    
+                if ($archetypeDiscovery) {
+                    $progress['archetypeDiscovery'] = $archetypeDiscovery;
+                }
+            }
+        }
+
+        return $progress;
     }
 
-    public function storeResponse(Request $request)
+    protected function renderResponse($itemSet, array $progress, bool $isCompleted = false)
     {
-        try {
-            $validated = $request->validate([
-                'itemId' => 'required|integer',
-                'answer' => 'required|integer|between:0,5', // Allow 0 for skipped questions
-                'type' => 'required|string|in:answered,skipped',
-                'category' => 'required|string',
-                'testStage' => 'required|string'
-            ]);
+        return Inertia::render('Test/MainTest', [
+            'hollandCodes' => [
+                'id' => $itemSet->id,
+                'type' => $itemSet->type,
+                'title' => $itemSet->title,
+                'lead_in_text' => $itemSet->lead_in_text,
+                'items' => $itemSet->items,
+                'option_sets' => $itemSet->items->pluck('optionSet')->unique()
+            ],
+            'progress' => $progress,
+            'isCompleted' => $isCompleted,
+            'testStage' => $this->testStage
+        ]);
+    }
 
-            \Log::info('Received response:', $validated);
+    protected function renderInitialResponse()
+    {
+        return Inertia::render('Test/MainTest', [
+            'hollandCodes' => null,
+            'progress' => null,
+            'testStage' => $this->testStage
+        ]);
+    }
 
-            // Get current progress from session
-            $progress = Session::get(self::SESSION_KEY, [
-                'current_index' => 0,
-                'responses' => [],
-                'completed' => false,
-                'progress_percentage' => 0
-            ]);
+    protected function renderError(string $message)
+    {
+        return Inertia::render('Test/MainTest', [
+            'error' => $message,
+            'testStage' => $this->testStage
+        ]);
+    }
 
-            // Store response (0 for skipped, actual value for answered)
-            $progress['responses'][$validated['itemId']] = $validated['type'] === 'skipped' 
-                ? 0 
-                : $validated['answer'];
+    protected function handleError(\Exception $e, Request $request)
+    {
+        \Log::error('Holland Codes Error:', [
+            'message' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
 
-            // Get total questions count
-            $hollandCodes = ItemSet::where('title', 'Hollands codes')->first();
-            $totalQuestions = $hollandCodes->items->count();
-
-            // Increment current index
-            $progress['current_index']++;
-
-            // Calculate progress based on current index
-            $progress['progress_percentage'] = $totalQuestions > 0 
-                ? round(($progress['current_index'] / $totalQuestions) * 100) 
-                : 0;
-
-            // Update completed status
-            $isCompleted = $progress['current_index'] >= $totalQuestions;
-            $progress['completed'] = $isCompleted;
-
-            \Log::info('Storing response:', [
-                'currentIndex' => $progress['current_index'],
-                'totalQuestions' => $totalQuestions,
-                'percentage' => $progress['progress_percentage'],
-                'type' => $validated['type'],
-                'answer' => $validated['answer'],
-                'storedAnswer' => $progress['responses'][$validated['itemId']],
-                'completed' => $isCompleted
-            ]);
-
-            // Calculate archetype if progress is sufficient
-            if ($progress['progress_percentage'] > 90) {
-                // Only include non-skipped responses for archetype calculation
-                $formattedResponses = [];
-                foreach ($progress['responses'] as $itemId => $answer) {
-                    if ($answer > 0) { // Skip answers with value 0
-                        $formattedResponses[$itemId] = [
-                            'itemId' => $itemId,
-                            'answer' => $answer,
-                            'type' => 'answered', // Force type to answered for archetype calculation
-                            'category' => $validated['category']
-                        ];
-                    }
-                }
-                
-                if (!empty($formattedResponses)) {
-                    $formattedProgress = ['responses' => $formattedResponses];
-                    $formattedResponses = $this->formatResponsesWithTraits($formattedProgress);
-                    $archetypeResults = $this->getArchetypeAndTopScores($formattedResponses['scores']);
-
-                    if (!empty($archetypeResults) && isset($archetypeResults['archetypes'][0])) {
-                        $progress['archetypeResults'] = $archetypeResults;
-                        
-                        $archetypeName = $archetypeResults['archetypes'][0];
-                        $archetypeDiscovery = DB::table('archetype_discoveries')
-                            ->where('slug', '=', strtolower($archetypeName))
-                            ->first();
-                            
-                        if ($archetypeDiscovery) {
-                            $progress['archetypeDiscovery'] = $archetypeDiscovery;
-                        }
-                    }
-                }
-            }
-
-            Session::put(self::SESSION_KEY, $progress);
-
-            if ($request->wantsJson()) {
-                return response()->json(['progress' => $progress]);
-            }
-
-            return back()->with([
-                'progress' => $progress,
-                'testStage' => $hollandCodes->title
-            ]);
-
-        } catch (\Exception $e) {
-            \Log::error('Error storing response: ' . $e->getMessage(), [
-                'request' => $request->all(),
-                'trace' => $e->getTraceAsString()
-            ]);
+        if ($request->wantsJson()) {
             return response()->json([
-                'error' => 'Failed to store response: ' . $e->getMessage()
+                'error' => 'Failed to process request: ' . $e->getMessage()
             ], 500);
         }
-    }
-    
-    public function goBack(Request $request)
-    {
-        try {
-            $progress = Session::get(self::SESSION_KEY, [
-                'current_index' => 0,
-                'responses' => [],
-                'completed' => false,
-                'progress_percentage' => 0
-            ]);
 
-            // Get total questions count
-            $hollandCodes = ItemSet::where('title', 'Hollands codes')->first();
-            $totalQuestions = $hollandCodes->items->count();
-
-            // Only decrement if greater than 0
-            if ($progress['current_index'] > 0) {
-                $progress['current_index']--;
-            }
-
-            // Calculate progress based on current index
-            $progress['progress_percentage'] = $totalQuestions > 0 
-                ? round(($progress['current_index'] / $totalQuestions) * 100) 
-                : 0;
-
-            // Update completed status
-            $progress['completed'] = $progress['current_index'] >= $totalQuestions;
-
-            \Log::info('Going back:', [
-                'currentIndex' => $progress['current_index'],
-                'totalQuestions' => $totalQuestions,
-                'percentage' => $progress['progress_percentage']
-            ]);
-
-            Session::put(self::SESSION_KEY, $progress);
-
-            if ($request->wantsJson()) {
-                return response()->json(['progress' => $progress]);
-            }
-
-            return back()->with([
-                'progress' => $progress,
-                'testStage' => $hollandCodes->title
-            ]);
-
-        } catch (\Exception $e) {
-            \Log::error('Error going back: ' . $e->getMessage());
-            return back()->with('error', 'Failed to go back: ' . $e->getMessage());
-        }
+        return $this->renderError($e->getMessage());
     }
 
     protected function formatResponsesWithTraits($progress)
@@ -304,40 +169,6 @@ class HollandCodeController extends Controller
         
         $formattedResponses['scores'] = $normalizedScores;
         
-        // Get archetype results using the trait finder
-        
-        return  $formattedResponses;
-    }
-
-
-    public function handleRequest(Request $request)
-    {
-        if (!$request->header('X-Inertia')) {
-            return response()->json(['error' => 'Invalid request'], 400);
-        }
-
-        try {
-            // Handle different actions based on request type
-            $action = $request->input('action');
-            
-            switch ($action) {
-                case 'store-response':
-                    return $this->storeResponse($request);
-                case 'go-back':
-                    return $this->goBack($request);
-                default:
-                    return $this->index();
-            }
-        } catch (\Exception $e) {
-            \Log::error('Error handling request:', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            
-            return Inertia::render('Test/MainTest', [
-                'error' => 'An error occurred: ' . $e->getMessage(),
-                'testStage' => 'holland_codes'
-            ]);
-        }
+        return $formattedResponses;
     }
 }
