@@ -24,20 +24,10 @@ class TestStageController extends Controller
                 'toStage' => 'required|string'
             ]);
 
-            \Log::info('TestStageController: Validated request', $validated);
-
-            // Get the session key from the appropriate controller
-            $sessionKey = $this->getSessionKey($validated['fromStage']);
-            
             // Get progress for current stage
+            $sessionKey = $this->getSessionKey($validated['fromStage']);
             $fromStageProgress = Session::get($sessionKey, [
                 'completed' => false
-            ]);
-
-            \Log::info('TestStageController: Previous stage progress', [
-                'stage' => $validated['fromStage'],
-                'progress' => $fromStageProgress,
-                'sessionKey' => $sessionKey
             ]);
 
             if (!$fromStageProgress['completed']) {
@@ -47,11 +37,9 @@ class TestStageController extends Controller
                     'progress' => $fromStageProgress
                 ], 400);
             }
-            ds(['currentStage'=>$validated['toStage']]);
 
             // Store the current stage in session
             Session::put('current_test_stage', $validated['toStage']);
-            \Log::info('TestStageController: Updated current_test_stage', ['stage' => $validated['toStage']]);
 
             // Get stage-specific data for the new stage
             $stageData = $this->getStageData($validated['toStage']);

@@ -55,6 +55,7 @@
         "virtual-dom-stringify": "^3.0.1",
         "vue-chartjs": "^5.3.1",
         "vue-element-loading": "^2.0.2",
+        "vue-i18n": "^10.0.5",
         "vue-multiselect": "^3.1.0",
         "vue3-apexcharts": "^1.5.3",
         "vuedraggable": "^4.1.0"

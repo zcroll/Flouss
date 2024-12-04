@@ -27,6 +27,7 @@ use App\Http\Controllers\Test\BasicInterestController;
 use App\Http\Controllers\Test\TestStageController;
 use App\Http\Controllers\Test\WorkplaceController;
 use App\Http\Controllers\Test\PersonalityController;
+use App\Http\Controllers\Test\DegreeTestStageController;
 
 // Google Login Routes (place these BEFORE any auth middleware groups)
 Route::get('auth/google', [App\Http\Controllers\Auth\GoogleController::class, 'redirectToGoogle'])
@@ -83,10 +84,9 @@ Route::middleware([
         Route::get('/degree/{degreeSlug}', [DegreeController::class, 'index'])->name('degree.show');
 
         Route::prefix('degree')->group(function () {
-            Route::get('{slug}', [DegreeController::class, 'index'])->name('degree.index');
-            Route::get('{slug}/skills', [DegreeController::class, 'skills'])->name('degree.skills');
-            Route::get('{slug}/jobs', [DegreeController::class, 'jobs'])->name('degree.jobs');
-            Route::get('{slug}/how-to-obtain', [DegreeController::class, 'howToObtain'])->name('degree.howToObtain');
+            Route::get('/', [DegreeController::class, 'index'])->name('degree.index');
+            Route::post('/', [DegreeController::class, 'storeResponse'])->name('degree.store');
+            Route::post('/go-back', [DegreeController::class, 'goBack'])->name('degree.back');
         });
 
         Route::get('/formations', [FormationFilterController::class, 'index'])->name('formations.index');
@@ -120,6 +120,13 @@ Route::middleware([
                 Route::get('/', [BasicInterestController::class, 'index'])->name('basic-interests.index');
                 Route::post('/', [BasicInterestController::class, 'storeResponse'])->name('basic-interests.store');
                 Route::post('/go-back', [BasicInterestController::class, 'goBack'])->name('basic-interests.go-back');
+            });
+
+            // Add Degree Assessment SPA routes
+            Route::prefix('degree-assessment')->group(function () {
+                Route::get('/', [DegreeTestStageController::class, 'index'])->name('degree-assessment.index');
+                Route::post('/', [DegreeTestStageController::class, 'storeResponse'])->name('degree-assessment.store');
+                Route::post('/go-back', [DegreeTestStageController::class, 'goBack'])->name('degree-assessment.go-back');
             });
         });
 

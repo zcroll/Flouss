@@ -38,7 +38,7 @@
           <div class="error">
             <h3>Error Occurred</h3>
             <p>{{ error }}</p>
-            <button @click="retryFetch">Retry</button>
+            <button @click="retryFetch" :disabled="form.processing">Retry</button>
           </div>
         </section>
         <section v-else class="Assessment" tabindex="-1" data-testid="assessment-test">
@@ -84,7 +84,8 @@
                 :description="testStageStore.currentStageDescription || 'You have completed this section.'"
                 :button-text="testStageStore.nextStageName ? `Continue to ${testStageStore.nextStageName}` : 'View Results'"
                 :current-stage="testStageStore.currentStage"
-                @continue="continueToNextSection" 
+                @continue="continueToNextSection"
+                :disabled="form.processing"
               />
             </section>
           </div>
@@ -106,10 +107,14 @@ import { useBasicInterestStore } from "@/stores/basicInterestStore";
 import Discovery from "@/Components/Test/Discovery.vue";
 import BackButton from "@/Components/Test/BackButton.vue";
 import MatchResult from "@/Components/Test/MatchResult.vue";
+import { useTestProgressStore } from '@/stores/testProgressStore';
+import { useDegreeStore } from '@/stores/degreeStore';
 
 const hollandCodeStore = useHollandCodeStore();
 const testStageStore = useTestStageStore();
 const basicInterestStore = useBasicInterestStore();
+const progressStore = useTestProgressStore();
+const degreeStore = useDegreeStore();
 
 const form = useForm({
   itemId: null,
@@ -120,26 +125,26 @@ const form = useForm({
 });
 
 const currentStore = computed(() => {
-  if (!testStageStore?.currentStage) return null;
-  
   switch (testStageStore.currentStage) {
     case 'basic_interests':
-      return basicInterestStore || null;
+      return basicInterestStore;
     case 'holland_codes':
-      return hollandCodeStore || null;
+      return hollandCodeStore;
+    case 'degree':
+      return degreeStore;
     default:
       return null;
   }
 });
 
 const currentTestData = computed(() => {
-  if (!testStageStore?.currentStage) return null;
-  
   switch (testStageStore.currentStage) {
     case 'basic_interests':
-      return basicInterestStore?.data || null;
+      return basicInterestStore.data;
     case 'holland_codes':
-      return hollandCodeStore?.data || null;
+      return hollandCodeStore.data;
+    case 'degree':
+      return degreeStore.data;
     default:
       return null;
   }
@@ -180,6 +185,8 @@ onMounted(async () => {
       await basicInterestStore?.fetchData();
     } else if (testStageStore?.currentStage === 'holland_codes') {
       await hollandCodeStore?.fetchHollandCodes();
+    } else if (testStageStore?.currentStage === 'degree') {
+      await degreeStore?.fetchData();
     }
   } catch (error) {
     console.error('Error initializing test:', error);
@@ -187,11 +194,15 @@ onMounted(async () => {
 });
 
 const retryFetch = async () => {
+  if (form.processing) return;
+  
   try {
     if (testStageStore.currentStage === 'basic_interests') {
       await basicInterestStore.fetchData();
     } else if (testStageStore.currentStage === 'holland_codes') {
       await hollandCodeStore.fetchHollandCodes();
+    } else if (testStageStore.currentStage === 'degree') {
+      await degreeStore.fetchData();
     }
   } catch (error) {
     console.error('Error retrying fetch:', error);
@@ -200,7 +211,7 @@ const retryFetch = async () => {
 
 const submitAnswer = async () => {
   const store = currentStore.value;
-  if (!store || loading.value) return;
+  if (!store || form.processing || !form.answer || !form.itemId) return;
   
   try {
     form.testStage = testStageStore?.currentStage;
@@ -213,27 +224,38 @@ const submitAnswer = async () => {
 };
 
 const goBack = () => {
-  if (!currentStore.value) return;
+  if (!currentStore.value || form.processing) return;
   currentStore.value.goBack();
 };
 
 const skipQuestion = () => {
-  if (!currentStore.value || currentStore.value.loading) return;
+  if (!currentStore.value || form.processing) return;
   currentStore.value.skipQuestion();
 };
 
 const handleDiscoveryClose = () => {
+  if (form.processing) return;
+  
   if (testStageStore.currentStage === 'basic_interests') {
     basicInterestStore.jobMatching = null;
   } else if (testStageStore.currentStage === 'holland_codes') {
     hollandCodeStore.progress.archetypeDiscovery = null;
+  } else if (testStageStore.currentStage === 'degree') {
+    degreeStore.progress.degreeMatching = null;
   }
 };
 
 const continueToNextSection = async () => {
+  if (form.processing) return;
+  
   try {
     const nextStage = testStageStore.getNextStage();
     if (nextStage) {
+      const currentProgress = progressStore.stages[testStageStore.currentStage];
+      if (!currentProgress?.completed) {
+        throw new Error('Please complete the current stage before continuing.');
+      }
+
       await testStageStore.changeStage(nextStage);
     } else {
       router.visit(route('dashboard'));

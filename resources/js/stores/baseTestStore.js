@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { router } from '@inertiajs/vue3';
+import { router, useForm } from '@inertiajs/vue3';
 
 export const createBaseTestStore = (storeName, options = {}) => {
     return defineStore(storeName, {
@@ -26,6 +26,13 @@ export const createBaseTestStore = (storeName, options = {}) => {
             error: null,
             debug: true,
             initialized: false,
+            form: useForm({
+                type: 'answered',
+                answer: null,
+                itemId: null,
+                category: options.category,
+                testStage: options.testStage
+            }),
             ...options.state
         }),
 
@@ -118,74 +125,58 @@ export const createBaseTestStore = (storeName, options = {}) => {
                 });
             },
 
-            async submitAnswer(form) {
-                if (this.loading) return;
-                
-                this.logDebug('submitAnswer:start', { form });
-                this.loading = true;
+            async submitAnswer(formData) {
+                if (this.form.processing) return;
+
+                this.logDebug('submitAnswer:start', { formData });
                 this.error = null;
 
-                try {
-                    await router.post(options.submitRoute, {
-                        ...form,
-                        type: form.type || 'answered',
-                        category: options.category,
-                        testStage: options.testStage
-                    }, {
-                        preserveState: true,
-                        preserveScroll: true,
-                        onSuccess: (page) => {
-                            this.logDebug('submitAnswer:success', { page });
-                            
-                            if (page.props.progress) {
-                                this.responses[form.itemId] = form.answer;
-                                this.setProgress(page.props.progress);
-                            }
-                        },
-                        onError: (errors) => {
-                            this.logDebug('submitAnswer:error', { errors });
-                            this.error = 'Failed to submit answer';
+                this.form.clearErrors();
+                this.form.type = formData.type || 'answered';
+                this.form.answer = formData.answer;
+                this.form.itemId = formData.itemId;
+
+                this.form.post(options.submitRoute, {
+                    preserveState: true,
+                    preserveScroll: true,
+                    onSuccess: (page) => {
+                        this.logDebug('submitAnswer:success', { page });
+                        
+                        if (page.props.progress) {
+                            this.responses[formData.itemId] = formData.answer;
+                            this.setProgress(page.props.progress);
                         }
-                    });
-                } catch (error) {
-                    this.logDebug('submitAnswer:error', { error });
-                    this.error = error.message;
-                } finally {
-                    this.loading = false;
-                }
+                    },
+                    onError: () => {
+                        this.logDebug('submitAnswer:error', { errors: this.form.errors });
+                        this.error = 'Failed to submit answer';
+                    }
+                });
             },
 
             async goBack() {
-                if (this.currentItemIndex <= 0 || this.loading) return;
+                if (this.currentItemIndex <= 0 || this.form.processing) return;
                 
                 this.logDebug('goBack:start', { currentIndex: this.currentItemIndex });
-                this.loading = true;
 
-                try {
-                    await router.post(options.goBackRoute, {}, {
-                        preserveState: true,
-                        preserveScroll: true,
-                        onSuccess: (page) => {
-                            if (page.props.progress) {
-                                this.setProgress(page.props.progress);
-                            }
-                        },
-                        onError: (error) => {
-                            this.error = error.message || 'Failed to go back';
+                this.form.post(options.goBackRoute, {
+                    preserveState: true,
+                    preserveScroll: true,
+                    onSuccess: (page) => {
+                        if (page.props.progress) {
+                            this.setProgress(page.props.progress);
                         }
-                    });
-                } catch (error) {
-                    this.error = error.message;
-                } finally {
-                    this.loading = false;
-                }
+                    },
+                    onError: () => {
+                        this.error = 'Failed to go back';
+                    }
+                });
             },
 
             async fetchData() {
-                if (this.loading) return;
+                if (this.form.processing) return;
                 
                 this.logDebug('fetchData:start');
-                this.loading = true;
                 this.error = null;
 
                 try {
@@ -205,8 +196,6 @@ export const createBaseTestStore = (storeName, options = {}) => {
                     this.logDebug('fetchData:error', { error });
                     this.error = error.message;
                     throw error;
-                } finally {
-                    this.loading = false;
                 }
             },
 
@@ -218,7 +207,7 @@ export const createBaseTestStore = (storeName, options = {}) => {
             progressPercentage: (state) => state.progress.progress_percentage,
             validResponsesCount: (state) => Object.values(state.responses).filter(v => v > 0).length,
             totalQuestionsCount: (state) => state.data?.items?.length || state.progress.totalQuestions,
-            canGoBack: (state) => state.currentItemIndex > 0 && !state.loading,
+            canGoBack: (state) => state.currentItemIndex > 0 && !state.form.processing,
             currentResponse: (state) => state.responses[state.currentItem?.id],
             ...options.getters
         }

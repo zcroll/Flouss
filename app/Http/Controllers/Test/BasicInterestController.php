@@ -19,6 +19,8 @@ class BasicInterestController extends BaseTestController
 
     protected function handleNearCompletion(array $progress): array
     {
+
+        ds($progress);
         $formattedResponses = [];
         foreach ($progress['responses'] as $itemId => $answer) {
             if ($answer > 0) {

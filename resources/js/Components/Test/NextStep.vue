@@ -43,6 +43,7 @@
 import { ref } from 'vue';
 import { useTestStageStore } from '@/stores/testStageStore';
 import { useTestProgressStore } from '@/stores/testProgressStore';
+import { useBasicInterestStore } from '@/stores/basicInterestStore';
 
 const props = defineProps({
   title: {
@@ -66,6 +67,7 @@ const props = defineProps({
 const emit = defineEmits(['continue']);
 const testStageStore = useTestStageStore();
 const progressStore = useTestProgressStore();
+const basicInterestStore = useBasicInterestStore();
 const loading = ref(false);
 const error = ref(null);
 
@@ -90,6 +92,12 @@ const handleContinue = async () => {
     
     if (!currentProgress?.canTransition) {
       throw new Error('Cannot proceed yet. Please ensure all required steps are completed.');
+    }
+
+    if (props.currentStage === 'basic_interests' && nextStage === 'degree') {
+      if (!basicInterestStore?.progress?.jobMatching) {
+        throw new Error('Please wait for job matching to complete before proceeding.');
+      }
     }
 
     await testStageStore.changeStage(nextStage);
