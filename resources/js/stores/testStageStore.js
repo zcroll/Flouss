@@ -1,14 +1,28 @@
 import { defineStore } from 'pinia';
 import { useHollandCodeStore } from './hollandCodeStore';
 import { useBasicInterestStore } from './basicInterestStore';
+import { useDegreeStore } from './degreeStore';
 import { router } from '@inertiajs/vue3';
-import { useTestProgressStore } from './testProgressStore';
-import axios from 'axios'; // Import axios
+import axios from 'axios';
 
 export const useTestStageStore = defineStore('testStage', {
     state: () => ({
-        currentStage: null, // Initialize as null instead of default value
-        stages: ['holland_codes', 'basic_interests'],
+        currentStage: null,
+        stages: ['holland_codes', 'basic_interests', 'degree'],
+        stageProgress: {
+            holland_codes: {
+                percentage: 0,
+                completed: false
+            },
+            basic_interests: {
+                percentage: 0,
+                completed: false
+            },
+            degree: {
+                percentage: 0,
+                completed: false
+            }
+        },
         stageInfo: {
             'holland_codes': {
                 name: 'Holland Codes',
@@ -19,19 +33,39 @@ export const useTestStageStore = defineStore('testStage', {
             },
             'basic_interests': {
                 name: 'Basic Interest',
-                description: 'Explore your specific areas of interest',
+                description: 'Explore your specific areas of interest', 
+                nextStage: 'degree',
+                nextStageName: 'Degree Assessment',
+                route: 'basic-interests.index'
+            },
+            'degree': {
+                name: 'Degree Assessment',
+                description: 'Find your ideal degree path',
                 nextStage: null,
                 nextStageName: null,
-                route: 'basic-interests.index'
+                route: 'degree-assessment.index'
             }
         },
-        stageData: null,
         loading: false,
         error: null,
         initialized: false
     }),
 
     actions: {
+        updateStageProgress(stage, percentage) {
+            if (this.stageProgress[stage]) {
+                this.stageProgress[stage].percentage = percentage;
+                this.stageProgress[stage].completed = percentage >= 100;
+            }
+        },
+
+        markStageComplete(stage) {
+            if (this.stageProgress[stage]) {
+                this.stageProgress[stage].percentage = 100;
+                this.stageProgress[stage].completed = true;
+            }
+        },
+
         async initialize() {
             if (this.initialized) return;
             
@@ -110,10 +144,13 @@ export const useTestStageStore = defineStore('testStage', {
                 this.currentStage = response.data.currentStage;
                 this.stageData = response.data.stageData;
                 
-                // If we're on basic interests, fetch its data
+                // Fetch data based on current stage
                 if (this.currentStage === 'basic_interests') {
                     const basicInterestStore = useBasicInterestStore();
                     await basicInterestStore.fetchData();
+                } else if (this.currentStage === 'degree') {
+                    const degreeStore = useDegreeStore();
+                    await degreeStore.fetchData();
                 }
             } catch (error) {
                 this.error = 'Failed to fetch current stage';
@@ -139,13 +176,9 @@ export const useTestStageStore = defineStore('testStage', {
                 }
 
                 this.currentStage = response.data.currentStage;
-                this.stageData = response.data.stageData;
-
-                // If transitioning to basic interests, fetch the data
-                if (newStage === 'basic_interests') {
-                    const basicInterestStore = useBasicInterestStore();
-                    await basicInterestStore.fetchData();
-                }
+                
+                // Fetch data for the new stage
+                await this.fetchStageData(newStage);
 
                 return true;
             } catch (error) {
@@ -157,12 +190,21 @@ export const useTestStageStore = defineStore('testStage', {
             }
         },
 
+        async fetchStageData(stage) {
+            const store = this.getStageStore();
+            if (store?.fetchData) {
+                await store.fetchData();
+            }
+        },
+
         getStageStore() {
             switch (this.currentStage) {
                 case 'basic_interests':
                     return useBasicInterestStore();
                 case 'holland_codes':
                     return useHollandCodeStore();
+                case 'degree':
+                    return useDegreeStore();
                 default:
                     return null;
             }
@@ -179,6 +221,16 @@ export const useTestStageStore = defineStore('testStage', {
         nextStageName: (state) => state.stageInfo[state.currentStage]?.nextStageName || '',
         currentStageDescription: (state) => state.stageInfo[state.currentStage]?.description || '',
         hasNextStage: (state) => !!state.stageInfo[state.currentStage]?.nextStage,
-        nextStage: (state) => state.stageInfo[state.currentStage]?.nextStage || null
+        nextStage: (state) => state.stageInfo[state.currentStage]?.nextStage || null,
+        stageProgress: (state) => (stage) => {
+            return state.stageProgress[stage]?.percentage || 0;
+        },
+        isStageComplete: (state) => (stage) => {
+            return state.stageProgress[stage]?.completed || false;
+        },
+        canProceedToNextStage: (state) => {
+            const currentStage = state.currentStage;
+            return state.stageProgress[currentStage]?.completed || false;
+        }
     }
 }); 

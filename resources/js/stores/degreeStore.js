@@ -2,9 +2,9 @@ import { createBaseTestStore } from './baseTestStore';
 
 export const useDegreeStore = createBaseTestStore('degree', {
     dataKey: 'degree',
-    submitRoute: '/degree',
-    goBackRoute: '/degree/go-back',
-    fetchRoute: route('degree.index'),
+    submitRoute: '/degree-assessment',
+    goBackRoute: '/degree-assessment/go-back', 
+    fetchRoute: route('degree-assessment.index'),
     category: 'degree',
     testStage: 'degree',
     

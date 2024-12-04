@@ -13,7 +13,7 @@ class DegreeTestStageController extends BaseTestController
 {
     protected const SESSION_KEY = 'degree_progress';
     protected $testStage = 'degree';
-    protected $itemSetTitle = 'Degree Assessment';
+    protected $itemSetTitle = 'Hollands codes';
 
     protected function handleNearCompletion(array $progress): array
     {

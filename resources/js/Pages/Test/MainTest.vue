@@ -27,6 +27,13 @@
           percentage: basicInterestStore?.progressPercentage ?? 0,
           completed: basicInterestStore?.isComplete ?? false
         },
+        degree: {
+          currentIndex: degreeStore?.progress?.current_index ?? 0,
+          validResponses: degreeStore?.validResponsesCount ?? 0,
+          percentage: degreeStore?.progressPercentage ?? 0,
+          completed: degreeStore?.isComplete ?? false,
+          degreeMatching: degreeStore?.progress?.degreeMatching
+        },
         completed: isComplete && canProceed
       }" :test-stage="testStageStore?.currentStage" />
 

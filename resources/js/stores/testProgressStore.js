@@ -5,38 +5,79 @@ export const useTestProgressStore = defineStore('testProgress', {
   state: () => ({
     debug: true,
     currentStage: 'holland_codes',
+    stageConfig: {
+      holland_codes: {
+        name: 'Your personality archetype',
+        time: '~ 3 mins',
+        totalQuestions: 48,
+        nextStage: 'basic_interests',
+        storeKey: 'hollandCodeStore',
+        dataKey: 'progress',
+        progressFields: {
+          currentIndex: 'current_index',
+          validResponses: 'validResponses',
+          percentage: 'progress_percentage',
+          completed: 'completed',
+          specialData: 'archetypeDiscovery'
+        }
+      },
+      basic_interests: {
+        name: 'Your career matches',
+        time: '~ 3 mins',
+        totalQuestions: 27,
+        nextStage: 'degree',
+        storeKey: 'basicInterestStore',
+        dataKey: 'progress',
+        progressFields: {
+          currentIndex: 'current_index',
+          validResponses: 'validResponses',
+          percentage: 'progress_percentage',
+          completed: 'completed',
+          specialData: 'jobMatching'
+        }
+      },
+      degree: {
+        name: 'Your degree matches',
+        time: '~ 3 mins',
+        totalQuestions: 30,
+        nextStage: null,
+        storeKey: 'degreeStore',
+        dataKey: 'progress',
+        progressFields: {
+          currentIndex: 'current_index',
+          validResponses: 'validResponses',
+          percentage: 'progress_percentage',
+          completed: 'completed',
+          specialData: 'degreeMatching'
+        }
+      }
+    },
     stages: {
       holland_codes: {
         completed: false,
-        nextStage: 'basic_interests',
-        totalQuestions: 48,
         currentIndex: 0,
         validResponses: 0,
         percentage: 0,
         canTransition: false,
+        archetypeDiscovery: null,
         debug: []
       },
       basic_interests: {
         completed: false,
-        nextStage: 'workplace',
-        totalQuestions: 27,
         currentIndex: 0,
         validResponses: 0,
         percentage: 0,
         canTransition: false,
+        jobMatching: null,
         debug: []
       },
-      workplace: {
+      degree: {
         completed: false,
-        nextStage: 'personality',
-        url: '/test/workplace',
+        currentIndex: 0,
+        validResponses: 0,
+        percentage: 0,
         canTransition: false,
-        debug: []
-      },
-      personality: {
-        completed: false,
-        nextStage: null,
-        canTransition: false,
+        degreeMatching: null,
         debug: []
       }
     }
@@ -47,11 +88,7 @@ export const useTestProgressStore = defineStore('testProgress', {
       if (!this.debug) return;
       
       const timestamp = new Date().toISOString();
-      const debugEntry = {
-        timestamp,
-        action,
-        data
-      };
+      const debugEntry = { timestamp, action, data };
       
       if (this.stages[stage]) {
         this.stages[stage].debug.push(debugEntry);
@@ -60,34 +97,28 @@ export const useTestProgressStore = defineStore('testProgress', {
     },
 
     markStageComplete(stage) {
-      if (this.stages[stage]) {
-        this.logDebug(stage, 'markComplete:before', {
-          stage,
-          currentState: { ...this.stages[stage] }
-        });
+      if (!this.stages[stage]) return;
 
-        this.stages[stage].completed = true;
-        this.stages[stage].canTransition = true;
-        this.stages[stage].percentage = 100;
+      this.logDebug(stage, 'markComplete:before', {
+        stage,
+        currentState: { ...this.stages[stage] }
+      });
 
-        // If this is holland_codes and we're in basic_interests, ensure it stays completed
-        if (stage === 'holland_codes' && this.currentStage === 'basic_interests') {
-          this.stages[stage].completed = true;
-          this.stages[stage].canTransition = true;
-        }
+      this.stages[stage].completed = true;
+      this.stages[stage].canTransition = true;
+      this.stages[stage].percentage = 100;
 
-        this.logDebug(stage, 'markComplete:after', {
-          stage,
-          newState: { ...this.stages[stage] }
-        });
-      }
+      this.logDebug(stage, 'markComplete:after', {
+        stage,
+        newState: { ...this.stages[stage] }
+      });
     },
 
     updateStageProgress(stage, progressData) {
       if (!this.stages[stage]) return;
 
-      const previousState = { ...this.stages[stage] };
       const stageData = this.stages[stage];
+      const stageConfig = this.stageConfig[stage];
 
       this.logDebug(stage, 'updateProgress:start', {
         stage,
@@ -95,154 +126,156 @@ export const useTestProgressStore = defineStore('testProgress', {
         currentState: { ...stageData }
       });
 
-      // If we're in basic_interests, ensure holland_codes stays completed
-      if (this.currentStage === 'basic_interests' && stage === 'holland_codes') {
-        stageData.completed = true;
-        stageData.canTransition = true;
-        stageData.percentage = 100;
-        return;
-      }
-
-      // Update with controller data if provided
       if (typeof progressData === 'object') {
-        // Update progress data
-        stageData.currentIndex = progressData.current_index || progressData.currentIndex || 0;
-        stageData.validResponses = progressData.valid_responses || progressData.validResponses || 0;
-        stageData.percentage = progressData.progress_percentage || progressData.percentage || 0;
+        // Map fields according to stage configuration
+        const fields = stageConfig.progressFields;
         
-        // Handle completion status
-        if (progressData.completed) {
+        // Update standard progress fields with fallbacks
+        stageData.currentIndex = progressData[fields.currentIndex] || progressData.currentIndex || 0;
+        stageData.validResponses = progressData[fields.validResponses] || progressData.validResponses || 0;
+        
+        // Calculate percentage based on valid responses if available
+        if (stageData.validResponses && stageConfig.totalQuestions) {
+          stageData.percentage = Math.min(
+            Math.round((stageData.validResponses / stageConfig.totalQuestions) * 100),
+            100
+          );
+        } else {
+          stageData.percentage = progressData[fields.percentage] || progressData.percentage || 0;
+        }
+        
+        // Handle stage-specific special data
+        if (fields.specialData && progressData[fields.specialData]) {
+          stageData[fields.specialData] = progressData[fields.specialData];
+        }
+
+        // Handle completion
+        const isCompleted = progressData[fields.completed] || progressData.completed || false;
+        if (isCompleted || stageData.percentage >= 100) {
           this.markStageComplete(stage);
         } else {
           stageData.completed = false;
           stageData.canTransition = false;
         }
-
-        this.logDebug(stage, 'updateProgress:after', {
-          previous: previousState,
-          current: { ...stageData }
-        });
-      } 
-      // Handle legacy percentage-only updates
-      else if (typeof progressData === 'number') {
+      } else if (typeof progressData === 'number') {
         stageData.percentage = progressData;
         if (progressData >= 100) {
           this.markStageComplete(stage);
         }
       }
-    },
 
-    async moveToNextStage() {
-      const currentStage = this.currentStage;
-      const currentStageData = this.stages[currentStage];
-      const nextStage = currentStageData?.nextStage;
-
-      this.logDebug(currentStage, 'moveToNextStage:attempt', {
-        currentStage,
-        nextStage,
-        currentStageData: { ...currentStageData }
+      this.logDebug(stage, 'updateProgress:end', {
+        stage,
+        newState: { ...stageData }
       });
-
-      if (nextStage && this.stages[nextStage]) {
-        if (currentStageData.completed && currentStageData.canTransition) {
-          this.currentStage = nextStage;
-          
-          this.logDebug(nextStage, 'moveToNextStage:success', {
-            from: currentStage,
-            to: nextStage
-          });
-
-          if (this.stages[nextStage].url) {
-            await router.visit(this.stages[nextStage].url);
-          }
-        } else {
-          this.logDebug(currentStage, 'moveToNextStage:blocked', {
-            reason: {
-              notCompleted: !currentStageData.completed,
-              cantTransition: !currentStageData.canTransition
-            }
-          });
-        }
-      }
     },
 
     setCurrentStage(stage) {
-      if (!this.stages[stage]) return;
-
-      this.logDebug(stage, 'setCurrentStage:before', {
-        fromStage: this.currentStage,
-        toStage: stage
-      });
-
-      // If moving to basic_interests, ensure holland_codes is marked as complete
-      if (stage === 'basic_interests') {
-        this.stages['holland_codes'].completed = true;
-        this.stages['holland_codes'].canTransition = true;
-        this.stages['holland_codes'].percentage = 100;
-      }
-
+      if (!this.stageConfig[stage]) return;
       this.currentStage = stage;
-
-      this.logDebug(stage, 'setCurrentStage:after', {
-        currentStage: this.currentStage,
-        stageState: { ...this.stages[stage] }
-      });
     },
 
-    resetStageTransition(stage) {
-      if (this.stages[stage]) {
-        const previousState = { ...this.stages[stage] };
-        this.stages[stage].canTransition = false;
-        
-        this.logDebug(stage, 'resetTransition', {
-          previous: previousState,
-          current: { ...this.stages[stage] }
-        });
-      }
+    getStageSequence() {
+      return Object.keys(this.stageConfig);
     },
 
-    // Debug helper to dump current state
+    getNextStage(currentStage) {
+      return this.stageConfig[currentStage]?.nextStage || null;
+    },
+
+    getPreviousStage(stage) {
+      const sequence = this.getStageSequence();
+      const currentIndex = sequence.indexOf(stage);
+      return currentIndex > 0 ? sequence[currentIndex - 1] : null;
+    },
+
+    // Debug helper
     dumpState() {
       return {
         currentStage: this.currentStage,
         stages: Object.entries(this.stages).reduce((acc, [key, value]) => {
           acc[key] = {
             ...value,
-            debug: value.debug?.length || 0 // Just show count of debug entries
+            debug: value.debug?.length || 0
           };
           return acc;
         }, {})
       };
+    },
+
+    // Add a method to calculate progress based on responses
+    calculateProgress(stage) {
+      const stageData = this.stages[stage];
+      const config = this.stageConfig[stage];
+      
+      if (!stageData || !config) return 0;
+      
+      const validResponses = stageData.validResponses || 0;
+      const totalQuestions = config.totalQuestions || 0;
+      
+      if (totalQuestions === 0) return 0;
+      
+      return Math.min(Math.round((validResponses / totalQuestions) * 100), 100);
     }
   },
 
   getters: {
-    currentStageName: (state) => state.currentStage,
-    isStageComplete: (state) => (stage) => state.stages[stage]?.completed || false,
-    canTransitionFromStage: (state) => (stage) => state.stages[stage]?.canTransition || false,
-    nextStage: (state) => state.stages[state.currentStage]?.nextStage,
-    nextStageUrl: (state) => {
-      const nextStage = state.stages[state.currentStage]?.nextStage;
-      return nextStage ? state.stages[nextStage]?.url : null;
+    getStageInfo: (state) => (stage) => state.stageConfig[stage] || null,
+    stageSequence: (state) => Object.keys(state.stageConfig),
+    currentStageName: (state) => state.stageConfig[state.currentStage]?.name || '',
+    nextStageName: (state) => {
+      const nextStage = state.stageConfig[state.currentStage]?.nextStage;
+      return nextStage ? state.stageConfig[nextStage]?.name : '';
     },
-    stageProgress: (state) => (stage) => state.stages[stage]?.percentage || 0,
+    isStageComplete: (state) => (stage) => {
+      const stageData = state.stages[stage];
+      if (!stageData) return false;
+
+      return stageData.completed || stageData.percentage >= 100;
+    },
+    canTransitionFromStage: (state) => (stage) => state.stages[stage]?.canTransition || false,
+    stageProgress: (state) => (stage) => {
+      const stageData = state.stages[stage];
+      if (!stageData) return 0;
+
+      // If we have valid responses, calculate based on that
+      if (stageData.validResponses && state.stageConfig[stage]?.totalQuestions) {
+        return Math.min(
+          Math.round((stageData.validResponses / state.stageConfig[stage].totalQuestions) * 100),
+          100
+        );
+      }
+
+      return stageData.percentage || 0;
+    },
     currentStageProgress: (state) => state.stages[state.currentStage]?.percentage || 0,
+    
+    stageStatus: (state) => (stage) => {
+      const stageData = state.stages[stage];
+      if (!stageData) return 'not-started';
+      
+      if (stageData.completed) return 'complete';
+      if (stage === state.currentStage) return 'in-progress';
+      
+      const prevStage = state.getPreviousStage(stage);
+      if (prevStage && state.stages[prevStage]?.completed) return 'upcoming';
+      
+      return 'not-started';
+    },
+
+    // Special data getters
+    archetypeDiscovery: (state) => state.stages.holland_codes?.archetypeDiscovery || null,
+    jobMatching: (state) => state.stages.basic_interests?.jobMatching || null,
+    degreeMatching: (state) => state.stages.degree?.degreeMatching || null,
+    
     shouldShowNextStage: (state) => {
       const currentStage = state.stages[state.currentStage];
-      const shouldShow = currentStage?.completed && currentStage?.canTransition;
-      
-      if (state.debug) {
-        console.log('shouldShowNextStage check:', {
-          stage: state.currentStage,
-          completed: currentStage?.completed,
-          canTransition: currentStage?.canTransition,
-          shouldShow
-        });
-      }
-      
-      return shouldShow;
+      return currentStage?.completed && currentStage?.canTransition;
     },
-    // Debug getter to access stage debug history
-    stageDebugHistory: (state) => (stage) => state.stages[stage]?.debug || []
+
+    // Add a getter for valid responses count
+    validResponsesCount: (state) => (stage) => {
+      return state.stages[stage]?.validResponses || 0;
+    }
   }
 }); 

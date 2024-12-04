@@ -11,7 +11,8 @@ class TestStageController extends Controller
 {
     private $stages = [
         'holland_codes',
-        'basic_interests'
+        'basic_interests',
+        'degree'
     ];
 
     public function changeStage(Request $request)
@@ -157,8 +158,7 @@ class TestStageController extends Controller
         $keyMap = [
             'holland_codes' => 'holland_codes_progress',
             'basic_interests' => 'basic_interest_progress',
-            'workplace' => 'workplace_progress',
-            'personality' => 'personality_progress'
+            'degree' => 'degree_progress'
         ];
 
         return $keyMap[$stage] ?? null;
@@ -168,7 +168,8 @@ class TestStageController extends Controller
     {
         $controllerMap = [
             'holland_codes' => app(HollandCodeController::class),
-            'basic_interests' => app(BasicInterestController::class)
+            'basic_interests' => app(BasicInterestController::class),
+            'degree' => app(DegreeTestStageController::class)
         ];
 
         return $controllerMap[$stage] ?? null;

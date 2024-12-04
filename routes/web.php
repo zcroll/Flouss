@@ -76,36 +76,30 @@ Route::middleware([
             Route::get('/results/{id}/personality', 'personality')->name('personality');
         });
 
-        Route::get('/main-test', [MainTestController::class, 'index'])->name('main-test');
-        Route::post('/main-test/store-holland-code', [MainTestController::class, 'storeHollandCodeResponse'])->name('store-holland-code-response');
-        Route::post('/main-test/store-basic-interest', [MainTestController::class, 'storeBasicInterestResponse'])->name('store-basic-interest-response');
-        Route::post('/test/go-back', [MainTestController::class, 'goBack'])->name('test.go-back');
+        // Route::get('/main-test', [MainTestController::class, 'index'])->name('main-test');
+        // Route::post('/main-test/store-holland-code', [MainTestController::class, 'storeHollandCodeResponse'])->name('store-holland-code-response');
+        // Route::post('/main-test/store-basic-interest', [MainTestController::class, 'storeBasicInterestResponse'])->name('store-basic-interest-response');
+        // Route::post('/test/go-back', [MainTestController::class, 'goBack'])->name('test.go-back');
 
         Route::get('/degree/{degreeSlug}', [DegreeController::class, 'index'])->name('degree.show');
 
-        Route::prefix('degree')->group(function () {
-            Route::get('/', [DegreeController::class, 'index'])->name('degree.index');
-            Route::post('/', [DegreeController::class, 'storeResponse'])->name('degree.store');
-            Route::post('/go-back', [DegreeController::class, 'goBack'])->name('degree.back');
-        });
-
+     
         Route::get('/formations', [FormationFilterController::class, 'index'])->name('formations.index');
         Route::get('/formations/filter', [FormationFilterController::class, 'filter'])->name('formations.filter');
         Route::get('/etablissements', [FormationFilterController::class, 'getEtablissements'])->name('etablissements.list');
         Route::get('/degrees', [DegreeFilterController::class, 'index'])->name('degrees.index');
         Route::get('/jobs', [JobFilterController::class, 'index'])->name('jobs.index');
 
-        // Test Routes
-        Route::get('/holland-codes', [MainTestController::class, 'index'])->name('holland-codes.index');
-        Route::post('/test/change-stage', [TestStageController::class, 'changeStage'])->name('test.change-stage');
-        Route::post('/test/store-response', [TestStageController::class, 'storeResponse'])->name('test.store-response');
+        // // Test Routes
+        // Route::get('/holland-codes', [MainTestController::class, 'index'])->name('holland-codes.index');
+        // Route::post('/test/change-stage', [TestStageController::class, 'changeStage'])->name('test.change-stage');
+        // Route::post('/test/store-response', [TestStageController::class, 'storeResponse'])->name('test.store-response');
 
-        // Chat routes
         Route::post('/chat', [ApiController::class, 'sendMessage'])->name('chat.send');
 
         // Welcome back routes
-        Route::get('/welcome-back/show', [WelcomeBackController::class, 'showWelcomeBack'])->name('welcome-back.show');
-        Route::post('/welcome-back/set-shown', [WelcomeBackController::class, 'setWelcomeBackShown'])->name('welcome-back.set-shown');
+        // Route::get('/welcome-back/show', [WelcomeBackController::class, 'showWelcomeBack'])->name('welcome-back.show');
+        // Route::post('/welcome-back/set-shown', [WelcomeBackController::class, 'setWelcomeBackShown'])->name('welcome-back.set-shown');
 
         Route::middleware(['auth'])->group(function () {
             // Holland Codes SPA routes
