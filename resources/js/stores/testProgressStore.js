@@ -39,7 +39,7 @@ export const useTestProgressStore = defineStore('testProgress', {
       degree: {
         name: 'Your degree matches',
         time: '~ 3 mins',
-        totalQuestions: 30,
+        totalQuestions: 7,
         nextStage: null,
         storeKey: 'degreeStore',
         dataKey: 'progress',

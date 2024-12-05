@@ -13,7 +13,7 @@ class DegreeTestStageController extends BaseTestController
 {
     protected const SESSION_KEY = 'degree_progress';
     protected $testStage = 'degree';
-    protected $itemSetTitle = 'Hollands codes';
+    protected $itemSetTitle = 'can\'t stands';
 
     protected function handleNearCompletion(array $progress): array
     {
@@ -111,6 +111,7 @@ class DegreeTestStageController extends BaseTestController
             }
 
             $totalQuestions = $degreeAssessment->items->count();
+            ds(['totalQuestions' => $totalQuestions]);
             $validResponses = count(array_filter($progress['responses'], fn($v) => $v > 0));
             $isCompleted = $validResponses >= $totalQuestions;
 
