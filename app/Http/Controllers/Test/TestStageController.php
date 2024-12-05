@@ -121,17 +121,37 @@ class TestStageController extends Controller
             Session::put('current_test_stage', $currentStage);
         }
 
+        // Get all stage progress data
+        $allProgress = [
+            'holland_codes' => Session::get('holland_codes_progress', [
+                'current_index' => 0,
+                'responses' => [],
+                'completed' => false,
+                'progress_percentage' => 0
+            ]),
+            'basic_interests' => Session::get('basic_interest_progress', [
+                'current_index' => 0,
+                'responses' => [],
+                'completed' => false,
+                'progress_percentage' => 0
+            ]),
+            'degree' => Session::get('degree_progress', [
+                'current_index' => 0,
+                'responses' => [],
+                'completed' => false,
+                'progress_percentage' => 0
+            ])
+        ];
+
         \Log::info('TestStageController: Getting current stage', [
             'stage' => $currentStage,
+            'progress' => $allProgress,
             'session_id' => Session::getId()
         ]);
         
-        // Get the stage-specific data
-        $stageData = $this->getStageData($currentStage);
-        
         return response()->json([
             'currentStage' => $currentStage,
-            'stageData' => $stageData
+            'progress' => $allProgress
         ]);
     }
 

@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { useHollandCodeStore } from './hollandCodeStore';
 import { useBasicInterestStore } from './basicInterestStore';
 import { useDegreeStore } from './degreeStore';
+import { useTestProgressStore } from './testProgressStore';
 import { router } from '@inertiajs/vue3';
 import axios from 'axios';
 
@@ -89,7 +90,7 @@ export const useTestStageStore = defineStore('testStage', {
             return progressStore.stages[stageInfo.storeKey];
         },
 
-        isStageComplete(stage) {
+        checkStageComplete(stage) {
             const progress = this.getStageProgress(stage);
             return progress?.completed || false;
         },
@@ -142,7 +143,19 @@ export const useTestStageStore = defineStore('testStage', {
                 const response = await axios.get('/test-stage/current');
                 
                 this.currentStage = response.data.currentStage;
-                this.stageData = response.data.stageData;
+                
+                // Update progress for all stages
+                const progressStore = useTestProgressStore();
+                const progress = response.data.progress;
+                
+                Object.entries(progress).forEach(([stage, stageProgress]) => {
+                    progressStore.updateStageProgress(stage, {
+                        currentIndex: stageProgress.current_index,
+                        validResponses: stageProgress.responses?.length ?? 0,
+                        percentage: stageProgress.progress_percentage,
+                        completed: stageProgress.completed
+                    });
+                });
                 
                 // Fetch data based on current stage
                 if (this.currentStage === 'basic_interests') {
