@@ -8,7 +8,7 @@ use App\Models\DegreeMatch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
-
+use App\Models\Degree;
 class DegreeTestStageController extends BaseTestController
 {
     protected const SESSION_KEY = 'degree_progress';
@@ -149,6 +149,9 @@ class DegreeTestStageController extends BaseTestController
                 'progress_percentage' => 0,
                 'validResponses' => 0
             ]);
+            $items = $this->calculateDegreeMatches();
+            ds($items);
+
 
             $progress['responses'][$validated['itemId']] = 
                 $validated['type'] === 'skipped' ? 0 : $validated['answer'];
@@ -167,7 +170,7 @@ class DegreeTestStageController extends BaseTestController
             $progress['completed'] = $validResponses >= $totalQuestions;
 
             if ($progress['progress_percentage'] > 90) {
-                $degreeMatches = $this->calculateDegreeMatches($progress['responses']);
+                $degreeMatches = $this->calculateDegreeMatches();
                 if (!empty($degreeMatches)) {
                     $progress['degreeMatching'] = $degreeMatches;
                 }
@@ -251,38 +254,35 @@ class DegreeTestStageController extends BaseTestController
         }
     }
 
-    protected function calculateDegreeMatches(array $responses)
+    protected function calculateDegreeMatches()
     {
         try {
-            $items = \App\Models\Item::whereIn('id', array_keys($responses))
-                ->with('degreeCategory')
-                ->get();
+            $jobMatches = Session::get('basic_interest_progress')['jobMatching'];
+            
+            // Extract job IDs from job matches
+            $jobIds = collect($jobMatches)->pluck('id')->toArray();
 
-            $categoryScores = [];
-            foreach ($items as $item) {
-                $category = $item->degreeCategory->name ?? 'uncategorized';
-                if (!isset($categoryScores[$category])) {
-                    $categoryScores[$category] = [
-                        'total' => 0,
-                        'count' => 0
-                    ];
-                }
-                $categoryScores[$category]['total'] += $responses[$item->id];
-                $categoryScores[$category]['count']++;
-            }
+            // Get degrees related to these jobs through DegreeJobsRelation
+            $degrees = Degree::whereHas('degreeJobsRelation', function($query) use ($jobIds) {
+                $query->whereIn('job_id', $jobIds);
+            })
+            ->select('id', 'name', 'slug', 'degree_level', 'salary', 'satisfaction', 'satisfaction_raw', 'image')
+            ->get()
+            ->map(function($degree) {
+                return [
+                    'id' => $degree->id,
+                    'name' => $degree->name,
+                    'slug' => $degree->slug,
+                    'degree_level' => $degree->degree_level,
+                    'salary' => $degree->salary,
+                    'satisfaction' => $degree->satisfaction,
+                    'satisfaction_raw' => $degree->satisfaction_raw,
+                    'image' => $degree->image
+                ];
+            })
+            ->toArray();
 
-            $averageScores = [];
-            foreach ($categoryScores as $category => $data) {
-                if ($data['count'] > 0) {
-                    $averageScores[$category] = $data['total'] / $data['count'];
-                }
-            }
-            arsort($averageScores);
-
-            return DegreeMatch::whereIn('category', array_keys($averageScores))
-                ->orderByRaw('FIELD(category, ' . implode(',', array_keys($averageScores)) . ')')
-                ->limit(5)
-                ->get();
+            return $degrees;
 
         } catch (\Exception $e) {
             \Log::error('DegreeTestStage: Error calculating matches', [

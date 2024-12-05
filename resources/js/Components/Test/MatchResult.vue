@@ -105,26 +105,28 @@
             <div class="Discovery__related__content">
             <ul class="Discovery__MemberCareerMatches">
               <div
-                v-for="job in jobMatching"
-                :key="job.id" 
+                v-for="item in displayItems"
+                :key="item.id" 
                 class="HorizontalCard HorizontalCard--wide"
-                :aria-labelledby="`HorizontalCard-${job.id}`"
+                :aria-labelledby="`HorizontalCard-${item.id}`"
               >
                 <img
                   class="HorizontalCard-image"
-                  :src="job.image"
+                  :src="item.image"
                   alt=""
                   role="presentation"
                   aria-hidden="true"
                 />
                 <div class="HorizontalCard-wrap">
                   <div
-                    :id="`HorizontalCard-${job.id}`"
+                    :id="`HorizontalCard-${item.id}`"
                     class="HorizontalCard-name"
                   >
-                    {{ job.name }}
+                    {{ item.name }}
                   </div>
-                  
+                  <div v-if="item.description" class="HorizontalCard-description">
+                    {{ item.description }}
+                  </div>
                 </div>
               </div>
             </ul>
@@ -149,11 +151,16 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 const props = defineProps({
   jobMatching: {
     type: Object,
+    default: null
+  },
+  degreeMatching: {
+    type: Object,
+    default: null
   },
   showMatch: {
     type: Boolean,
@@ -174,6 +181,12 @@ const handleFeedback = (type) => {
 const handleShare = () => {
   // Handle share logic
 };
+
+const displayItems = computed(() => {
+  if (props.jobMatching) return props.jobMatching;
+  if (props.degreeMatching) return props.degreeMatching;
+  return [];
+});
 </script>
 
 

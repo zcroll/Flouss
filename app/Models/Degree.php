@@ -75,5 +75,9 @@ class Degree extends Model
         }
         return $this->favorites()->where('user_id', auth()->id())->exists();
     }
+    public function degreeJobsRelation(): HasMany
+    {
+        return $this->hasMany(DegreeJobsRelation::class);
+    }
 }
 

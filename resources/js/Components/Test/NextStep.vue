@@ -44,6 +44,7 @@ import { ref } from 'vue';
 import { useTestStageStore } from '@/stores/testStageStore';
 import { useTestProgressStore } from '@/stores/testProgressStore';
 import { useBasicInterestStore } from '@/stores/basicInterestStore';
+import { useDegreeStore } from '@/stores/degreeStore';
 
 const props = defineProps({
   title: {
@@ -68,6 +69,7 @@ const emit = defineEmits(['continue']);
 const testStageStore = useTestStageStore();
 const progressStore = useTestProgressStore();
 const basicInterestStore = useBasicInterestStore();
+const degreeStore = useDegreeStore();
 const loading = ref(false);
 const error = ref(null);
 
@@ -97,6 +99,12 @@ const handleContinue = async () => {
     if (props.currentStage === 'basic_interests' && nextStage === 'degree') {
       if (!basicInterestStore?.progress?.jobMatching) {
         throw new Error('Please wait for job matching to complete before proceeding.');
+      }
+    }
+
+    if (props.currentStage === 'degree' && nextStage === 'personality') {
+      if (!degreeStore?.progress?.degreeMatching) {
+        throw new Error('Please wait for degree matching to complete before proceeding.');
       }
     }
 

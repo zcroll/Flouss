@@ -72,10 +72,12 @@
             <Discovery
               v-if="isComplete && (
                 (testStageStore.currentStage === 'holland_codes' && hollandCodeStore?.progress?.archetypeDiscovery) ||
-                (testStageStore.currentStage === 'basic_interests' && basicInterestStore?.progress?.jobMatching)
+                (testStageStore.currentStage === 'basic_interests' && basicInterestStore?.progress?.jobMatching) ||
+                (testStageStore.currentStage === 'degree' && degreeStore?.progress?.degreeMatching)
               )"
               :archetype-discovery="hollandCodeStore?.progress?.archetypeDiscovery"
               :job-matching="basicInterestStore?.progress?.jobMatching"
+              :degree-matching="degreeStore?.progress?.degreeMatching"
               :current-stage="testStageStore.currentStage"
               @close="handleDiscoveryClose"
             />

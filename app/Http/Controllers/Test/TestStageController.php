@@ -142,6 +142,8 @@ class TestStageController extends Controller
                 'progress_percentage' => 0
             ])
         ];
+        $data  = Session::get('basic_interest_progress');
+        ds($data);
 
         \Log::info('TestStageController: Getting current stage', [
             'stage' => $currentStage,
@@ -227,6 +229,25 @@ class TestStageController extends Controller
                 ]);
                 
                 \Log::info('TestStageController: Holland Codes progress', [
+                    'progress' => $progress,
+                    'session_id' => Session::getId()
+                ]);
+                
+                $stageData = [
+                    'progress' => $progress
+                ];
+                break;
+                
+            case 'degree':
+                $progress = Session::get('degree_progress', [
+                    'current_index' => 0,
+                    'responses' => [],
+                    'completed' => false,
+                    'progress_percentage' => 0,
+                    'degreeMatching' => null
+                ]);
+                
+                \Log::info('TestStageController: Degree progress', [
                     'progress' => $progress,
                     'session_id' => Session::getId()
                 ]);

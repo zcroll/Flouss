@@ -32,8 +32,9 @@
         @close="handleClose" 
       />
       <MatchResult 
-        v-if="showArchetype && isBasicInterests" 
+        v-if="showArchetype && (isBasicInterests || isDegree)" 
         :job-matching="jobMatching" 
+        :degree-matching="degreeMatching"
         @close="handleClose" 
       />
     </div>
@@ -59,6 +60,10 @@ const props = defineProps({
     type: Object,
     default: null
   },
+  degreeMatching: {
+    type: Object,
+    default: null
+  },
   currentStage: {
     type: String,
     required: true
@@ -71,6 +76,7 @@ const showArchetype = ref(false);
 
 const isHollandCodes = computed(() => props.currentStage === 'holland_codes');
 const isBasicInterests = computed(() => props.currentStage === 'basic_interests');
+const isDegree = computed(() => props.currentStage === 'degree');
 
 const handleShowResults = () => {
   showArchetype.value = true;

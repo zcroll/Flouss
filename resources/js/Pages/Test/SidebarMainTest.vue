@@ -106,27 +106,23 @@ watch(() => props.progress, (newProgress) => {
     const stageMap = {
       hollandCodes: 'holland_codes',
       basicInterest: 'basic_interests',
-      degree: 'degree'
+      degree: 'degree',
     };
 
     const stage = stageMap[key];
     if (stage && value) {
-      // Handle object or number progress data
       if (typeof value === 'object') {
         testProgressStore.updateStageProgress(stage, {
           currentIndex: value.currentIndex,
           validResponses: value.validResponses,
           percentage: value.percentage,
           completed: value.completed,
-          // Map the fields explicitly
           current_index: value.currentIndex,
           progress_percentage: value.percentage,
-          // Include stage-specific data
           ...(stage === 'basic_interests' && value.jobMatching ? { jobMatching: value.jobMatching } : {}),
           ...(stage === 'degree' && value.degreeMatching ? { degreeMatching: value.degreeMatching } : {})
         });
       } else {
-        // Handle simple percentage number
         testProgressStore.updateStageProgress(stage, value);
       }
     }
