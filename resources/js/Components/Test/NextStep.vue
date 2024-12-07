@@ -24,7 +24,7 @@
           id="interstitial-enter-button"
           class="alans-butt--grey"
           @click="handleContinue"
-          :disabled="loading"
+          :disabled="loading || disabled"
         >
           <span v-if="loading" class="loading-indicator">
             <span class="spinner"></span>
@@ -41,6 +41,8 @@
 
 <script setup>
 import { ref } from 'vue';
+import axios from 'axios';
+import { router } from '@inertiajs/vue3';
 import { useTestStageStore } from '@/stores/testStageStore';
 import { useTestProgressStore } from '@/stores/testProgressStore';
 import { useBasicInterestStore } from '@/stores/basicInterestStore';
@@ -62,6 +64,10 @@ const props = defineProps({
   currentStage: {
     type: String,
     required: true
+  },
+  disabled: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -81,9 +87,44 @@ const handleContinue = async () => {
   
   try {
     const nextStage = testStageStore.getNextStage();
+    
+    // If there's no next stage, we're at the final step
     if (!nextStage) {
-      emit('continue');
-      return;
+      try {
+        // Debug stage completion status
+        const stageStatus = testStageStore.stages.map(stage => ({
+          stage,
+          completed: testStageStore.isStageComplete(stage),
+          progress: progressStore.stages[stage]
+        }));
+        console.log('Stage completion status:', stageStatus);
+
+        // Check current stage completion
+        const currentStageComplete = progressStore.stages[props.currentStage]?.completed;
+        if (!currentStageComplete) {
+          throw new Error('Please complete the current stage before continuing.');
+        }
+
+        // Make API call to save results
+        const response = await axios.post(route('test.save-results'));
+        
+        if (response.data.success) {
+          testStageStore.clearError();
+          // If there's a redirect URL, navigate to it
+          if (response.data.redirect) {
+            window.location.href = response.data.redirect;
+          } else {
+            emit('continue');
+          }
+        } else {
+          throw new Error(response.data.message || 'Failed to save results');
+        }
+        
+        return;
+      } catch (err) {
+        console.error('Save results error:', err);
+        throw new Error(err.response?.data?.message || err.message || 'Failed to save your results. Please try again.');
+      }
     }
 
     const currentProgress = progressStore.stages[props.currentStage];
@@ -102,15 +143,15 @@ const handleContinue = async () => {
       }
     }
 
-    if (props.currentStage === 'degree' && nextStage === 'personality') {
+    if (props.currentStage === 'degree' && !nextStage) {
       if (!degreeStore?.progress?.degreeMatching) {
         throw new Error('Please wait for degree matching to complete before proceeding.');
       }
     }
 
-    await testStageStore.changeStage(nextStage);
-    if (testStageStore.error) {
-      throw new Error(testStageStore.error);
+    const success = await testStageStore.changeStage(nextStage);
+    if (!success) {
+      throw new Error(testStageStore.error || 'Failed to change stage');
     }
     emit('continue');
   } catch (err) {

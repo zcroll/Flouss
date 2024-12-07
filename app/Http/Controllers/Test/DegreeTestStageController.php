@@ -169,10 +169,13 @@ class DegreeTestStageController extends BaseTestController
                 : 0;
             $progress['completed'] = $validResponses >= $totalQuestions;
 
-            if ($progress['progress_percentage'] > 90) {
+            if ($progress['progress_percentage'] > 99) {
                 $degreeMatches = $this->calculateDegreeMatches();
                 if (!empty($degreeMatches)) {
-                    $progress['degreeMatching'] = $degreeMatches;
+                    $progress['degreeMatching'] = array_slice($degreeMatches, 0, 5);
+                    $resultUser = Session::get('result_user', []);
+                    $resultUser['degreeMatching'] = $degreeMatches;
+                    Session::put('result_user', $resultUser);
                 }
             }
 
@@ -257,7 +260,7 @@ class DegreeTestStageController extends BaseTestController
     protected function calculateDegreeMatches()
     {
         try {
-            $jobMatches = Session::get('basic_interest_progress')['jobMatching'];
+            $jobMatches = Session::get('result_user')['jobs'];
             
             // Extract job IDs from job matches
             $jobIds = collect($jobMatches)->pluck('id')->toArray();

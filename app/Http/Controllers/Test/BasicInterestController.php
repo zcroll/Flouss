@@ -35,7 +35,10 @@ class BasicInterestController extends BaseTestController
             if (isset($pythonJobResults['job_matches'])) {
                 $jobIds = array_column($pythonJobResults['job_matches'], 'job_id');
                 $jobs = JobInfo::whereIn('id', $jobIds)->get();
-                $progress['jobMatching'] = $jobs;
+                $progress['jobMatching'] = $jobs->take(5);
+                $resultUser = Session::get('result_user', []);
+                $resultUser['jobs'] = $jobs;
+                Session::put('result_user', $resultUser);
             }
         }
 

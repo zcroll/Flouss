@@ -129,6 +129,10 @@ Route::middleware([
             Route::get('/current', [TestStageController::class, 'getCurrentStage']);
             Route::post('/change', [TestStageController::class, 'changeStage']);
         });
+
+        Route::post('/test/save-results', [App\Http\Controllers\Test\TestStageController::class, 'saveResults'])
+            ->name('test.save-results')
+            ->middleware(['auth']);
     });
 });
 

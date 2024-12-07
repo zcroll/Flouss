@@ -82,7 +82,35 @@ class TestStageController extends Controller
             }
 
             // Store the response using the stage-specific controller
-            return $controller->storeResponse($request);
+            $response = $controller->storeResponse($request);
+
+            // Check if all stages are completed after storing the response
+            $allProgress = [
+                'holland_codes' => Session::get('holland_codes_progress', [
+                    'completed' => false
+                ]),
+                'basic_interests' => Session::get('basic_interest_progress', [
+                    'completed' => false
+                ]),
+                'degree' => Session::get('degree_progress', [
+                    'completed' => false
+                ])
+            ];
+
+            $allCompleted = !in_array(false, array_column($allProgress, 'completed'));
+            
+            if ($allCompleted && Session::has('result_user')) {
+                $resultTest = new ResultTest();
+                $saveResult = $resultTest->checkAllTestsCompleted();
+                
+                return response()->json([
+                    'response' => $response,
+                    'allCompleted' => true,
+                    'saveResult' => $saveResult
+                ]);
+            }
+
+            return $response;
 
         } catch (\Exception $e) {
             \Log::error('TestStageController: Error storing response', [
@@ -142,9 +170,13 @@ class TestStageController extends Controller
                 'progress_percentage' => 0
             ])
         ];
-        $data  = Session::get('basic_interest_progress');
-        ds($data);
 
+        $resultUser = Session::get('result_user');
+        ds(['result_user' => $resultUser]);
+        
+        // Check if all stages are completed
+        $completionResult = $this->checkAllStagesCompleted();
+        
         \Log::info('TestStageController: Getting current stage', [
             'stage' => $currentStage,
             'progress' => $allProgress,
@@ -153,7 +185,8 @@ class TestStageController extends Controller
         
         return response()->json([
             'currentStage' => $currentStage,
-            'progress' => $allProgress
+            'progress' => $allProgress,
+            'completionResult' => $completionResult
         ]);
     }
 
@@ -259,5 +292,125 @@ class TestStageController extends Controller
         }
         
         return $stageData;
+    }
+
+    private function checkAllStagesCompleted()
+    {
+        $allProgress = [
+            'holland_codes' => Session::get('holland_codes_progress', [
+                'current_index' => 0,
+                'responses' => [],
+                'completed' => false,
+                'progress_percentage' => 0
+            ]),
+            'basic_interests' => Session::get('basic_interest_progress', [
+                'current_index' => 0,
+                'responses' => [],
+                'completed' => false,
+                'progress_percentage' => 0
+            ]),
+            'degree' => Session::get('degree_progress', [
+                'current_index' => 0,
+                'responses' => [],
+                'completed' => false,
+                'progress_percentage' => 0
+            ])
+        ];
+
+        $allCompleted = true;
+        foreach ($allProgress as $progress) {
+            if (!($progress['completed'] ?? false)) {
+                $allCompleted = false;
+                break;
+            }
+        }
+
+        if ($allCompleted && Session::has('result_user')) {
+            $resultTest = new ResultTest();
+            return $resultTest->checkAllTestsCompleted();
+        }
+
+        return null;
+    }
+
+    public function saveResults()
+    {
+        try {
+            // Check if user is authenticated
+            if (!auth()->check()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User must be authenticated'
+                ], 401);
+            }
+
+            // Check if we have result_user in session
+            if (!Session::has('result_user')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No test results found to save'
+                ], 400);
+            }
+
+            // Check if all stages are completed
+            $allProgress = [
+                'holland_codes' => Session::get('holland_codes_progress', [
+                    'completed' => false
+                ]),
+                'basic_interests' => Session::get('basic_interest_progress', [
+                    'completed' => false
+                ]),
+                'degree' => Session::get('degree_progress', [
+                    'completed' => false
+                ])
+            ];
+
+            // Debug log the progress
+            \Log::info('Stage completion status:', [
+                'progress' => $allProgress,
+                'session_id' => Session::getId()
+            ]);
+
+            // Check if any stage is not completed
+            foreach ($allProgress as $stage => $progress) {
+                if (!($progress['completed'] ?? false)) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Stage {$stage} is not completed"
+                    ], 400);
+                }
+            }
+
+            $resultTest = new ResultTest();
+            $result = $resultTest->checkAllTestsCompleted();
+            
+            // Convert the response to array to check the data
+            $resultData = json_decode($result->getContent(), true);
+            
+            if (isset($resultData['success']) && $resultData['success']) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Results saved successfully'
+                ]);
+            }
+            
+            return response()->json([
+                'success' => false,
+                'message' => $resultData['message'] ?? 'Failed to save results'
+            ], 400);
+
+        } catch (\Exception $e) {
+            \Log::error('Failed to save test results:', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'session_data' => Session::get('result_user'),
+                'progress_data' => $allProgress ?? null
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while saving your results: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

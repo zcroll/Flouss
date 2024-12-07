@@ -44,14 +44,14 @@ class ResultController extends Controller
         // Get top 2 traits from scores
         $topTraits = [];
         if (!empty($firstScore->scores)) {
-            $scores = json_decode($firstScore->scores, true);
+            $scores = is_string($firstScore->scores) ? json_decode($firstScore->scores, true) : $firstScore->scores;
             arsort($scores);
             $topTraits = array_slice($scores, 0, 2, true);
         }
 
         $jobs = null;
         if (!empty($firstScore->jobs)) {
-            $decodedJobs = json_decode($firstScore->jobs, true, 512, JSON_THROW_ON_ERROR);
+            $decodedJobs = is_string($firstScore->jobs) ? json_decode($firstScore->jobs, true, 512, JSON_THROW_ON_ERROR) : $firstScore->jobs;
 
             if (isset($decodedJobs['job_matches'])) {
                 $jobIds = collect($decodedJobs['job_matches'])->pluck('job_id');

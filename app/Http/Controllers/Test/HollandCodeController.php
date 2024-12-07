@@ -36,9 +36,16 @@ class HollandCodeController extends BaseTestController
         if (!empty($formattedResponses)) {
             $formattedProgress = ['responses' => $formattedResponses];
             $formattedResponses = $this->formatResponsesWithTraits($formattedProgress);
+            ds($formattedResponses);
             $archetypeResults = $this->getArchetypeAndTopScores($formattedResponses['scores']);
+          
 
             if (!empty($archetypeResults) && isset($archetypeResults['archetypes'][0])) {
+                Session::put('result_user', [
+                    'archetype' => $archetypeResults,
+                    'scores' => $formattedResponses['scores']
+                ]);
+                
                 $progress['archetypeResults'] = $archetypeResults;
                 
                 $archetypeName = $archetypeResults['archetypes'][0];
