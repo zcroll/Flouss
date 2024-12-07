@@ -89,7 +89,7 @@ const props = defineProps({
     default: null
   },
   topTraits: {
-    type: Array,
+    type: Object,
     default: null
   }
 });

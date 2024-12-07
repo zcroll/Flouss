@@ -98,7 +98,7 @@ import { useForm } from '@inertiajs/vue3';
 
 const props = defineProps({
   userId: {
-    type: Number,
+    type: String,
     required: true
   },
   jobs: {
@@ -111,7 +111,7 @@ const props = defineProps({
   },
   ArchetypeJobs: {
     type: Array,
-    required: true
+    required: false
   },
   archetypeDiscovery: {
     type: Object,

@@ -9,4 +9,8 @@ return [
     'relatedJobs' => 'Carrières connexes',
     'interestedInDegree' => 'Intéressé par ce diplôme ? Explorez notre',
     'degreeGuide' => 'Guide des Diplômes',
+    'cities' => 'Villes',
+    'levels' => 'Niveaux',
+    'types' => 'Établissements',
+    'filters' => 'Filtres',
 ];

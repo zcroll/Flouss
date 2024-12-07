@@ -1,83 +1,53 @@
 import { defineStore } from 'pinia';
 import { useHollandCodeStore } from './hollandCodeStore';
 import { useBasicInterestStore } from './basicInterestStore';
-import { useDegreeStore } from './degreeStore';
-import { useTestProgressStore } from './testProgressStore';
 import { router } from '@inertiajs/vue3';
-import axios from 'axios';
+import { useTestProgressStore } from './testProgressStore';
 
 export const useTestStageStore = defineStore('testStage', {
     state: () => ({
-        currentStage: null,
-        stages: ['holland_codes', 'basic_interests', 'degree'],
-        stageProgress: {
-            holland_codes: {
-                percentage: 0,
-                completed: false
-            },
-            basic_interests: {
-                percentage: 0,
-                completed: false
-            },
-            degree: {
-                percentage: 0,
-                completed: false
-            }
-        },
+        currentStage: 'holland_codes',
+        stages: ['holland_codes', 'basic_interests', 'workplace', 'personality'],
         stageInfo: {
             'holland_codes': {
                 name: 'Holland Codes',
                 description: 'Discover your career interests and personality type',
                 nextStage: 'basic_interests',
                 nextStageName: 'Basic Interest Assessment',
-                route: 'holland-codes.index'
+                route: 'holland-codes.index',
+                storeKey: 'hollandCodes'
             },
             'basic_interests': {
                 name: 'Basic Interest',
-                description: 'Explore your specific areas of interest', 
-                nextStage: 'degree',
-                nextStageName: 'Degree Assessment',
-                route: 'basic-interests.index'
+                description: 'Explore your specific areas of interest',
+                nextStage: 'workplace',
+                nextStageName: 'Workplace Assessment',
+                route: 'holland-codes.index',
+                storeKey: 'basicInterest'
             },
-            'degree': {
-                name: 'Degree Assessment',
-                description: 'Find your ideal degree path',
+            'workplace': {
+                name: 'Workplace',
+                description: 'Understand your ideal work environment',
+                nextStage: 'personality',
+                nextStageName: 'Personality Assessment',
+                route: 'holland-codes.index',
+                storeKey: 'workplace'
+            },
+            'personality': {
+                name: 'Personality',
+                description: 'Discover your personality traits',
                 nextStage: null,
                 nextStageName: null,
-                route: 'degree-assessment.index'
+                route: 'holland-codes.index',
+                storeKey: 'personality'
             }
         },
         loading: false,
         error: null,
-        initialized: false
+        transitionData: null
     }),
 
     actions: {
-        updateStageProgress(stage, percentage) {
-            if (this.stageProgress[stage]) {
-                this.stageProgress[stage].percentage = percentage;
-                this.stageProgress[stage].completed = percentage >= 100;
-            }
-        },
-
-        markStageComplete(stage) {
-            if (this.stageProgress[stage]) {
-                this.stageProgress[stage].percentage = 100;
-                this.stageProgress[stage].completed = true;
-            }
-        },
-
-        async initialize() {
-            if (this.initialized) return;
-            
-            try {
-                await this.fetchCurrentStage();
-                this.initialized = true;
-            } catch (error) {
-                console.error('Failed to initialize test stage store:', error);
-            }
-        },
-
         getNextStage() {
             const currentStageInfo = this.stageInfo[this.currentStage];
             return currentStageInfo?.nextStage || null;
@@ -90,7 +60,7 @@ export const useTestStageStore = defineStore('testStage', {
             return progressStore.stages[stageInfo.storeKey];
         },
 
-        checkStageComplete(stage) {
+        isStageComplete(stage) {
             const progress = this.getStageProgress(stage);
             return progress?.completed || false;
         },
@@ -137,89 +107,114 @@ export const useTestStageStore = defineStore('testStage', {
             return true;
         },
 
-        async fetchCurrentStage() {
+        async initializeFromSession() {
             try {
-                this.loading = true;
-                const response = await axios.get('/test-stage/current');
+                const response = await fetch(route('test.current-stage'));
+                const data = await response.json();
                 
-                this.currentStage = response.data.currentStage;
-                
-                // Update progress for all stages
-                const progressStore = useTestProgressStore();
-                const progress = response.data.progress;
-                
-                Object.entries(progress).forEach(([stage, stageProgress]) => {
-                    progressStore.updateStageProgress(stage, {
-                        currentIndex: stageProgress.current_index,
-                        validResponses: stageProgress.responses?.length ?? 0,
-                        percentage: stageProgress.progress_percentage,
-                        completed: stageProgress.completed
-                    });
-                });
-                
-                // Fetch data based on current stage
-                if (this.currentStage === 'basic_interests') {
-                    const basicInterestStore = useBasicInterestStore();
-                    await basicInterestStore.fetchData();
-                } else if (this.currentStage === 'degree') {
-                    const degreeStore = useDegreeStore();
-                    await degreeStore.fetchData();
+                if (data.currentStage) {
+                    this.currentStage = data.currentStage;
+                    
+                    // Initialize the appropriate store based on the current stage
+                    await this.initializeStage(this.currentStage);
                 }
             } catch (error) {
-                this.error = 'Failed to fetch current stage';
-                console.error('Error fetching current stage:', error);
-            } finally {
-                this.loading = false;
+                console.error('Failed to initialize from session:', error);
             }
         },
 
         async changeStage(newStage) {
+            console.log('Starting stage change:', { from: this.currentStage, to: newStage });
+            
             try {
+                // Validate the stage transition
+                this.validateStageTransition(this.currentStage, newStage);
+                
                 this.loading = true;
                 this.error = null;
 
-                const response = await axios.post('/test-stage/change', {
-                    fromStage: this.currentStage,
-                    toStage: newStage
-                });
-
-                if (response.data.error) {
-                    this.error = response.data.error;
-                    return false;
+                // Get the route for the new stage
+                const newStageInfo = this.stageInfo[newStage];
+                if (!newStageInfo?.route) {
+                    throw new Error('Stage route not found');
                 }
 
-                this.currentStage = response.data.currentStage;
-                
-                // Fetch data for the new stage
-                await this.fetchStageData(newStage);
+                // Make the API request to change stage
+                await router.post(route('test.change-stage'), {
+                    fromStage: this.currentStage,
+                    toStage: newStage
+                }, {
+                    preserveState: true,
+                    preserveScroll: true,
+                    onSuccess: (page) => {
+                        console.log('Stage change response:', page.props);
+                        
+                        if (page.props.error) {
+                            console.error('Stage change error from server:', page.props.error);
+                            this.error = page.props.error;
+                            return;
+                        }
 
-                return true;
+                        // Store transition data temporarily
+                        this.transitionData = page.props;
+
+                        // Update the current stage
+                        this.currentStage = newStage;
+
+                        // Update progress store
+                        const progressStore = useTestProgressStore();
+                        progressStore.setCurrentStage(newStage);
+
+                        // Navigate to the new stage's route
+                        router.visit(route(newStageInfo.route), {
+                            preserveState: true,
+                            preserveScroll: true,
+                            onSuccess: () => {
+                                // Initialize the new stage with the stored transition data
+                                this.initializeStage(newStage, this.transitionData);
+                                this.transitionData = null;
+                            },
+                            onError: (errors) => {
+                                console.error('Navigation error:', errors);
+                                this.error = 'Failed to navigate to new stage';
+                                this.currentStage = this.currentStage; // Keep current stage
+                                progressStore.setCurrentStage(this.currentStage);
+                            }
+                        });
+                    },
+                    onError: (errors) => {
+                        console.error('Stage change request error:', errors);
+                        this.error = errors?.message || 'Failed to change stage';
+                    }
+                });
             } catch (error) {
-                this.error = error.response?.data?.message || 'Failed to change stage';
-                console.error('Error changing stage:', error);
-                return false;
+                console.error('Stage change error:', error);
+                this.error = error.message;
+                throw error;
             } finally {
                 this.loading = false;
             }
         },
 
-        async fetchStageData(stage) {
-            const store = this.getStageStore();
-            if (store?.fetchData) {
-                await store.fetchData();
-            }
-        },
+        initializeStage(stage, data) {
+            console.log('Initializing stage:', { stage, data });
+            
+            const progressStore = useTestProgressStore();
+            progressStore.updateStageProgress(stage, data?.progress || {});
 
-        getStageStore() {
-            switch (this.currentStage) {
+            switch(stage) {
                 case 'basic_interests':
-                    return useBasicInterestStore();
+                    const basicInterestStore = useBasicInterestStore();
+                    basicInterestStore.initialize(data);
+                    console.log('Basic Interest store initialized');
+                    break;
                 case 'holland_codes':
-                    return useHollandCodeStore();
-                case 'degree':
-                    return useDegreeStore();
+                    const hollandCodeStore = useHollandCodeStore();
+                    hollandCodeStore.initialize(data);
+                    console.log('Holland Codes store initialized');
+                    break;
                 default:
-                    return null;
+                    console.log('No specific initialization for stage:', stage);
             }
         },
 
@@ -230,20 +225,15 @@ export const useTestStageStore = defineStore('testStage', {
 
     getters: {
         hasError: (state) => !!state.error,
-        currentStageName: (state) => state.stageInfo[state.currentStage]?.name || '',
-        nextStageName: (state) => state.stageInfo[state.currentStage]?.nextStageName || '',
-        currentStageDescription: (state) => state.stageInfo[state.currentStage]?.description || '',
-        hasNextStage: (state) => !!state.stageInfo[state.currentStage]?.nextStage,
-        nextStage: (state) => state.stageInfo[state.currentStage]?.nextStage || null,
-        stageProgress: (state) => (stage) => {
-            return state.stageProgress[stage]?.percentage || 0;
-        },
-        isStageComplete: (state) => (stage) => {
-            return state.stageProgress[stage]?.completed || false;
-        },
-        canProceedToNextStage: (state) => {
-            const currentStage = state.currentStage;
-            return state.stageProgress[currentStage]?.completed || false;
+        currentStageName: (state) => state.stageInfo[state.currentStage]?.name || state.currentStage,
+        nextStageName: (state) => state.stageInfo[state.currentStage]?.nextStageName || null,
+        currentStageDescription: (state) => state.stageInfo[state.currentStage]?.description || null,
+        isValidTransition: (state) => (fromStage, toStage) => {
+            try {
+                return state.stageInfo[fromStage]?.nextStage === toStage;
+            } catch {
+                return false;
+            }
         }
     }
 }); 

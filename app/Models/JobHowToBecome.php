@@ -15,6 +15,7 @@ class JobHowToBecome extends Model
         'job_id',
         'title',
         'steps',
+        'steps_fr',
         'certifications',
         'associations',
     ];

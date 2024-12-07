@@ -108,7 +108,7 @@ export default defineComponent({
   },
   props: {
     userId: {
-      type: Number,
+      type: String,
       required: true
     },
     archetype: {

@@ -109,6 +109,10 @@ export default {
       type: Object,
       required: true,
     },
+    screenWidth: {
+      type: Number,
+      required: false,
+    },
   },
   methods: {
     formatCategory(category) {

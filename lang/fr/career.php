@@ -59,4 +59,10 @@ return [
     'enterprising_definition' => 'Les personnes entreprenantes sont énergiques, ambitieuses et sociables. Ils aiment diriger, persuader les autres et prendre des risques. Ils préfèrent les activités commerciales compétitives et les rôles de leadership.',
     'conventional' => 'Conventionnel',
     'conventional_definition' => 'Les personnes conventionnelles sont prudentes, structurées et attentives aux détails. Ils aiment travailler avec des données, des chiffres et des dossiers. Ils préfèrent suivre des procédures établies et travailler dans des environnements structurés.',
+    'steps' => 'Comment devenir un(e) ',
+    'degrees' => 'Disciplines',
+    'no_steps' => 'Aucune étape disponible pour cette occupation.',
+    'no_degrees' => 'Aucune discipline disponible pour cette occupation.',
+    'associations' => 'Associations',
+
 ];

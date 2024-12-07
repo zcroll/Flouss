@@ -32,4 +32,58 @@ createInertiaApp({
     progress: {
         color: '#4B5563',
     },
+    
 });
+
+// document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+// // Disable keyboard shortcuts
+// document.addEventListener('keydown', (e) => {
+//     // Prevent F12
+//     if (e.key === 'F12') {
+//         e.preventDefault();
+//         return false;
+//     }
+    
+//     // Prevent Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
+//     if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) {
+//         e.preventDefault(); 
+//         return false;
+//     }
+    
+//     // Prevent Ctrl+U (view source)
+//     if (e.ctrlKey && e.key === 'u') {
+//         e.preventDefault();
+//         return false;
+//     }
+// });
+
+
+// // Clear console
+// setInterval(() => {
+//     console.clear();
+//     console.log('%c', 'font-size:0;');
+// }, 100);
+
+// // Disable debugging
+// function debug(e) {
+//     e.preventDefault();
+//     return false;
+// }
+
+// // Catch and prevent various debug attempts
+// window.addEventListener('debug', debug);
+// window.addEventListener('debugger', debug);
+// window.addEventListener('inspect', debug);
+
+// // Additional protection against source viewing
+// document.onkeypress = function (event) {
+//     event = (event || window.event);
+//     if (event.keyCode == 123) {
+//         return false;
+//     }
+// }
+
+// // Disable selecting/copying text
+// document.addEventListener('selectstart', (e) => e.preventDefault());
+// document.addEventListener('copy', (e) => e.preventDefault());

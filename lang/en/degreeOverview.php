@@ -9,4 +9,8 @@ return [
     'relatedJobs' => 'Related Careers',
     'interestedInDegree' => 'Interested in pursuing this Degree? Explore our',
     'degreeGuide' => 'Degree Guide',
+    'cities' => 'Cities',
+    'levels' => 'Levels',
+    'types' => 'Institution',
+    'filters' => 'Filters',
 ];
