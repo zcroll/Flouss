@@ -22,6 +22,17 @@ const stats = ref([
   }
 ]);
 
+defineProps({
+  canLogin: {
+    type: Boolean,
+    required: true
+  },
+  canRegister: {
+    type: Boolean,
+    required: true
+  }
+});
+
 onMounted(() => {
   // Animate SVG paths
   const timeline = anime.timeline({
@@ -64,7 +75,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <Header />
+  <Header :can-login="false" :can-register="false" />
   <div role="main">
     <section class="CareerTest__header">
       <svg class="CareerTest__header__bg" width="766" height="706" viewBox="0 0 766 706" fill="none">

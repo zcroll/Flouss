@@ -9,6 +9,8 @@ use Inertia\Inertia;
 
 class TestStageController extends Controller
 {
+    const TEST_STAGE_SESSION_KEY = 'current_test_stage';
+
     public function changeStage(Request $request)
     {
         \Log::info('TestStageController: Starting stage change', $request->all());
@@ -19,6 +21,8 @@ class TestStageController extends Controller
                 'toStage' => 'required|string'
             ]);
 
+            Session::put(self::TEST_STAGE_SESSION_KEY, $validated['toStage']);
+            
             \Log::info('TestStageController: Validated request', $validated);
 
             // Get the session key from the appropriate controller
@@ -66,7 +70,7 @@ class TestStageController extends Controller
             
             return Inertia::render('Test/MainTest', [
                 'error' => 'Stage transition failed: ' . $e->getMessage(),
-                'testStage' => $validated['fromStage'] ?? 'holland_codes'
+                'testStage' => Session::get(self::TEST_STAGE_SESSION_KEY, 'holland_codes')
             ]);
         }
     }
@@ -123,5 +127,12 @@ class TestStageController extends Controller
             default:
                 return null;
         }
+    }
+
+    public function getCurrentStage()
+    {
+        return response()->json([
+            'currentStage' => Session::get(self::TEST_STAGE_SESSION_KEY, 'holland_codes')
+        ]);
     }
 } 

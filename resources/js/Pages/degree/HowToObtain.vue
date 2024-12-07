@@ -67,17 +67,17 @@
                   <SheetTrigger asChild>
                     <Button variant="outline" class="lg:hidden">
                       <FunnelIcon class="h-4 w-4 mr-2" />
-                      Filters
+                      {{ __('degreeOverview.filters') }}
                     </Button>
                   </SheetTrigger>
                   <SheetContent side="bottom" class="h-[85vh]">
                     <SheetHeader>
-                      <SheetTitle>Filters</SheetTitle>
+                      <SheetTitle>{{ __('degreeOverview.filters') }}</SheetTitle>
                     </SheetHeader>
                     <div class="space-y-6 py-4">
                       <!-- Mobile Filter Content -->
                       <div class="space-y-4">
-                        <h3 class="text-sm font-medium">Cities</h3>
+                        <h3 class="text-sm font-medium">{{ __('degreeOverview.cities') }}</h3>
                         <div class="space-y-2">
                           <div v-for="ville in uniqueVilles" :key="ville" class="flex items-center">
                             <input type="checkbox" :id="`mobile-city-${ville}`" :value="ville" v-model="selectedCities" class="h-4 w-4 rounded border-gray-300 text-[#db492b] focus:ring-[#db492b]" />
@@ -87,7 +87,7 @@
                       </div>
                       
                       <div class="space-y-4">
-                        <h3 class="text-sm font-medium">Levels</h3>
+                        <h3 class="text-sm font-medium">{{ __('degreeOverview.levels') }}</h3>
                         <div class="space-y-2">
                           <div v-for="niveau in uniqueNiveaux" :key="niveau" class="flex items-center">
                             <input type="checkbox" :id="`mobile-niveau-${niveau}`" :value="niveau" v-model="selectedNiveaux" class="h-4 w-4 rounded border-gray-300 text-[#db492b] focus:ring-[#db492b]" />
@@ -97,7 +97,7 @@
                       </div>
                       
                       <div class="space-y-4">
-                        <h3 class="text-sm font-medium">Institution Types</h3>
+                        <h3 class="text-sm font-medium">{{ __('degreeOverview.types') }}</h3>
                         <div class="space-y-2">
                           <div v-for="type in uniqueTypes" :key="type" class="flex items-center">
                             <input type="checkbox" :id="`mobile-type-${type}`" :value="type" v-model="selectedTypes" class="h-4 w-4 rounded border-gray-300 text-[#db492b] focus:ring-[#db492b]" />
@@ -114,7 +114,7 @@
                   <!-- City Filter -->
                   <div class="relative" ref="cityDropdown">
                     <button @click="toggleCityDropdown" class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-[#db492b]/20 rounded-xl hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#db492b]/20 transition duration-200">
-                      <span class="mr-2">{{ selectedCities.length ? `${selectedCities.length} Cities` : 'City' }}</span>
+                      <span class="mr-2">{{ selectedCities.length ? `${selectedCities.length} Cities` : __('degreeOverview.cities') }}</span>
                       <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                       </svg>
@@ -132,7 +132,7 @@
                   <!-- Level Filter -->
                   <div class="relative" ref="niveauDropdown">
                     <button @click="toggleNiveauDropdown" class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-[#db492b]/20 rounded-xl hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#db492b]/20 transition duration-200">
-                      <span class="mr-2">{{ selectedNiveaux.length ? `${selectedNiveaux.length} Levels` : 'Level' }}</span>
+                      <span class="mr-2">{{ selectedNiveaux.length ? `${selectedNiveaux.length} Levels` : __('degreeOverview.levels') }}</span>
                       <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                       </svg>
@@ -150,7 +150,7 @@
                   <!-- Institution Type Filter -->
                   <div class="relative" ref="typeDropdown">
                     <button @click="toggleTypeDropdown" class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-[#db492b]/20 rounded-xl hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#db492b]/20 transition duration-200">
-                      <span class="mr-2">{{ selectedTypes.length ? `${selectedTypes.length} Types` : 'Institution Type' }}</span>
+                      <span class="mr-2">{{ selectedTypes.length ? `${selectedTypes.length} Types` : __('degreeOverview.types') }}</span>
                       <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                       </svg>

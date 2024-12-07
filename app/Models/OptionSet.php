@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class OptionSet extends Model
 {
     protected $table = 'option_sets';
-    
+
     protected $fillable = [
         'name',
         'help_text',
@@ -24,4 +24,4 @@ class OptionSet extends Model
     {
         return $this->hasMany(Item::class);
     }
-} 
+}

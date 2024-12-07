@@ -147,7 +147,7 @@
             </div>
           </div>
 
-          <WhenVisible v-if="hasMorePages" :once="false" :params="{
+          <WhenVisible v-if="hasMorePages" :params="{
             data: {
               page: page + 1,
               ...props.filters,

@@ -16,7 +16,7 @@
         :isFavorited="occupation.is_favorited"
       >
         <div class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white shadow ">
-          <Breadcrumbs 
+          <Breadcrumbs
             :items="[
               { name: 'Home', route: 'dashboard' },
               { name: 'Jobs', route: 'jobs.index' },
@@ -27,7 +27,7 @@
 
           <section id="step-1" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0">
 
-            <h2 class="heading-type pb-5" itemProp="name">Steps to become a {{ occupation.name }}</h2>
+            <h2 class="heading-type pb-5" itemProp="name">{{__('career.steps')}}{{ occupation.name }}</h2>
             <div v-if="howToBecome.steps && howToBecome.steps.length > 0" class="space-y-4 mb-8">
               <ul class="list-custom">
                 <li v-for="(step, index) in howToBecome.steps" :key="index" class="text-l text-gray-700 pt-3">
@@ -36,21 +36,21 @@
               </ul>
             </div>
             <div v-else class="space-y-4 mb-8">
-              <p class="text-lg text-gray-700">No steps available for this occupation.</p>
+              <p class="text-lg text-gray-700">{{ __('career.no_steps') }}</p>
             </div>
           </section>
 
           <section id="step-2" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0">
 
-            <h2 class="heading-type pb-5" itemProp="name">Degrees</h2>
+            <h2 class="heading-type pb-5" itemProp="name">{{ __('career.degrees') }}</h2>
             <div v-if="jobDegrees && jobDegrees.length > 0" class="space-y-4 mb-8">
               <div>
                 <ul class="space-y-4">
                   <li v-for="(degree, index) in jobDegrees" :key="index" class="flex items-center space-x-4 p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow duration-200">
                     <img v-if="degree.image" :src="degree.image" :alt="degree.title" class="w-16 h-16 object-cover rounded-lg shadow-sm">
                     <div class="flex-1">
-                      <Link 
-                        v-if="degree.slug" 
+                      <Link
+                        v-if="degree.slug"
                         :href="route('degree.index', { slug: degree.slug })"
                         class="text-lg font-medium text-gray-900transition-colors duration-200"
                       >
@@ -67,7 +67,7 @@
               </div>
             </div>
             <div v-else class="space-y-4 mb-8">
-              <p class="text-lg text-gray-700">No degrees available for this occupation.</p>
+              <p class="text-lg text-gray-700">{{ __('career.no_degrees') }}</p>
             </div>
           </section>
 
@@ -75,7 +75,7 @@
 
           <section v-if="howToBecome.associations && howToBecome.associations.length > 0" id="step-4" class="how-to-step Box" itemProp="step" itemType="http://schema.org/HowToStep" tabIndex="0">
             <span class="Tag">Step 4</span>
-            <h2 class="heading-type pb-5" itemProp="name">Associations</h2>
+            <h2 class="heading-type pb-5" itemProp="name">{{ __('career.associations') }}</h2>
             <div class="space-y-4 mb-8">
               <ul class="list-custom">
                 <li v-for="(association, index) in howToBecome.associations" :key="index" class="text-lg py-1text-gray-700 leading-relaxed">

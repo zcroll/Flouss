@@ -140,7 +140,7 @@ const props = defineProps({
     salary: Number,
     personality: String,
     satisfaction: String,
-    degreeLevel: String,
+    degreeLevel: Number,
     duration: String,
     jobType: String,
     workplaceType: String,
@@ -154,7 +154,6 @@ watch(() => props.isFavorited, (newValue) => {
     console.log('isFavorited changed:', newValue);
 });
 
-console.log('Initial isFavorited:', props.isFavorited);
 
 const isSmallScreen = ref(false);
 

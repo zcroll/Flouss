@@ -138,6 +138,8 @@ const isReady = computed(() => currentStore.value && currentTestData.value);
 
 onMounted(async () => {
   try {
+    await testStageStore.initializeFromSession();
+    
     if (testStageStore.currentStage === 'basic_interests') {
       await basicInterestStore.initialize();
     } else if (testStageStore.currentStage === 'holland_codes') {

@@ -63,7 +63,9 @@ const props = defineProps({
   predefinedQuestions: Array,
   archetype: Object,
   chatHistory: Array,
-  topTraits: Array
+  topTraits: Object,
+  parsedScales: Object
+  
 });
 
 const removeFavorite = (id) => {

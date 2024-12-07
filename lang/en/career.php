@@ -65,4 +65,9 @@ return [
     'enterprising_definition' => 'Enterprising people are energetic, ambitious and sociable. They enjoy leading, persuading others and taking risks. They prefer competitive business activities and leadership roles.',
     'conventional' => 'Conventional',
     'conventional_definition' => 'Conventional people are careful, structured and detail-oriented. They enjoy working with data, numbers and records. They prefer following established procedures and working in structured environments.',
+    'steps' => 'How to Become a(n) ',
+    'degrees' => 'Disciplines',
+    'no_steps' => 'No steps available for this occupation.',
+    'no_degrees' => 'No discipline available for this occupation.',
+    'associations' => 'Associations',
 ];

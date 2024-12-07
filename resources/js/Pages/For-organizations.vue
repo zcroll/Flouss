@@ -1,5 +1,5 @@
 <template>
-  <Header />
+  <Header :can-login="false" :can-register="false" />
   <div class="landinghero wf-section">
     <HeroSection />
     <WorldClass />
@@ -27,6 +27,17 @@ const handleOrbs = () => {
     }
   }
 }
+
+defineProps({
+  canLogin: {
+    type: Boolean,
+    required: true
+  },
+  canRegister: {
+    type: Boolean,
+    required: true
+  }
+});
 
 onMounted(() => {
   window.addEventListener("scroll", handleOrbs);

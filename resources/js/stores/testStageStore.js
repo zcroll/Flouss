@@ -107,6 +107,22 @@ export const useTestStageStore = defineStore('testStage', {
             return true;
         },
 
+        async initializeFromSession() {
+            try {
+                const response = await fetch(route('test.current-stage'));
+                const data = await response.json();
+                
+                if (data.currentStage) {
+                    this.currentStage = data.currentStage;
+                    
+                    // Initialize the appropriate store based on the current stage
+                    await this.initializeStage(this.currentStage);
+                }
+            } catch (error) {
+                console.error('Failed to initialize from session:', error);
+            }
+        },
+
         async changeStage(newStage) {
             console.log('Starting stage change:', { from: this.currentStage, to: newStage });
             
