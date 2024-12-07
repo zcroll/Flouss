@@ -54,3 +54,102 @@ export default {
   name: 'DataShare',
 }
 </script>
+
+<style scoped>
+.DashboardPage__sharing {
+  display: flex;
+  gap: 2rem;
+  padding: 2rem;
+  background: linear-gradient(145deg, #ffffff, #f0f0f0);
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+}
+
+.DashboardPage__sharing__wrap {
+  flex: 1;
+}
+
+.DashboardPage__sharing__title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 1.5rem;
+  line-height: 1.4;
+}
+
+.DashboardPage__sharing__list {
+  display: flex;
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+}
+
+.DashboardPage__sharing__item {
+  transition: transform 0.2s ease;
+}
+
+.DashboardPage__sharing__item:hover {
+  transform: translateY(-2px);
+}
+
+.DashboardPage__sharing__link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: #ffffff;
+  border-radius: 50%;
+  color: #4a5568;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
+}
+
+.DashboardPage__sharing__link:hover {
+  background: #4299e1;
+  color: white;
+}
+
+.DashboardPage__sharing__icon {
+  width: 20px;
+  height: 20px;
+}
+
+.DashboardPage__sharing__preview {
+  flex: 1;
+  position: relative;
+}
+
+.DashboardPage__sharing__preview__image {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+}
+
+.DashboardPage__sharing__preview__image:hover {
+  transform: scale(1.02);
+}
+
+.DashboardPage__sharing__preview__label {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.7);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+}
+
+@media (max-width: 768px) {
+  .DashboardPage__sharing {
+    flex-direction: column;
+  }
+  
+  .DashboardPage__sharing__title {
+    font-size: 1.5rem;
+  }
+}
+</style>

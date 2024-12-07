@@ -20,8 +20,10 @@ class Result extends Model
         'user_id',
         'scores',
         'jobs',
+        'degree',
         'highestTwoScores',
         'Archetype',
+        'degree',
     ];
 
     protected $casts = [

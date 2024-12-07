@@ -51,12 +51,36 @@
       </div> -->
 
       <!-- Data Share Section -->
-      <!-- <div>
+      <div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <DataShare class="rounded-3xl shadow-sm p-8" />
         </div>
-      </div> -->
+      </div>
+
+
+
+
+
+      <div class="relative">
+        <!-- Decorative background elements -->
+
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div class="relative">
+            <TopCareersHeader />
+            <DegreeList 
+              :displayed-degrees="displayedDegrees" 
+              :show-all-degrees="showAllDegrees"
+              :has-more-degrees="degrees && degrees.length > displayedDegrees.length" 
+              @select-degree="selectedDegree = $event"
+              @toggle-show-more="showAllDegrees = true" 
+            />
+          </div>
+        </div>
+      </div>
     </div> 
+
+    
   </AppLayout>
 </template>
 
@@ -68,6 +92,7 @@ import Folder from '@/Components/Result/Folder.vue';
 import DataShare from '@/Components/Result/DataShare.vue';
 import TopCareersHeader from '@/Components/Result/TopCareersHeader.vue';
 import CareersList from '@/Components/Result/CareersList.vue';
+import DegreeList from '@/Components/Result/DegreeList.vue';
 import Feedback from '@/Components/Result/Feedback.vue';
 import { useForm } from '@inertiajs/vue3';
 
@@ -95,16 +120,28 @@ const props = defineProps({
   hasGivenFeedback: {
     type: Boolean,
     required: true
+  },
+  degrees: {
+    type: Array,
+    required: true
   }
 });
 
 const selectedJob = ref(null);
 const showAllJobs = ref(false);
+const selectedDegree = ref(null);
+const showAllDegrees = ref(false);
 
 const displayedJobs = computed(() => {
   if (!props.jobs) return [];
   if (showAllJobs.value) return props.jobs;
   return props.jobs.slice(0, Math.ceil(props.jobs.length / 2));
+});
+
+const displayedDegrees = computed(() => {
+  if (!props.degrees) return [];
+  if (showAllDegrees.value) return props.degrees;
+  return props.degrees.slice(0, Math.ceil(props.degrees.length / 2));
 });
 
 const form = useForm({
@@ -121,4 +158,3 @@ const submitFeedback = () => {
   });
 };
 </script>
-

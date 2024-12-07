@@ -41,6 +41,8 @@ class ResultController extends Controller
 
         $archetype = $firstScore->Archetype ?? null;
 
+        ds(['archetypegetting'=>$archetype]);
+
         // Get top 2 traits from scores
         $topTraits = [];
         if (!empty($firstScore->scores)) {
@@ -48,28 +50,32 @@ class ResultController extends Controller
             arsort($scores);
             $topTraits = array_slice($scores, 0, 2, true);
         }
+        ds(['topTraits'=>$topTraits]);
 
         $jobs = null;
+        $degrees = null;
+        
         if (!empty($firstScore->jobs)) {
             $decodedJobs = is_string($firstScore->jobs) ? json_decode($firstScore->jobs, true, 512, JSON_THROW_ON_ERROR) : $firstScore->jobs;
-
-            if (isset($decodedJobs['job_matches'])) {
-                $jobIds = collect($decodedJobs['job_matches'])->pluck('job_id');
-                $jobs = JobInfo::whereIn('id', $jobIds)
-                    ->get()
-                    ->map(function ($job) {
-                        return [
-                            'id' => $job->id,
-                            'name' => $this->getLocalizedColumn($job, 'name'),
-                            'slug' => $job->slug,
-                            'image' => $job->image
-                        ];
-                    });
-            }
+            ds(['decodedJobs'=>$decodedJobs]);
+            $jobs = $decodedJobs;
         }
 
-        $Archetype = DB::table('persona')->where('name', $archetype[0] ?? '')->first();
-        $archetypeDiscovery = DB::table('archetype_discoveries')->where('slug', '=', strtolower($archetype[0]))->first();
+        if (!empty($firstScore->degree)) {
+            $decodedDegrees = is_string($firstScore->degree) ? json_decode($firstScore->degree, true, 512, JSON_THROW_ON_ERROR) : $firstScore->degree;
+            ds(['decodedDegrees'=>$decodedDegrees]);
+            $degrees = $decodedDegrees;
+        }
+
+        ds(['degrees'=>$degrees]);
+
+        $Archetype = DB::table('persona')->where('name', $archetype ?? '')->first();
+        $archetypeDiscovery = DB::table('archetype_discoveries')->where('slug', '=', strtolower($archetype))->first();
+        ds([
+            'jobs' => $jobs,
+            'Archetype' => $archetypeDiscovery,
+            'archetypeDiscovery' => $archetypeDiscovery,
+        ]);
 
         if ($firstScore) {
             return Inertia::render('Result/Results', [
@@ -77,6 +83,7 @@ class ResultController extends Controller
 
                 'userId' => $firstScore->uuid,
                 'jobs' => $jobs,
+                'degrees' => $degrees,
                 'Archetype' => $archetypeDiscovery,
                 'archetypeDiscovery' => $archetypeDiscovery,
             ]);

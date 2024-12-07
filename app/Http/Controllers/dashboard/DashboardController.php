@@ -63,7 +63,7 @@ class DashboardController extends Controller
                // Get top 2 traits from scores
             $topTraits = [];
             if (!empty($result->scores)) {
-                $scores = json_decode($result->scores, true);
+                $scores = is_array($result->scores) ? $result->scores : json_decode($result->scores, true);
                 arsort($scores);
                 $topTraits = array_slice($scores, 0, 2, true);
             }
@@ -73,19 +73,19 @@ class DashboardController extends Controller
 
          
 
-            if (!empty($result->jobs)) {
-                $decodedJobs = json_decode($result->jobs, true, 512, JSON_THROW_ON_ERROR);
+            // if (!empty($result->jobs)) {
+            //     $decodedJobs = json_decode($result->jobs, true, 512, JSON_THROW_ON_ERROR);
                 
-                if (isset($decodedJobs['job_matches'])) {
-                    $jobsCollection = collect($decodedJobs['job_matches']);
-                    $jobIds = $jobsCollection->pluck('job_id')->toArray();
+            //     if (isset($decodedJobs['job_matches'])) {
+            //         $jobsCollection = collect($decodedJobs['job_matches']);
+            //         $jobIds = $jobsCollection->pluck('job_id')->toArray();
 
-                    $topJobs = JobInfo::whereIn('id', $jobIds)
-                        ->select('id', 'name', 'slug', 'image')
-                        ->limit(6)
-                        ->get();
-                }
-            }
+            //         $topJobs = JobInfo::whereIn('id', $jobIds)
+            //             ->select('id', 'name', 'slug', 'image')
+            //             ->limit(6)
+            //             ->get();
+            //     }
+            // }
         }
 
         $chatHistory = ChatHistory::where('user_id', $user->id)
