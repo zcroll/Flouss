@@ -27,6 +27,7 @@ use App\Http\Controllers\Test\BasicInterestController;
 use App\Http\Controllers\Test\TestStageController;
 use App\Http\Controllers\Test\WorkplaceController;
 use App\Http\Controllers\Test\PersonalityController;
+use App\Http\Controllers\Formation\FormationController;
 
 // Google Login Routes (place these BEFORE any auth middleware groups)
 Route::get('auth/google', [App\Http\Controllers\Auth\GoogleController::class, 'redirectToGoogle'])
@@ -88,7 +89,8 @@ Route::middleware([
             Route::get('{slug}/how-to-obtain', [DegreeController::class, 'howToObtain'])->name('degree.howToObtain');
         });
 
-        Route::get('/formations', [FormationFilterController::class, 'index'])->name('formations.index');
+        Route::get('/formations', [FormationController::class, 'index'])->name('formations.index');
+        Route::get('/formation/{formation}', [FormationController::class, 'show'])->name('formation.show');
         Route::get('/formations/filter', [FormationFilterController::class, 'filter'])->name('formations.filter');
         Route::get('/etablissements', [FormationFilterController::class, 'getEtablissements'])->name('etablissements.list');
         Route::get('/degrees', [DegreeFilterController::class, 'index'])->name('degrees.index');
@@ -121,6 +123,8 @@ Route::middleware([
                 Route::post('/go-back', [BasicInterestController::class, 'goBack'])->name('basic-interests.go-back');
             });
         });
+
+        Route::get('/test/current-stage', [TestStageController::class, 'getCurrentStage'])->name('test.current-stage');
     });
 });
 
