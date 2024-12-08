@@ -27,6 +27,7 @@ use App\Http\Controllers\Test\BasicInterestController;
 use App\Http\Controllers\Test\TestStageController;
 use App\Http\Controllers\Test\WorkplaceController;
 use App\Http\Controllers\Test\PersonalityController;
+use App\Http\Controllers\Formation\FormationController;
 use App\Http\Controllers\Test\DegreeTestStageController;
 
 // Google Login Routes (place these BEFORE any auth middleware groups)
@@ -46,7 +47,6 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 })->name('home');
-
 
 Route::middleware([
     'auth:sanctum',
@@ -83,8 +83,15 @@ Route::middleware([
 
         Route::get('/degree/{degreeSlug}', [DegreeController::class, 'index'])->name('degree.show');
 
-     
-        Route::get('/formations', [FormationFilterController::class, 'index'])->name('formations.index');
+        Route::prefix('degree')->group(function () {
+            Route::get('{slug}', [DegreeController::class, 'index'])->name('degree.index');
+            Route::get('{slug}/skills', [DegreeController::class, 'skills'])->name('degree.skills');
+            Route::get('{slug}/jobs', [DegreeController::class, 'jobs'])->name('degree.jobs');
+            Route::get('{slug}/how-to-obtain', [DegreeController::class, 'howToObtain'])->name('degree.howToObtain');
+        });
+
+        Route::get('/formations', [FormationController::class, 'index'])->name('formations.index');
+        Route::get('/formation/{formation}', [FormationController::class, 'show'])->name('formation.show');
         Route::get('/formations/filter', [FormationFilterController::class, 'filter'])->name('formations.filter');
         Route::get('/etablissements', [FormationFilterController::class, 'getEtablissements'])->name('etablissements.list');
         Route::get('/degrees', [DegreeFilterController::class, 'index'])->name('degrees.index');
@@ -95,6 +102,7 @@ Route::middleware([
         // Route::post('/test/change-stage', [TestStageController::class, 'changeStage'])->name('test.change-stage');
         // Route::post('/test/store-response', [TestStageController::class, 'storeResponse'])->name('test.store-response');
 
+        // Chat routes
         Route::post('/chat', [ApiController::class, 'sendMessage'])->name('chat.send');
 
         // Welcome back routes
@@ -190,7 +198,3 @@ Route::get('/ruller', function () {
 Route::get('/api',[ApiController::class,'index']);
 
 
-
-Route::get('/navbar-test', function () {
-  return Inertia::render('Navbartest');
-})->name('navbar-test');

@@ -36,29 +36,29 @@
                   <Badge 
                     v-for="city in selectedCities" 
                     :key="city"
-                    variant="secondary"
-                    class="flex items-center gap-1"
+                    variant="primary"
+                    class="flex items-center gap-1 bg-blue-100 text-blue-800 px-2 py-1 rounded-lg border border-blue-300"
                   >
                     {{ city }}
-                    <button @click="removeCity(city)" class="ml-1">×</button>
+                    <button @click="removeCity(city)" class="ml-1 hover:text-blue-600">×</button>
                   </Badge>
                   <Badge 
                     v-for="niveau in selectedNiveaux" 
                     :key="niveau"
-                    variant="secondary"
-                    class="flex items-center gap-1"
+                    variant="success" 
+                    class="flex items-center gap-1 bg-green-100 text-green-800 px-2 py-1 rounded-lg border border-green-300"
                   >
                     {{ niveau }}
-                    <button @click="removeNiveau(niveau)" class="ml-1">×</button>
+                    <button @click="removeNiveau(niveau)" class="ml-1 hover:text-green-600">×</button>
                   </Badge>
                   <Badge 
                     v-for="type in selectedTypes" 
                     :key="type"
-                    variant="secondary"
-                    class="flex items-center gap-1"
+                    variant="warning"
+                    class="flex items-center gap-1 bg-yellow-100 text-yellow-800 px-2 py-1 rounded-lg border border-yellow-300"
                   >
                     {{ type }}
-                    <button @click="removeType(type)" class="ml-1">×</button>
+                    <button @click="removeType(type)" class="ml-1 hover:text-yellow-600">×</button>
                   </Badge>
                 </div>
                 
@@ -114,7 +114,7 @@
                   <!-- City Filter -->
                   <div class="relative" ref="cityDropdown">
                     <button @click="toggleCityDropdown" class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-[#db492b]/20 rounded-xl hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#db492b]/20 transition duration-200">
-                      <span class="mr-2">{{ selectedCities.length ? `${selectedCities.length} Cities` : __('degreeOverview.cities') }}</span>
+                      <span class="mr-2">{{ __('degreeOverview.cities') }}</span>
                       <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                       </svg>
@@ -132,7 +132,7 @@
                   <!-- Level Filter -->
                   <div class="relative" ref="niveauDropdown">
                     <button @click="toggleNiveauDropdown" class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-[#db492b]/20 rounded-xl hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#db492b]/20 transition duration-200">
-                      <span class="mr-2">{{ selectedNiveaux.length ? `${selectedNiveaux.length} Levels` : __('degreeOverview.levels') }}</span>
+                      <span class="mr-2">{{ __('degreeOverview.levels') }}</span>
                       <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                       </svg>
@@ -150,7 +150,7 @@
                   <!-- Institution Type Filter -->
                   <div class="relative" ref="typeDropdown">
                     <button @click="toggleTypeDropdown" class="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-[#db492b]/20 rounded-xl hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#db492b]/20 transition duration-200">
-                      <span class="mr-2">{{ selectedTypes.length ? `${selectedTypes.length} Types` : __('degreeOverview.types') }}</span>
+                      <span class="mr-2">{{ __('degreeOverview.types') }}</span>
                       <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                       </svg>
