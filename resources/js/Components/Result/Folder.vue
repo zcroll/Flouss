@@ -9,18 +9,18 @@
               <div class="avatar">
                 <component 
                   v-if="archetype && archetype.slug"
-                  :is="getAvatarComponent(archetype.slug)"
+                  :is="getAvatarComponent('Architect')"
                   style="width: 100%;"
                 />
                 <component 
                   v-else
-                  :is="getAvatarComponent('Default')"
+                  :is="getAvatarComponent('Architect')"
                   style="width: 100%;"
                 />
               </div>
               
               <div class="text-button-container">
-              <h1 class="archetype-name" :data-text="archetype.slug">{{ archetype.slug }}</h1>
+              <h1 class="archetype-name" :data-text="archetype.slug">Architect</h1>
               
                 <Link
                   class="view-report-button"
@@ -55,7 +55,7 @@
                       class="avatar-thumbnail-image"
                     />
                   </div>
-                  <span class="avatar-name">{{ avatar.slug }}</span>
+                  <span class="avatar-name"></span>
                 </div>
               </div>
             </div>

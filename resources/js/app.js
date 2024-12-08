@@ -8,6 +8,8 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import draggable from 'vuedraggable';
 import __ from './lang';
 import { createPinia } from 'pinia'
+// import LottieAnimation from '@lottiefiles/lottie-player' // import lottie-vuejs
+
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 

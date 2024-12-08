@@ -38,7 +38,6 @@ class DashboardController extends Controller
             ->select([
                 'favorites.id',
                 'degrees.name',
-                'degrees.slug', 
                 'degrees.image'
             ])
             ->get();

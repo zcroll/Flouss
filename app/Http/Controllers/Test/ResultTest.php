@@ -38,16 +38,11 @@ class ResultTest extends Controller
                 $result->Archetype = $resultUser['archetype']['archetypes'][0] ?? null;
                 $result->save();
                 
-                // Clear the session after successful save
-                Session::forget('result_user');
+                // Session::forget('result_user');
                 
                 DB::commit();
                 
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Results saved successfully',
-                    'redirect' => route('results')
-                ]);
+                return to_route('results');
             } catch (\Exception $e) {
                 DB::rollBack();
                 throw $e;

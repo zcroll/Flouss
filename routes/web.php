@@ -188,3 +188,9 @@ Route::get('/ruller', function () {
 });
 
 Route::get('/api',[ApiController::class,'index']);
+
+
+
+Route::get('/navbar-test', function () {
+  return Inertia::render('Navbartest');
+})->name('navbar-test');
