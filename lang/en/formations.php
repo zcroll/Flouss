@@ -25,5 +25,5 @@ return [
     'select_discipline' => 'Select a discipline',
     'select_region' => 'Select a region',
     'search_placeholder' => 'Search for a formation',
-
+    'clear_filters' => 'Clear filters',
 ]; 

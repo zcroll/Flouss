@@ -26,6 +26,8 @@ return [
     'select_region' => 'Sélectionner une région',
     'search_placeholder' => 'Rechercher une formation',
     'region' => 'Région',
+    'clear_filters' => 'Effacer les filtres',
+
 
 
 ]; 
