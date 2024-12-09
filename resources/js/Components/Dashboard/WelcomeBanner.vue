@@ -27,7 +27,7 @@
         </p>
 
         <div class="flex items-center gap-4">
-          <Link v-if="!hasResult" href="/main-test"
+          <Link v-if="!hasResult" :href="route('holland-codes.index')"
             class="group relative inline-flex items-center px-6 py-3 bg-[#E05B42] hover:bg-[#E05B42]/90 text-white font-medium rounded-lg transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-[#E05B42]/20">
             {{ __('dashboard.begin_assessment') }}
             <svg class="ml-2 w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">

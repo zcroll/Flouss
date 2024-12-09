@@ -42,7 +42,11 @@ class ResultTest extends Controller
                 
                 DB::commit();
                 
-                return to_route('results');
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Results saved successfully',
+                    'redirect' => route('results')
+                ]);
             } catch (\Exception $e) {
                 DB::rollBack();
                 throw $e;

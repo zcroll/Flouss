@@ -111,7 +111,7 @@ onBeforeUnmount(() => {
                         </template>
 
                         <Link
-                            :href="route('main-test')"
+                            :href="route('holland-codes.index')"
                             class="mt-4 px-4 py-2 bg-primary text-white rounded-lg text-center hover:bg-primary/90 transition-colors duration-200 flex items-center justify-center gap-3"
                             @click="isOpen = false"
                         >
@@ -155,7 +155,7 @@ onBeforeUnmount(() => {
                 </template>
             </div>
 
-            <Link :href="route('main-test')" class="GlobalNav-button GlobalNav-button--main alans-butt--grey">
+            <Link :href="route('holland-codes.index')" class="GlobalNav-button GlobalNav-button--main alans-butt--grey">
                 {{ __('navigation.take_test') }}
             </Link>
         </nav>
