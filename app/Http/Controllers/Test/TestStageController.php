@@ -7,10 +7,30 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
+/**
+ * Class TestStageController
+ * 
+ * Manages the test stage transitions and response storage for the assessment system.
+ * This controller acts as a coordinator between different test stages (Holland Codes,
+ * Basic Interests, Workplace, and Personality assessments).
+ *
+ * @package App\Http\Controllers\Test
+ */
 class TestStageController extends Controller
 {
+    /**
+     * Session key used to store the current test stage
+     * 
+     * @var string
+     */
     const TEST_STAGE_SESSION_KEY = 'current_test_stage';
 
+    /**
+     * Changes the current test stage after validating completion of the previous stage
+     *
+     * @param Request $request Contains fromStage and toStage parameters
+     * @return \Inertia\Response
+     */
     public function changeStage(Request $request)
     {
         \Log::info('TestStageController: Starting stage change', $request->all());
@@ -75,6 +95,12 @@ class TestStageController extends Controller
         }
     }
 
+    /**
+     * Stores a user's response for the current test stage
+     *
+     * @param Request $request Contains response data including itemId, answer, type, category and testStage
+     * @return \Inertia\Response
+     */
     public function storeResponse(Request $request)
     {
         try {
@@ -108,11 +134,23 @@ class TestStageController extends Controller
         }
     }
 
+    /**
+     * Generates a session key for storing progress of a specific test stage
+     *
+     * @param string $stage The test stage name
+     * @return string The session key
+     */
     private function getSessionKey($stage)
     {
         return $stage . '_progress';
     }
 
+    /**
+     * Returns the appropriate controller instance for a given test stage
+     *
+     * @param string $stage The test stage name
+     * @return Controller|null Returns null if stage is invalid
+     */
     protected function getStageController($stage)
     {
         switch ($stage) {
@@ -129,6 +167,11 @@ class TestStageController extends Controller
         }
     }
 
+    /**
+     * Retrieves the current test stage from the session
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getCurrentStage()
     {
         return response()->json([
