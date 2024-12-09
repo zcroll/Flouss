@@ -1,203 +1,296 @@
 <template>
-  <section class="Roadmap" data-testid="roadmap">
-    <div v-if="error" class="error-container">
-      <div class="error-alert">
-        {{ error }}
-      </div>
-    </div>
+    <section class="Roadmap" data-testid="roadmap">
+        <!-- <div v-if="debug" style="padding: 10px; background: #f5f5f5;">
+          <pre>{{ {
+            currentStage: testStageStore?.currentStage,
+            hasData: !!currentTestData.value,
+            hasStore: !!currentStore.value,
+            isReady: isReady,
+            loading: loading.value,
+            error: error.value,
+            leadInText: currentTestData.value?.lead_in_text
+          } }}</pre>
+        </div> -->
 
-    <div class="assessment-with-progress">
-      <SidebarMainTest :progress="{
-        hollandCodes: Number(hollandCodeStore?.progress?.progress_percentage || 0),
+        <div v-if="error" class="error-container">
+            <div class="error-alert">
+                {{ error }}
+            </div>
+        </div>
+
+        <div class="assessment-with-progress">
+            <SidebarMainTest :progress="{
+        hollandCodes: Number(hollandCodeStore?.progress?.progress_percentage ?? 0),
         basicInterest: {
-          currentIndex: basicInterestStore?.progress?.current_index || 0,
-          validResponses: basicInterestStore.validResponsesCount,
-          percentage: basicInterestStore.progressPercentage,
-          completed: basicInterestStore.isComplete
+          currentIndex: basicInterestStore?.progress?.current_index ?? 0,
+          validResponses: basicInterestStore?.validResponsesCount ?? 0,
+          percentage: basicInterestStore?.progressPercentage ?? 0,
+          completed: basicInterestStore?.isComplete ?? false
+        },
+        degree: {
+          currentIndex: degreeStore?.progress?.current_index ?? 0,
+          validResponses: degreeStore?.validResponsesCount ?? 0,
+          percentage: degreeStore?.progressPercentage ?? 0,
+          completed: degreeStore?.isComplete ?? false,
+          degreeMatching: degreeStore?.progress?.degreeMatching
         },
         completed: isComplete && canProceed
-      }" :test-stage="testStageStore.currentStage" />
+      }" :test-stage="testStageStore?.currentStage"/>
 
-      <div class="assessment Roadmap__inner">
-        <section v-if="!isReady || loading" class="Assessment">
-          <div class="loading">Loading...</div>
-        </section>
-        <section v-else-if="error" class="Assessment">
-          <div class="error">
-            <h3>Error Occurred</h3>
-            <p>{{ error }}</p>
-            <button @click="retryFetch">Retry</button>
-          </div>
-        </section>
-        <section v-else class="Assessment" tabindex="-1" data-testid="assessment-test">
-          <section class="Assessment__ItemSetLeadIn" v-if="!isComplete">
-            {{ currentTestData.lead_in_text }}
-          </section>
+            <div class="assessment Roadmap__inner">
+                <section v-if="!isReady || loading" class="Assessment">
+                    <div class="loading">Loading...</div>
+                </section>
+                <section v-else-if="error" class="Assessment">
+                    <div class="error">
+                        <h3>Error Occurred</h3>
+                        <p>{{ error }}</p>
+                        <button @click="retryFetch" :disabled="form.processing">Retry</button>
+                    </div>
+                </section>
+                <section v-else class="Assessment" tabindex="-1" data-testid="assessment-test">
+                    <!-- <div v-if="debug" style="padding: 10px; background: #f5f5f5;">
+                      <p>Lead in text: {{ currentTestData?.lead_in_text }}</p>
+                      <p>Current item: {{ currentItem?.id }}</p>
+                    </div> -->
 
-          <div class="Assessment__scroll-container">
-            <div v-if="!isComplete && currentItem?.id">
-              <div class="Assessment__Item--forward-appear-done Assessment__Item--forward-enter-done">
-                <TestQuestion :key="`question-${currentItem.id}-${testStageStore.currentStage}`"
-                  :current-item="currentItem" :current-item-index="currentItemIndex"
-                  :test-stage="testStageStore.currentStage" :test-data="currentTestData" :form="form"
-                  :store="currentStore" @submit="submitAnswer" @go-back="goBack" @skip="skipQuestion"
-                  ref="questionRef" />
-              </div>
+                    <section class="Assessment__ItemSetLeadIn" v-if="!isComplete">
+                        {{ currentTestData?.lead_in_text }}
+                    </section>
+
+                    <div class="Assessment__scroll-container">
+                        <div v-if="!isComplete && currentItem?.id">
+                            <div class="Assessment__Item--forward-appear-done Assessment__Item--forward-enter-done">
+                                <TestQuestion :key="`question-${currentItem.id}-${testStageStore.currentStage}`"
+                                              :current-item="currentItem" :current-item-index="currentItemIndex"
+                                              :test-stage="testStageStore.currentStage" :test-data="currentTestData"
+                                              :form="form"
+                                              :store="currentStore" @submit="submitAnswer" @go-back="goBack"
+                                              @skip="skipQuestion"
+                                              ref="questionRef"/>
+                            </div>
+                        </div>
+
+                        <Discovery
+                            v-if="isComplete && (
+                (testStageStore.currentStage === 'holland_codes' && hollandCodeStore?.progress?.archetypeDiscovery) ||
+                (testStageStore.currentStage === 'basic_interests' && basicInterestStore?.progress?.jobMatching) ||
+                (testStageStore.currentStage === 'degree' && degreeStore?.progress?.degreeMatching)
+              )"
+                            :archetype-discovery="hollandCodeStore?.progress?.archetypeDiscovery"
+                            :job-matching="basicInterestStore?.progress?.jobMatching"
+                            :degree-matching="degreeStore?.progress?.degreeMatching"
+                            :current-stage="testStageStore.currentStage"
+                            @close="handleDiscoveryClose"
+                        />
+
+                        <section class="discovery"
+                                 v-if="isComplete">
+                            <div class="next-stage-info" v-if="testStageStore.nextStageName">
+                                <h3>Next Step: {{ testStageStore.nextStageName }}</h3>
+                                <p>{{ testStageStore.currentStageDescription }}</p>
+                            </div>
+                            <NextStep
+                                :title="testStageStore.nextStageName || 'Complete'"
+                                :description="testStageStore.currentStageDescription || 'You have completed this section.'"
+                                :button-text="testStageStore.nextStageName ? `Continue to ${testStageStore.nextStageName}` : 'View Results'"
+                                :current-stage="testStageStore.currentStage"
+                                @continue="continueToNextSection"
+                                :disabled="form.processing"
+                            />
+                        </section>
+                    </div>
+                </section>
             </div>
-
-            <Discovery
-              v-if="isComplete && testStageStore.currentStage === 'holland_codes' && hollandCodeStore?.progress?.archetypeDiscovery"
-              :archetype-discovery="hollandCodeStore.progress.archetypeDiscovery" 
-              @close="handleDiscoveryClose" 
-            />
-
-            <section class="discovery"
-              v-if="isComplete">
-              <div class="next-stage-info" v-if="testStageStore.nextStageName">
-                <h3>Next Step: {{ testStageStore.nextStageName }}</h3>
-                <p>{{ testStageStore.currentStageDescription }}</p>
-              </div>
-              <NextStep 
-                :title="testStageStore.nextStageName || 'Complete'"
-                :description="testStageStore.currentStageDescription || 'You have completed this section.'"
-                :button-text="testStageStore.nextStageName ? `Continue to ${testStageStore.nextStageName}` : 'View Results'"
-                :current-stage="testStageStore.currentStage"
-                @continue="continueToNextSection" 
-              />
-            </section>
-          </div>
-        </section>
-      </div>
-    </div>
-  </section>
+        </div>
+    </section>
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from "vue";
-import { useForm, router } from "@inertiajs/vue3";
+import {ref, computed, watch, onMounted} from "vue";
+import {useForm, router} from "@inertiajs/vue3";
 import NextStep from "@/Components/Test/NextStep.vue";
 import SidebarMainTest from "./SidebarMainTest.vue";
 import TestQuestion from "@/Components/Test/TestQuestion.vue";
-import { useHollandCodeStore } from "@/stores/hollandCodeStore";
-import { useTestStageStore } from "@/stores/testStageStore";
-import { useBasicInterestStore } from "@/stores/basicInterestStore";
+import {useHollandCodeStore} from "@/stores/hollandCodeStore";
+import {useTestStageStore} from "@/stores/testStageStore";
+import {useBasicInterestStore} from "@/stores/basicInterestStore";
 import Discovery from "@/Components/Test/Discovery.vue";
 import BackButton from "@/Components/Test/BackButton.vue";
+import MatchResult from "@/Components/Test/MatchResult.vue";
+import {useTestProgressStore} from '@/stores/testProgressStore';
+import {useDegreeStore} from '@/stores/degreeStore';
 
 const hollandCodeStore = useHollandCodeStore();
 const testStageStore = useTestStageStore();
 const basicInterestStore = useBasicInterestStore();
+const progressStore = useTestProgressStore();
+const degreeStore = useDegreeStore();
 
 const form = useForm({
-  itemId: null,
-  answer: null,
-  category: null,
-  testStage: null,
-  type: 'answered'
+    itemId: null,
+    answer: null,
+    category: null,
+    testStage: null,
+    type: 'answered'
 });
 
 const currentStore = computed(() => {
-  switch (testStageStore.currentStage) {
-    case 'basic_interests':
-      return basicInterestStore;
-    case 'holland_codes':
-      return hollandCodeStore;
-    default:
-      return null;
-  }
+    switch (testStageStore.currentStage) {
+        case 'basic_interests':
+            return basicInterestStore;
+        case 'holland_codes':
+            return hollandCodeStore;
+        case 'degree':
+            return degreeStore;
+        default:
+            return null;
+    }
 });
 
 const currentTestData = computed(() => {
-  switch (testStageStore.currentStage) {
-    case 'basic_interests':
-      return basicInterestStore.basicInterestData;
-    case 'holland_codes':
-      return hollandCodeStore.hollandCodesData;
-    default:
-      return null;
-  }
+    switch (testStageStore.currentStage) {
+        case 'basic_interests':
+            return basicInterestStore.data;
+        case 'holland_codes':
+            return hollandCodeStore.data;
+        case 'degree':
+            return degreeStore.data;
+        default:
+            return null;
+    }
 });
 
-const currentItem = computed(() => currentStore.value?.currentItem || null);
-const currentItemIndex = computed(() => currentStore.value?.currentItemIndex || 0);
+const currentItem = computed(() => currentStore.value?.currentItem ?? null);
+const currentItemIndex = computed(() => currentStore.value?.currentItemIndex ?? 0);
+
 const isComplete = computed(() => {
-  if (testStageStore.currentStage === 'holland_codes') {
-    return hollandCodeStore.isTestComplete;
-  }
-  return currentStore.value?.isComplete || false;
+    if (!testStageStore?.currentStage) return false;
+
+    if (testStageStore.currentStage === 'holland_codes') {
+        return hollandCodeStore?.isTestComplete ?? false;
+    }
+    return currentStore.value?.isComplete ?? false;
 });
+
 const canProceed = computed(() => {
-  if (testStageStore.currentStage === 'holland_codes') {
-    return hollandCodeStore.isTestComplete;
-  }
-  return currentStore.value?.canProceed || false;
+    if (!testStageStore?.currentStage) return false;
+
+    if (testStageStore.currentStage === 'holland_codes') {
+        return hollandCodeStore?.isTestComplete ?? false;
+    }
+    return currentStore.value?.canProceed ?? false;
 });
-const loading = computed(() => currentStore.value?.loading || false);
-const error = computed(() => currentStore.value?.error || null);
-const isReady = computed(() => currentStore.value && currentTestData.value);
+
+const loading = computed(() => currentStore.value?.loading ?? false);
+const error = computed(() => currentStore.value?.error ?? null);
+const isReady = computed(() => !!currentStore.value && !!currentTestData.value);
+
+const debug = ref(true);
 
 onMounted(async () => {
-  try {
-    await testStageStore.initializeFromSession();
-    
-    if (testStageStore.currentStage === 'basic_interests') {
-      await basicInterestStore.initialize();
-    } else if (testStageStore.currentStage === 'holland_codes') {
-      await hollandCodeStore.fetchHollandCodes();
+    try {
+        await testStageStore?.initialize();
+
+        if (testStageStore?.currentStage === 'basic_interests') {
+            await basicInterestStore?.fetchData();
+        } else if (testStageStore?.currentStage === 'holland_codes') {
+            await hollandCodeStore?.fetchHollandCodes();
+        } else if (testStageStore?.currentStage === 'degree') {
+            await degreeStore?.fetchData();
+        }
+    } catch (error) {
+        console.error('Error initializing test:', error);
     }
-  } catch (error) {
-    console.error('Error initializing test:', error);
-  }
 });
 
 const retryFetch = async () => {
-  try {
-    if (testStageStore.currentStage === 'basic_interests') {
-      await basicInterestStore.initialize();
-    } else if (testStageStore.currentStage === 'holland_codes') {
-      await hollandCodeStore.fetchHollandCodes();
+    if (form.processing) return;
+
+    try {
+        if (testStageStore.currentStage === 'basic_interests') {
+            await basicInterestStore.fetchData();
+        } else if (testStageStore.currentStage === 'holland_codes') {
+            await hollandCodeStore.fetchHollandCodes();
+        } else if (testStageStore.currentStage === 'degree') {
+            await degreeStore.fetchData();
+        }
+    } catch (error) {
+        console.error('Error retrying fetch:', error);
     }
-  } catch (error) {
-    console.error('Error retrying fetch:', error);
-  }
 };
 
 const submitAnswer = async () => {
-  if (!currentStore.value) return;
-  
-  form.testStage = testStageStore.currentStage;
-  await currentStore.value.submitAnswer(form);
-  form.answer = null;
+    const store = currentStore.value;
+    if (!store || form.processing || !form.answer || !form.itemId) return;
+
+    try {
+        form.testStage = testStageStore?.currentStage;
+        await store.submitAnswer(form);
+    } catch (err) {
+        console.error('Error submitting answer:', err);
+    } finally {
+        form.answer = null;
+    }
 };
 
 const goBack = () => {
-  if (!currentStore.value) return;
-  currentStore.value.goBack();
+    if (!currentStore.value || form.processing) return;
+    currentStore.value.goBack();
 };
 
 const skipQuestion = () => {
-  if (!currentStore.value || currentStore.value.loading) return;
-  currentStore.value.skipQuestion();
+    if (!currentStore.value || form.processing) return;
+    currentStore.value.skipQuestion();
 };
 
 const handleDiscoveryClose = () => {
-  if (testStageStore.currentStage === 'holland_codes') {
-    hollandCodeStore.progress.archetypeDiscovery = null;
-  }
+    if (form.processing) return;
+
+    if (testStageStore.currentStage === 'basic_interests') {
+        basicInterestStore.jobMatching = null;
+    } else if (testStageStore.currentStage === 'holland_codes') {
+        hollandCodeStore.progress.archetypeDiscovery = null;
+    } else if (testStageStore.currentStage === 'degree') {
+        degreeStore.progress.degreeMatching = null;
+    }
 };
 
 const continueToNextSection = async () => {
-  try {
-    const nextStage = testStageStore.getNextStage();
-    if (nextStage) {
-      await testStageStore.changeStage(nextStage);
-    } else {
-      router.visit(route('dashboard'));
+    if (form.processing) return;
+
+    try {
+        const nextStage = testStageStore.getNextStage();
+        if (nextStage) {
+            const currentProgress = progressStore.stages[testStageStore.currentStage];
+            if (!currentProgress?.completed) {
+                throw new Error('Please complete the current stage before continuing.');
+            }
+
+            await testStageStore.changeStage(nextStage);
+        } else {
+            router.visit(route('dashboard'));
+        }
+    } catch (error) {
+        console.error('Failed to continue to next section:', error);
     }
-  } catch (error) {
-    console.error('Failed to continue to next section:', error);
-  }
 };
+
+watch(() => currentTestData.value, (newData) => {
+    console.log('currentTestData changed:', {
+        data: newData,
+        stage: testStageStore.currentStage,
+        storeData: currentStore.value?.data
+    });
+}, {immediate: true});
+
+watch(() => currentStore.value, (newStore) => {
+    console.log('currentStore changed:', {
+        store: newStore,
+        data: newStore?.data,
+        currentItem: newStore?.currentItem
+    });
+}, {immediate: true});
 </script>
 
 <style>
