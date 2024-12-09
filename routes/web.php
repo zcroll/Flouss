@@ -197,4 +197,6 @@ Route::get('/ruller', function () {
 
 Route::get('/api',[ApiController::class,'index']);
 
+Route::get('/test-result',[ResultController::class,'index']);
 
+Route::get('/test-result/{id}',[ResultController::class,'show']);
