@@ -2,17 +2,14 @@
   <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
     <!-- Search Bar -->
     <div class="mb-8">
-      <label for="search" class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
-        <MagnifyingGlassIcon class="h-4 w-4 text-gray-400" />
-        {{ __('formations.search') }}
-      </label>
       <div class="relative">
+        <MagnifyingGlassIcon class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
         <input 
           id="search"
           v-model="form.search"
           type="search"
           :placeholder="__('formations.search_placeholder')"
-          class="w-full h-11 pl-4 rounded-lg border-gray-200 bg-gray-50 shadow-sm focus:border-[#db492b] focus:ring-[#db492b] text-gray-900"
+          class="w-full h-11 pl-10 rounded-3xl border-gray-200 bg-gray-50 shadow-sm focus:border-[#db492b] focus:ring-[#db492b] text-gray-900"
           @input="debouncedFilter"
         />
       </div>
