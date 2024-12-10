@@ -49,6 +49,8 @@
           :options="etablissementOptions"
           :placeholder="__('formations.select_establishment')"
           class="filter-select"
+          track-by="value"
+          label="label"
           @update:modelValue="filter"
         />
       </div>
@@ -63,7 +65,10 @@
           v-model="form.diplomas"
           :options="diplomaOptions"
           :placeholder="__('formations.select_diploma')"
+          :disabled="isLoading"
           class="filter-select"
+          track-by="value"
+          label="label"
           @update:modelValue="filter"
         />
       </div>
@@ -78,7 +83,10 @@
           v-model="form.disciplines"
           :options="disciplineOptions"
           :placeholder="__('formations.select_discipline')"
+          :disabled="isLoading"
           class="filter-select"
+          track-by="value"
+          label="label"
           @update:modelValue="filter"
         />
       </div>
@@ -150,7 +158,7 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, onMounted } from 'vue';
 import { debounce } from 'lodash';
 import { Dialog, DialogPanel, DialogTitle, TransitionRoot, TransitionChild } from '@headlessui/vue';
 import { 
@@ -165,6 +173,8 @@ import {
 } from '@heroicons/vue/24/outline';
 import CustomMultiSelect from '@/Components/helpers/CustomMultiSelect.vue';
 import MoroccoMap from '@/Components/Maps/MoroccoMap.vue';
+import { router } from '@inertiajs/vue3';
+import axios from 'axios';
 
 const props = defineProps({
   filters: {
@@ -195,43 +205,176 @@ const selectedRegion = ref(props.filters.region ? { name: props.filters.region }
 
 const form = ref({
   search: props.filters.search || '',
-  etablissements: props.filters.etablissements || [],
-  diplomas: props.filters.diplomas || [],
-  disciplines: props.filters.disciplines || [],
+  etablissements: (props.filters.etablissements || []).map(e => ({
+    value: e,
+    label: e
+  })),
+  diplomas: (props.filters.diplomas || []).map(d => ({
+    value: d,
+    label: d
+  })),
+  disciplines: (props.filters.disciplines || []).map(d => ({
+    value: d,
+    label: d
+  })),
   region: props.filters.region || ''
 });
 
-// Computed properties for options
-const etablissementOptions = computed(() => 
-  props.etablissements.map(e => ({ value: e.id, label: e.nom }))
-);
+const isLoading = ref(false);
+const error = ref(null);
+const isUpdating = ref(false);
 
-const diplomaOptions = computed(() => 
-  props.diplomas.map(d => ({ value: d, label: d }))
-);
+// Filtered options
+const filteredDisciplines = ref(props.disciplines || []);
+const filteredDiplomas = ref(props.diplomas || []);
 
-const disciplineOptions = computed(() => 
-  props.disciplines.map(d => ({ value: d, label: d }))
-);
+// Filter function with debounce
+const debouncedFilter = debounce(() => {
+  filter();
+}, 300);
 
-const hasActiveFilters = computed(() => {
-  return form.value.search || 
-         form.value.etablissements.length > 0 || 
-         form.value.diplomas.length > 0 || 
-         form.value.disciplines.length > 0 || 
-         form.value.region;
-});
-
-// Methods
 const filter = () => {
+  if (isUpdating.value) return;
+  
   emit('update:filters', {
-    ...form.value,
+    search: form.value.search,
+    etablissements: form.value.etablissements.map(e => e.value),
+    diplomas: form.value.diplomas.map(d => d.value),
+    disciplines: form.value.disciplines.map(d => d.value),
+    region: form.value.region,
     page: 1
   });
 };
 
-const debouncedFilter = debounce(filter, 300);
+// Fetch options without triggering filter
+const fetchFilteredOptions = async () => {
+  if (isLoading.value) return;
+  
+  isLoading.value = true;
+  error.value = null;
+  
+  try {
+    const params = {
+      etablissements: form.value.etablissements.map(e => e.value),
+      disciplines: form.value.disciplines.map(d => d.value)
+    };
 
+    // Only make the request if we have either establishments or disciplines
+    if (params.etablissements.length > 0 || params.disciplines.length > 0) {
+      const response = await axios.get(route('formations.filter-options'), {
+        params
+      });
+
+      filteredDisciplines.value = response.data.disciplines;
+      filteredDiplomas.value = response.data.diplomas;
+
+      // Update selections while maintaining structure
+      if (form.value.disciplines.length > 0) {
+        form.value.disciplines = form.value.disciplines.filter(d => 
+          response.data.disciplines.includes(d.value)
+        );
+      }
+
+      if (form.value.diplomas.length > 0) {
+        form.value.diplomas = form.value.diplomas.filter(d => 
+          response.data.diplomas.includes(d.value)
+        );
+      }
+    }
+  } catch (error) {
+    console.error('Error fetching filter options:', error);
+    error.value = 'Error loading filter options';
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+// Watch for establishment changes
+watch(() => form.value.etablissements, async (newVal, oldVal) => {
+  if (isUpdating.value) return;
+  
+  isUpdating.value = true;
+  
+  // Only fetch new options if establishments changed
+  if (JSON.stringify(newVal) !== JSON.stringify(oldVal)) {
+    // Only clear child selections if establishments changed to empty
+    if (newVal.length === 0 && oldVal.length > 0) {
+      form.value.disciplines = [];
+      form.value.diplomas = [];
+      filteredDisciplines.value = props.disciplines || [];
+      filteredDiplomas.value = props.diplomas || [];
+    } else if (newVal.length > 0) {
+      await fetchFilteredOptions();
+    }
+    filter();
+  }
+  
+  isUpdating.value = false;
+}, { deep: true });
+
+// Watch for discipline changes
+watch(() => form.value.disciplines, async (newVal, oldVal) => {
+  if (isUpdating.value) return;
+  
+  isUpdating.value = true;
+  
+  // Only fetch new options if disciplines changed
+  if (JSON.stringify(newVal) !== JSON.stringify(oldVal)) {
+    // Only clear diplomas if disciplines changed to empty
+    if (newVal.length === 0 && oldVal.length > 0) {
+      form.value.diplomas = [];
+      if (form.value.etablissements.length === 0) {
+        filteredDiplomas.value = props.diplomas || [];
+      }
+    } else if (newVal.length > 0 || form.value.etablissements.length > 0) {
+      await fetchFilteredOptions();
+    }
+    filter();
+  }
+  
+  isUpdating.value = false;
+}, { deep: true });
+
+// Watch for external filter changes
+watch(() => props.filters, (newFilters) => {
+  if (isUpdating.value) return;
+  
+  isUpdating.value = true;
+  
+  form.value = {
+    search: newFilters.search || '',
+    etablissements: newFilters.etablissements?.map(e => ({
+      value: e,
+      label: e
+    })) || [],
+    diplomas: newFilters.diplomas?.map(d => ({
+      value: d,
+      label: d
+    })) || [],
+    disciplines: newFilters.disciplines?.map(d => ({
+      value: d,
+      label: d
+    })) || [],
+    region: newFilters.region || ''
+  };
+  
+  if (newFilters.region) {
+    selectedRegion.value = { name: newFilters.region };
+  } else {
+    selectedRegion.value = null;
+  }
+  
+  isUpdating.value = false;
+}, { deep: true });
+
+// Initialize on mount
+onMounted(() => {
+  if (form.value.etablissements.length > 0 || form.value.disciplines.length > 0) {
+    fetchFilteredOptions();
+  }
+});
+
+// Methods
 const openMap = () => {
   isMapOpen.value = true;
 };
@@ -265,22 +408,35 @@ const clearAllFilters = () => {
   filter();
 };
 
-// Watch for external filter changes
-watch(() => props.filters, (newFilters) => {
-  form.value = {
-    search: newFilters.search || '',
-    etablissements: newFilters.etablissements || [],
-    diplomas: newFilters.diplomas || [],
-    disciplines: newFilters.disciplines || [],
-    region: newFilters.region || ''
-  };
-  
-  if (newFilters.region) {
-    selectedRegion.value = { name: newFilters.region };
-  } else {
-    selectedRegion.value = null;
-  }
-}, { deep: true });
+// Computed properties for options
+const etablissementOptions = computed(() => 
+  props.etablissements.map(e => ({ 
+    value: e.id, 
+    label: e.nom || e.id
+  }))
+);
+
+const disciplineOptions = computed(() => 
+  filteredDisciplines.value.map(d => ({ 
+    value: d, 
+    label: d
+  }))
+);
+
+const diplomaOptions = computed(() => 
+  filteredDiplomas.value.map(d => ({ 
+    value: d, 
+    label: d
+  }))
+);
+
+const hasActiveFilters = computed(() => {
+  return form.value.search || 
+         form.value.etablissements.length > 0 || 
+         form.value.diplomas.length > 0 || 
+         form.value.disciplines.length > 0 || 
+         form.value.region;
+});
 </script>
 
 <style scoped>

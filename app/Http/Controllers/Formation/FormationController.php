@@ -52,24 +52,40 @@ class FormationController extends Controller
             ->values()
             ->all();
         
-        // Get unique diplomas
-        $diplomas = Formation::query()
-            ->select('diploma')
+        // Get disciplines based on selected establishments
+        $disciplinesQuery = Formation::query()
+            ->select('discipline')
             ->distinct()
-            ->whereNotNull('diploma')
-            ->orderBy('diploma')
-            ->pluck('diploma')
+            ->whereNotNull('discipline');
+
+        if (!empty($request->etablissements)) {
+            $disciplinesQuery->whereIn('type_etablissement', $request->etablissements);
+        }
+
+        $disciplines = $disciplinesQuery
+            ->orderBy('discipline')
+            ->pluck('discipline')
             ->filter()
             ->values()
             ->all();
-            
-        // Get unique disciplines
-        $disciplines = Formation::query()
-            ->select('discipline')
+        
+        // Get diplomas based on selected establishments and disciplines
+        $diplomasQuery = Formation::query()
+            ->select('diploma')
             ->distinct()
-            ->whereNotNull('discipline')
-            ->orderBy('discipline')
-            ->pluck('discipline')
+            ->whereNotNull('diploma');
+
+        if (!empty($request->etablissements)) {
+            $diplomasQuery->whereIn('type_etablissement', $request->etablissements);
+        }
+
+        if (!empty($request->disciplines)) {
+            $diplomasQuery->whereIn('discipline', $request->disciplines);
+        }
+
+        $diplomas = $diplomasQuery
+            ->orderBy('diploma')
+            ->pluck('diploma')
             ->filter()
             ->values()
             ->all();
@@ -98,6 +114,66 @@ class FormationController extends Controller
     {
         return Inertia::render('Formations/Show', [
             'formation' => $formation->load('degrees')
+        ]);
+    }
+
+    public function getFilterOptions(Request $request)
+    {
+        $query = Formation::query();
+
+        if ($request->has('etablissements')) {
+            $establishmentValues = collect($request->etablissements)
+                ->map(function ($item) {
+                    // Handle both string values and objects
+                    return is_array($item) ? $item['value'] : $item;
+                })
+                ->filter()
+                ->values()
+                ->all();
+                
+            if (!empty($establishmentValues)) {
+                $query->whereIn('type_etablissement', $establishmentValues);
+            }
+        }
+
+        if ($request->has('disciplines')) {
+            $disciplineValues = collect($request->disciplines)
+                ->map(function ($item) {
+                    // Handle both string values and objects
+                    return is_array($item) ? $item['value'] : $item;
+                })
+                ->filter()
+                ->values()
+                ->all();
+                
+            if (!empty($disciplineValues)) {
+                $query->whereIn('discipline', $disciplineValues);
+            }
+        }
+
+        // Get filtered disciplines
+        $disciplines = $query->clone()
+            ->select('discipline')
+            ->distinct()
+            ->whereNotNull('discipline')
+            ->orderBy('discipline')
+            ->pluck('discipline')
+            ->filter()
+            ->values();
+
+        // Get filtered diplomas
+        $diplomas = $query->clone()
+            ->select('diploma')
+            ->distinct()
+            ->whereNotNull('diploma')
+            ->orderBy('diploma')
+            ->pluck('diploma')
+            ->filter()
+            ->values();
+
+        return response()->json([
+            'disciplines' => $disciplines,
+            'diplomas' => $diplomas,
         ]);
     }
 } 

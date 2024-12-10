@@ -90,9 +90,13 @@ Route::middleware([
             Route::get('{slug}/how-to-obtain', [DegreeController::class, 'howToObtain'])->name('degree.howToObtain');
         });
 
-        Route::get('/formations', [FormationController::class, 'index'])->name('formations.index');
-        Route::get('/formation/{formation}', [FormationController::class, 'show'])->name('formation.show');
-        Route::get('/formations/filter', [FormationFilterController::class, 'filter'])->name('formations.filter');
+        Route::middleware(['auth'])->group(function () {
+            Route::get('/formations', [FormationController::class, 'index'])->name('formations.index');
+            Route::get('/formation/{formation}', [FormationController::class, 'show'])->name('formation.show');
+            Route::get('/formations/filter-options', [FormationController::class, 'getFilterOptions'])
+                ->name('formations.filter-options');
+        });
+
         Route::get('/etablissements', [FormationFilterController::class, 'getEtablissements'])->name('etablissements.list');
         Route::get('/degrees', [DegreeFilterController::class, 'index'])->name('degrees.index');
         Route::get('/jobs', [JobFilterController::class, 'index'])->name('jobs.index');

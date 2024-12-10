@@ -9,10 +9,11 @@
           <!-- Filters Sidebar -->
           <div class="lg:col-span-1">
             <FilterFormation
-              v-model:filters="form"
+              :filters="filters"
               :etablissements="etablissements"
               :diplomas="diplomas"
               :disciplines="disciplines"
+              @update:filters="updateFilters"
             />
           </div>
 
@@ -136,9 +137,9 @@
                      aria-label="Pagination">
                   <Link v-for="(link, index) in formations.links" 
                         :key="index"
-                        :href="link.url"
+                        :href="link.url || ''"
                         :only="['formations', 'filters']"
-                        :data="form"
+                        :data="filters"
                         :class="[
                           'relative inline-flex items-center px-4 py-2 border text-sm font-medium',
                           link.active 
@@ -197,22 +198,19 @@ const props = defineProps({
 
 const viewMode = ref('grid'); // 'grid' or 'list'
 
-const form = ref({
-  search: props.filters.search || '',
-  etablissements: props.filters.etablissements || [],
-  diplomas: props.filters.diplomas || [],
-  disciplines: props.filters.disciplines || [],
-  region: props.filters.region || ''
-});
+const filters = ref(props.filters);
 
-console.log(props.diplomas);
-
-// Watch for filter changes and update the URL
-watch(form, (newForm) => {
-  router.get(route('formations.index'), newForm, {
+const updateFilters = (newFilters) => {
+  // Update the URL with new filters
+  router.get(route('formations.index'), newFilters, {
     preserveState: true,
     preserveScroll: true,
     only: ['formations', 'filters']
   });
+};
+
+// Watch for prop changes from server
+watch(() => props.filters, (newFilters) => {
+  filters.value = newFilters;
 }, { deep: true });
 </script>
