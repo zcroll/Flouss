@@ -147,15 +147,16 @@ class CareerController extends Controller
                 'image' => $occupation->image,
                 'is_favorited' => $isFavorited,
             ],
-            'jobSteps' => $occupation->jobSteps->map(function($step) {
-                return [
-                    'id' => $step->id,
-                    'title' => $this->getLocalizedColumn($step, 'step_title'),
-                ];
-            }),
-            'jobAssociations' => $occupation->jobAssociations,
+            'howToBecome' => [
+                'steps' => $occupation->jobSteps->map(function($step) {
+                    return [
+                        'id' => $step->id,
+                        'title' => app()->getLocale() === 'fr' ? $step->step_title_fr : $step->step_title,
+                    ];
+                }),
+                'associations' => $occupation->jobAssociations,
+            ],
             'jobDegrees' => $degrees,
-            'howToBecome' => $occupation->howToBecome,
             'disableStepsLink' => $occupation->jobSteps->isEmpty(),
         ]);
     }

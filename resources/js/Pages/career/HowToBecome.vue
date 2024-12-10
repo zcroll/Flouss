@@ -96,22 +96,34 @@ import { defineComponent } from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import StickySidebar from '@/Pages/lib/StickySidebar.vue'
 import { Link } from '@inertiajs/vue3'
-import BackToTop from "@/Components/helpers/BackToTop.vue";
+import BackToTop from "@/Components/helpers/BackToTop.vue"
 import Breadcrumbs from '@/Components/helpers/Breadcrumbs.vue'
 
 export default defineComponent({
   components: {
-      BackToTop,
+    BackToTop,
     AppLayout,
     StickySidebar,
     Link,
     Breadcrumbs,
   },
   props: {
-    occupation: Object,
-    howToBecome: Object,
-    jobDegrees: Array,
-    disableStepsLink: Boolean,
+    occupation: {
+      type: Object,
+      required: true
+    },
+    howToBecome: {
+      type: Object,
+      required: true
+    },
+    jobDegrees: {
+      type: Array,
+      required: true
+    },
+    disableStepsLink: {
+      type: Boolean,
+      required: true
+    }
   }
 })
 </script>

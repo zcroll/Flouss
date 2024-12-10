@@ -3,27 +3,26 @@ import { cva } from 'class-variance-authority';
 export { default as Button } from './Button.vue';
 
 export const buttonVariants = cva(
-  'yesinline-flex yesitems-center yesjustify-center yesgap-2 yeswhitespace-nowrap yesrounded-md yestext-sm yesfont-medium yestransition-colors focus-visible:yesoutline-none focus-visible:yesring-1 focus-visible:yesring-ring disabled:yespointer-events-none disabled:yesopacity-50 [&_svg]:yespointer-events-none [&_svg]:yessize-4 [&_svg]:yesshrink-0',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
   {
     variants: {
       variant: {
         default:
-          'yesbg-primary yestext-primary-foreground yesshadow hover:yesbg-primary/90',
+          'bg-primary text-primary-foreground shadow hover:bg-primary/90',
         destructive:
-          'yesbg-destructive yestext-destructive-foreground yesshadow-sm hover:yesbg-destructive/90',
+          'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90',
         outline:
-          'yesborder yesborder-input yesbg-background yesshadow-sm hover:yesbg-accent hover:yestext-accent-foreground',
+          'border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground',
         secondary:
-          'yesbg-secondary yestext-secondary-foreground yesshadow-sm hover:yesbg-secondary/80',
-        ghost: 'hover:yesbg-accent hover:yestext-accent-foreground',
-        link: 'yestext-primary yesunderline-offset-4 hover:yesunderline',
+          'bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80',
+        ghost: 'hover:bg-accent hover:text-accent-foreground',
+        link: 'text-primary underline-offset-4 hover:underline',
       },
       size: {
-        default: 'yesh-9 yespx-4 yespy-2',
-        xs: 'yesh-7 yesrounded yespx-2',
-        sm: 'yesh-8 yesrounded-md yespx-3 yestext-xs',
-        lg: 'yesh-10 yesrounded-md yespx-8',
-        icon: 'yesh-9 yesw-9',
+        default: 'h-9 px-4 py-2',
+        sm: 'h-8 rounded-md px-3 text-xs',
+        lg: 'h-10 rounded-md px-8',
+        icon: 'h-9 w-9',
       },
     },
     defaultVariants: {

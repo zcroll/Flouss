@@ -175,8 +175,8 @@ import CustomMultiSelect from '@/Components/helpers/CustomMultiSelect.vue';
 import debounce from 'lodash/debounce';
 import { WhenVisible } from '@inertiajs/vue3';
 import BackToTop from '@/Components/helpers/BackToTop.vue';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/Components/ui/sheet"
-import { Button } from "@/Components/ui/button"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { Button } from "@/components/ui/button"
 
 const props = defineProps({
   jobs: Object,
