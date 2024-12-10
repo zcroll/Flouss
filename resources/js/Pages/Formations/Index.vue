@@ -3,14 +3,7 @@
     <div class="min-h-screen">
       <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <!-- Header -->
-        <div class="max-w-4xl mb-12">
-          <h1 class="text-4xl font-bold text-gray-900 mb-4">
-            {{ __('formations.title') }}
-          </h1>
-          <p class="text-lg text-gray-600">
-            {{ __('formations.subtitle') }}
-          </p>
-        </div>
+
 
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <!-- Filters Sidebar -->

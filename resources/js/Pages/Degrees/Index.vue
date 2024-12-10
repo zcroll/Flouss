@@ -36,7 +36,7 @@
           </div>
 
           <!-- Mobile Filters -->
-          <div class="sm:hidden">
+          <div class="sm:hidden mt-4">
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="outline" class="w-full flex justify-between items-center">
@@ -57,7 +57,7 @@
                   </div>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="top" class="h-[90vh] rounded-t-[20px]">
+              <SheetContent side="top" class="h-[90vh] rounded-b-xl">
                 <SheetHeader>
                   <SheetTitle class="text-lg font-semibold">{{ __('degrees.filters') }}</SheetTitle>
                 </SheetHeader>
@@ -97,13 +97,13 @@
                   <div class="flex gap-3 mt-8">
                     <Button 
                       variant="outline" 
-                      class="flex-1"
+                      class="flex-1 rounded-lg border-2 border-black/60 text-black"
                       @click="resetFilters"
                     >
                       {{ __('degrees.reset_filters') }}
                     </Button>
                     <Button 
-                      class="flex-1 bg-[#db492b] hover:bg-[#db492b]/90"
+                      class="flex-1 bg-black/90 rounded-lg text-white px-4 py-2"
                       @click="applyFilters"
                     >
                       {{ __('degrees.search') }}

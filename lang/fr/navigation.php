@@ -6,7 +6,7 @@ return [
     'dashboard' => 'Tableau de bord',
     'results' => 'Résultats',
     'jobs' => 'Carrières',
-    'degrees' => 'Disciplines Académiques',
+    'degrees' => 'Disciplines',
     'career_test' => 'Test de carrière',
     'manage_team' => 'Gérer l\'équipe',
     'team_settings' => 'Paramètres de l\'équipe',
@@ -25,5 +25,6 @@ return [
     'unlock_future' => 'Une Orientation éclairée... Futur Brillant !',
     'get_started' => 'Commencer à explorer',
     'learn_more' => 'En savoir plus sur Gen.Z',
+    'formations' => 'Formations',
 ];
                     

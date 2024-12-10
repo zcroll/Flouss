@@ -11,7 +11,7 @@ return [
     'select_sorting_option' => 'Sélectionner l\'option de tri',
     'highest_salary' => 'Salaire le plus élevé',
     'highest_satisfaction' => 'Satisfaction la plus élevée',
-    'reset_filters' => 'Réinitialiser les filtres',
+    'reset_filters' => 'Réinitialiser',
     'no_jobs_found' => 'Aucun emploi trouvé correspondant à vos critères',
     'hidden' => 'caché',
     'head_title' => 'Perspectives de carrière',

@@ -6,7 +6,7 @@ return [
     'dashboard' => 'Dashboard',
     'results' => 'Results',
     'jobs' => 'Careers',
-    'degrees' => 'Academic Disciplines',
+    'degrees' => 'Disciplines',
     'career_test' => 'Career Test',
     'manage_team' => 'Manage Team',
     'team_settings' => 'Team Settings',
@@ -25,4 +25,5 @@ return [
     'unlock_future' => 'Clear Orientation, Bright Future !',
     'get_started' => 'Start Exploring',
     'learn_more' => 'Learn More About Gen.Z',
+    'formations' => 'Courses',
 ];

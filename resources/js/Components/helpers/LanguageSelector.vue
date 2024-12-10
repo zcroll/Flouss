@@ -36,7 +36,7 @@
         v-for="language in languages"
         :key="language.value"
         @click="switchLanguage(language.value)"
-        class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors"
+        class="flex items-center gap-2 px-1 py-1 rounded-3xl transition-colors"
         :class="selectedLanguage === language.value ? 'bg-gray-950 text-white' : ''"
       >
         <img class="h-5" :src="getFlagSrc(language.value)" :alt="`${language.value} flag`" />

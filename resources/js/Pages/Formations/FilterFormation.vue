@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+  <div class="bg-white border-2 border-[#db492b]/20 rounded-2xl p-6 shadow-lg shadow-[#db492b]/5">
     <!-- Search Bar -->
     <div class="mb-8">
       <div class="relative">

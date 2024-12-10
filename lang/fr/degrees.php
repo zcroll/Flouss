@@ -12,7 +12,7 @@ return [
     'select_sorting_option' => 'Sélectionner l\'option de tri',
     'highest_salary' => 'Salaire le plus élevé',
     'highest_satisfaction' => 'Satisfaction la plus élevée',
-    'reset_filters' => 'Réinitialiser les filtres',
+    'reset_filters' => 'Réinitialiser',
     'no_degrees_found' => 'Aucun diplôme trouvé correspondant à vos critères',
     'hidden' => 'caché',
     'associate' => 'Associate',

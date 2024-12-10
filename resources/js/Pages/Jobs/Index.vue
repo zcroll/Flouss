@@ -33,10 +33,10 @@
           </div>
 
           <!-- Mobile Filters -->
-          <div class="sm:hidden">
+          <div class="sm:hidden mt-4">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="outline" class="w-full flex justify-between items-center">
+                <Button variant="outline" class="w-full flex justify-between items-center ">
                   <span class="flex items-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
@@ -54,7 +54,7 @@
                   </div>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="top" class="h-[90vh] rounded-t-[20px]">
+              <SheetContent side="top" class="h-[90vh] rounded-b-xl">
                 <SheetHeader>
                   <SheetTitle class="text-lg font-semibold">{{ __('jobs.filters') }}</SheetTitle>
                 </SheetHeader>
@@ -90,13 +90,13 @@
                   <div class="flex gap-3 mt-8">
                     <Button 
                       variant="outline" 
-                      class="flex-1"
+                      class="flex-1 rounded-lg border-2 border-black/60 text-black"
                       @click="resetFilters"
                     >
                       {{ __('jobs.reset_filters') }}
                     </Button>
                     <Button 
-                      class="flex-1 bg-[#db492b] hover:bg-[#db492b]/90"
+                      class="flex-1 bg-black/90 rounded-lg text-white px-4 py-2"
                       @click="applyFilters"
                     >
                       {{ __('jobs.search') }}

@@ -91,9 +91,23 @@ export default {
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
   			'accordion-up': 'accordion-up 0.2s ease-out'
-  		}
+  		},
+  		textShadow: {
+  			sm: "rgba(255, 255, 255, 0.35) 1px 1px 12px",
+  		},
   	}
   },
 
-  plugins: [forms, require('tailwindcss-animate')],
+  plugins: [forms, require('tailwindcss-animate'),
+	function ({ matchUtilities, theme }) {
+		matchUtilities(
+		  {
+			"text-shadow": (value) => ({
+			  textShadow: value,
+			}),
+		  },
+		  { values: theme("textShadow") },
+		)
+	  },
+  ],
 }

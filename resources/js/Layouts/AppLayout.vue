@@ -1,10 +1,10 @@
 <script setup>
 import { ref } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
-import { 
-    HomeIcon, 
-    BriefcaseIcon, 
-    UserIcon, 
+import {
+    HomeIcon,
+    BriefcaseIcon,
+    UserIcon,
     AcademicCapIcon,
     BuildingOfficeIcon,
     DocumentTextIcon,
@@ -21,6 +21,9 @@ import Footer from "@/Components/helpers/Footer.vue";
 import LanguageSelector from '@/Components/helpers/LanguageSelector.vue';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/Components/ui/sheet"
 import __ from '@/lang';
+import NavGroup from '@/Components/helpers/NavGroup.vue';
+import NavItem from '@/Components/helpers/NavItem.vue';
+import MobileNavigation from '@/Components/helpers/MobileNavigation.vue';
 
 const props = defineProps({
     title: String,
@@ -45,10 +48,12 @@ const logout = () => {
     router.post(route('logout'));
 };
 
-const navigation = [
-    { name: 'Dashboard', href: route('dashboard'), current: route().current('dashboard') },
-    { name: 'Results', href: route('results'), current: route().current('results') },
-    // Add more navigation items as needed
+const navigationItems = [
+    { name: 'Dashboard', route: 'dashboard' },
+    { name: 'Results', route: 'results' },
+    { name: 'Jobs', route: 'jobs.index' },
+    { name: 'Degrees', route: 'degrees.index' },
+    { name: 'Formations', route: 'formations.index' }
 ];
 
 </script>
@@ -60,9 +65,9 @@ const navigation = [
 
             <Header>
                 <template #navigation>
-                    <nav class="top-0 left-0 right-0 z-10 fixed" style="background: linear-gradient(0deg, #00000000 0%, #0c0a09 3%);">
+                    <nav class="top-3 left-0 mx-3 right-0 z-10 fixed rounded-xl" style="background: linear-gradient(0deg, #00000000 0%, #0c0a09 3%);">
                         <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
-                            <div class="flex justify-between items-center w-full h-[50px]">
+                            <div class="flex justify-between items-center w-full h-[55px]">
 
                             <div class="flex h-full">
                                 <div class="flex-shrink-0 flex items-center">
@@ -71,25 +76,52 @@ const navigation = [
                                     </Link>
                                 </div>
                                 <!-- Navigation Links -->
-                                <div class="hidden sm:-my-px sm:ml-32 sm:flex items-center justify-between w-full h-full">
-                                    <div class="flex space-x-8 h-full items-center">
-                                        <NavLink :href="route('dashboard')" :active="route().current('dashboard')" class="btn_link h-[10px] flex items-center">
-                                            {{ __('navigation.dashboard') }}
-                                        </NavLink>
-                                        <NavLink :href="route('results')" :active="route().current('results')" class="btn_link h-[30px] flex items-center">
-                                            {{ __('navigation.results') }}
-                                        </NavLink>
-                                        <NavLink :href="route('jobs.index')" :active="route().current('jobs.index')" class="btn_link h-[30px] flex items-center">
-                                            {{ __('navigation.jobs') }}
-                                        </NavLink>
-                                        <NavLink :href="route('degrees.index')" :active="route().current('degrees.index')" class="btn_link h-[30px] flex items-center">
-                                            {{ __('navigation.degrees') }}
-                                        </NavLink>
-                                    </div>
+                                <div class="hidden md[630px]:-my-px sm:ml-32 sm:flex items-center justify-between w-full h-full">
+                                    <NavGroup v-slot="{ ready, size, position, duration }">
+                                        <div
+                                            :style="{
+                                                '--size': size,
+                                                '--position': position,
+                                                '--duration': duration,
+                                            }"
+                                        >
+                                            <!-- Border highlighter - Reduced opacity and blur -->
+                                            <div
+                                                v-if="ready"
+                                                class="absolute bottom-0 h-1/2 w-[var(--size)] translate-x-[var(--position)] bg-white/10 blur-lg transition-[width,transform] duration-[var(--duration)]"
+                                            />
+
+                                            <div class="relative">
+                                                <!-- Pill - Adjusted opacity -->
+                                                <div
+                                                    v-if="ready"
+                                                    class="absolute inset-y-0 h-full w-[var(--size)] translate-x-[var(--position)] rounded-full bg-[#db492b]/10  transition-[width,transform] duration-[var(--duration)]"
+                                                />
+
+                                                <!-- Light effect - Adjust size -->
+                                                <div
+                                                    v-if="ready"
+                                                    class="absolute bottom-0 h-1/2 w-[var(--size)] translate-x-[var(--position)] rounded-full bg-[#db492b]/100 blur-lg transition-[width,transform] duration-[var(--duration)]"
+                                                />
+
+                                                <!-- Navigation Items -->
+                                                <ul class="relative flex items-center gap-3">
+                                                    <NavItem
+                                                        v-for="item in navigationItems"
+                                                        :key="item.route"
+                                                        :href="route(item.route)"
+                                                        :active="route().current(item.route)"
+                                                    >
+                                                        {{ __(`navigation.${item.name.toLowerCase()}`) }}
+                                                    </NavItem>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </NavGroup>
                                 </div>
                             </div>
 
-                            <div class="hidden sm:flex sm:items-center sm:ml-6 h-full">
+                            <div class="hidden lg:flex sm:items-center sm:ml-6 h-full ">
                                 <!-- Language Selector -->
                                 <LanguageSelector :languages="$page.props.languages" :selectedLanguage="$page.props.language" />
 
@@ -185,32 +217,32 @@ const navigation = [
                             </div>
 
                             <!-- Mobile Menu Button -->
-                            <div class="sm:hidden">
+                            <div class="lg:hidden">
                                 <Sheet v-model:open="isOpen">
-                                    <SheetTrigger class="inline-flex items-center justify-center p-1 rounded-full border-2 border-stone-300/20 hover:border-amber-500/50 transition-all duration-200">
-                                        <img class="h-6 w-6 rounded-full object-cover" 
-                                             :src="$page.props.auth.user.profile_photo_url" 
+                                    <SheetTrigger class="inline-flex items-center justify-center p-1 rounded-full border-2 border-stone-300/20 transition-all duration-200">
+                                        <img class="h-6 w-6 rounded-full object-cover"
+                                             :src="$page.props.auth.user.profile_photo_url"
                                              :alt="$page.props.auth.user.name" />
                                     </SheetTrigger>
-                                    <SheetContent side="top" class="w-[250px] bg-stone-950/95 backdrop-blur-xl border-l border-stone-800">
+                                    <SheetContent side="top" class="w-auto bg-gray-50 rounded-b-xl backdrop-blur-xl ">
                                         <SheetHeader>
-                                            <Link :href="route('profile.show')" 
+                                            <Link :href="route('profile.show')"
                                                   class="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-stone-800/50 text-gray-900 transition-colors"
                                                   @click="isOpen = false">
                                                 <UserIcon class="w-4 h-4" />
                                                 <span class="text-sm">{{ __('navigation.profile') }}</span>
                                             </Link>
                                             <div class="border-t border-gray-200 my-1.5"></div>
-                                            <LanguageSelector 
-                                                :languages="$page.props.languages" 
+                                            <LanguageSelector
+                                                :languages="$page.props.languages"
                                                 :selectedLanguage="$page.props.language"
-                                                :isMobile="true" 
+                                                :isMobile="true"
                                             />
                                         </SheetHeader>
                                         <div class="flex flex-col gap-1.5">
                                             <div class="border-t border-gray-200 my-1.5"></div>
                                             <form @submit.prevent="logout">
-                                                <button type="submit" 
+                                                <button type="submit"
                                                         class="w-full flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-stone-800/50 text-red-400 transition-colors text-sm"
                                                         @click="isOpen = false">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -237,43 +269,7 @@ const navigation = [
         </main>
 
         <!-- Mobile Bottom Navigation -->
-        <nav class="sm:hidden fixed bottom-0 left-0 right-0 bg-stone-950 backdrop-blur-lg border-t border-stone-800 z-50">
-            <div class="flex items-center justify-around px-3 py-3">
-                <!-- Dashboard -->
-                <Link :href="route('dashboard')" 
-                      class="flex flex-col items-center space-y-1">
-                    <HomeIcon class="w-6 h-6" :class="{'text-[#db492b]': route().current('dashboard'), 'text-stone-400': !route().current('dashboard')}" />
-                </Link>
-
-                <!-- Results -->
-                <Link :href="route('results')" 
-                      class="flex flex-col items-center space-y-1">
-                    <DocumentTextIcon class="w-6 h-6" :class="{'text-[#db492b]': route().current('results'), 'text-stone-400': !route().current('results')}" />
-                </Link>
-
-                <!-- Jobs -->
-                <Link :href="route('jobs.index')" 
-                      class="flex flex-col items-center space-y-1">
-                    <BriefcaseIcon class="w-6 h-6" :class="{'text-[#db492b]': route().current('jobs.index'), 'text-stone-400': !route().current('jobs.index')}" />
-                </Link>
-
-                <!-- Degrees -->
-                <Link :href="route('degrees.index')" 
-                      class="flex flex-col items-center space-y-1">
-                    <AcademicCapIcon class="w-6 h-6" :class="{'text-[#db492b]': route().current('degrees.index'), 'text-stone-400': !route().current('degrees.index')}" />
-                </Link>
-
-                <!-- Career Test (if over 10 days) -->
-                <Link v-if="isOver10Days" 
-                      :href="route('activities')" 
-                      class="flex flex-col items-center space-y-1">
-                    <ClipboardDocumentListIcon class="w-6 h-6" :class="{'text-[#db492b]': route().current('activities'), 'text-stone-400': !route().current('activities')}" />
-                    <span class="text-xs" :class="{'text-amber-500': route().current('activities'), 'text-stone-400': !route().current('activities')}">
-                        {{ __('navigation.career_test') }}
-                    </span>
-                </Link>
-            </div>
-        </nav>
+        <MobileNavigation :is-over10-days="isOver10Days" />
     </div>
 
     <!-- Footer -->
@@ -292,4 +288,5 @@ const navigation = [
     padding: 1rem 0;
     background-color: transparent;
 }
+
 </style>
