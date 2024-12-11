@@ -187,7 +187,7 @@ import StickySidebar from '@/Pages/lib/StickySidebar.vue'
 import Formation from '@/Components/helpers/Formation.vue'
 import BackToTop from "@/Components/helpers/BackToTop.vue"
 import Ruller from '@/Pages/ruller.vue'
-import { Button } from "@/components/ui/button"
+import { Button } from "@/Components/ui/button"
 import {
   Sheet,
   SheetContent,
