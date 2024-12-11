@@ -19,7 +19,7 @@ import ResponsiveNavLink from '@/Components/helpers/ResponsiveNavLink.vue';
 import Header from "@/Components/helpers/Header.vue";
 import Footer from "@/Components/helpers/Footer.vue";
 import LanguageSelector from '@/Components/helpers/LanguageSelector.vue';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/Components/ui/sheet"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import __ from '@/lang';
 import NavGroup from '@/Components/helpers/NavGroup.vue';
 import NavItem from '@/Components/helpers/NavItem.vue';

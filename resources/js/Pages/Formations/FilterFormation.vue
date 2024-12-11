@@ -6,11 +6,11 @@
         <MagnifyingGlassIcon class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
         <input 
           id="search"
-          v-model="form.search"
+          :value="form.search"
           type="search"
           :placeholder="__('formations.search_placeholder')"
           class="w-full h-11 pl-10 rounded-3xl border-gray-200 bg-gray-50 shadow-sm focus:border-[#db492b] focus:ring-[#db492b] text-gray-900"
-          @input="debouncedFilter"
+          @input="handleSearch"
         />
       </div>
     </div>
@@ -51,7 +51,7 @@
           class="filter-select"
           track-by="value"
           label="label"
-          @update:modelValue="filter"
+          @update:modelValue="value => handleMultiSelect('etablissements', value)"
         />
       </div>
 
@@ -65,11 +65,10 @@
           v-model="form.diplomas"
           :options="diplomaOptions"
           :placeholder="__('formations.select_diploma')"
-          :disabled="isLoading"
           class="filter-select"
           track-by="value"
           label="label"
-          @update:modelValue="filter"
+          @update:modelValue="value => handleMultiSelect('diplomas', value)"
         />
       </div>
 
@@ -83,11 +82,10 @@
           v-model="form.disciplines"
           :options="disciplineOptions"
           :placeholder="__('formations.select_discipline')"
-          :disabled="isLoading"
           class="filter-select"
           track-by="value"
           label="label"
-          @update:modelValue="filter"
+          @update:modelValue="value => handleMultiSelect('disciplines', value)"
         />
       </div>
 
@@ -98,7 +96,7 @@
           {{ __('formations.region') }}
         </label>
         <button 
-          @click="openMap"
+          @click="isMapOpen = true"
           class="w-full flex items-center justify-between px-4 py-2.5 rounded-lg text-sm border border-gray-200 hover:bg-gray-50 transition-colors duration-200"
         >
           <span class="text-gray-600">
@@ -111,7 +109,7 @@
 
     <!-- Map Dialog -->
     <TransitionRoot appear :show="isMapOpen" as="template">
-      <Dialog as="div" @close="closeMap" class="relative z-50">
+      <Dialog as="div" @close="isMapOpen = false" class="relative z-50">
         <TransitionChild
           as="template"
           enter="duration-300 ease-out"
@@ -140,13 +138,13 @@
                   <DialogTitle class="text-lg font-medium text-gray-900">
                     {{ __('formations.explore_by_region') }}
                   </DialogTitle>
-                  <button @click="closeMap" class="text-gray-400 hover:text-gray-500">
+                  <button @click="isMapOpen = false" class="text-gray-400 hover:text-gray-500">
                     <XMarkIcon class="h-6 w-6" />
                   </button>
                 </div>
                 <MoroccoMap 
                   v-model="selectedRegion" 
-                  @update:modelValue="onRegionSelect" 
+                  @update:modelValue="handleRegionSelect"
                 />
               </DialogPanel>
             </TransitionChild>
@@ -158,7 +156,7 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue';
+import { ref, computed } from 'vue';
 import { debounce } from 'lodash';
 import { Dialog, DialogPanel, DialogTitle, TransitionRoot, TransitionChild } from '@headlessui/vue';
 import { 
@@ -177,7 +175,8 @@ import MoroccoMap from '@/Components/Maps/MoroccoMap.vue';
 const props = defineProps({
   filters: {
     type: Object,
-    required: true
+    required: true,
+    default: () => ({})
   },
   etablissements: {
     type: Array,
@@ -198,158 +197,104 @@ const props = defineProps({
 
 const emit = defineEmits(['update:filters']);
 
-const isMapOpen = ref(false);
-const selectedRegion = ref(props.filters.region ? { name: props.filters.region } : null);
-const isUpdating = ref(false);
-
 // Form state with reactive values
 const form = ref({
   search: props.filters.search || '',
-  etablissements: [],
-  diplomas: [],
-  disciplines: [],
-  region: props.filters.region || ''
+  etablissements: (props.filters.etablissements || []).map(e => ({
+    value: e,
+    label: e
+  })),
+  diplomas: (props.filters.diplomas || []).map(d => ({
+    value: d,
+    label: d
+  })),
+  disciplines: (props.filters.disciplines || []).map(d => ({
+    value: d,
+    label: d
+  }))
 });
 
-// Computed properties for multiselect options
-const etablissementOptions = computed(() => {
-  return props.etablissements.map(e => ({
+// Map state
+const isMapOpen = ref(false);
+const selectedRegion = ref(props.filters.region ? { name: props.filters.region } : null);
+
+// Computed properties for filter options
+const etablissementOptions = computed(() => 
+  props.etablissements.map(e => ({
     value: e.id,
     label: e.nom
-  }));
-});
+  }))
+);
 
-const diplomaOptions = computed(() => {
-  return props.diplomas.map(d => ({
+const diplomaOptions = computed(() => 
+  props.diplomas.map(d => ({
     value: d,
     label: d
-  }));
-});
+  }))
+);
 
-const disciplineOptions = computed(() => {
-  return props.disciplines.map(d => ({
+const disciplineOptions = computed(() => 
+  props.disciplines.map(d => ({
     value: d,
     label: d
-  }));
-});
+  }))
+);
 
-// Initialize form with current filters
-watch(() => props.filters, (newFilters) => {
-  if (isUpdating.value) return;
-  
-  isUpdating.value = true;
-  form.value = {
-    search: newFilters.search || '',
-    etablissements: (newFilters.etablissements || []).map(e => ({
-      value: e,
-      label: e
-    })),
-    diplomas: (newFilters.diplomas || []).map(d => ({
-      value: d,
-      label: d
-    })),
-    disciplines: (newFilters.disciplines || []).map(d => ({
-      value: d,
-      label: d
-    })),
-    region: newFilters.region || ''
-  };
-  isUpdating.value = false;
-}, { immediate: true, deep: true });
+// Check if there are any active filters
+const hasActiveFilters = computed(() => 
+  Boolean(
+    form.value.search ||
+    form.value.etablissements.length ||
+    form.value.diplomas.length ||
+    form.value.disciplines.length ||
+    selectedRegion.value
+  )
+);
 
-// Watch for changes in available options and update selected values
-watch(() => props.etablissements, () => {
-  if (!isUpdating.value) {
-    const availableValues = new Set(props.etablissements.map(e => e.id));
-    form.value.etablissements = form.value.etablissements.filter(e => 
-      availableValues.has(e.value)
-    );
-  }
-}, { deep: true });
-
-watch(() => props.diplomas, () => {
-  if (!isUpdating.value) {
-    const availableValues = new Set(props.diplomas);
-    form.value.diplomas = form.value.diplomas.filter(d => 
-      availableValues.has(d.value)
-    );
-  }
-}, { deep: true });
-
-watch(() => props.disciplines, () => {
-  if (!isUpdating.value) {
-    const availableValues = new Set(props.disciplines);
-    form.value.disciplines = form.value.disciplines.filter(d => 
-      availableValues.has(d.value)
-    );
-    console.log('Available disciplines:', availableValues);
-    console.log('Current disciplines:', form.value.disciplines);
-  }
-}, { deep: true });
-
-// Computed property for active filters
-const hasActiveFilters = computed(() => {
-  return form.value.search ||
-         form.value.etablissements.length > 0 ||
-         form.value.diplomas.length > 0 ||
-         form.value.disciplines.length > 0 ||
-         selectedRegion.value;
-});
-
-// Filter functions
+// Debounced filter update
 const debouncedFilter = debounce(() => {
-  filter();
-}, 300);
-
-const filter = () => {
-  if (isUpdating.value) return;
-  
-  const filterData = {
+  emit('update:filters', {
     search: form.value.search,
     etablissements: form.value.etablissements.map(e => e.value),
     diplomas: form.value.diplomas.map(d => d.value),
     disciplines: form.value.disciplines.map(d => d.value),
     region: selectedRegion.value?.name || '',
     page: 1
-  };
+  });
+}, 300);
 
-  console.log('Emitting filter update:', filterData);
-  emit('update:filters', filterData);
+// Event handlers
+const handleSearch = (event) => {
+  form.value.search = event.target.value;
+  debouncedFilter();
 };
 
+const handleMultiSelect = (field, value) => {
+  form.value[field] = value;
+  debouncedFilter();
+};
+
+const handleRegionSelect = (region) => {
+  selectedRegion.value = region;
+  isMapOpen.value = false;
+  debouncedFilter();
+};
+
+// Clear filters
 const clearAllFilters = () => {
-  isUpdating.value = true;
   form.value = {
     search: '',
     etablissements: [],
     diplomas: [],
-    disciplines: [],
-    region: ''
+    disciplines: []
   };
   selectedRegion.value = null;
-  isUpdating.value = false;
-  filter();
+  debouncedFilter();
 };
 
 const clearRegion = () => {
   selectedRegion.value = null;
-  form.value.region = '';
-  filter();
-};
-
-const openMap = () => {
-  isMapOpen.value = true;
-};
-
-const closeMap = () => {
-  isMapOpen.value = false;
-};
-
-const onRegionSelect = (region) => {
-  selectedRegion.value = region;
-  form.value.region = region.name;
-  closeMap();
-  filter();
+  debouncedFilter();
 };
 </script>
 
