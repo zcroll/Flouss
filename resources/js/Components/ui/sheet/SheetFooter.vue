@@ -1,15 +1,16 @@
-<script setup lang="ts">
-import type { HTMLAttributes } from 'vue'
-import { cn } from '@/lib/utils'
+<script setup>
+import { cn } from '@/lib/utils';
 
-const props = defineProps<{ class?: HTMLAttributes['class'] }>()
+const props = defineProps({
+  class: { type: null, required: false },
+});
 </script>
 
 <template>
   <div
     :class="
       cn(
-        'yesflex yesflex-col-reverse sm:yesflex-row sm:yesjustify-end sm:yesgap-x-2',
+        'flex flex-col-reverse sm:flex-row sm:justify-end sm:gap-x-2',
         props.class,
       )
     "

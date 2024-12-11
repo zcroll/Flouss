@@ -202,3 +202,9 @@ Route::get('/ruller', function () {
 Route::get('/api',[ApiController::class,'index']);
 
 Route::get('/test-result',[ResultController::class,'index']);
+
+Route::get('/dashboard/test-messages', [DashboardController::class, 'testMessages'])
+    ->name('dashboard.test-messages');
+
+Route::get('/dashboard/test-fetch', [DashboardController::class, 'testFetch'])
+    ->name('dashboard.test-fetch');

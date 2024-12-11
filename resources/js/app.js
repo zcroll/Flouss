@@ -7,11 +7,30 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import draggable from 'vuedraggable';
 import __ from './lang';
-import { createPinia } from 'pinia'
-// import LottieAnimation from '@lottiefiles/lottie-player' // import lottie-vuejs
+import { createPinia } from 'pinia';
 
+// Import Vue Toastification
+import Toast from "vue-toastification";
+// Import the CSS
+import "vue-toastification/dist/index.css";
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+
+// Toast options
+const toastOptions = {
+    position: "top-right",
+    timeout: 3000,
+    closeOnClick: true,
+    pauseOnFocusLoss: true,
+    pauseOnHover: true,
+    draggable: true,
+    draggablePercent: 0.6,
+    showCloseButtonOnHover: false,
+    hideProgressBar: false,
+    closeButton: "button",
+    icon: true,
+    rtl: false
+};
 
 createInertiaApp({
     title: (title) => `${title}`,
@@ -20,6 +39,7 @@ createInertiaApp({
         const app = createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
+            .use(Toast, toastOptions)  // Add Vue Toastification
             .component('draggable', draggable)
 
         app.config.globalProperties.__ = __;
@@ -32,7 +52,6 @@ createInertiaApp({
     progress: {
         color: '#4B5563',
     },
-    
 });
 
 // document.addEventListener('contextmenu', (e) => e.preventDefault());

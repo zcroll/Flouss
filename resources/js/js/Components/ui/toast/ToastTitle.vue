@@ -1,6 +1,6 @@
 <script setup>
 import { cn } from '@/lib/utils';
-import { DialogDescription } from 'radix-vue';
+import { ToastTitle } from 'radix-vue';
 import { computed } from 'vue';
 
 const props = defineProps({
@@ -17,10 +17,10 @@ const delegatedProps = computed(() => {
 </script>
 
 <template>
-  <DialogDescription
-    :class="cn('text-sm text-muted-foreground', props.class)"
+  <ToastTitle
     v-bind="delegatedProps"
+    :class="cn('text-sm font-semibold', props.class)"
   >
     <slot />
-  </DialogDescription>
+  </ToastTitle>
 </template>

@@ -61,6 +61,20 @@ class HandleInertiaRequests extends Middleware
                     });
                    
             });
-        }]);
+        },
+            // Auth user data
+            'auth' => [
+                'user' => fn () => $request->user()
+                    ? $request->user()->only('id', 'name', 'email')
+                    : null,
+            ],
+            
+            // Flash messages
+            'flash' => [
+                'message' => fn () => $request->session()->get('message'),
+                'error' => fn () => $request->session()->get('error'),
+                'success' => fn () => $request->session()->get('success'),
+            ],
+        ]);
     }
 }

@@ -1,6 +1,6 @@
 <script setup>
-import { ref } from 'vue';
-import { Head, Link, router } from '@inertiajs/vue3';
+import { ref, onMounted, watch } from 'vue';
+import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import {
     HomeIcon,
     BriefcaseIcon,
@@ -19,11 +19,12 @@ import ResponsiveNavLink from '@/Components/helpers/ResponsiveNavLink.vue';
 import Header from "@/Components/helpers/Header.vue";
 import Footer from "@/Components/helpers/Footer.vue";
 import LanguageSelector from '@/Components/helpers/LanguageSelector.vue';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/Components/ui/sheet"
 import __ from '@/lang';
 import NavGroup from '@/Components/helpers/NavGroup.vue';
 import NavItem from '@/Components/helpers/NavItem.vue';
 import MobileNavigation from '@/Components/helpers/MobileNavigation.vue';
+import { useToast } from "vue-toastification";
 
 const props = defineProps({
     title: String,
@@ -55,6 +56,41 @@ const navigationItems = [
     { name: 'Degrees', route: 'degrees.index' },
     { name: 'Formations', route: 'formations.index' }
 ];
+
+const toast = useToast();
+const page = usePage()
+
+// Watch for flash messages
+watch(() => page.props.flash, (flash) => {
+    if (flash.success) {
+        toast.success(flash.success, {
+            timeout: 3000
+        });
+    }
+    if (flash.error) {
+        toast.error(flash.error, {
+            timeout: 5000
+        });
+    }
+    if (flash.message) {
+        toast.info(flash.message, {
+            timeout: 3000
+        });
+    }
+}, { deep: true })
+
+// Check for flash messages on mount
+onMounted(() => {
+    if (page.props.flash.success) {
+        toast.success(page.props.flash.success);
+    }
+    if (page.props.flash.error) {
+        toast.error(page.props.flash.error);
+    }
+    if (page.props.flash.message) {
+        toast.info(page.props.flash.message);
+    }
+})
 
 </script>
 
