@@ -224,7 +224,7 @@ const navigationItems = [
                                              :src="$page.props.auth.user.profile_photo_url"
                                              :alt="$page.props.auth.user.name" />
                                     </SheetTrigger>
-                                    <SheetContent side="top" class="w-auto bg-gray-50 rounded-b-xl backdrop-blur-xl ">
+                                    <SheetContent side="right" class="w-[250px] bg-gray-50 rounded-b-xl backdrop-blur-xl ">
                                         <SheetHeader>
                                             <Link :href="route('profile.show')"
                                                   class="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-stone-800/50 text-gray-900 transition-colors"

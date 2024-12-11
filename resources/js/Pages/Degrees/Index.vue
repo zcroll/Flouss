@@ -181,8 +181,8 @@ import debounce from "lodash/debounce";
 import { usePage } from "@inertiajs/vue3";
 import { WhenVisible } from "@inertiajs/vue3";
 import BackToTop from "@/Components/helpers/BackToTop.vue";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { Button } from "@/components/ui/button"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/Components/ui/sheet"
+import { Button } from "@/Components/ui/button"
 
 const props = defineProps({
   degrees: Object,
