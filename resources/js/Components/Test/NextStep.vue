@@ -108,14 +108,11 @@ const handleContinue = async () => {
         // Make API call to save results
         const response = await axios.post(route('test.save-results'));
         
+        console.log('Save results response:', response);
         if (response.data.success) {
           testStageStore.clearError();
-          // If there's a redirect URL, navigate to it
-          if (response.data.redirect) {
-            window.location.href = response.data.redirect;
-          } else {
-            emit('continue');
-          }
+          // Always navigate to results page on success
+          router.visit(route('results'));
         } else {
           throw new Error(response.data.message || 'Failed to save results');
         }
