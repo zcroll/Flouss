@@ -2,91 +2,97 @@
   <AppLayout title="Results">
     <div class="min-h-screen">
       <!-- Hero Section with Archetype -->
-      <div class="relative overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <Folder 
-            :archetype="Archetype" 
-            :archetype-jobs="ArchetypeJobs" 
-            :archetype-discovery="archetypeDiscovery"
-            :user-id="userId" 
-            class="shadow-xl rounded-2xl"
-          />
+      <Deferred :data="['Archetype', 'archetypeDiscovery']">
+        <template #fallback>
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="bg-gray-100 h-64 rounded-2xl"></div>
+          </div>
+        </template>
+        
+        <div class="relative overflow-hidden">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <Folder 
+              :archetype="Archetype" 
+              :archetype-jobs="ArchetypeJobs" 
+              :archetype-discovery="archetypeDiscovery"
+              :user-id="userId" 
+              class="shadow-xl rounded-2xl"
+            />
+          </div>
         </div>
-      </div>
+      </Deferred>
 
       <!-- Careers Section -->
-      <div class="relative">
-        <!-- Decorative background elements -->
+      <Deferred data="jobs">
+        <template #fallback>
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="space-y-6">
+              <!-- Header Skeleton -->
+              <div class="h-8 bg-gray-100 rounded w-48"></div>
+              <SkeletonLoader />
+            </div>
+          </div>
+        </template>
 
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div class="relative">
-            <TopCareersHeader />
-            <CareersList 
-              :displayed-jobs="displayedJobs" 
-              :show-all-jobs="showAllJobs"
-              :has-more-jobs="jobs && jobs.length > displayedJobs.length" 
-              @select-job="selectedJob = $event"
-              @toggle-show-more="showAllJobs = true" 
-            />
+        <!-- Actual content -->
+        <div class="relative">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="relative">
+              <TopCareersHeader />
+              <CareersList 
+                :displayed-jobs="displayedJobs" 
+                :show-all-jobs="showAllJobs"
+                :has-more-jobs="jobs && jobs.length > displayedJobs.length" 
+                @select-job="selectedJob = $event"
+                @toggle-show-more="showAllJobs = true" 
+              />
+            </div>
           </div>
         </div>
-      </div>
+      </Deferred>
 
-      <!-- Feedback Section -->
-      <!-- <div v-if="!hasGivenFeedback" class="relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div class="rounded-3xl shadow-lg">
-            <Feedback 
-              :feedback="form.feedback" 
-              :rating="form.rating" 
-              :errors="form.errors"
-              :processing="form.processing" 
-              @update:feedback="form.feedback = $event"
-              @update:rating="form.rating = $event" 
-              @submit="submitFeedback" 
-            />
+      <!-- Degrees Section -->
+      <Deferred data="degrees">
+        <template #fallback>
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="space-y-6">
+              <!-- Header Skeleton -->
+              <div class="h-8 bg-gray-100 rounded w-48"></div>
+              <SkeletonLoader />
+            </div>
+          </div>
+        </template>
+
+        <!-- Actual content -->
+        <div class="relative">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="relative">
+              <TopCareersHeader />
+              <DegreeList 
+                :displayed-degrees="displayedDegrees" 
+                :show-all-degrees="showAllDegrees"
+                :has-more-degrees="degrees && degrees.length > displayedDegrees.length" 
+                @select-degree="selectedDegree = $event"
+                @toggle-show-more="showAllDegrees = true" 
+              />
+            </div>
           </div>
         </div>
-      </div> -->
+      </Deferred>
 
-      <!-- Data Share Section -->
+      <!-- DataShare section -->
       <div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <DataShare class="rounded-3xl shadow-sm p-8" />
         </div>
       </div>
-
-
-
-
-
-      <div class="relative">
-        <!-- Decorative background elements -->
-
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div class="relative">
-            <TopCareersHeader />
-            <DegreeList 
-              :displayed-degrees="displayedDegrees" 
-              :show-all-degrees="showAllDegrees"
-              :has-more-degrees="degrees && degrees.length > displayedDegrees.length" 
-              @select-degree="selectedDegree = $event"
-              @toggle-show-more="showAllDegrees = true" 
-            />
-          </div>
-        </div>
-      </div>
-    </div> 
-
-    
+    </div>
   </AppLayout>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, Deferred } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import Folder from '@/Components/Result/Folder.vue';
 import DataShare from '@/Components/Result/DataShare.vue';
@@ -94,6 +100,7 @@ import TopCareersHeader from '@/Components/Result/TopCareersHeader.vue';
 import CareersList from '@/Components/Result/CareersList.vue';
 import DegreeList from '@/Components/Result/DegreeList.vue';
 import Feedback from '@/Components/Result/Feedback.vue';
+import SkeletonLoader from '@/Components/Result/SkeletonLoader.vue';
 import { useForm } from '@inertiajs/vue3';
 
 const props = defineProps({

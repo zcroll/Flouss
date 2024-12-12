@@ -41,55 +41,43 @@ class ResultController extends Controller
 
         $archetype = $firstScore->Archetype ?? null;
 
-        ds(['archetypegetting'=>$archetype]);
-
-        // Get top 2 traits from scores
-        $topTraits = [];
-        if (!empty($firstScore->scores)) {
-            $scores = is_string($firstScore->scores) ? json_decode($firstScore->scores, true) : $firstScore->scores;
-            arsort($scores);
-            $topTraits = array_slice($scores, 0, 2, true);
-        }
-        ds(['topTraits'=>$topTraits]);
-
-        $jobs = null;
-        $degrees = null;
-        
-        if (!empty($firstScore->jobs)) {
-            $decodedJobs = is_string($firstScore->jobs) ? json_decode($firstScore->jobs, true, 512, JSON_THROW_ON_ERROR) : $firstScore->jobs;
-            ds(['decodedJobs'=>$decodedJobs]);
-            $jobs = $decodedJobs;
-        }
-
-        if (!empty($firstScore->degree)) {
-            $decodedDegrees = is_string($firstScore->degree) ? json_decode($firstScore->degree, true, 512, JSON_THROW_ON_ERROR) : $firstScore->degree;
-            ds(['decodedDegrees'=>$decodedDegrees]);
-            $degrees = $decodedDegrees;
-        }
-
-        ds(['degrees'=>$degrees]);
-
-        $Archetype = DB::table('persona')->where('name', $archetype ?? '')->first();
-        $archetypeDiscovery = DB::table('archetype_discoveries')->where('slug', '=', strtolower($archetype))->first();
-        ds([
-            'jobs' => $jobs,
-            'Archetype' => $archetypeDiscovery,
-            'archetypeDiscovery' => $archetypeDiscovery,
+        // Basic data needed immediately
+        return Inertia::render('Result/Results', [
+            'userId' => $firstScore->uuid,
+            'hasGivenFeedback' => Inertia::defer(fn () => 
+                Feedback::hasUserGivenFeedback(Auth::id())
+            ),
+            
+            // Defer heavy data loading
+            'jobs' => Inertia::defer(fn () => 
+                !empty($firstScore->jobs) 
+                    ? (is_string($firstScore->jobs) 
+                        ? json_decode($firstScore->jobs, true, 512, JSON_THROW_ON_ERROR) 
+                        : $firstScore->jobs)
+                    : null,
+                'career-data'
+            ),
+            
+            'degrees' => Inertia::defer(fn () => 
+                !empty($firstScore->degree)
+                    ? (is_string($firstScore->degree) 
+                        ? json_decode($firstScore->degree, true, 512, JSON_THROW_ON_ERROR) 
+                        : $firstScore->degree)
+                    : null,
+                'career-data'
+            ),
+            
+            'Archetype' => Inertia::defer(fn () => 
+                DB::table('persona')->where('name', $archetype ?? '')->first()
+            ),
+            
+            'archetypeDiscovery' => Inertia::defer(fn () => 
+                DB::table('archetype_discoveries')
+                    ->where('slug', '=', strtolower($archetype))
+                    ->first(),
+                'archetype-data'
+            ),
         ]);
-
-        if ($firstScore) {
-            return Inertia::render('Result/Results', [
-                'hasGivenFeedback' => Feedback::hasUserGivenFeedback(Auth::id()),
-
-                'userId' => $firstScore->uuid,
-                'jobs' => $jobs,
-                'degrees' => $degrees,
-                'Archetype' => $archetypeDiscovery,
-                'archetypeDiscovery' => $archetypeDiscovery,
-            ]);
-        }
-
-        return to_route('dashboard');
     }
 
     public function personality($id): \Inertia\Response

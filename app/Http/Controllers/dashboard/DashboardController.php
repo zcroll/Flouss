@@ -61,7 +61,7 @@ class DashboardController extends Controller
                 if (!empty($result->Archetype)) {
                     $archetype = $result->Archetype;
                     $archetypeDiscovery = DB::table('archetype_discoveries')
-                        ->where('slug', '=', strtolower($archetype[0]))
+                        ->where('slug', '=', strtolower($archetype))
                         ->select(['slug', 'rarity_string', 'rationale', 'scales'])
                         ->first();
                 }
