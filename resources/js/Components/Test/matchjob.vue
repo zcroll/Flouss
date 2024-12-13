@@ -1,6 +1,5 @@
 <template>
-  <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css">
-  <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/assessments.ba16abcb0f5b.css">
+
 
   <div class="Dialog-wrap__background">
     <div class="Dialog-discovery" style="">
@@ -433,5 +432,8 @@ defineEmits(['close']);
 </script>
 
 <style scoped>
-
+.Dialog-discovery__extraclose-button alans-butt--grey{
+width: 100%;
+height: 100%;
+}
 </style>

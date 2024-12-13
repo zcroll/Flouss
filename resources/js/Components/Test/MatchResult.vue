@@ -18,7 +18,7 @@
           focusable="false"
           data-prefix="fal"
           data-icon="chevron-down"
-          class="svg-inline--fa fa-chevron-down Dialog-close-icon"
+          class="rounded-full"
           role="img"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 448 512"
@@ -62,29 +62,28 @@
                   ></path>
                 </svg>
                 Share</button
-                ><button
-                  class="Dialog-discovery__extraclose-button alans-butt--grey"
-                  tabindex="0"
-                  aria-label="Click here to close the dialog and to continue your assessment."
-                  @click="handleClose"
-                >
-                  <svg
-                    aria-hidden="true"
-                    focusable="false"
-                    data-prefix="far"
-                    data-icon="xmark" 
-                    class="svg-inline--fa fa-xmark Dialog-discovery__extraclose-button__icon"
-                    role="img"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 320 512"
-                  >
-                  <path
-                    fill="currentColor"
-                    d="M312.1 375c9.369 9.369 9.369 24.57 0 33.94s-24.57 9.369-33.94 0L160 289.9l-119 119c-9.369 9.369-24.57 9.369-33.94 0s-9.369-24.57 0-33.94L126.1 256L7.027 136.1c-9.369-9.369-9.369-24.57 0-33.94s24.57-9.369 33.94 0L160 222.1l119-119c9.369-9.369 24.57-9.369 33.94 0s9.369 24.57 0 33.94L193.9 256L312.1 375z"
-                    class=""
-                  ></path>
-                </svg>
-              </button>
+                >          <button 
+            class="Dialog-discovery__extraclose-button"
+            @click="handleClose"
+            aria-label="Close dialog"
+          >
+            <svg
+              aria-hidden="true"
+              focusable="false"
+              data-prefix="far"
+              data-icon="xmark" 
+              class="svg-inline--fa fa-xmark Dialog-discovery__extraclose-button__icon"
+              role="img"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 320 512"
+            >
+            <path
+              fill="currentColor"
+              d="M312.1 375c9.369 9.369 9.369 24.57 0 33.94s-24.57 9.369-33.94 0L160 289.9l-119 119c-9.369 9.369-24.57 9.369-33.94 0s-9.369-24.57 0-33.94L126.1 256L7.027 136.1c-9.369-9.369-9.369-24.57 0-33.94s24.57-9.369 33.94 0L160 222.1l119-119c9.369-9.369 24.57-9.369 33.94 0s9.369 24.57 0 33.94L193.9 256L312.1 375z"
+              class=""
+            ></path>
+          </svg>
+          </button>
             </div>
             <h1
               class="Discovery__title"

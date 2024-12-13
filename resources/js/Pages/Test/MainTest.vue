@@ -86,10 +86,6 @@
 
                         <section class="discovery"
                                  v-if="isComplete">
-                            <div class="next-stage-info" v-if="testStageStore.nextStageName">
-                                <h3>Next Step: {{ testStageStore.nextStageName }}</h3>
-                                <p>{{ testStageStore.currentStageDescription }}</p>
-                            </div>
                             <NextStep
                                 :title="testStageStore.nextStageName || 'Complete'"
                                 :description="testStageStore.currentStageDescription || 'You have completed this section.'"

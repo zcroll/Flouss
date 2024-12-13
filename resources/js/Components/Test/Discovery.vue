@@ -89,6 +89,4 @@ const handleClose = () => {
 </script>
 
 <style scoped>
-@import url('https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css');
-@import url('https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/assessments.ba16abcb0f5b.css')
 </style>

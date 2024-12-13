@@ -26,7 +26,7 @@
           @submit="submitAnswer" 
         />
 
-        <div class="Assessment__Question__actions">
+        <!-- <div class="Assessment__Question__actions">
           <button 
             type="button" 
             class="Assessment__Question__skip" 
@@ -36,7 +36,7 @@
           >
             {{ store.loading ? 'Skipping...' : 'Skip question' }}
           </button>
-        </div>
+        </div> -->
       </form>
     </div>
 

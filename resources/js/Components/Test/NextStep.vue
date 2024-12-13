@@ -13,9 +13,7 @@
       <div>
         <h4 aria-hidden="true">Next Step</h4>
         <h3 aria-hidden="true">{{ title }}</h3>
-        <h5 aria-hidden="true">
-          {{ description }}
-        </h5>
+
         <div v-if="error" class="error-message">
           {{ error }}
           <button class="retry-button" @click="handleRetry">Retry</button>
@@ -34,6 +32,9 @@
             {{ buttonText }}
           </span>
         </button>
+        <h5 aria-hidden="true">
+          {{ description }}
+        </h5>
       </div>
     </div>
   </div>
@@ -214,4 +215,5 @@ button:disabled {
   opacity: 0.7;
   cursor: not-allowed;
 }
+
 </style>

@@ -26,7 +26,7 @@
 watch(() => props.progress, (newProgress) => {
   // ... existing holland_codes and basic_interests cases ...
   
-  else if (props.currentStage === 'degree') {
+  if (props.currentStage === 'degree') {
     testProgressStore.updateStageProgress('degree', {
       currentIndex: newProgress.degree?.currentIndex || 0,
       validResponses: newProgress.degree?.validResponses || 0,
