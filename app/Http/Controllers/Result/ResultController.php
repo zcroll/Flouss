@@ -16,7 +16,7 @@ use App\Models\Insight;
 use App\Models\Persona;
 use App\Models\Feedback;
 use App\Models\ArchetypeDiscovery;
-
+use App\Models\Degree;
 class ResultController extends Controller
 {
     protected function getLocalizedColumn($model, $baseColumn)
@@ -41,6 +41,42 @@ class ResultController extends Controller
 
         $archetype = $firstScore->Archetype ?? null;
 
+        // Transform jobs data with localization
+        $jobs = !empty($firstScore->jobs) 
+            ? (is_string($firstScore->jobs) 
+                ? json_decode($firstScore->jobs, true, 512, JSON_THROW_ON_ERROR) 
+                : $firstScore->jobs)
+            : null;
+
+        if ($jobs) {
+            $jobs = collect($jobs)->map(function ($job) {
+                $jobModel = JobInfo::find($job['id']);
+                if ($jobModel) {
+                    $job['name'] = $this->getLocalizedColumn($jobModel, 'name');
+                    $job['description'] = $this->getLocalizedColumn($jobModel, 'description');
+                }
+                return $job;
+            })->toArray();
+        }
+
+        // Transform degrees data with localization
+        $degrees = !empty($firstScore->degree)
+            ? (is_string($firstScore->degree) 
+                ? json_decode($firstScore->degree, true, 512, JSON_THROW_ON_ERROR) 
+                : $firstScore->degree)
+            : null;
+
+        if ($degrees) {
+            $degrees = collect($degrees)->map(function ($degree) {
+                $degreeModel = Degree::find($degree['id']);
+                if ($degreeModel) {
+                    $degree['name'] = $this->getLocalizedColumn($degreeModel, 'name');
+                    $degree['description'] = $this->getLocalizedColumn($degreeModel, 'description');
+                }
+                return $degree;
+            })->toArray();
+        }
+
         // Basic data needed immediately
         return Inertia::render('Result/Results', [
             'userId' => $firstScore->uuid,
@@ -49,26 +85,14 @@ class ResultController extends Controller
             ),
             
             // Defer heavy data loading
-            'jobs' => Inertia::defer(fn () => 
-                !empty($firstScore->jobs) 
-                    ? (is_string($firstScore->jobs) 
-                        ? json_decode($firstScore->jobs, true, 512, JSON_THROW_ON_ERROR) 
-                        : $firstScore->jobs)
-                    : null,
-                'career-data'
-            ),
+            'jobs' => Inertia::defer(fn () => $jobs, 'career-data'),
             
-            'degrees' => Inertia::defer(fn () => 
-                !empty($firstScore->degree)
-                    ? (is_string($firstScore->degree) 
-                        ? json_decode($firstScore->degree, true, 512, JSON_THROW_ON_ERROR) 
-                        : $firstScore->degree)
-                    : null,
-                'career-data'
-            ),
+            'degrees' => Inertia::defer(fn () => $degrees, 'career-data'),
             
             'Archetype' => Inertia::defer(fn () => 
-                DB::table('persona')->where('name', $archetype ?? '')->first()
+                DB::table('persona')
+                    ->where('name', $archetype ?? '')
+                    ->first()
             ),
             
             'archetypeDiscovery' => Inertia::defer(fn () => 
@@ -79,7 +103,6 @@ class ResultController extends Controller
             ),
         ]);
     }
-
     public function personality($id): \Inertia\Response
     {
         $userId = Auth::id();
@@ -98,7 +121,7 @@ class ResultController extends Controller
         }
         ds(['archetypetest'=>$archetype[0]]);
 
-        $ArchetypeData = DB::table('persona')->where('name', '=',$archetype[0])->first();
+        $ArchetypeData = DB::table('persona')->where('name', '=',$archetype)->first();
         ds(['ArchetypeData'=>$ArchetypeData]);
 
         $insights = $ArchetypeData ? Insight::where('persona_id', $ArchetypeData->id)
@@ -111,7 +134,7 @@ class ResultController extends Controller
             }) : collect([]);
 
         // Fetch Archetype Discovery
-        $archetypeDiscovery = ArchetypeDiscovery::where('slug', '=', strtolower($archetype[0]))->first();
+        $archetypeDiscovery = ArchetypeDiscovery::where('slug', '=', strtolower($archetype))->first();
 
         ds(['archetypeDiscovery'=>$archetypeDiscovery]);
      
