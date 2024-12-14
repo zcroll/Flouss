@@ -29,6 +29,7 @@ use App\Http\Controllers\Test\WorkplaceController;
 use App\Http\Controllers\Test\PersonalityController;
 use App\Http\Controllers\Formation\FormationController;
 use App\Http\Controllers\Test\DegreeTestStageController;
+use Pan\Facades\Pan;
 
 // Google Login Routes (place these BEFORE any auth middleware groups)
 Route::get('auth/google', [App\Http\Controllers\Auth\GoogleController::class, 'redirectToGoogle'])
@@ -208,3 +209,41 @@ Route::get('/dashboard/test-messages', [DashboardController::class, 'testMessage
 
 Route::get('/dashboard/test-fetch', [DashboardController::class, 'testFetch'])
     ->name('dashboard.test-fetch');
+
+    Route::prefix('adminn')->group(function () {
+        Route::get('/dashboard', function () {
+            return Inertia::render('Admin/Dashbord/index');
+        });
+        
+        Route::get('/analytics', function () {
+            return Inertia::render('Admin/Dashbord/Analytics/index');
+        })->name('admin.analytics');
+        
+        // Task Management Routes
+        Route::prefix('tasks')->group(function () {
+            Route::get('/', function () {
+                return Inertia::render('Admin/Task/index');
+            })->name('admin.tasks.index');
+            
+            Route::post('/', [App\Http\Controllers\Admin\TaskController::class, 'store'])
+                ->name('admin.tasks.store');
+                
+            Route::get('/{task}', [App\Http\Controllers\Admin\TaskController::class, 'show'])
+                ->name('admin.tasks.show');
+                
+            Route::put('/{task}', [App\Http\Controllers\Admin\TaskController::class, 'update'])
+                ->name('admin.tasks.update');
+                
+            Route::delete('/{task}', [App\Http\Controllers\Admin\TaskController::class, 'destroy'])
+                ->name('admin.tasks.destroy');
+                
+            Route::post('/bulk-action', [App\Http\Controllers\Admin\TaskController::class, 'bulkAction'])
+                ->name('admin.tasks.bulk-action');
+        });
+        // ... other admin routes
+    });
+
+Route::post('/pan/track', function (Request $request) {
+    Pan::track($request->element, $request->url);
+    return response()->json(['status' => 'success']);
+})->middleware(['web']);

@@ -14,6 +14,8 @@ import Toast from "vue-toastification";
 // Import the CSS
 import "vue-toastification/dist/index.css";
 
+import './pan-init'
+
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 // Toast options
