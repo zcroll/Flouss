@@ -1,32 +1,32 @@
-
 <template>
     <div class="report-card" :class="colorScheme">
         <div class="report-content-wrapper">
             <!-- Desktop View -->
         <div class="report-flex" v-if="!isMobile">
-          <div class="text-content">
-            <div class="text-wrapper" style="text-align: center;">
-              <div class="avatar">
-                <component 
-                  v-if="archetype && archetype.slug"
-                  :is="getAvatarComponent('Architect')"
+          <div class="text-content" style="display: flex; justify-content: center; align-items: center;">
+            <div class="text-wrapper" style="text-align: center; display: flex; flex-direction: column; align-items: center;">
+              <div class="avatar" style="display: flex; justify-content: center;">
+                <ArchetypeAvatar
+                  v-if="archetypeDiscovery && archetypeDiscovery.slug"
+                  :archetype="archetypeDiscovery.slug"
                   style="width: 100%;"
                 />
-                <component 
+                <ArchetypeAvatar
                   v-else
-                  :is="getAvatarComponent('Architect')"
+                  archetype="default"
                   style="width: 100%;"
                 />
               </div>
               
-              <div class="text-button-container">
-              <h1 class="archetype-name" :data-text="archetype.slug">Architect</h1>
+              <div class="text-button-container" style="display: flex; flex-direction: column; align-items: center;">
+                <h1 class="archetype-name" :data-text="archetypeDiscovery.slug">{{ archetypeDiscovery.slug }}</h1>
               
                 <Link
                   class="view-report-button"
                   :href="`/results/${userId}/personality`"
                   tabindex="0"
                   :aria-label="__('results.click_to_view_trait_report')"
+                  style="display: flex; align-items: center; justify-content: center;"
                 >
                   <span>{{ __('results.view_report') }}</span>
                   <svg xmlns="http://www.w3.org/2000/svg" class="arrow-icon" viewBox="0 0 20 20" fill="currentColor">
@@ -46,12 +46,12 @@
                   v-for="avatar in avatars"
                   :key="avatar.slug"
                   class="avatar-thumbnail"
-                  :class="{ 'avatar-active': avatar.slug === archetype.slug }"
+                  :class="{ 'avatar-active': avatar.slug === archetypeDiscovery.slug }"
                   @click="selectAvatar(avatar.slug)"
                 >
                   <div class="avatar-thumbnail-wrapper">
-                    <component 
-                      :is="getAvatarComponent(avatar.slug)"
+                    <ArchetypeAvatar
+                      :archetype="avatar.slug"
                       class="avatar-thumbnail-image"
                     />
                   </div>
@@ -67,7 +67,7 @@
             <!-- Mobile View -->
             <div class="report-flex" v-if="isMobile" style="flex-direction: row; justify-content: space-between; align-items: center;">
                 <div class="text-content" style="flex: 1; text-align: center;">
-                    <h1 class="archetype-name" :data-text="archetype.slug">{{ archetype.slug }}</h1>
+                    <h1 class="archetype-name" :data-text="archetypeDiscovery.slug">{{ archetypeDiscovery.slug }}</h1>
                     <Link
                         class="view-report-button"
                         :href="`/results/${userId}/personality`"
@@ -84,9 +84,9 @@
                 </div>
                 <div class="avatar-section" style="flex: 1; display: flex; justify-content: center;">
                     <div class="avatar">
-                        <component 
-                            :is="getAvatarComponent(archetype.slug)"
-                            style="width: 100%;"
+                        <ArchetypeAvatar
+                          :archetype="archetypeDiscovery.slug"
+                          style="width: 100%;"
                         />
                     </div>
                 </div>
@@ -97,21 +97,23 @@
 </template>
 
 <script>
-import { defineComponent, defineAsyncComponent } from 'vue';
+import { defineComponent } from 'vue';
 import { Link } from '@inertiajs/vue3';
 import __ from '@/lang';
+import ArchetypeAvatar from './Archetype_Avatar/ArchetypeAvatar.vue';
 
 export default defineComponent({
   name: 'Folder',
   components: {
     Link,
+    ArchetypeAvatar
   },
   props: {
     userId: {
       type: String,
       required: true
     },
-    archetype: {
+    archetypeDiscovery: {
       type: Object,
       required: true
     },
@@ -149,6 +151,7 @@ export default defineComponent({
         { slug: 'Scholar' },
         { slug: 'Builder' },
         { slug: 'Innovator' },
+        { slug: 'default' },
       ],
       isMobile: window.innerWidth <= 768
     };
@@ -188,16 +191,13 @@ export default defineComponent({
         'Builder': 'purple-theme',
         'Innovator': 'yellow-theme',
       };
-      return colorMap[this.archetype.slug] || 'green-theme'; // default to green
+      if (!this.archetypeDiscovery || !this.archetypeDiscovery.slug) {
+        return 'green-theme';
+      }
+      return colorMap[this.archetypeDiscovery.slug];
     }
   },
   methods: {
-    getAvatarComponent(slug) {
-      return defineAsyncComponent(() => 
-        import(`./Archetype_Avatar/${slug}.vue`)
-          .catch(() => import('./Archetype_Avatar/Default.vue'))
-      );
-    },
     selectAvatar(slug) {
       console.log(`Selected avatar: ${slug}`);
     }
@@ -216,7 +216,6 @@ export default defineComponent({
 </script>
 
 <style>
-
 @import 'public/css/folder.css';
 @import 'public/css/career_list.css';
 </style>

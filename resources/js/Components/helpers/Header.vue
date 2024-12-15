@@ -1,7 +1,7 @@
 <template>
 
 
-    <header class="relative overflow-x-auto min-h-[48px]">
+    <header class="relative overflow-x-auto">
 
         <div class="header-background"></div>
         <slot name="navigation"></slot>

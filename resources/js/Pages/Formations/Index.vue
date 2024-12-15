@@ -1,7 +1,7 @@
 <template>
   <AppLayout>
     <div class="min-h-screen">
-      <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-12 mt-20">
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <!-- Filters Sidebar -->
           <div class="lg:col-span-1">

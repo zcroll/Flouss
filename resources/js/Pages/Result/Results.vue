@@ -1,6 +1,6 @@
 <template>
   <AppLayout title="Results">
-    <div class="min-h-screen">
+    <div class="min-h-screen mt-10">
       <!-- Hero Section with Archetype -->
       <Deferred :data="['Archetype', 'archetypeDiscovery']">
         <template #fallback>
@@ -38,7 +38,13 @@
         <div class="relative">
           <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div class="relative">
-              <TopCareersHeader />
+              <RecommendationHeader 
+                :headerConfig="{
+                  title: __('results.top_careers'),
+                  viewAllLink: '/jobs/',
+                  viewAllText: __('results.View_All_careers')
+                }" 
+              />
               <CareersList 
                 :displayed-jobs="displayedJobs" 
                 :show-all-jobs="showAllJobs"
@@ -67,7 +73,13 @@
         <div class="relative">
           <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div class="relative">
-              <TopCareersHeader />
+              <RecommendationHeader 
+                :headerConfig="{
+                  title: __('results.top_degrees'),
+                  viewAllLink: '/degrees/',
+                  viewAllText: __('results.View_All_degrees')
+                }" 
+              />
               <DegreeList 
                 :displayed-degrees="displayedDegrees" 
                 :show-all-degrees="showAllDegrees"
@@ -96,7 +108,7 @@ import { Link, Deferred } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import Folder from '@/Components/Result/Folder.vue';
 import DataShare from '@/Components/Result/DataShare.vue';
-import TopCareersHeader from '@/Components/Result/TopCareersHeader.vue';
+import RecommendationHeader from '@/Components/Result/RecommendationHeader.vue';
 import CareersList from '@/Components/Result/CareersList.vue';
 import DegreeList from '@/Components/Result/DegreeList.vue';
 import Feedback from '@/Components/Result/Feedback.vue';

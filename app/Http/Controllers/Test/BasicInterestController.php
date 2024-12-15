@@ -109,7 +109,7 @@ class BasicInterestController extends BaseTestController
 
     private function matchJobs($interest_scores)
     {
-        $pythonPath = 'python3';
+        $pythonPath = 'python3.11';
         $scriptPath = app_path('/python/test.py');
         
         try {

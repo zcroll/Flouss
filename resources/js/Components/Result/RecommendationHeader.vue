@@ -2,7 +2,7 @@
   <div class="section-head">
     <div>
       <h2 class="text-[35px] text-gray-900" tabindex="0">
-        {{ __('results.top_careers') }}
+        {{ headerConfig.title }}
       </h2>
     </div>
     
@@ -23,8 +23,8 @@
         </span>
         <span v-if="!isMobile" class="DashboardPage__button__copy">{{ __('results.share') }}</span>
       </button>
-      <Link v-if="!isMobile" href="/jobs/" class="Button DashboardPage__button DashboardPage__button--share">
-        <span>{{ __('results.View_All_careers') }}</span>
+      <Link v-if="!isMobile" :href="headerConfig.viewAllLink" class="Button DashboardPage__button DashboardPage__button--share">
+        <span>{{ headerConfig.viewAllText }}</span>
       </Link>
     </span>
   </div>
@@ -33,6 +33,21 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
 import { ref, onMounted, onBeforeUnmount } from 'vue';
+
+const props = defineProps({
+  headerConfig: {
+    type: Object,
+    required: true,
+    validator: (value) => {
+      return ['title', 'viewAllLink', 'viewAllText'].every(key => key in value);
+    },
+    default: () => ({
+      title: __('results.top_careers'),
+      viewAllLink: '/jobs/',
+      viewAllText: __('results.View_All_careers')
+    })
+  }
+});
 
 let isMobile = ref(window.innerWidth <= 410);
 

@@ -143,7 +143,6 @@
 
 }
 
-
 .report-card {
     background: linear-gradient(145deg, rgba(255,255,255,0.9) 0%, rgba(224,242,225,0.95) 100%);
     border-radius: clamp(16px, 2.5vw, 1.75rem);
@@ -404,8 +403,8 @@
 }
 
 .avatar-thumbnail-image {
-    width: clamp(30px, 6vw, 40px);
-    height: clamp(30px, 6vw, 40px);
+    width: clamp(30px, 6vw, 20px);
+    height: clamp(30px, 6vw, 20px);
 }
 
 .avatar-name {
@@ -442,7 +441,7 @@
     }
 
     .avatar {
-        max-width: 80px; /* Reduce avatar size for mobile */
+        max-width: 100px; /* Reduce avatar size for mobile */
     }
 }
 
