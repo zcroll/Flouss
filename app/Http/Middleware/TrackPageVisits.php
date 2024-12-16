@@ -2,21 +2,27 @@
 
 namespace App\Http\Middleware;
 
-use App\Services\PageVisitTracker;
 use Closure;
 use Illuminate\Http\Request;
+use App\Services\PageVisitTracker;
 
 class TrackPageVisits
 {
-    public function __construct(
-        private readonly PageVisitTracker $visitTracker
-    ) {}
+    protected PageVisitTracker $visitTracker;
 
+    public function __construct(PageVisitTracker $visitTracker)
+    {
+        $this->visitTracker = $visitTracker;
+    }
+
+    /**
+     * Handle an incoming request.
+     */
     public function handle(Request $request, Closure $next)
     {
         $response = $next($request);
-
-        if ($request->isMethod('GET') && !$request->ajax()) {
+        
+        if ($request->method() === 'GET') {
             $this->visitTracker->trackVisit($request);
         }
 

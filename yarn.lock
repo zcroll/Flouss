@@ -6396,6 +6396,11 @@ pbkdf2@^3.1.2:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
+php-parser@^3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/php-parser/-/php-parser-3.2.1.tgz#960916dc03e4979a59435f9dd9eb03f2e86d8126"
+  integrity sha512-WT5AMqe39ZdqAxp9Yp7uR6e3clBWlT1dxHHs49GmnDx2d+975NEiLSVy2tRGLdSC9tgdQOLiN1Yz54g1d2cZDQ==
+
 picocolors@^1.0.0, picocolors@^1.0.1, picocolors@^1.1.0:
   version "1.1.1"
   resolved "https://registry.npmjs.org/picocolors/-/picocolors-1.1.1.tgz"

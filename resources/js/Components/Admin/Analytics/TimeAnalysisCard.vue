@@ -1,94 +1,93 @@
-<script setup lang="ts">
+<script setup>
 import { computed } from 'vue'
-import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card'
-import { Skeleton } from '@/Components/ui/skeleton'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/Components/ui/card'
+import { useAnalytics } from '@/Composables/useAnalytics'
 
-const props = defineProps<{
-  data?: {
-    hourly: number[]
-    peak_hour: number
-    quiet_hour: number
-    daily_average: number
-    weekly_comparison: {
-      current_week: number
-      previous_week: number
-      percentage_change: number
+const { timeAnalysis, formatHour } = useAnalytics()
+
+const peakHourFormatted = computed(() => {
+    const hour = timeAnalysis.value.peak_hour
+    if (hour === null || hour === undefined) return 'No data'
+    return formatHour(hour)
+})
+
+const quietHourFormatted = computed(() => {
+    const hour = timeAnalysis.value.quiet_hour
+    if (hour === null || hour === undefined) return 'No data'
+    return formatHour(hour)
+})
+
+const dailyAverage = computed(() => {
+    const avg = timeAnalysis.value.daily_average
+    if (!avg && avg !== 0) return 'No data'
+    return Math.round(avg)
+})
+
+const weeklyChange = computed(() => {
+    const comparison = timeAnalysis.value.weekly_comparison
+    if (!comparison) {
+        return {
+            value: 0,
+            direction: 'right',
+            class: 'text-muted-foreground',
+            text: 'No change'
+        }
     }
-  }
-  loading?: boolean
-}>()
 
-const formatHour = (hour: number) => {
-  return new Date(2000, 0, 1, hour).toLocaleTimeString('en-US', {
-    hour: 'numeric',
-    hour12: true
-  })
-}
-
-const weeklyTrend = computed(() => {
-  if (!props.data) return { type: 'neutral', text: '0%' }
-  
-  const change = props.data.weekly_comparison.percentage_change
-  return {
-    type: change > 0 ? 'positive' : change < 0 ? 'negative' : 'neutral',
-    text: `${Math.abs(change)}%`
-  }
+    const change = comparison.percentage_change
+    return {
+        value: Math.abs(change),
+        direction: change >= 0 ? 'up' : 'down',
+        class: change === 0 
+            ? 'text-muted-foreground' 
+            : change > 0 
+                ? 'text-green-600 dark:text-green-500'
+                : 'text-red-600 dark:text-red-500',
+        text: `${Math.abs(change)}% ${change >= 0 ? 'increase' : 'decrease'}`
+    }
 })
 </script>
 
 <template>
-  <Card>
-    <CardHeader>
-      <CardTitle>Time Analysis</CardTitle>
-    </CardHeader>
-    <CardContent>
-      <div class="space-y-4">
-        <!-- Peak Hours -->
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <h4 class="text-sm font-medium text-muted-foreground mb-1">Peak Hour</h4>
-            <p v-if="!loading && data" class="text-2xl font-bold">
-              {{ formatHour(data.peak_hour) }}
-            </p>
-            <Skeleton v-else class="h-8 w-24" />
-          </div>
-          <div>
-            <h4 class="text-sm font-medium text-muted-foreground mb-1">Quiet Hour</h4>
-            <p v-if="!loading && data" class="text-2xl font-bold">
-              {{ formatHour(data.quiet_hour) }}
-            </p>
-            <Skeleton v-else class="h-8 w-24" />
-          </div>
-        </div>
+    <Card>
+        <CardHeader>
+            <CardTitle>Time Analysis</CardTitle>
+            <CardDescription>
+                Traffic patterns and peak hours
+            </CardDescription>
+        </CardHeader>
+        <CardContent>
+            <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                <!-- Peak Hour -->
+                <div class="space-y-2">
+                    <p class="text-sm font-medium text-muted-foreground">Peak Hour</p>
+                    <p class="text-2xl font-bold">{{ peakHourFormatted }}</p>
+                </div>
 
-        <!-- Weekly Comparison -->
-        <div>
-          <h4 class="text-sm font-medium text-muted-foreground mb-1">Weekly Trend</h4>
-          <div class="flex items-center gap-2">
-            <span 
-              v-if="!loading && data" 
-              class="text-2xl font-bold"
-              :class="{
-                'text-green-500': weeklyTrend.type === 'positive',
-                'text-red-500': weeklyTrend.type === 'negative'
-              }"
-            >
-              {{ weeklyTrend.text }}
-            </span>
-            <Skeleton v-else class="h-8 w-24" />
-            <span class="text-sm text-muted-foreground">vs last week</span>
-          </div>
-        </div>
+                <!-- Quiet Hour -->
+                <div class="space-y-2">
+                    <p class="text-sm font-medium text-muted-foreground">Quiet Hour</p>
+                    <p class="text-2xl font-bold">{{ quietHourFormatted }}</p>
+                </div>
 
-        <!-- Daily Average -->
-        <div>
-          <h4 class="text-sm font-medium text-muted-foreground mb-1">Daily Average</h4>
-          <p v-if="!loading && data" class="text-2xl font-bold">
-            {{ data.daily_average }} visits
-          </p>
-          <Skeleton v-else class="h-8 w-32" />
-        </div>
-      </div>
-    </CardContent>
-  </Card>
+                <!-- Daily Average -->
+                <div class="space-y-2">
+                    <p class="text-sm font-medium text-muted-foreground">Daily Average</p>
+                    <p class="text-2xl font-bold">
+                        {{ typeof dailyAverage === 'number' ? dailyAverage : 'No data' }}
+                        <span v-if="typeof dailyAverage === 'number'" class="text-sm text-muted-foreground">visits</span>
+                    </p>
+                </div>
+
+                <!-- Weekly Change -->
+                <div class="space-y-2">
+                    <p class="text-sm font-medium text-muted-foreground">Weekly Change</p>
+                    <p class="text-2xl font-bold" :class="weeklyChange.class">
+                        <i :class="`fa-solid fa-arrow-${weeklyChange.direction}`" class="mr-1"></i>
+                        {{ weeklyChange.text }}
+                    </p>
+                </div>
+            </div>
+        </CardContent>
+    </Card>
 </template> 

@@ -3,71 +3,94 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
-use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PageVisit extends Model
 {
+    use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<string, mixed>
+     */
     protected $fillable = [
-        'user_id',
         'path',
-        'full_url', 
-        'method',
-        'browser',
-        'browser_version',
-        'platform',
-        'device',
-        'ip_address',
-        'visit_time',
-        'referrer',
-        'user_agent'
+        'route_name',
+        'visit_count',
+        'last_visit_at',
+        'metadata'
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
     protected $casts = [
-        'visit_time' => 'datetime'
+        'metadata' => 'array',
+        'last_visit_at' => 'datetime',
+        'visit_count' => 'integer'
     ];
 
-    public function user()
+    /**
+     * Get the formatted path for display.
+     */
+    public function getFormattedPathAttribute(): string
     {
-        return $this->belongsTo(User::class);
+        return '/' . ltrim($this->path, '/');
     }
 
-    public function scopeWithinPeriod(Builder $query, Carbon $startDate, Carbon $endDate): Builder
+    /**
+     * Get the display name for the page.
+     */
+    public function getDisplayNameAttribute(): string
     {
-        return $query->whereBetween('visit_time', [$startDate, $endDate]);
+        return $this->route_name ?? $this->formatted_path;
     }
 
-    public function scopeTopPages(Builder $query, int $limit = 10): Builder
+    /**
+     * Scope a query to only include visits within a date range.
+     */
+    public function scopeWithinDates($query, $startDate, $endDate)
     {
-        return $query->select('path')
-            ->selectRaw('COUNT(*) as visit_count')
-            ->selectRaw('MAX(visit_time) as last_visit_at')
-            ->groupBy('path')
-            ->orderByDesc('visit_count')
-            ->limit($limit);
+        return $query->whereBetween('last_visit_at', [$startDate, $endDate]);
     }
 
-    public function scopeGroupByDay(Builder $query): Builder
+    /**
+     * Scope a query to order by most visited.
+     */
+    public function scopeMostVisited($query)
     {
-        return $query->selectRaw('DATE(visit_time) as date')
-            ->selectRaw('COUNT(*) as total_visits')
-            ->groupBy('date')
-            ->orderBy('date');
+        return $query->orderByDesc('visit_count');
     }
 
-    public function scopeGroupByHour(Builder $query): Builder
+    /**
+     * Scope a query to get recent visits.
+     */
+    public function scopeRecent($query, $limit = 10)
     {
-        return $query->selectRaw('HOUR(visit_time) as hour')
-            ->selectRaw('COUNT(*) as total_visits')
-            ->groupBy('hour')
-            ->orderBy('hour');
+        return $query->orderByDesc('last_visit_at')->limit($limit);
     }
 
-    public function scopeWeekly(Builder $query, Carbon $date): Builder
+    /**
+     * Get the total visits for a specific path.
+     */
+    public static function getTotalVisitsForPath(string $path): int
     {
-        return $query->whereBetween('visit_time', [
-            $date->copy()->startOfWeek(),
-            $date->copy()->endOfWeek()
-        ]);
+        return static::where('path', $path)->value('visit_count') ?? 0;
     }
-} 
+
+    /**
+     * Get analytics summary.
+     */
+    public static function getAnalyticsSummary()
+    {
+        return [
+            'total_visits' => static::sum('visit_count'),
+            'unique_pages' => static::count(),
+            'most_visited' => static::mostVisited()->take(5)->get(),
+            'recent_visits' => static::recent()->get()
+        ];
+    }
+}

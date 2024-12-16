@@ -46,29 +46,33 @@ const formatVisitCount = (count) => {
 }
 
 // Get first letters for avatar fallback
-const getInitials = (path) => {
-  return path
-    .split('/')
-    .filter(Boolean)
-    .slice(-1)[0]
-    .split('-')
+const getInitials = (url) => {
+  const segments = url.split('/').filter(Boolean)
+  if (segments.length === 0) return 'HP'
+  
+  const lastSegment = segments[segments.length - 1]
+  const words = lastSegment.split('-')
+  return words
+    .slice(0, 2)
     .map(word => word[0])
     .join('')
     .toUpperCase()
-    .slice(0, 2)
 }
 
 // Format the path for display
-const formatPath = (path) => {
-  return path
-    .split('/')
-    .filter(Boolean)
+const formatPath = (url) => {
+  if (!url) return 'Home'
+  const segments = url.split('/').filter(Boolean)
+  if (segments.length === 0) return 'Home'
+  
+  return segments
     .map(segment => segment.replace(/-/g, ' '))
     .join(' / ')
 }
 
 // Format timestamp
 const formatDate = (timestamp) => {
+  if (!timestamp) return ''
   return new Date(timestamp).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
@@ -79,7 +83,7 @@ const formatDate = (timestamp) => {
 
 // Sort pages by visit count
 const sortedPages = computed(() => 
-  [...props.data].sort((a, b) => b.visit_count - a.visit_count)
+  [...props.data].sort((a, b) => b.visits - a.visits)
 )
 </script>
 
@@ -118,38 +122,38 @@ const sortedPages = computed(() =>
             <TableBody>
               <TableRow 
                 v-for="page in sortedPages" 
-                :key="page.path"
+                :key="page.url"
                 class="group"
               >
                 <TableCell>
                   <div class="flex items-center gap-3">
                     <Avatar class="h-8 w-8 shrink-0">
                       <AvatarImage 
-                        :src="`/icons/${getInitials(page.path).toLowerCase()}.png`" 
-                        :alt="formatPath(page.path)"
+                        :src="`/icons/${getInitials(page.url).toLowerCase()}.png`" 
+                        :alt="formatPath(page.url)"
                       />
                       <AvatarFallback class="bg-primary/10 text-sm">
-                        {{ getInitials(page.path) }}
+                        {{ getInitials(page.url) }}
                       </AvatarFallback>
                     </Avatar>
                     <div class="flex flex-col min-w-0">
                       <span class="text-sm font-medium truncate">
-                        {{ formatPath(page.path) }}
+                        {{ page.name || formatPath(page.url) }}
                       </span>
                       <span class="text-xs text-muted-foreground truncate">
-                        /{{ page.path }}
+                        {{ page.url }}
                       </span>
                     </div>
                   </div>
                 </TableCell>
                 <TableCell>
                   <div class="text-sm text-muted-foreground">
-                    {{ formatDate(page.last_visit_at).split(',')[0] }}
+                    {{ page.last_visit }}
                   </div>
                 </TableCell>
                 <TableCell class="text-right">
                   <div class="font-medium text-sm">
-                    {{ formatVisitCount(page.visit_count) }}
+                    {{ formatVisitCount(page.visits) }}
                   </div>
                 </TableCell>
               </TableRow>

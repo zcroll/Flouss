@@ -50,6 +50,7 @@
         "lucide-vue-next": "^0.460.0",
         "motion": "^10.18.0",
         "node-ray": "^2.1.2",
+        "php-parser": "^3.2.1",
         "pinia": "^2.1.0",
         "radix-vue": "^1.9.11",
         "shadcn-ui": "^0.9.3",

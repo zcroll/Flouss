@@ -4,27 +4,102 @@ import { Head } from '@inertiajs/vue3'
 import { Button } from '@/Components/ui/button'
 import Overview from '@/Components/ADMIN/Charts/Overview.vue'
 import TopPagesCard from '@/Components/ADMIN/List/TopPagesCard.vue'
-import { useAdminTabs } from '@/Composables/useAdminTabs'
 import {
   Card,
-  CardContent, 
-  CardDescription,
+  CardContent,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from '@/Components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/Components/ui/select'
 import ProfileDropdown from '@/Components/ADMIN/profileDropdown.vue'
 import Search from '@/Components/ADMIN/search.vue'
 import ThemeSwitch from '@/Components/ADMIN/themeSwitch.vue'
 import SideBar from '@/Pages/Admin/SideBar.vue'
 import ThemeProvider from '@/Components/ADMIN/ThemeProvider.vue'
-import AdminTabs from '@/Components/ADMIN/AdminTabs.vue'
-import TimeAnalysisCard from '@/Components/Admin/Analytics/TimeAnalysisCard.vue'
-import { useAnalytics } from '@/Composables/useAnalytics'
+import { useToast } from '@/Components/ui/toast/use-toast'
 
-defineOptions({
-  layout: null
+const props = defineProps({
+  analytics: {
+    type: Object,
+    required: true
+  },
+  dateRange: {
+    type: Object,
+    required: true
+  }
 })
+
+const { toast } = useToast()
+const timeRangeOptions = [
+  { value: 'today', label: 'Today' },
+  { value: 'yesterday', label: 'Yesterday' },
+  { value: 'last7days', label: 'Last 7 Days' },
+  { value: 'last30days', label: 'Last 30 Days' },
+  { value: 'thisMonth', label: 'This Month' },
+  { value: 'lastMonth', label: 'Last Month' },
+]
+
+const selectedTimeRange = ref('last7days')
+
+const statsCards = computed(() => [
+  {
+    title: 'Total Visits',
+    value: props.analytics.overview.total_visits,
+    icon: 'eye',
+    change: '+12%',
+    changeText: 'from previous period'
+  },
+  {
+    title: 'Unique Visitors',
+    value: props.analytics.overview.unique_visitors,
+    icon: 'users',
+    change: '+5.2%',
+    changeText: 'from previous period'
+  },
+  {
+    title: 'Total Actions',
+    value: props.analytics.overview.total_actions,
+    icon: 'activity',
+    change: '+8.1%',
+    changeText: 'from previous period'
+  },
+  {
+    title: 'Total Logins',
+    value: props.analytics.overview.total_logins,
+    icon: 'log-in',
+    change: '+3.2%',
+    changeText: 'from previous period'
+  }
+])
+
+const updateTimeRange = async (value) => {
+  try {
+    const response = await axios.post(route('admin.analytics.update-time'), {
+      timeRange: value
+    })
+    
+    // Update the analytics data
+    props.analytics = response.data.analytics
+    props.dateRange = response.data.dateRange
+    
+    toast({
+      title: 'Time range updated',
+      description: 'The analytics data has been updated successfully.',
+    })
+  } catch (error) {
+    toast({
+      title: 'Error',
+      description: 'Failed to update time range. Please try again.',
+      variant: 'destructive'
+    })
+  }
+}
 
 const formatDate = (date) => {
   return new Date(date).toLocaleDateString('en-US', {
@@ -33,103 +108,12 @@ const formatDate = (date) => {
     day: '2-digit'
   })
 }
-
-const props = defineProps({
-  analytics: {
-    type: Object,
-    required: true,
-    default: () => ({
-      total_visits: 0,
-      most_visited_pages: [],
-      visit_trends: []
-    })
-  },
-  dateRange: {
-    type: Object,
-    required: true,
-    default: () => ({
-      start: new Date().toISOString().split('T')[0],
-      end: new Date().toISOString().split('T')[0]
-    })
-  }
-})
-
-const { activeTab, handleTabChange, handleSidebarNavigation } = useAdminTabs('analytics')
-
-// Computed properties for analytics data
-const totalVisits = computed(() => props.analytics.total_visits)
-const visitTrends = computed(() => props.analytics.visit_trends)
-const mostVisitedPages = computed(() => props.analytics.most_visited_pages)
-
-// Stats cards data
-const statsCards = computed(() => [
-  {
-    title: 'Total Revenue',
-    value: '$45,231.89',
-    change: '+20.1%',
-    changeText: 'from last month',
-    icon: 'currency-dollar'
-  },
-  {
-    title: 'Subscriptions',
-    value: '+2350',
-    change: '+180.1%',
-    changeText: 'from last month',
-    icon: 'users'
-  },
-  {
-    title: 'Sales',
-    value: '+12,234',
-    change: '+19%',
-    changeText: 'from last month',
-    icon: 'credit-card'
-  },
-  {
-    title: 'Active Now',
-    value: totalVisits.value.toString(),
-    change: '+201',
-    changeText: 'since last hour',
-    icon: 'activity'
-  }
-])
-
-// Date range state
-const selectedDateRange = ref({
-  start: props.dateRange.start,
-  end: props.dateRange.end
-})
-
-// Methods
-const handleDateRangeChange = () => {
-  // Implement date range change logic
-}
-
-const handleDownload = () => {
-  // Implement analytics data export
-}
-
-const handleViewAllPages = () => {
-  // Implement view all pages logic
-  // Could navigate to a full page view or open a modal
-}
-
-const {
-  analytics,
-  dateRange,
-  filters,
-  isLoading,
-  updateTimeRange
-} = useAnalytics()
-
-onMounted(() => {
-  handleSidebarNavigation('/adminn/dashboard/analytics')
-})
 </script>
 
 <template>
   <Head title="Analytics Dashboard" />
   
-  <ThemeProvider v-slot="{ theme, toggleTheme }">
+  <ThemeProvider>
     <div class="min-h-screen bg-background">
       <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
@@ -143,11 +127,11 @@ onMounted(() => {
           <header class="bg-card border-b border-border">
             <div class="px-4 py-3 flex justify-between items-center">
               <div class="flex items-center space-x-4">
-                <h1 class="text-xl font-semibold text-foreground">Analytics Dashboard</h1>
+                <h1 class="text-xl font-semibold">User Monitoring Analytics</h1>
               </div>
               <div class="flex items-center space-x-4">
                 <Search />
-                <ThemeSwitch @click="toggleTheme" />
+                <ThemeSwitch />
                 <ProfileDropdown />
               </div>
             </div>
@@ -161,20 +145,26 @@ onMounted(() => {
                 <div class="flex items-center justify-between">
                   <div>
                     <h1 class="text-3xl font-bold tracking-tight">Analytics Overview</h1>
-                    <p class="text-muted-foreground mt-1">
-                      Detailed analytics from {{ formatDate(selectedDateRange.start) }} 
-                      to {{ formatDate(selectedDateRange.end) }}
+                    <p class="text-muted-foreground">
+                      {{ formatDate(dateRange.start) }} - {{ formatDate(dateRange.end) }}
                     </p>
                   </div>
                   <div class="flex items-center gap-4">
-                    <!-- Date Range Picker Here -->
-                    <Button variant="outline" class="gap-2">
-                      <i class="fa-regular fa-calendar"></i>
-                      Select Range
-                    </Button>
-                    <Button>
+                    <Select v-model="selectedTimeRange" @update:modelValue="updateTimeRange">
+                      <SelectTrigger class="w-[180px]">
+                        <SelectValue :placeholder="timeRangeOptions.find(o => o.value === selectedTimeRange)?.label" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem v-for="option in timeRangeOptions" 
+                                  :key="option.value" 
+                                  :value="option.value">
+                          {{ option.label }}
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Button variant="outline">
                       <i class="fa-regular fa-download mr-2"></i>
-                      Download Report
+                      Export Data
                     </Button>
                   </div>
                 </div>
@@ -188,9 +178,11 @@ onMounted(() => {
                     </CardHeader>
                     <CardContent>
                       <div class="text-2xl font-bold">{{ stat.value }}</div>
-                      <p class="text-xs text-muted-foreground flex items-center gap-1">
-                        <i :class="`fa-solid fa-arrow-${stat.change >= 0 ? 'up text-green-500' : 'down text-red-500'}`"></i>
-                        {{ Math.abs(stat.change) }}% {{ stat.changeText }}
+                      <p class="text-xs text-muted-foreground">
+                        <span :class="stat.change.startsWith('+') ? 'text-green-500' : 'text-red-500'">
+                          {{ stat.change }}
+                        </span>
+                        {{ stat.changeText }}
                       </p>
                     </CardContent>
                   </Card>
@@ -198,42 +190,61 @@ onMounted(() => {
               </div>
 
               <!-- Analytics Content -->
-              <div class="space-y-6">
-                <!-- Stats Cards -->
-                <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                  <Card v-for="stat in statsCards" :key="stat.title">
-                    <CardHeader class="flex flex-row items-center justify-between pb-2">
-                      <CardTitle class="text-sm font-medium">{{ stat.title }}</CardTitle>
-                      <i :class="`fa-solid fa-${stat.icon} text-muted-foreground`"></i>
-                    </CardHeader>
-                    <CardContent>
-                      <div class="text-2xl font-bold">{{ stat.value }}</div>
-                      <p class="text-xs text-muted-foreground flex items-center gap-1">
-                        <i :class="`fa-solid fa-arrow-${stat.change >= 0 ? 'up text-green-500' : 'down text-red-500'}`"></i>
-                        {{ Math.abs(stat.change) }}% {{ stat.changeText }}
-                      </p>
-                    </CardContent>
-                  </Card>
+              <div class="grid gap-6 grid-cols-1 lg:grid-cols-7">
+                <!-- Visit Trends Chart -->
+                <div class="lg:col-span-4">
+                  <Overview 
+                    :data="analytics.visits"
+                    title="Visit Trends"
+                    description="User visits over time"
+                  />
                 </div>
 
-                <!-- Charts Section -->
-                <div class="grid gap-6 grid-cols-1 lg:grid-cols-7">
-                  <div class="lg:col-span-4 space-y-6">
-                    <Overview 
-                      :data="visitTrends" 
-                      title="Visit Trends"
-                      description="Traffic patterns over time"
-                    />
-                    <TimeAnalysisCard />
-                  </div>
-
-                  <div class="lg:col-span-3">
-                    <TopPagesCard 
-                      :data="mostVisitedPages" 
-                      @view-all="handleViewAllPages"
-                    />
-                  </div>
+                <!-- Top Pages -->
+                <div class="lg:col-span-3">
+                  <TopPagesCard 
+                    :data="analytics.topPages"
+                    title="Most Visited Pages"
+                    description="Top pages by number of visits"
+                  />
                 </div>
+              </div>
+
+              <!-- User Activity Table -->
+              <div class="mt-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Recent User Activity</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div class="relative overflow-x-auto">
+                      <table class="w-full text-sm text-left">
+                        <thead class="text-xs uppercase bg-muted">
+                          <tr>
+                            <th scope="col" class="px-6 py-3">User</th>
+                            <th scope="col" class="px-6 py-3">Page</th>
+                            <th scope="col" class="px-6 py-3">Method</th>
+                            <th scope="col" class="px-6 py-3">IP</th>
+                            <th scope="col" class="px-6 py-3">Time</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr v-for="activity in analytics.userActivity" 
+                              :key="activity.id"
+                              class="border-b">
+                            <td class="px-6 py-4">
+                              {{ activity.user?.name || 'Guest' }}
+                            </td>
+                            <td class="px-6 py-4">{{ activity.url }}</td>
+                            <td class="px-6 py-4">{{ activity.method }}</td>
+                            <td class="px-6 py-4">{{ activity.ip }}</td>
+                            <td class="px-6 py-4">{{ activity.created_at }}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             </div>
           </main>
@@ -246,12 +257,5 @@ onMounted(() => {
 <style scoped>
 .container {
   max-width: 1400px;
-}
-
-@media (max-width: 640px) {
-  .container {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
 }
 </style>

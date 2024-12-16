@@ -2,10 +2,9 @@
 
 namespace App\Services;
 
-use App\Models\PageVisit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-
+use App\Models\PageVisit;
 class PageVisitTracker
 {
     public function trackVisit(Request $request): void
