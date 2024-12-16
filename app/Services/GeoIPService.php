@@ -31,8 +31,14 @@ readonly class GeoIPService
         try {
             // Handle null IP or local IP
             if (!$ip || $this->isLocalIP($ip)) {
-                $ip = self::MOROCCAN_TEST_IPS['marrakesh']; // Use verified Marrakesh IP
+                $ip = self::MOROCCAN_TEST_IPS['marrakesh'];
                 Log::info('Using test IP for local/null IP', ['ip' => $ip]);
+            }
+
+            // Check if we have cached data in database
+            $cachedLocation = \App\Models\IPLocation::where('ip', $ip)->first();
+            if ($cachedLocation) {
+                return $this->formatLocationResponse($cachedLocation);
             }
 
             $apiKey = config('services.ipgeolocation.key');
@@ -41,22 +47,44 @@ readonly class GeoIPService
                 ->retry(3, 100)
                 ->get('https://api.ipgeolocation.io/ipgeo', [
                     'apiKey' => $apiKey,
-                    'ip' => $ip,
-                    'fields' => 'geo,time_zone,currency'
+                    'ip' => $ip
                 ]);
 
             if ($response->successful()) {
                 $data = $response->json();
-                return [
-                    'country' => $data['country_name'],
+                
+                // Store the data
+                \App\Models\IPLocation::create([
+                    'ip' => $data['ip'],
+                    'continent_code' => $data['continent_code'],
+                    'continent_name' => $data['continent_name'],
+                    'country_code2' => $data['country_code2'],
+                    'country_code3' => $data['country_code3'],
+                    'country_name' => $data['country_name'],
+                    'country_name_official' => $data['country_name_official'],
+                    'country_capital' => $data['country_capital'],
+                    'state_prov' => $data['state_prov'],
+                    'state_code' => $data['state_code'],
+                    'district' => $data['district'],
                     'city' => $data['city'],
-                    'latitude' => (float)$data['latitude'],
-                    'longitude' => (float)$data['longitude'],
-                    'timezone' => $data['time_zone']['name'],
-                    'currency' => $data['currency']['code'],
-                    'isp' => $data['isp'] ?? null,
-                    'success' => true
-                ];
+                    'zipcode' => $data['zipcode'],
+                    'latitude' => $data['latitude'],
+                    'longitude' => $data['longitude'],
+                    'is_eu' => $data['is_eu'],
+                    'calling_code' => $data['calling_code'],
+                    'country_tld' => $data['country_tld'],
+                    'languages' => $data['languages'],
+                    'country_flag' => $data['country_flag'],
+                    'geoname_id' => $data['geoname_id'],
+                    'isp' => $data['isp'],
+                    'connection_type' => $data['connection_type'],
+                    'organization' => $data['organization'],
+                    'country_emoji' => $data['country_emoji'],
+                    'currency_data' => $data['currency'],
+                    'timezone_data' => $data['time_zone']
+                ]);
+
+                return $this->formatLocationResponse($data);
             }
 
             Log::warning('IPGeolocation request failed', [
@@ -75,6 +103,33 @@ readonly class GeoIPService
 
             return self::DEFAULT_LOCATION;
         }
+    }
+
+    private function formatLocationResponse($data): array
+    {
+        if ($data instanceof \App\Models\IPLocation) {
+            return [
+                'country' => $data->country_name,
+                'city' => $data->city,
+                'latitude' => (float)$data->latitude,
+                'longitude' => (float)$data->longitude,
+                'timezone' => $data->timezone_data['name'] ?? 'UTC',
+                'currency' => $data->currency_data['code'] ?? 'MAD',
+                'isp' => $data->isp,
+                'success' => true
+            ];
+        }
+
+        return [
+            'country' => $data['country_name'],
+            'city' => $data['city'],
+            'latitude' => (float)$data['latitude'],
+            'longitude' => (float)$data['longitude'],
+            'timezone' => $data['time_zone']['name'] ?? 'UTC',
+            'currency' => $data['currency']['code'] ?? 'MAD',
+            'isp' => $data['isp'],
+            'success' => true
+        ];
     }
 
     public function checkStatus(): array
