@@ -1,9 +1,9 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { Head } from '@inertiajs/vue3'
+import { Head, router } from '@inertiajs/vue3'
 import { Button } from '@/Components/ui/button'
 import Overview from '@/Components/ADMIN/Charts/Overview.vue'
-import RecentSales from '@/Components/ADMIN/List/RecentSales.vue'
+import RecentSales from '@/Components/ADMIN/List/TopPagesCard.vue'
 import { useAdminTabs } from '@/Composables/useAdminTabs'
 import {
   Card,
@@ -24,42 +24,15 @@ defineOptions({
   layout: null
 })
 
-const { activeTab, handleTabChange, handleSidebarNavigation } = useAdminTabs('analytics')
+const { activeTab, handleTabChange, handleSidebarNavigation } = useAdminTabs('reports')
 
 onMounted(() => {
-  handleSidebarNavigation('/adminn/analytics')
+  handleSidebarNavigation('/adminn/reports')
 })
-
-const topNav = [
-  {
-    title: 'Overview',
-    href: '/adminn/dashboard',
-    isActive: true,
-    disabled: false,
-  },
-  {
-    title: 'Customers', 
-    href: '/adminn/customers',
-    isActive: false,
-    disabled: true,
-  },
-  {
-    title: 'Products',
-    href: '/adminn/products', 
-    isActive: false,
-    disabled: true,
-  },
-  {
-    title: 'Settings',
-    href: '/adminn/settings',
-    isActive: false,
-    disabled: true,
-  }
-]
 </script>
 
 <template>
-  <Head title="Dashboard" />
+  <Head title="Reports" />
   
   <ThemeProvider v-slot="{ theme, toggleTheme }">
     <div class="min-h-screen bg-background">
@@ -89,23 +62,26 @@ const topNav = [
           <main class="flex-1 overflow-x-hidden overflow-y-auto bg-background">
             <div class="container mx-auto px-6 py-8">
               <div class="mb-6 flex items-center justify-between">
-                <h1 class="text-2xl font-bold tracking-tight text-foreground">Dashboard Analytics</h1>
+                <h1 class="text-2xl font-bold tracking-tight text-foreground">Reports Dashboard</h1>
                 <div class="flex items-center space-x-2">
                   <Button>Download</Button>
                 </div>
               </div>
 
-              <AdminTabs :default-tab="'analytics'">
+              <AdminTabs :default-tab="'reports'">
                 <template #content>
                 <TabsContent value="overview">
                   <!-- Overview content will be handled by navigation -->
                 </TabsContent>
-                <TabsContent value="analytics" class="space-y-6">
+                <TabsContent value="analytics">
+                  <!-- Analytics content will be handled by navigation -->
+                </TabsContent>
+                <TabsContent value="reports" class="space-y-6">
                   <!-- Stats Cards -->
                   <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                     <Card>
                       <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle class="text-sm font-medium">Total Revenue</CardTitle>
+                        <CardTitle class="text-sm font-medium">Total Reports</CardTitle>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
@@ -120,14 +96,14 @@ const topNav = [
                         </svg>
                       </CardHeader>
                       <CardContent>
-                        <div class="text-2xl font-bold">$45,231.89</div>
+                        <div class="text-2xl font-bold">1,234</div>
                         <p class="text-xs text-muted-foreground">+20.1% from last month</p>
                       </CardContent>
                     </Card>
 
                     <Card>
                       <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle class="text-sm font-medium">Subscriptions</CardTitle>
+                        <CardTitle class="text-sm font-medium">Active Reports</CardTitle>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
@@ -144,14 +120,14 @@ const topNav = [
                         </svg>
                       </CardHeader>
                       <CardContent>
-                        <div class="text-2xl font-bold">+2350</div>
+                        <div class="text-2xl font-bold">892</div>
                         <p class="text-xs text-muted-foreground">+180.1% from last month</p>
                       </CardContent>
                     </Card>
 
                     <Card>
                       <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle class="text-sm font-medium">Sales</CardTitle>
+                        <CardTitle class="text-sm font-medium">Completed Reports</CardTitle>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
@@ -167,14 +143,14 @@ const topNav = [
                         </svg>
                       </CardHeader>
                       <CardContent>
-                        <div class="text-2xl font-bold">+12,234</div>
+                        <div class="text-2xl font-bold">342</div>
                         <p class="text-xs text-muted-foreground">+19% from last month</p>
                       </CardContent>
                     </Card>
 
                     <Card>
                       <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle class="text-sm font-medium">Active Now</CardTitle>
+                        <CardTitle class="text-sm font-medium">Pending Reports</CardTitle>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
@@ -189,17 +165,17 @@ const topNav = [
                         </svg>
                       </CardHeader>
                       <CardContent>
-                        <div class="text-2xl font-bold">+573</div>
+                        <div class="text-2xl font-bold">573</div>
                         <p class="text-xs text-muted-foreground">+201 since last hour</p>
                       </CardContent>
                     </Card>
                   </div>
 
-                  <!-- Analytics Charts Section -->
+                  <!-- Reports Charts Section -->
                   <div class="grid gap-6 lg:grid-cols-7">
                     <Card class="col-span-4">
                       <CardHeader>
-                        <CardTitle>Analytics Overview</CardTitle>
+                        <CardTitle>Reports Overview</CardTitle>
                       </CardHeader>
                       <CardContent class="pl-2">
                         <Overview />
@@ -208,17 +184,14 @@ const topNav = [
 
                     <Card class="col-span-3">
                       <CardHeader>
-                        <CardTitle>Recent Activity</CardTitle>
-                        <CardDescription>Analytics for the past 30 days</CardDescription>
+                        <CardTitle>Recent Reports</CardTitle>
+                        <CardDescription>Reports generated in the last 30 days</CardDescription>
                       </CardHeader>
                       <CardContent>
                         <RecentSales />
                       </CardContent>
                     </Card>
                   </div>
-                </TabsContent>
-                <TabsContent value="reports">
-                  <!-- Reports content -->
                 </TabsContent>
                 <TabsContent value="notifications">
                   <!-- Notifications content -->

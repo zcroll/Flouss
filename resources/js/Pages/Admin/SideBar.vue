@@ -27,25 +27,62 @@ const sidebarData = ref({
     {
       title: 'GENERAL',
       items: [
-        { name: 'Dashboard', icon: 'chart-line', href: '/adminn/dashboard' },
-        { name: 'Tasks', icon: 'list-check', href: '/adminn/tasks' },
-        { name: 'Apps', icon: 'table-cells', href: '/adminn/apps' },
-        { name: 'Charts', icon: 'chart-pie', href: '/adminn/charts', badge: 4 },
-        { name: 'Users', icon: 'users', href: '/adminn/users' }
+        { 
+          name: 'Dashboard', 
+          icon: 'chart-mixed', 
+          href: '/adminn/dashboard',
+          hasChildren: true,
+          items: [
+            { 
+              name: 'Overview', 
+              href: '/adminn/dashboard',
+              icon: 'chart-mixed'
+            },
+            { 
+              name: 'Analytics', 
+              href: '/adminn/dashboard/analytics',
+              icon: 'chart-bar'
+            },
+            { 
+              name: 'Reports', 
+              href: '/adminn/dashboard/reports',
+              icon: 'file-lines'
+            }
+          ]
+        },
+        { 
+          name: 'Tasks', 
+          icon: 'list-check', 
+          href: '/adminn/tasks',
+          isActive: false
+        },
+        { 
+          name: 'Users', 
+          icon: 'users', 
+          href: '/adminn/users',
+          isActive: false
+        }
       ]
     },
     {
-      title: 'PAGES',
+      title: 'SETTINGS',
       items: [
-        { name: 'Auth', icon: 'lock', href: '/adminn/auth', hasChildren: true },
-        { name: 'Forms', icon: 'clipboard', href: '/adminn/forms' }
-      ]
-    },
-    {
-      title: 'OTHER', 
-      items: [
-        { name: 'Settings', icon: 'gear', href: '/adminn/settings', hasChildren: true },
-        { name: 'Help Center', icon: 'circle-question', href: '/adminn/help' }
+        { 
+          name: 'Settings', 
+          icon: 'gear', 
+          href: '/adminn/settings', 
+          hasChildren: true,
+          items: [
+            { name: 'General', href: '/adminn/settings/general' },
+            { name: 'Security', href: '/adminn/settings/security' },
+            { name: 'Notifications', href: '/adminn/settings/notifications' }
+          ]
+        },
+        { 
+          name: 'Help Center', 
+          icon: 'circle-question', 
+          href: '/adminn/help'
+        }
       ]
     }
   ],

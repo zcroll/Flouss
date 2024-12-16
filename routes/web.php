@@ -30,6 +30,8 @@ use App\Http\Controllers\Test\PersonalityController;
 use App\Http\Controllers\Formation\FormationController;
 use App\Http\Controllers\Test\DegreeTestStageController;
 use Pan\Facades\Pan;
+use App\Http\Controllers\Admin\AnalyticsController;
+use App\Http\Controllers\Admin\MonitoringController;
 
 // Google Login Routes (place these BEFORE any auth middleware groups)
 Route::get('auth/google', [App\Http\Controllers\Auth\GoogleController::class, 'redirectToGoogle'])
@@ -212,12 +214,22 @@ Route::get('/dashboard/test-fetch', [DashboardController::class, 'testFetch'])
 
     Route::prefix('adminn')->group(function () {
         Route::get('/dashboard', function () {
-            return Inertia::render('Admin/Dashbord/index');
-        });
+            return Inertia::render('Admin/Dashboard/index', [
+                'page' => request()->query('tab', 'overview')
+            ]);
+        })->name('admin.dashboard');
         
-        Route::get('/analytics', function () {
-            return Inertia::render('Admin/Dashbord/Analytics/index');
-        })->name('admin.analytics');
+        Route::get('dashboard/analytics', [AnalyticsController::class, 'index'])
+            ->name('admin.analytics');
+        
+        Route::post('dashboard/analytics/time-range', [AnalyticsController::class, 'updateTimeRange'])
+            ->name('admin.analytics.update-time');
+        
+        Route::get('/dashboard/reports', function () {
+            return Inertia::render('Admin/Dashboard/index', [
+                'page' => 'reports'
+            ]);
+        })->name('admin.reports');
         
         // Task Management Routes
         Route::prefix('tasks')->group(function () {
@@ -247,3 +259,14 @@ Route::post('/pan/track', function (Request $request) {
     Pan::track($request->element, $request->url);
     return response()->json(['status' => 'success']);
 })->middleware(['web']);
+
+Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/analytics', [AnalyticsController::class, 'index'])
+        ->name('admin.analytics');
+        
+    Route::post('/analytics/time-range', [AnalyticsController::class, 'updateTimeRange'])
+        ->name('admin.analytics.update-time');
+    
+    Route::get('/monitoring/authentication', [MonitoringController::class, 'authentication'])
+        ->name('admin.monitoring.authentication');
+});

@@ -1,6 +1,7 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { Bar } from 'vue-chartjs'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/Components/ui/card'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -20,18 +21,32 @@ ChartJS.register(
   Legend
 )
 
-const data = ref({
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-  datasets: [
-    {
-      label: 'Revenue',
-      data: Array.from({length: 12}, () => Math.floor(Math.random() * 5000) + 1000),
-      backgroundColor: 'hsl(var(--primary))',
-      borderRadius: 4,
-      barThickness: 20,
-    }
-  ]
+const props = defineProps({
+  data: {
+    type: Array,
+    required: true,
+    default: () => []
+  },
+  title: {
+    type: String,
+    default: 'Overview'
+  },
+  description: {
+    type: String,
+    default: ''
+  }
 })
+
+const chartData = computed(() => ({
+  labels: props.data.map(item => item.date),
+  datasets: [{
+    label: 'Visits',
+    data: props.data.map(item => item.total_visits),
+    backgroundColor: 'hsl(var(--primary))',
+    borderRadius: 4,
+    barThickness: 20,
+  }]
+}))
 
 const options = {
   responsive: true,
@@ -43,20 +58,17 @@ const options = {
     tooltip: {
       mode: 'index',
       intersect: false,
+      backgroundColor: 'hsl(var(--background))',
+      titleColor: 'hsl(var(--foreground))',
+      bodyColor: 'hsl(var(--foreground))',
+      borderColor: 'hsl(var(--border))',
+      borderWidth: 1,
+      padding: 12,
+      bodyFont: {
+        family: 'Inter'
+      },
       callbacks: {
-        label: function(context) {
-          let label = context.dataset.label || '';
-          if (label) {
-            label += ': ';
-          }
-          if (context.parsed.y !== null) {
-            label += new Intl.NumberFormat('en-US', { 
-              style: 'currency', 
-              currency: 'USD' 
-            }).format(context.parsed.y);
-          }
-          return label;
-        }
+        label: (context) => `${context.parsed.y.toLocaleString()} visits`
       }
     }
   },
@@ -64,10 +76,10 @@ const options = {
     y: {
       beginAtZero: true,
       ticks: {
-        callback: function(value) {
-          return '$' + value.toLocaleString();
-        },
-        color: 'hsl(var(--muted-foreground))'
+        color: 'hsl(var(--muted-foreground))',
+        font: {
+          family: 'Inter'
+        }
       },
       grid: {
         color: 'hsl(var(--border))'
@@ -78,7 +90,10 @@ const options = {
         display: false
       },
       ticks: {
-        color: 'hsl(var(--muted-foreground))'
+        color: 'hsl(var(--muted-foreground))',
+        font: {
+          family: 'Inter'
+        }
       }
     }
   }
@@ -86,10 +101,18 @@ const options = {
 </script>
 
 <template>
-  <div class="w-full h-[350px] p-4 bg-card rounded-lg">
-    <Bar 
-      :data="data" 
-      :options="options"
-    />
-  </div>
+  <Card>
+    <CardHeader>
+      <CardTitle>{{ title }}</CardTitle>
+      <CardDescription>{{ description }}</CardDescription>
+    </CardHeader>
+    <CardContent>
+      <div class="h-[350px]">
+        <Bar 
+          :data="chartData" 
+          :options="options"
+        />
+      </div>
+    </CardContent>
+  </Card>
 </template>

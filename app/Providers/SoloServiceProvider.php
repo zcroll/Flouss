@@ -14,7 +14,7 @@ class SoloServiceProvider extends SoloApplicationServiceProvider
             // Commands that auto start.
             ->addCommands([
                 EnhancedTailCommand::make('Logs', 'tail -f -n 100 ' . storage_path('logs/laravel.log')),
-                'Vite' => 'npm run dev',
+                'Vite' => 'yarn dev',
                 'HTTP' => 'php artisan serve',
             ])
             // Not auto-started

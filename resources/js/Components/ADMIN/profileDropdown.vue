@@ -13,7 +13,7 @@ import { Button } from '@/Components/ui/button'
 const user = ref({
   name: 'John Doe',
   email: 'john@example.com',
-  image: '/Icons/light/avatar.svg'
+  image: '/Icons/light/user-ninja.svg'
 })
 
 const handleLogout = () => {
@@ -25,11 +25,11 @@ const handleLogout = () => {
   <DropdownMenu>
     <DropdownMenuTrigger asChild>
       <Button variant="ghost" class="relative h-8 w-8 rounded-full">
-        <!-- <img
+        <img
           :src="user.image"
           :alt="user.name"
           class="h-8 w-8 rounded-full object-cover"
-        /> -->
+        />
       </Button>
     </DropdownMenuTrigger>
     

@@ -1,49 +1,65 @@
-import { ref } from 'vue'
-import { router } from '@inertiajs/vue3'
+import { ref, watch } from 'vue'
+import { router, usePage } from '@inertiajs/vue3'
 
 // Create a singleton state outside the function
 const activeTab = ref('overview')
 const activeSidebarItem = ref('/adminn/dashboard')
 
 export function useAdminTabs(defaultTab = 'overview') {
-  // Set the initial active tab if provided
-  if (defaultTab) {
-    activeTab.value = defaultTab
-  }
+  const page = usePage()
 
-  const handleTabChange = (tab) => {
-    if (tab === activeTab.value) return // Prevent unnecessary navigation
+  // Initialize the active tab and sidebar item based on the current URL
+  const initializeState = () => {
+    const path = window.location.pathname
+    activeSidebarItem.value = path
     
-    activeTab.value = tab
-    switch (tab) {
-      case 'overview':
-        if (window.location.pathname !== '/adminn/dashboard') {
-          router.visit('/adminn/dashboard')
-        }
-        activeSidebarItem.value = '/adminn/dashboard'
-        break
-      case 'analytics':
-        if (window.location.pathname !== '/adminn/analytics') {
-          router.visit('/adminn/analytics')
-        }
-        activeSidebarItem.value = '/adminn/analytics'
-        break
-      // Add more cases as needed
+    // Set active tab based on URL or page prop
+    if (path === '/adminn/dashboard') {
+      activeTab.value = page.props.page || defaultTab
+    } else {
+      // Extract the last segment of the URL for other dashboard pages
+      const segment = path.split('/').pop()
+      activeTab.value = segment || defaultTab
     }
   }
 
-  const handleSidebarNavigation = (path) => {
-    if (path === activeSidebarItem.value) return // Prevent unnecessary updates
+  // Initialize on mount
+  initializeState()
+
+  // Watch for page prop changes
+  watch(() => page.props.page, (newPage) => {
+    if (newPage && newPage !== activeTab.value) {
+      activeTab.value = newPage
+    }
+  })
+
+  // Watch for URL changes
+  watch(() => window.location.pathname, (newPath) => {
+    if (newPath !== activeSidebarItem.value) {
+      initializeState()
+    }
+  })
+
+  const handleTabChange = (tab) => {
+    if (tab === activeTab.value) return
+    activeTab.value = tab
     
+    // Update sidebar state when tab changes
+    activeSidebarItem.value = tab === 'overview' 
+      ? '/adminn/dashboard'
+      : `/adminn/dashboard/${tab}`
+  }
+
+  const handleSidebarNavigation = (path) => {
+    if (path === activeSidebarItem.value) return
     activeSidebarItem.value = path
-    switch (path) {
-      case '/adminn/dashboard':
-        activeTab.value = 'overview'
-        break
-      case '/adminn/analytics':
-        activeTab.value = 'analytics'
-        break
-      // Add more cases as needed
+    
+    // Update tab state when sidebar changes
+    if (path.startsWith('/adminn/dashboard')) {
+      const segment = path.split('/').pop()
+      activeTab.value = segment === 'dashboard' ? 'overview' : segment
+    } else {
+      activeTab.value = 'overview'
     }
   }
 

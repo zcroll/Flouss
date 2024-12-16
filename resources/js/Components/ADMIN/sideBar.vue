@@ -1,6 +1,6 @@
 <script setup>
-import { ref, computed, inject } from 'vue'
-import { Link } from '@inertiajs/vue3'
+import { ref, computed, inject, watch } from 'vue'
+import { Link, router } from '@inertiajs/vue3'
 import {
   Collapsible,
   CollapsibleContent,
@@ -20,7 +20,7 @@ import {
 import { Badge } from '@/Components/ui/badge'
 import { useAdminTabs } from '@/Composables/useAdminTabs'
 
-defineProps({
+const props = defineProps({
   title: {
     type: String,
     required: true
@@ -36,14 +36,26 @@ const isOpen = ref(false)
 const { activeSidebarItem, handleSidebarNavigation } = useAdminTabs()
 
 const checkIsActive = (item) => {
-  return activeSidebarItem.value === item.href
+  return activeSidebarItem.value === item.href || 
+    (item.items && item.items.some(subItem => activeSidebarItem.value === subItem.href))
 }
 
 const handleNavigation = (item, e) => {
   e.preventDefault()
   handleSidebarNavigation(item.href)
-  router.visit(item.href)
+  router.visit(item.href, {
+    preserveState: true,
+    preserveScroll: true,
+    replace: true
+  })
 }
+
+// Watch for URL changes to update active state
+watch(() => window.location.pathname, (newPath) => {
+  if (newPath !== activeSidebarItem.value) {
+    handleSidebarNavigation(newPath)
+  }
+})
 
 const { current: theme } = inject('theme')
 </script>

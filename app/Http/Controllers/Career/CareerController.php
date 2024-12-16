@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
+
+
+
 class CareerController extends Controller
 {
     protected function getLocalizedColumn($model, $baseColumn)
