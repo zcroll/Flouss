@@ -2,13 +2,12 @@
 import { ref, onMounted, computed } from 'vue'
 import { Head } from '@inertiajs/vue3'
 import { Button } from '@/Components/ui/button'
-import Overview from '@/Components/ADMIN/Charts/Overview.vue'
-import TopPagesCard from '@/Components/ADMIN/List/TopPagesCard.vue'
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
+  CardDescription,
 } from '@/Components/ui/card'
 import {
   Select,
@@ -17,6 +16,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/Components/ui/select'
+import { 
+  BarChart,
+  LineChart,
+  PieChart,
+  Activity,
+  Users,
+  Globe,
+  Eye,
+  Clock,
+  ArrowUp,
+  ArrowDown,
+} from 'lucide-vue-next'
 import ProfileDropdown from '@/Components/ADMIN/profileDropdown.vue'
 import Search from '@/Components/ADMIN/search.vue'
 import ThemeSwitch from '@/Components/ADMIN/themeSwitch.vue'
@@ -51,30 +62,27 @@ const statsCards = computed(() => [
   {
     title: 'Total Visits',
     value: props.analytics.overview.total_visits,
-    icon: 'eye',
-    change: '+12%',
-    changeText: 'from previous period'
+    change: props.analytics.overview.percent_change,
+    icon: Eye,
+    trend: props.analytics.overview.percent_change >= 0 ? 'up' : 'down'
   },
   {
-    title: 'Unique Visitors',
-    value: props.analytics.overview.unique_visitors,
-    icon: 'users',
-    change: '+5.2%',
-    changeText: 'from previous period'
+    title: 'Unique Pages',
+    value: props.analytics.overview.unique_pages,
+    icon: Globe,
+    change: null
   },
   {
-    title: 'Total Actions',
-    value: props.analytics.overview.total_actions,
-    icon: 'activity',
-    change: '+8.1%',
-    changeText: 'from previous period'
+    title: 'Average Daily Visits',
+    value: props.analytics.overview.average_daily_visits,
+    icon: Activity,
+    change: null
   },
   {
-    title: 'Total Logins',
-    value: props.analytics.overview.total_logins,
-    icon: 'log-in',
-    change: '+3.2%',
-    changeText: 'from previous period'
+    title: 'Top Country',
+    value: `${props.analytics.overview.top_country} (${props.analytics.overview.top_country_visits} visits)`,
+    icon: Globe,
+    change: null
   }
 ])
 
@@ -84,13 +92,12 @@ const updateTimeRange = async (value) => {
       timeRange: value
     })
     
-    // Update the analytics data
     props.analytics = response.data.analytics
     props.dateRange = response.data.dateRange
     
     toast({
       title: 'Time range updated',
-      description: 'The analytics data has been updated successfully.',
+      description: 'Analytics data has been refreshed successfully.',
     })
   } catch (error) {
     toast({
@@ -108,6 +115,14 @@ const formatDate = (date) => {
     day: '2-digit'
   })
 }
+
+const getTrendColor = (trend) => {
+  return trend === 'up' ? 'text-green-500' : 'text-red-500'
+}
+
+const getTrendIcon = (trend) => {
+  return trend === 'up' ? ArrowUp : ArrowDown
+}
 </script>
 
 <template>
@@ -124,10 +139,10 @@ const formatDate = (date) => {
         <!-- Main Content -->
         <div class="flex-1 flex flex-col overflow-hidden">
           <!-- Top Header -->
-          <header class="bg-card border-b border-border">
-            <div class="px-4 py-3 flex justify-between items-center">
+          <header class="bg-card border-b border-border sticky top-0 z-10">
+            <div class="px-6 py-4 flex justify-between items-center">
               <div class="flex items-center space-x-4">
-                <h1 class="text-xl font-semibold">User Monitoring Analytics</h1>
+                <h1 class="text-2xl font-bold tracking-tight">Analytics Dashboard</h1>
               </div>
               <div class="flex items-center space-x-4">
                 <Search />
@@ -139,102 +154,150 @@ const formatDate = (date) => {
 
           <!-- Main Content Area -->
           <main class="flex-1 overflow-x-hidden overflow-y-auto bg-background">
-            <div class="container mx-auto p-6">
+            <div class="container mx-auto p-6 space-y-8">
               <!-- Header with Actions -->
-              <div class="mb-8 space-y-4">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <h1 class="text-3xl font-bold tracking-tight">Analytics Overview</h1>
-                    <p class="text-muted-foreground">
-                      {{ formatDate(dateRange.start) }} - {{ formatDate(dateRange.end) }}
-                    </p>
-                  </div>
-                  <div class="flex items-center gap-4">
-                    <Select v-model="selectedTimeRange" @update:modelValue="updateTimeRange">
-                      <SelectTrigger class="w-[180px]">
-                        <SelectValue :placeholder="timeRangeOptions.find(o => o.value === selectedTimeRange)?.label" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem v-for="option in timeRangeOptions" 
-                                  :key="option.value" 
-                                  :value="option.value">
-                          {{ option.label }}
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <Button variant="outline">
-                      <i class="fa-regular fa-download mr-2"></i>
-                      Export Data
-                    </Button>
-                  </div>
+              <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                  <h2 class="text-3xl font-bold tracking-tight">Overview</h2>
+                  <p class="text-muted-foreground mt-1">
+                    {{ formatDate(dateRange.start) }} - {{ formatDate(dateRange.end) }}
+                  </p>
                 </div>
+                <div class="flex items-center gap-4">
+                  <Select v-model="selectedTimeRange" @update:modelValue="updateTimeRange">
+                    <SelectTrigger class="w-[180px]">
+                      <SelectValue :placeholder="timeRangeOptions.find(o => o.value === selectedTimeRange)?.label" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem v-for="option in timeRangeOptions" 
+                                :key="option.value" 
+                                :value="option.value">
+                        {{ option.label }}
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button variant="outline">
+                    <i class="fa-regular fa-download mr-2"></i>
+                    Export
+                  </Button>
+                </div>
+              </div>
 
-                <!-- Stats Cards -->
-                <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                  <Card v-for="stat in statsCards" :key="stat.title">
-                    <CardHeader class="flex flex-row items-center justify-between pb-2">
-                      <CardTitle class="text-sm font-medium">{{ stat.title }}</CardTitle>
-                      <i :class="`fa-solid fa-${stat.icon} text-muted-foreground`"></i>
-                    </CardHeader>
-                    <CardContent>
-                      <div class="text-2xl font-bold">{{ stat.value }}</div>
-                      <p class="text-xs text-muted-foreground">
-                        <span :class="stat.change.startsWith('+') ? 'text-green-500' : 'text-red-500'">
-                          {{ stat.change }}
-                        </span>
-                        {{ stat.changeText }}
-                      </p>
-                    </CardContent>
-                  </Card>
-                </div>
+              <!-- Stats Cards Grid -->
+              <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                <Card v-for="stat in statsCards" :key="stat.title">
+                  <CardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
+                    <CardTitle class="text-sm font-medium">{{ stat.title }}</CardTitle>
+                    <component :is="stat.icon" 
+                             class="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div class="text-2xl font-bold">{{ stat.value }}</div>
+                    <div v-if="stat.change !== null" 
+                         class="flex items-center text-xs mt-1">
+                      <component :is="getTrendIcon(stat.trend)"
+                               :class="[getTrendColor(stat.trend), 'mr-1 h-3 w-3']" />
+                      <span :class="getTrendColor(stat.trend)">
+                        {{ Math.abs(stat.change) }}% from previous period
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
 
               <!-- Analytics Content -->
-              <div class="grid gap-6 grid-cols-1 lg:grid-cols-7">
-                <!-- Visit Trends Chart -->
-                <div class="lg:col-span-4">
-                  <Overview 
-                    :data="analytics.visits"
-                    title="Visit Trends"
-                    description="User visits over time"
-                  />
+              <div class="grid gap-6">
+                <!-- Charts Row -->
+                <div class="grid gap-6 lg:grid-cols-7">
+                  <!-- Visit Trends Chart -->
+                  <Card class="lg:col-span-4">
+                    <CardHeader>
+                      <CardTitle>Visit Trends</CardTitle>
+                      <CardDescription>User visits over time</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <Overview 
+                        :data="analytics.visits"
+                        class="h-[350px]"
+                      />
+                    </CardContent>
+                  </Card>
+
+                  <!-- Top Pages -->
+                  <Card class="lg:col-span-3">
+                    <CardHeader>
+                      <CardTitle>Most Visited Pages</CardTitle>
+                      <CardDescription>Top pages by number of visits</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div class="space-y-4">
+                        <div v-for="page in analytics.topPages" 
+                             :key="page.url"
+                             class="flex items-center justify-between py-2">
+                          <div class="space-y-1">
+                            <p class="text-sm font-medium leading-none">
+                              {{ page.name || page.url }}
+                            </p>
+                            <p class="text-sm text-muted-foreground">
+                              {{ page.last_visit }}
+                            </p>
+                          </div>
+                          <div class="text-sm font-medium">{{ page.visits }} visits</div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
 
-                <!-- Top Pages -->
-                <div class="lg:col-span-3">
-                  <TopPagesCard 
-                    :data="analytics.topPages"
-                    title="Most Visited Pages"
-                    description="Top pages by number of visits"
-                  />
-                </div>
-              </div>
+                <!-- Location Stats -->
+                <Card v-if="analytics.geoip_status.working">
+                  <CardHeader>
+                    <CardTitle>Morocco Cities Distribution</CardTitle>
+                    <CardDescription>Visitor locations across Moroccan cities</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div class="grid gap-6 lg:grid-cols-2">
+                      <!-- Map Visualization would go here -->
+                      <div class="space-y-4">
+                        <div v-for="(stats, city) in analytics.location_analysis.visit_locations.filter(loc => loc.location.includes('Morocco'))" 
+                             :key="city"
+                             class="flex items-center justify-between">
+                          <div>
+                            <p class="font-medium">{{ stats.location.split(',')[0] }}</p>
+                            <p class="text-sm text-muted-foreground">
+                              {{ stats.coordinates.lat.toFixed(2) }}, {{ stats.coordinates.lng.toFixed(2) }}
+                            </p>
+                          </div>
+                          <div class="text-sm">
+                            {{ stats.count }} visits
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
 
-              <!-- User Activity Table -->
-              <div class="mt-6">
+                <!-- Recent Activity -->
                 <Card>
                   <CardHeader>
-                    <CardTitle>Recent User Activity</CardTitle>
+                    <CardTitle>Recent Activity</CardTitle>
+                    <CardDescription>Latest user interactions</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div class="relative overflow-x-auto">
-                      <table class="w-full text-sm text-left">
+                      <table class="w-full text-sm">
                         <thead class="text-xs uppercase bg-muted">
                           <tr>
-                            <th scope="col" class="px-6 py-3">User</th>
-                            <th scope="col" class="px-6 py-3">Page</th>
-                            <th scope="col" class="px-6 py-3">Method</th>
-                            <th scope="col" class="px-6 py-3">IP</th>
-                            <th scope="col" class="px-6 py-3">Time</th>
+                            <th class="px-6 py-3 text-left">Page</th>
+                            <th class="px-6 py-3 text-left">Method</th>
+                            <th class="px-6 py-3 text-left">IP</th>
+                            <th class="px-6 py-3 text-left">Time</th>
                           </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="divide-y divide-border">
                           <tr v-for="activity in analytics.userActivity" 
-                              :key="activity.id"
-                              class="border-b">
-                            <td class="px-6 py-4">
-                              {{ activity.user?.name || 'Guest' }}
-                            </td>
+                              :key="activity.url + activity.created_at"
+                              class="bg-card">
                             <td class="px-6 py-4">{{ activity.url }}</td>
                             <td class="px-6 py-4">{{ activity.method }}</td>
                             <td class="px-6 py-4">{{ activity.ip }}</td>

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PageVisit extends Model
 {
@@ -19,7 +20,18 @@ class PageVisit extends Model
         'route_name',
         'visit_count',
         'last_visit_at',
-        'metadata'
+        'metadata',
+        'ip',
+        'country',
+        'city',
+        'latitude',
+        'longitude',
+        'timezone',
+        'currency',
+        'browser_name',
+        'platform',
+        'device',
+        'user_id'
     ];
 
     /**
@@ -30,7 +42,9 @@ class PageVisit extends Model
     protected $casts = [
         'metadata' => 'array',
         'last_visit_at' => 'datetime',
-        'visit_count' => 'integer'
+        'visit_count' => 'integer',
+        'latitude' => 'float',
+        'longitude' => 'float'
     ];
 
     /**
@@ -92,5 +106,10 @@ class PageVisit extends Model
             'most_visited' => static::mostVisited()->take(5)->get(),
             'recent_visits' => static::recent()->get()
         ];
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

@@ -6,9 +6,17 @@ use Binafy\LaravelUserMonitoring\Utills\Detector;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Services\GeoIPService;
 
 class VisitMonitoringMiddleware
 {
+    private GeoIPService $geoipService;
+
+    public function __construct(GeoIPService $geoipService)
+    {
+        $this->geoipService = $geoipService;
+    }
+
     /**
      * Handle monitor visiting.
      */
@@ -26,14 +34,22 @@ class VisitMonitoringMiddleware
         $exceptPages = config('user-monitoring.visit_monitoring.except_pages', []);
 
         if (empty($exceptPages) || !$this->checkIsExceptPages($request->path(), $exceptPages)) {
-            // Store visit
+            $ip = $request->ip();
+            $location = $this->geoipService->getLocation($ip);
+
             DB::table(config('user-monitoring.visit_monitoring.table'))->insert([
                 'user_id' => auth($guard)->id(),
                 'browser_name' => $detector->getBrowser(),
                 'platform' => $detector->getDevice(),
                 'device' => $detector->getDevice(),
-                'ip' => $request->ip(),
+                'ip' => $ip,
                 'page' => $request->url(),
+                'country' => $location['country'],
+                'city' => $location['city'],
+                'latitude' => $location['latitude'],
+                'longitude' => $location['longitude'],
+                'timezone' => $location['timezone'],
+                'currency' => $location['currency'],
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

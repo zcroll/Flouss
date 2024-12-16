@@ -8,6 +8,8 @@ use Inertia\Inertia;
 use App\Models\PageVisit;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Services\GeoIPService;
+use Illuminate\Support\Facades\Log;
 
 class AnalyticsController extends Controller
 {
@@ -18,12 +20,17 @@ class AnalyticsController extends Controller
         // Get date range based on selection
         $dates = $this->getDateRange($timeRange);
         
+        // Check if GeoIP service is working
+        $geoipStatus = $this->checkGeoIPStatus();
+        
         // Get analytics data
         $analyticsData = [
             'visits' => $this->getVisitsAnalytics($dates),
             'topPages' => $this->getTopPages($dates),
             'userActivity' => $this->getUserActivity($dates),
             'overview' => $this->getOverviewStats($dates),
+            'location_analysis' => $this->getLocationAnalytics($dates),
+            'geoip_status' => $geoipStatus
         ];
 
         return Inertia::render('Admin/Dashboard/Analytics/index', [
@@ -102,12 +109,91 @@ class AnalyticsController extends Controller
             ? (($totalVisits - $previousPeriodVisits) / $previousPeriodVisits) * 100 
             : 100;
 
+        $locationStats = PageVisit::withinDates($dates['start'], $dates['end'])
+            ->select('country')
+            ->selectRaw('COUNT(*) as visit_count')
+            ->groupBy('country')
+            ->orderByDesc('visit_count')
+            ->limit(1)
+            ->first();
+
         return [
             'total_visits' => $totalVisits,
             'unique_pages' => PageVisit::withinDates($dates['start'], $dates['end'])->count(),
             'percent_change' => round($percentChange, 1),
-            'average_daily_visits' => round($totalVisits / max(1, Carbon::parse($dates['start'])->diffInDays($dates['end'])))
+            'average_daily_visits' => round($totalVisits / max(1, Carbon::parse($dates['start'])->diffInDays($dates['end']))),
+            'top_country' => $locationStats?->country ?? 'Unknown',
+            'top_country_visits' => $locationStats?->visit_count ?? 0
         ];
+    }
+
+    private function checkGeoIPStatus(): array
+    {
+        try {
+            $geoip = app(GeoIPService::class);
+            return $geoip->checkStatus();
+        } catch (\Exception $e) {
+            Log::error('GeoIP Status Check Failed:', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return [
+                'working' => false,
+                'message' => 'Service error: ' . $e->getMessage(),
+                'api_key_valid' => false,
+                'test_location' => null
+            ];
+        }
+    }
+
+    private function getLocationAnalytics($dates): array
+    {
+        try {
+            $visits = PageVisit::withinDates($dates['start'], $dates['end'])
+                ->select('country', 'city', 'latitude', 'longitude')
+                ->selectRaw('COUNT(*) as visit_count')
+                ->groupBy('country', 'city', 'latitude', 'longitude')
+                ->orderByDesc('visit_count')
+                ->get();
+
+            \Log::info('Location Analytics Query Result:', [
+                'total_visits' => $visits->count(),
+                'unique_locations' => $visits->pluck('city', 'country')->toArray()
+            ]);
+
+            $countryStats = $visits->groupBy('country')
+                ->map(fn($group) => [
+                    'visits' => $group->sum('visit_count'),
+                    'cities' => $group->count(),
+                    'recent_cities' => $group->take(3)->pluck('city'),
+                    'percent_total' => round(($group->sum('visit_count') / $visits->sum('visit_count')) * 100, 1)
+                ])
+                ->sortByDesc('visits');
+
+            return [
+                'top_countries' => $countryStats->take(10),
+                'visit_locations' => $visits->take(10)->map(fn($visit) => [
+                    'location' => "{$visit->city}, {$visit->country}",
+                    'coordinates' => [
+                        'lat' => $visit->latitude,
+                        'lng' => $visit->longitude
+                    ],
+                    'count' => $visit->visit_count,
+                    'last_visit' => $visit->last_visit_at?->diffForHumans()
+                ]),
+                'total_countries' => $countryStats->count(),
+                'total_cities' => $visits->count()
+            ];
+        } catch (\Exception $e) {
+            \Log::error('Error getting location analytics: ' . $e->getMessage());
+            return [
+                'top_countries' => [],
+                'visit_locations' => [],
+                'total_countries' => 0,
+                'total_cities' => 0
+            ];
+        }
     }
 
     public function updateTimeRange(Request $request)

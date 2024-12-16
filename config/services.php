@@ -46,4 +46,8 @@ return [
         'organization' => env('OPENAI_ORGANIZATION'),
     ],
 
+    'ipgeolocation' => [
+        'key' => env('IPGEOLOCATION_KEY'),
+    ],
+
 ];

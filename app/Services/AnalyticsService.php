@@ -20,6 +20,7 @@ readonly class AnalyticsService
                 'most_visited_pages' => $this->getMostVisitedPages($startDate, $endDate),
                 'visit_trends' => $this->getVisitTrends($startDate, $endDate),
                 'time_analysis' => $this->getTimeAnalysis($startDate, $endDate),
+                'location_analysis' => $this->getLocationAnalytics($startDate, $endDate),
             ]
         );
     }
@@ -104,6 +105,35 @@ readonly class AnalyticsService
             'current_week' => $currentWeekVisits,
             'previous_week' => $previousWeekVisits,
             'percentage_change' => $percentageChange
+        ];
+    }
+
+    private function getLocationAnalytics(Carbon $startDate, Carbon $endDate): array
+    {
+        $visits = PageVisit::withinPeriod($startDate, $endDate)
+            ->select('country', 'city')
+            ->selectRaw('COUNT(*) as visit_count')
+            ->groupBy('country', 'city')
+            ->orderByDesc('visit_count')
+            ->get();
+
+        $countryStats = $visits->groupBy('country')
+            ->map(fn($group) => [
+                'visits' => $group->sum('visit_count'),
+                'cities' => $group->count(),
+                'recent_cities' => $group->take(3)->pluck('city'),
+                'percent_total' => round(($group->sum('visit_count') / $visits->sum('visit_count')) * 100, 1)
+            ])
+            ->sortByDesc('visits');
+
+        return [
+            'top_countries' => $countryStats->take(10),
+            'visit_locations' => $visits->take(10)->map(fn($visit) => [
+                'location' => "{$visit->city}, {$visit->country}",
+                'count' => $visit->visit_count
+            ]),
+            'total_countries' => $countryStats->count(),
+            'total_cities' => $visits->count()
         ];
     }
 } 
