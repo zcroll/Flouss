@@ -34,6 +34,7 @@ import ThemeSwitch from '@/Components/ADMIN/themeSwitch.vue'
 import SideBar from '@/Pages/Admin/SideBar.vue'
 import ThemeProvider from '@/Components/ADMIN/ThemeProvider.vue'
 import { useToast } from '@/Components/ui/toast/use-toast'
+import Cities from '@/Components/ADMIN/Analytics/Cities.vue'
 
 const props = defineProps({
   analytics: {
@@ -42,6 +43,18 @@ const props = defineProps({
   },
   dateRange: {
     type: Object,
+    required: true
+  },
+  cities: {
+    type: Array,
+    required: true
+  },
+  totalVisits: {
+    type: Number,
+    required: true
+  },
+  totalCities: {
+    type: Number,
     required: true
   }
 })
@@ -55,6 +68,11 @@ const timeRangeOptions = [
   { value: 'thisMonth', label: 'This Month' },
   { value: 'lastMonth', label: 'Last Month' },
 ]
+console.log({
+  cities: props.cities,
+  totalVisits: props.totalVisits,
+  totalCities: props.totalCities
+})
 
 const selectedTimeRange = ref('last7days')
 
@@ -308,6 +326,12 @@ const getTrendIcon = (trend) => {
                     </div>
                   </CardContent>
                 </Card>
+
+                <Cities 
+                  :cities="cities"
+                  :total-visits="totalVisits"
+                  :total-cities="totalCities"
+                />
               </div>
             </div>
           </main>

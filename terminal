@@ -1,0 +1,21 @@
+# Create the directory structure if it doesn't exist
+mkdir -p ~/.vscode-server/data/User/globalStorage/laravel.vscode-laravel/file-downloader-downloads/
+
+# Navigate to the directory
+cd ~/.vscode-server/data/User/globalStorage/laravel.vscode-laravel/file-downloader-downloads/
+
+# Download the Linux x86_64 binary
+wget "https://github.com/SamuelNitsche/vs-code-php-parser-cli/releases/download/0.1.9/php-parser-0.1.9-x86_64-Linux" -O php-parser-0.1.6
+
+# Make it executable
+chmod +x php-parser-0.1.6
+
+# Verify the binary works
+./php-parser-0.1.6 --version
+
+# Install PHP extensions
+sudo pacman -S php-sqlite php-pgsql php-gd php-intl php-xdebug
+
+# Clear the VS Code extension cache
+rm -rf ~/.vscode-server/data/User/globalStorage/laravel.vscode-laravel/*
+rm -rf ~/.vscode/extensions/laravel.vscode-laravel-*

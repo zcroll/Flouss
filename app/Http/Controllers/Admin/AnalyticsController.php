@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Services\GeoIPService;
 use Illuminate\Support\Facades\Log;
+use App\Models\IPLocation;
 
 class AnalyticsController extends Controller
 {
@@ -33,12 +34,43 @@ class AnalyticsController extends Controller
             'geoip_status' => $geoipStatus
         ];
 
+        $visits = IPLocation::select(
+            'city',
+            'country_name as country',
+            'latitude', 
+            'longitude',
+            DB::raw('COUNT(*) as visit_count'),
+            DB::raw('ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC) as rank')
+        )
+        ->whereNotNull('city')
+        ->groupBy('city', 'country_name', 'latitude', 'longitude')
+        ->orderBy('visit_count', 'desc')
+        ->get();
+
+        $citiesData = [
+            'cities' => $visits->map(fn($visit) => [
+                'rank' => $visit->rank,
+                'city' => $visit->city,
+                'country' => $visit->country,
+                'coordinates' => [
+                    'lat' => $visit->latitude,
+                    'lng' => $visit->longitude
+                ],
+                'visitCount' => $visit->visit_count
+            ]),
+            'totalVisits' => $visits->sum('visit_count'),
+            'totalCities' => $visits->count()
+        ];
+
         return Inertia::render('Admin/Dashboard/Analytics/index', [
             'analytics' => $analyticsData,
             'dateRange' => [
                 'start' => $dates['start']->format('Y-m-d'),
                 'end' => $dates['end']->format('Y-m-d'),
             ],
+            'cities' => $citiesData['cities'],
+            'totalVisits' => $citiesData['totalVisits'],
+            'totalCities' => $citiesData['totalCities']
         ]);
     }
 
@@ -131,6 +163,7 @@ class AnalyticsController extends Controller
     {
         try {
             $geoip = app(GeoIPService::class);
+            ds(['testing geoip', $geoip->checkStatus()]);
             return $geoip->checkStatus();
         } catch (\Exception $e) {
             Log::error('GeoIP Status Check Failed:', [
@@ -216,5 +249,65 @@ class AnalyticsController extends Controller
                 'end' => $dates['end']->format('Y-m-d'),
             ],
         ]);
+    }
+
+
+
+    public function MostVisitedCities()
+    {
+        try {
+            $visits = IPLocation::select(
+                'city',
+                'country_name as country', 
+                'latitude',
+                'longitude',
+                DB::raw('COUNT(*) as visit_count'),
+                DB::raw('ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC) as rank')
+            )
+            ->whereNotNull('city')
+            ->groupBy('city', 'country_name', 'latitude', 'longitude')
+            ->orderBy('visit_count', 'desc')
+            ->get();
+
+            ds([
+                'cities' => $visits->map(fn($visit) => [
+                    'rank' => $visit->rank,
+                    'city' => $visit->city,
+                    'country' => $visit->country,
+                    'coordinates' => [
+                        'lat' => $visit->latitude,
+                        'lng' => $visit->longitude
+                    ],
+                    'visitCount' => $visit->visit_count
+                ]),
+                'totalVisits' => $visits->sum('visit_count'),
+                'totalCities' => $visits->count()
+            ]);
+
+
+
+            return Inertia::render('Admin/Analytics/Cities', [
+                'cities' => $visits->map(fn($visit) => [
+                    'rank' => $visit->rank,
+                    'city' => $visit->city,
+                    'country' => $visit->country,
+                    'state_prov' => $visit->state_prov,
+                    'coordinates' => [
+                        'lat' => $visit->latitude,
+                        'lng' => $visit->longitude
+                    ],
+                    'visitCount' => $visit->visit_count
+                ]),
+                'totalVisits' => $visits->sum('visit_count'),
+                'totalCities' => $visits->count()
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error getting city analytics: ' . $e->getMessage());
+            return Inertia::render('Admin/Analytics/Cities', [
+                'cities' => [],
+                'totalVisits' => 0,
+                'totalCities' => 0
+            ]);
+        }
     }
 } 

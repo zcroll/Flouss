@@ -35,7 +35,8 @@ class IPLocation extends Model
         'organization',
         'country_emoji',
         'currency_data',
-        'timezone_data'
+        'timezone_data',
+        'expires_at'
     ];
 
     protected $casts = [
@@ -43,6 +44,11 @@ class IPLocation extends Model
         'latitude' => 'float',
         'longitude' => 'float',
         'currency_data' => 'array',
-        'timezone_data' => 'array'
+        'timezone_data' => 'array',
+        'expires_at' => 'datetime'
+    ];
+
+    protected $dates = [
+        'expires_at'
     ];
 } 

@@ -9,34 +9,89 @@ readonly class GeoIPService
 {
     // Moroccan Test IPs with verified locations
     private const MOROCCAN_TEST_IPS = [
-        'marrakesh' => '105.158.107.135',  // Marrakesh, verified working
-        'casablanca' => '105.158.106.23',  // Casablanca region
-        'rabat' => '105.157.3.214',        // Rabat region
-        'tangier' => '196.217.12.241',     // Tangier region
-        'agadir' => '105.157.96.120'       // Agadir region
+        'marrakesh' => [
+            '105.158.107.135',  // Marrakesh, verified working
+            '105.158.107.136',  // Marrakesh area
+            '105.158.107.137'   // Marrakesh area
+        ],
+        'casablanca' => [
+            '105.158.106.23',   // Casablanca region
+            '105.158.106.24',   // Casablanca center
+            '105.158.106.25'    // Casablanca port area
+        ],
+        'rabat' => [
+            '105.157.3.214',    // Rabat region
+            '105.157.3.215',    // Rabat center
+            '105.157.3.216'     // Rabat coast
+        ],
+        'tangier' => [
+            '196.217.12.241',   // Tangier region
+            '196.217.12.242',   // Tangier port
+            '196.217.12.243'    // Tangier medina
+        ],
+        'agadir' => [
+            '105.157.96.120',   // Agadir region
+            '105.157.96.121',   // Agadir beach
+            '105.157.96.122'    // Agadir center
+        ],
+        'fes' => [
+            '105.157.200.100',  // Fes region
+            '105.157.200.101'   // Fes medina
+        ]
     ];
-    
-    private const DEFAULT_LOCATION = [
-        'country' => 'Morocco',
-        'city' => 'Marrakesh',
-        'latitude' => 31.62252,
-        'longitude' => -7.98983,
-        'timezone' => 'Africa/Casablanca',
-        'currency' => 'MAD',
-        'success' => true
-    ];
+
+    private function storeLocationData(array $data): array
+    {
+        return \App\Models\IPLocation::updateOrCreate(
+            ['ip' => $data['ip']],
+            [
+                'continent_code' => $data['continent_code'],
+                'continent_name' => $data['continent_name'],
+                'country_code2' => $data['country_code2'],
+                'country_code3' => $data['country_code3'],
+                'country_name' => $data['country_name'],
+                'country_name_official' => $data['country_name_official'],
+                'country_capital' => $data['country_capital'],
+                'state_prov' => $data['state_prov'],
+                'state_code' => $data['state_code'],
+                'district' => $data['district'],
+                'city' => $data['city'],
+                'zipcode' => $data['zipcode'],
+                'latitude' => $data['latitude'],
+                'longitude' => $data['longitude'],
+                'is_eu' => $data['is_eu'],
+                'calling_code' => $data['calling_code'],
+                'country_tld' => $data['country_tld'],
+                'languages' => $data['languages'],
+                'country_flag' => $data['country_flag'],
+                'geoname_id' => $data['geoname_id'],
+                'isp' => $data['isp'],
+                'connection_type' => $data['connection_type'],
+                'organization' => $data['organization'],
+                'country_emoji' => $data['country_emoji'],
+                'currency_data' => $data['currency'],
+                'timezone_data' => $data['time_zone'],
+                'expires_at' => now()->addDays(7)
+            ]
+        )->toArray();
+    }
 
     public function getLocation(?string $ip = null): array
     {
         try {
-            // Handle null IP or local IP
             if (!$ip || $this->isLocalIP($ip)) {
-                $ip = self::MOROCCAN_TEST_IPS['marrakesh'];
-                Log::info('Using test IP for local/null IP', ['ip' => $ip]);
+                $ip = $this->getRandomMoroccanIP();
+                Log::info('Using random test IP for local/null IP', ['ip' => $ip]);
             }
 
             // Check if we have cached data in database
-            $cachedLocation = \App\Models\IPLocation::where('ip', $ip)->first();
+            $cachedLocation = \App\Models\IPLocation::where('ip', $ip)
+                ->where(function($query) {
+                    $query->whereNull('expires_at')
+                          ->orWhere('expires_at', '>', now());
+                })
+                ->first();
+                
             if ($cachedLocation) {
                 return $this->formatLocationResponse($cachedLocation);
             }
@@ -52,39 +107,8 @@ readonly class GeoIPService
 
             if ($response->successful()) {
                 $data = $response->json();
-                
-                // Store the data
-                \App\Models\IPLocation::create([
-                    'ip' => $data['ip'],
-                    'continent_code' => $data['continent_code'],
-                    'continent_name' => $data['continent_name'],
-                    'country_code2' => $data['country_code2'],
-                    'country_code3' => $data['country_code3'],
-                    'country_name' => $data['country_name'],
-                    'country_name_official' => $data['country_name_official'],
-                    'country_capital' => $data['country_capital'],
-                    'state_prov' => $data['state_prov'],
-                    'state_code' => $data['state_code'],
-                    'district' => $data['district'],
-                    'city' => $data['city'],
-                    'zipcode' => $data['zipcode'],
-                    'latitude' => $data['latitude'],
-                    'longitude' => $data['longitude'],
-                    'is_eu' => $data['is_eu'],
-                    'calling_code' => $data['calling_code'],
-                    'country_tld' => $data['country_tld'],
-                    'languages' => $data['languages'],
-                    'country_flag' => $data['country_flag'],
-                    'geoname_id' => $data['geoname_id'],
-                    'isp' => $data['isp'],
-                    'connection_type' => $data['connection_type'],
-                    'organization' => $data['organization'],
-                    'country_emoji' => $data['country_emoji'],
-                    'currency_data' => $data['currency'],
-                    'timezone_data' => $data['time_zone']
-                ]);
-
-                return $this->formatLocationResponse($data);
+                $storedData = $this->storeLocationData($data);
+                return $this->formatLocationResponse($storedData);
             }
 
             Log::warning('IPGeolocation request failed', [
@@ -93,7 +117,7 @@ readonly class GeoIPService
                 'response' => $response->json()
             ]);
 
-            return self::DEFAULT_LOCATION;
+            throw new \Exception('Failed to get location data');
 
         } catch (\Exception $e) {
             Log::error('IPGeolocation Error:', [
@@ -101,7 +125,7 @@ readonly class GeoIPService
                 'error' => $e->getMessage()
             ]);
 
-            return self::DEFAULT_LOCATION;
+            throw $e;
         }
     }
 
@@ -145,21 +169,23 @@ readonly class GeoIPService
                 ];
             }
 
-            // Test with our verified Marrakesh IP
+            $testIp = $this->getRandomMoroccanIP();
             $response = Http::timeout(5)
                 ->retry(3, 100)
                 ->get('https://api.ipgeolocation.io/ipgeo', [
                     'apiKey' => $apiKey,
-                    'ip' => self::MOROCCAN_TEST_IPS['marrakesh']
+                    'ip' => $testIp
                 ]);
 
             if ($response->successful()) {
                 $data = $response->json();
+                $storedData = $this->storeLocationData($data);
+
                 return [
                     'working' => true,
-                    'message' => "API Working - Test location: {$data['city']}, {$data['country_name']} (ISP: {$data['isp']})",
+                    'message' => "API Working - Test location: {$storedData['city']}, {$storedData['country_name']} (ISP: {$storedData['isp']})",
                     'api_key_valid' => true,
-                    'test_data' => $data
+                    'test_data' => $storedData
                 ];
             }
 
@@ -190,6 +216,8 @@ readonly class GeoIPService
 
     public function getRandomMoroccanIP(): string
     {
-        return self::MOROCCAN_TEST_IPS[array_rand(self::MOROCCAN_TEST_IPS)];
+        $city = array_rand(self::MOROCCAN_TEST_IPS);
+        $cityIps = self::MOROCCAN_TEST_IPS[$city];
+        return $cityIps[array_rand($cityIps)];
     }
-} 
+}
