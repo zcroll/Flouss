@@ -7,9 +7,7 @@
           <div class="lg:col-span-1">
             <FilterFormation
               :filters="filters"
-              :etablissements="availableFilters.etablissements"
-              :diplomas="availableFilters.diplomas"
-              :disciplines="availableFilters.disciplines"
+              :filter-options="filterOptions"
               @update:filters="updateFilters"
             />
           </div>
@@ -141,41 +139,19 @@ const props = defineProps({
     type: Object,
     required: true,
     default: () => ({})
+  },
+  filterOptions: {
+    type: Object,
+    required: true,
+    default: () => ({
+      etablissements: [],
+      diplomas: [],
+      disciplines: []
+    })
   }
 });
 
 const viewMode = ref('grid');
-
-// Compute available filter options from current formations data
-const availableFilters = computed(() => {
-  const values = {
-    etablissements: new Set(),
-    disciplines: new Set(),
-    diplomas: new Set()
-  };
-
-  // Extract unique values from current formations
-  props.formations.data.forEach(formation => {
-    if (formation.type_etablissement) {
-      values.etablissements.add(formation.type_etablissement);
-    }
-    if (formation.discipline) {
-      values.disciplines.add(formation.discipline);
-    }
-    if (formation.diploma) {
-      values.diplomas.add(formation.diploma);
-    }
-  });
-
-  // Convert to sorted arrays and format as needed
-  return {
-    etablissements: Array.from(values.etablissements)
-      .sort()
-      .map(value => ({ id: value, nom: value })),
-    disciplines: Array.from(values.disciplines).sort(),
-    diplomas: Array.from(values.diplomas).sort()
-  };
-});
 
 // Handle filter updates
 const updateFilters = (newFilters) => {

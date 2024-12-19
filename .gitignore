@@ -21,3 +21,14 @@ yarn-error.log
 
 .vemto_settings
 .aider*
+
+# Yarn
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+yarn-debug.log*
+yarn-error.log*

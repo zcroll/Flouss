@@ -24,13 +24,16 @@ class DashboardController extends Controller
                 throw new \Exception('User not found');
             }
 
+            $locale = app()->getLocale();
+            $nameColumn = $locale === 'fr' ? 'name_fr' : 'name';
+
             $favoriteJobs = DB::table('favorites')
                 ->where('favorites.user_id', $user->id)
                 ->where('favorites.favoritable_type', 'App\Models\JobInfo')
                 ->join('job_infos', 'favorites.favoritable_id', '=', 'job_infos.id')
                 ->select([
                     'favorites.id',
-                    'job_infos.name',
+                    DB::raw("COALESCE(job_infos.{$nameColumn}, job_infos.name) as name"),
                     'job_infos.slug',
                     'job_infos.image'
                 ])
@@ -43,7 +46,7 @@ class DashboardController extends Controller
                 ->join('degrees', 'favorites.favoritable_id', '=', 'degrees.id')
                 ->select([
                     'favorites.id',
-                    'degrees.name',
+                    DB::raw("COALESCE(degrees.{$nameColumn}, degrees.name) as name"),
                     'degrees.image'
                 ])
                 ->get();
@@ -78,19 +81,7 @@ class DashboardController extends Controller
 
              
 
-                // if (!empty($result->jobs)) {
-                //     $decodedJobs = json_decode($result->jobs, true, 512, JSON_THROW_ON_ERROR);
-                    
-                //     if (isset($decodedJobs['job_matches'])) {
-                //         $jobsCollection = collect($decodedJobs['job_matches']);
-                //         $jobIds = $jobsCollection->pluck('job_id')->toArray();
-
-                //         $topJobs = JobInfo::whereIn('id', $jobIds)
-                //             ->select('id', 'name', 'slug', 'image')
-                //             ->limit(6)
-                //             ->get();
-                //     }
-                // }
+             
             }
 
             $chatHistory = ChatHistory::where('user_id', $user->id)
@@ -162,52 +153,52 @@ ds(['archetype'=>$archetypeDiscovery]);
     }
 
     // Add a test method to trigger different messages
-    public function testMessages()
-    {
-        // Test different types of messages
-        return redirect()->route('dashboard')
-            ->with('success', 'This is a success message!')
-            ->with('error', 'This is an error message!')
-            ->with('message', 'This is an info message!');
-    }
+    // public function testMessages()
+    // {
+    //     // Test different types of messages
+    //     return redirect()->route('dashboard')
+    //         ->with('success', 'This is a success message!')
+    //         ->with('error', 'This is an error message!')
+    //         ->with('message', 'This is an info message!');
+    // }
 
-    public function testFetch()
-    {
-        try {
-            // Simulate different scenarios
-            $scenario = request('scenario', 'success');
+    // public function testFetch()
+    // {
+    //     try {
+    //         // Simulate different scenarios
+    //         $scenario = request('scenario', 'success');
             
-            switch ($scenario) {
-                case 'error':
-                    throw new \Exception('Failed to fetch data');
+    //         switch ($scenario) {
+    //             case 'error':
+    //                 throw new \Exception('Failed to fetch data');
                     
-                case 'unauthorized':
-                    abort(403, 'You are not authorized to access this resource');
+    //             case 'unauthorized':
+    //                 abort(403, 'You are not authorized to access this resource');
                     
-                case 'not_found':
-                    abort(404, 'Resource not found');
+    //             case 'not_found':
+    //                 abort(404, 'Resource not found');
                     
-                case 'validation':
-                    return back()->withErrors([
-                        'field' => 'Invalid input'
-                    ])->with('error', 'Validation failed');
+    //             case 'validation':
+    //                 return back()->withErrors([
+    //                     'field' => 'Invalid input'
+    //                 ])->with('error', 'Validation failed');
                     
-                default:
-                    // Return success response through Inertia
-                    return Inertia::render('Dashboard', [
-                        'testData' => [
-                            'status' => 'success',
-                            'message' => 'Data fetched successfully',
-                            'data' => [
-                                'id' => 1,
-                                'name' => 'Test Data',
-                                'timestamp' => now()->toDateTimeString()
-                            ]
-                        ]
-                    ])->with('success', 'Data fetched successfully');
-            }
-        } catch (\Exception $e) {
-            return back()->with('error', $e->getMessage());
-        }
-    }
+    //             default:
+    //                 // Return success response through Inertia
+    //                 return Inertia::render('Dashboard', [
+    //                     'testData' => [
+    //                         'status' => 'success',
+    //                         'message' => 'Data fetched successfully',
+    //                         'data' => [
+    //                             'id' => 1,
+    //                             'name' => 'Test Data',
+    //                             'timestamp' => now()->toDateTimeString()
+    //                         ]
+    //                     ]
+    //                 ])->with('success', 'Data fetched successfully');
+    //         }
+    //     } catch (\Exception $e) {
+    //         return back()->with('error', $e->getMessage());
+    //     }
+    // }
 }

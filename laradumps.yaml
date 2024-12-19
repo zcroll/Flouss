@@ -8,11 +8,11 @@ app:
 config:
   sleep: 0
 observers:
-  auto_invoke_app: true
+  auto_invoke_app: false
   enabled_in_testing: false
   dump: false
   original_dump: false
-  queries: false
+  queries: true
   slow_queries: false
   mail: false
   logs: false
