@@ -29,12 +29,7 @@
       </svg>
 
       <!-- Text -->
-      <span 
-        v-if="!isOpen" 
-        class="font-medium text-sm whitespace-nowrap transition-opacity duration-200 opacity-100 group-hover:opacity-90"
-      >
-        {{ __('dashboard.ai_career_guide') }}
-      </span>
+
     </button>
 
     <!-- Desktop Chat Window -->
