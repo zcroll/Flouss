@@ -53,10 +53,10 @@
                       <p>Lead in text: {{ currentTestData?.lead_in_text }}</p>
                       <p>Current item: {{ currentItem?.id }}</p>
                     </div> -->
-
+<!-- 
                     <section class="Assessment__ItemSetLeadIn" v-if="!isComplete">
                         {{ currentTestData?.lead_in_text }}
-                    </section>
+                    </section> -->
 
                     <div class="Assessment__scroll-container">
                         <div v-if="!isComplete && currentItem?.id">

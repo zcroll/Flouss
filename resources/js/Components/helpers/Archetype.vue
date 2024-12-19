@@ -115,8 +115,6 @@ const shareDiscovery = () => {
 </script>
 <style scoped>
 
-@import url('https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/assessments.ba16abcb0f5b.css');
-
 .dialog-element {
   transform: scale(0.9);
   font-family: 'Quicksand', sans-serif;

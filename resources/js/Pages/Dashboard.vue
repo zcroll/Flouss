@@ -1,7 +1,7 @@
 <template>
   <AppLayout title="dashboard" >
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4">
-      <div class="flex flex-wrap gap-4 mb-6">
+      <!-- <div class="flex flex-wrap gap-4 mb-6">
         <button
           @click="testError"
           class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
@@ -53,7 +53,7 @@
             Test Validation Error
           </button>
         </div>
-      </div>
+      </div> -->
 
       <div v-if="testData" class="bg-white p-4 rounded-lg shadow mb-6">
         <h3 class="text-lg font-semibold mb-2">Test Response Data:</h3>
@@ -90,20 +90,17 @@
           />
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <AssessmentResults 
-            :hasResult="hasResult"
-            :archetype="archetype"
-            :topTraits="topTraits"
-            :parsed-scales="parsedScales"
-            class="lg:col-span-2"
-          />
-          
-          <AIChat
-            :predefined-questions="predefinedQuestions"
-            :initial-messages="chatHistory"
-          />
-        </div>
+        <AssessmentResults 
+          :hasResult="hasResult"
+          :archetype="archetype"
+          :topTraits="topTraits"
+          :parsed-scales="parsedScales"
+        />
+
+        <AIChat
+          :predefined-questions="predefinedQuestions"
+          :initial-messages="chatHistory"
+        />
       </div>
     </div>
   </AppLayout>
