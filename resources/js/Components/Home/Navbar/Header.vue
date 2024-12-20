@@ -114,6 +114,7 @@ onBeforeUnmount(() => {
                             :href="route('holland-codes.index')"
                             class="mt-4 px-4 py-2 bg-primary text-white rounded-lg text-center hover:bg-primary/90 transition-colors duration-200 flex items-center justify-center gap-3"
                             @click="isOpen = false"
+                            v-show="!$page.props.auth.user"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -155,7 +156,7 @@ onBeforeUnmount(() => {
                 </template>
             </div>
 
-            <Link :href="route('holland-codes.index')" class="GlobalNav-button GlobalNav-button--main alans-butt--grey">
+            <Link v-show="!$page.props.auth.user" :href="route('holland-codes.index')" class="GlobalNav-button GlobalNav-button--main alans-butt--grey">
                 {{ __('navigation.take_test') }}
             </Link>
         </nav>

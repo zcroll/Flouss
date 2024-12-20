@@ -90,7 +90,7 @@ onMounted(() => {
         <p class="CareerTest__header__description">
           {{ __('career-test.description') }}
         </p>
-        <Link :href="route('main-test')" class="alans-butt--large alans-butt--grey CareerTest__header__button" data-track="mixpanel" data-target="Start the career test">{{ __('career-test.start_test') }}</Link>
+        <Link :href="route('holland-codes.index')" class="alans-butt--large alans-butt--grey CareerTest__header__button" data-track="mixpanel" data-target="Start the career test">{{ __('career-test.start_test') }}</Link>
 
         <section class="CareerTest__header__stats">
           <h2 class="CareerTest__header__stats__heading">{{ __('career-test.by_the_numbers') }}</h2>

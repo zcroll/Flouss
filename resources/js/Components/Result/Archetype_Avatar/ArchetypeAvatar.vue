@@ -30,54 +30,45 @@ let dotLottieInstance = null;
 
 // Map archetypes to their corresponding animation files
 const animationMapping = {
-    // Advocate animation group (Blue theme)
-    // Advocate animation group
+
+
+
+    'caregiver': 'defender',
+    'designer': 'executive',
+    'guardian': 'consul',
+    'mentor': 'consul',
+    'producer': 'logistician',
+    'protector': 'defender',
+    'scholar': 'logistician',
+
+
     'advocat': 'advocate',
-    'humanitarian': 'mediator',
-    'mentor': 'advocate',
-    'supporter': 'consul',
-    'caregiver': 'advocate',
-    'protector': 'protagonist',
-    
-    // Architect animation group
-    'architect': 'architect', 
-    'mastermind': 'architect',
-    'researcher': 'campaigner',
-    'technician': 'architect',
-    'builder': 'virtuoso',
-    'groundbreaker': 'architect',
-    
-    // Commander animation group
+    'anchor': 'protagonist',
     'captain': 'protagonist',
+    'composer': 'advocate',
+    'humanitarian': 'mediator',
     'kingpin': 'protagonist',
-    'strategist': 'commander',
-    'anchor': 'commander',
-    
-    // Adventurer animation group
-    'explorer': 'adventurer',
-    'maverick': 'debater',
-    
-    // Entertainer animation group
-    'composer': 'entertainer',
-    'designer': 'entertainer',
-    'creator': 'entertainer',
-    
-    // Entrepreneur animation group
-    'producer': 'adventurer',
+    'philosopher': 'advocate',
+    'supporter': 'campaigner',
+
+
+    'architect': 'architect',
+    'builder': 'virtuoso',
+    'explorer': 'campaigner',
+    'groundbreaker': 'commander',
+    'researcher': 'logician',
+    'strategist': 'architect',
+
+   
+    'creator': 'adventurer',
+    'enthusiast': 'entrepreneur',
     'innovator': 'entrepreneur',
+    'inventor': 'logistician',
     'luminary': 'entertainer',
-    
-    // Logician animation group
-    'philosopher': 'logistician',
-    'scholar': 'logician',
-    
-    // Protagonist animation group
-    'visionary': 'protagonist',
-    'enthusiast': 'protagonist',
-    
-    // Virtuoso animation group
-    'inventor': 'virtuoso',
-    'guardian': 'defender'
+    'mastermind': 'architect',
+    'maverick': 'debater',
+    'technician': 'virtuoso',
+    'visionary': 'debater'
 };
 
 const animationPath = computed(() => {
