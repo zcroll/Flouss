@@ -16,14 +16,16 @@ class AnalyticsController extends Controller
 {
     public function index()
     {
+
+        // getting time range selection from request
         $timeRange = request()->input('timeRange', 'last7days');
-        
+
         // Get date range based on selection
         $dates = $this->getDateRange($timeRange);
-        
+
         // Check if GeoIP service is working
         $geoipStatus = $this->checkGeoIPStatus();
-        
+
         // Get analytics data
         $analyticsData = [
             'visits' => $this->getVisitsAnalytics($dates),
@@ -37,7 +39,7 @@ class AnalyticsController extends Controller
         $visits = IPLocation::select(
             'city',
             'country_name as country',
-            'latitude', 
+            'latitude',
             'longitude',
             DB::raw('COUNT(*) as visit_count'),
             DB::raw('ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC) as rank')
@@ -77,7 +79,7 @@ class AnalyticsController extends Controller
     private function getDateRange($timeRange)
     {
         $end = Carbon::now();
-        
+
         $start = match($timeRange) {
             'today' => Carbon::today(),
             'yesterday' => Carbon::yesterday(),
@@ -136,9 +138,9 @@ class AnalyticsController extends Controller
         $totalVisits = PageVisit::withinDates($dates['start'], $dates['end'])->sum('visit_count');
         $previousPeriodStart = Carbon::parse($dates['start'])->subDays(Carbon::parse($dates['start'])->diffInDays($dates['end']));
         $previousPeriodVisits = PageVisit::withinDates($previousPeriodStart, $dates['start'])->sum('visit_count');
-        
-        $percentChange = $previousPeriodVisits > 0 
-            ? (($totalVisits - $previousPeriodVisits) / $previousPeriodVisits) * 100 
+
+        $percentChange = $previousPeriodVisits > 0
+            ? (($totalVisits - $previousPeriodVisits) / $previousPeriodVisits) * 100
             : 100;
 
         $locationStats = PageVisit::withinDates($dates['start'], $dates['end'])
@@ -236,7 +238,7 @@ class AnalyticsController extends Controller
         ]);
 
         $dates = $this->getDateRange($request->timeRange);
-        
+
         return response()->json([
             'analytics' => [
                 'visits' => $this->getVisitsAnalytics($dates),
@@ -258,7 +260,7 @@ class AnalyticsController extends Controller
         try {
             $visits = IPLocation::select(
                 'city',
-                'country_name as country', 
+                'country_name as country',
                 'latitude',
                 'longitude',
                 DB::raw('COUNT(*) as visit_count'),
@@ -310,4 +312,4 @@ class AnalyticsController extends Controller
             ]);
         }
     }
-} 
+}
