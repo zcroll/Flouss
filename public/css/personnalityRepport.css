@@ -94,6 +94,7 @@ table .BarMeter__meter {
     color: #222 !important;
     padding: 14px 12px;
     margin-bottom: 24px;
+
 }
 @media (max-width: 767px) {
     .PersonalityGraphs .Box {
@@ -326,6 +327,7 @@ table .BarMeter__meter {
 }
 .Discovery__related__content--scales {
     background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
 }
 .Discovery__related__content--scales h3 {
     border-bottom: 2px solid rgba(255, 255, 255, 0.18);

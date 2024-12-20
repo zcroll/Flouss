@@ -66,7 +66,7 @@
                   </div>
                 </div>
               </div>
-              <div class="Discovery__insights">
+              <div>
                 <h2 class="Discovery__insights-title">{{ __("results.Insights") }}</h2>
                 <div v-for="(insights, category) in Insights" 
                      :key="category" 
