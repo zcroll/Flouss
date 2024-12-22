@@ -236,20 +236,20 @@ Route::get('/dashboard/test-fetch', [DashboardController::class, 'testFetch'])
                 return Inertia::render('Admin/Task/index');
             })->name('admin.tasks.index');
             
-            Route::post('/', [App\Http\Controllers\Admin\TaskController::class, 'store'])
-                ->name('admin.tasks.store');
+            // Route::post('/', [App\Http\Controllers\Admin\TaskController::class, 'store'])
+            //     ->name('admin.tasks.store');
                 
-            Route::get('/{task}', [App\Http\Controllers\Admin\TaskController::class, 'show'])
-                ->name('admin.tasks.show');
+            // Route::get('/{task}', [App\Http\Controllers\Admin\TaskController::class, 'show'])
+            //     ->name('admin.tasks.show');
                 
-            Route::put('/{task}', [App\Http\Controllers\Admin\TaskController::class, 'update'])
-                ->name('admin.tasks.update');
+            // Route::put('/{task}', [App\Http\Controllers\Admin\TaskController::class, 'update'])
+            //     ->name('admin.tasks.update');
                 
-            Route::delete('/{task}', [App\Http\Controllers\Admin\TaskController::class, 'destroy'])
-                ->name('admin.tasks.destroy');
+            // Route::delete('/{task}', [App\Http\Controllers\Admin\TaskController::class, 'destroy'])
+            //     ->name('admin.tasks.destroy');
                 
-            Route::post('/bulk-action', [App\Http\Controllers\Admin\TaskController::class, 'bulkAction'])
-                ->name('admin.tasks.bulk-action');
+            // Route::post('/bulk-action', [App\Http\Controllers\Admin\TaskController::class, 'bulkAction'])
+            //     ->name('admin.tasks.bulk-action');
         });
         // ... other admin routes
     });

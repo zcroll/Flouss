@@ -1,0 +1,61 @@
+1|beforeEach(function() {
+2|    $this->testData = [
+3|        'name' => 'hamid chakkouri',
+4|        'email' => 'zcrroll@gmail.com',
+5|        'password' => 'password123',
+6|        'password_confirmation' => 'password123',
+7|        'google_id' => '106700729275441873960',
+8|        'email_verified_at' => Carbon::parse('2024-11-20 10:59:08'),
+9|    ];
+10|});
+11|$token = Password::createToken($this->user);
+12|$response = $this->post('/reset-password', [
+13|    'token' => $token,
+14|    'email' => $this->user->email,
+15|    'password' => $newPassword,
+16|    'password_confirmation' => $newPassword,
+17|]);
+18|$response->assertSessionHasNoErrors();
+19|$this->assertTrue(Hash::check($newPassword, $this->user->fresh()->password));
+20|it('requires valid reset token', function() {
+21|    $response = $this->post('/reset-password', [
+22|        'token' => 'invalid-token',
+23|        'email' => $this->user->email,
+24|        // ...
+25|    ]);
+26|    $response->assertSessionHasErrors(['email']);
+27|});
+28|
+29|$data = $this->testData;
+30|$data['password'] = 'Password123!';
+31|$data['password_confirmation'] = 'DifferentPassword123!';
+32|
+33|try {
+34|    $action->create($data);
+35|    $this->fail('Expected ValidationException was not thrown');
+36|} catch (ValidationException $e) {
+37|    $this->assertArrayHasKey('password', $e->errors());
+38|    $this->assertTrue(in_array(
+39|        trans('validation.confirmed', ['attribute' => 'password']),
+40|        $e->errors()['password']
+41|    ));
+42|}
+43|
+44|$user = $action->create($this->testData);
+45|
+46|expect($user)
+47|    ->toBeInstanceOf(User::class)
+48|    ->name->toBe($this->testData['name'])
+49|    ->email->toBe($this->testData['email'])
+50|    ->and(Hash::check($this->testData['password'], $user->password))->toBeTrue(); 
+51|
+52|try {
+53|    $action->create($this->testData);
+54|    $this->fail('Expected ValidationException was not thrown');
+55|} catch (ValidationException $e) {
+56|    $this->assertArrayHasKey('email', $e->errors());
+57|    $this->assertTrue(in_array(
+58|        trans('validation.unique', ['attribute' => 'email']),
+59|        $e->errors()['email']
+60|    ));
+61|} 

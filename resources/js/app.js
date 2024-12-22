@@ -18,7 +18,6 @@ import './pan-init'
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
-// Toast options
 const toastOptions = {
     position: "top-right",
     timeout: 3000,

@@ -38,65 +38,72 @@
       }" :test-stage="testStageStore?.currentStage"/>
 
             <div class="assessment Roadmap__inner">
-                <section v-if="!isReady || loading" class="Assessment">
-                    <div class="loading">Loading...</div>
-                </section>
-                <section v-else-if="error" class="Assessment">
-                    <div class="error">
-                        <h3>Error Occurred</h3>
-                        <p>{{ error }}</p>
-                        <button @click="retryFetch" :disabled="form.processing">Retry</button>
-                    </div>
-                </section>
-                <section v-else class="Assessment" tabindex="-1" data-testid="assessment-test">
-                    <!-- <div v-if="debug" style="padding: 10px; background: #f5f5f5;">
-                      <p>Lead in text: {{ currentTestData?.lead_in_text }}</p>
-                      <p>Current item: {{ currentItem?.id }}</p>
-                    </div> -->
-<!-- 
-                    <section class="Assessment__ItemSetLeadIn" v-if="!isComplete">
-                        {{ currentTestData?.lead_in_text }}
-                    </section> -->
-
-                    <div class="Assessment__scroll-container">
-                        <div v-if="!isComplete && currentItem?.id">
-                            <div class="Assessment__Item--forward-appear-done Assessment__Item--forward-enter-done">
-                                <TestQuestion :key="`question-${currentItem.id}-${testStageStore.currentStage}`"
-                                              :current-item="currentItem" :current-item-index="currentItemIndex"
-                                              :test-stage="testStageStore.currentStage" :test-data="currentTestData"
-                                              :form="form"
-                                              :store="currentStore" @submit="submitAnswer" @go-back="goBack"
-                                              @skip="skipQuestion"
-                                              ref="questionRef"/>
-                            </div>
+                <template v-if="showTutorial">
+                    <MainTestTutorial
+                        @continue="handleTutorialComplete"
+                    />
+                </template>
+                <template v-else>
+                    <section v-if="!isReady || loading" class="Assessment">
+                        <div class="loading">Loading...</div>
+                    </section>
+                    <section v-else-if="error" class="Assessment">
+                        <div class="error">
+                            <h3>Error Occurred</h3>
+                            <p>{{ error }}</p>
+                            <button @click="retryFetch" :disabled="form.processing">Retry</button>
                         </div>
+                    </section>
+                    <section v-else class="Assessment" tabindex="-1" data-testid="assessment-test">
+                        <!-- <div v-if="debug" style="padding: 10px; background: #f5f5f5;">
+                          <p>Lead in text: {{ currentTestData?.lead_in_text }}</p>
+                          <p>Current item: {{ currentItem?.id }}</p>
+                        </div> -->
 
-                        <Discovery
-                            v-if="isComplete && (
-                (testStageStore.currentStage === 'holland_codes' && hollandCodeStore?.progress?.archetypeDiscovery) ||
-                (testStageStore.currentStage === 'basic_interests' && basicInterestStore?.progress?.jobMatching) ||
-                (testStageStore.currentStage === 'degree' && degreeStore?.progress?.degreeMatching)
-              )"
-                            :archetype-discovery="hollandCodeStore?.progress?.archetypeDiscovery"
-                            :job-matching="basicInterestStore?.progress?.jobMatching"
-                            :degree-matching="degreeStore?.progress?.degreeMatching"
-                            :current-stage="testStageStore.currentStage"
-                            @close="handleDiscoveryClose"
-                        />
-
-                        <section class="discovery"
-                                 v-if="isComplete">
-                            <NextStep
-                                :title="testStageStore.nextStageName || 'Complete'"
-                                :description="testStageStore.currentStageDescription || 'You have completed this section.'"
-                                :button-text="testStageStore.nextStageName ? `Continue to ${testStageStore.nextStageName}` : 'View Results'"
-                                :current-stage="testStageStore.currentStage"
-                                @continue="continueToNextSection"
-                                :disabled="form.processing"
-                            />
+                        <section class="Assessment__ItemSetLeadIn" v-if="!isComplete">
+                            {{ currentTestData?.lead_in_text }}
                         </section>
-                    </div>
-                </section>
+
+                        <div class="Assessment__scroll-container">
+                            <div v-if="!isComplete && currentItem?.id">
+                                <div class="Assessment__Item--forward-appear-done Assessment__Item--forward-enter-done">
+                                    <TestQuestion :key="`question-${currentItem.id}-${testStageStore.currentStage}`"
+                                                  :current-item="currentItem" :current-item-index="currentItemIndex"
+                                                  :test-stage="testStageStore.currentStage" :test-data="currentTestData"
+                                                  :form="form"
+                                                  :store="currentStore" @submit="submitAnswer" @go-back="goBack"
+                                                  @skip="skipQuestion"
+                                                  ref="questionRef"/>
+                                </div>
+                            </div>
+
+                            <Discovery
+                                v-if="isComplete && (
+                    (testStageStore.currentStage === 'holland_codes' && hollandCodeStore?.progress?.archetypeDiscovery) ||
+                    (testStageStore.currentStage === 'basic_interests' && basicInterestStore?.progress?.jobMatching) ||
+                    (testStageStore.currentStage === 'degree' && degreeStore?.progress?.degreeMatching)
+                  )"
+                                :archetype-discovery="hollandCodeStore?.progress?.archetypeDiscovery"
+                                :job-matching="basicInterestStore?.progress?.jobMatching"
+                                :degree-matching="degreeStore?.progress?.degreeMatching"
+                                :current-stage="testStageStore.currentStage"
+                                @close="handleDiscoveryClose"
+                            />
+
+                            <section class="discovery"
+                                     v-if="isComplete">
+                                <NextStep
+                                    :title="testStageStore.nextStageName || 'Complete'"
+                                    :description="testStageStore.currentStageDescription || 'You have completed this section.'"
+                                    :button-text="testStageStore.nextStageName ? `Continue to ${testStageStore.nextStageName}` : 'View Results'"
+                                    :current-stage="testStageStore.currentStage"
+                                    @continue="continueToNextSection"
+                                    :disabled="form.processing"
+                                />
+                            </section>
+                        </div>
+                    </section>
+                </template>
             </div>
         </div>
     </section>
@@ -116,6 +123,7 @@ import BackButton from "@/Components/Test/BackButton.vue";
 import MatchResult from "@/Components/Test/MatchResult.vue";
 import {useTestProgressStore} from '@/stores/testProgressStore';
 import {useDegreeStore} from '@/stores/degreeStore';
+import MainTestTutorial from "@/Components/Test/MainTestTutorial.vue";
 
 const hollandCodeStore = useHollandCodeStore();
 const testStageStore = useTestStageStore();
@@ -164,6 +172,7 @@ const isComplete = computed(() => {
     if (!testStageStore?.currentStage) return false;
 
     if (testStageStore.currentStage === 'holland_codes') {
+
         return hollandCodeStore?.isTestComplete ?? false;
     }
     return currentStore.value?.isComplete ?? false;
@@ -215,6 +224,11 @@ const retryFetch = async () => {
         console.error('Error retrying fetch:', error);
     }
 };
+const showTutorial = computed(() => {
+    return testStageStore.currentStage === 'holland_codes' &&
+           hollandCodeStore?.currentItemIndex === 0 &&
+           !hollandCodeStore?.responses['tutorial'];
+});
 
 const submitAnswer = async () => {
     const store = currentStore.value;
@@ -287,6 +301,11 @@ watch(() => currentStore.value, (newStore) => {
         currentItem: newStore?.currentItem
     });
 }, {immediate: true});
+
+const handleTutorialComplete = () => {
+    if (!hollandCodeStore) return;
+    hollandCodeStore.responses['tutorial'] = true;
+};
 </script>
 
 <style>

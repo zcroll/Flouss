@@ -22,5 +22,10 @@ export default defineConfig({
         alias: {
             '@': path.resolve(__dirname, './resources/js')
         }
+    },
+    optimizeDeps: {
+        exclude: [
+            'chunk-WYNMOUL2'
+        ]
     }
 });
