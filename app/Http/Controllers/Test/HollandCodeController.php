@@ -64,14 +64,132 @@ class HollandCodeController extends BaseTestController
 
     protected function renderResponse($itemSet, array $progress, bool $isCompleted = false)
     {
+        // Debug the locale first
+        ds([
+            'debug_locale' => [
+                'current_locale' => app()->getLocale(),
+                'is_french' => app()->getLocale() === 'fr'
+            ]
+        ]);
+
+        // Add static translations for common option texts
+        $optionTranslations = [
+            'Hate it' => 'Je déteste ça',
+            'Dislike it' => 'Je n\'aime pas ça',
+            'Neutral' => 'Neutre',
+            'Like it' => 'J\'aime ça',
+            'Love it' => 'J\'adore',
+            'Smiley faces with "Hate it" to "Love it" (1 to 5)' => 'Visages souriants de "Je déteste" à "J\'adore" (1 à 5)'
+        ];
+
+        // Debug a sample item to verify text fields
+        $sampleItem = $itemSet->items->first();
+        ds([
+            'sample_item_debug' => [
+                'text' => $sampleItem->text,
+                'text_fr' => $sampleItem->text_fr,
+                'current_locale' => app()->getLocale()
+            ]
+        ]);
+
         return Inertia::render('Test/MainTest', [
             'hollandCodes' => [
                 'id' => $itemSet->id,
                 'type' => $itemSet->type,
-                'title' => $itemSet->title,
-                'lead_in_text' => $itemSet->lead_in_text,
-                'items' => $itemSet->items,
-                'option_sets' => $itemSet->items->pluck('optionSet')->unique()
+                'title' => $this->getLocalizedColumn($itemSet, 'title'),
+                'lead_in_text' => $this->getLocalizedColumn($itemSet, 'lead_in_text'),
+                'items' => $itemSet->items->map(function ($item) use ($optionTranslations) {
+                    // Get the localized text for the item
+                    $itemText = app()->getLocale() === 'fr' && !empty($item->text_fr) 
+                        ? $item->text_fr 
+                        : $item->text;
+
+                    $mappedItem = [
+                        'id' => $item->id,
+                        'text' => $itemText,
+                        'help_text' => $this->getLocalizedColumn($item, 'help_text'),
+                        'option_set_id' => $item->option_set_id,
+                        'is_completed' => $item->is_completed,
+                        'career_id' => $item->career_id,
+                        'degree_id' => $item->degree_id,
+                        'image_url' => $item->image_url,
+                        'image_colour' => $item->image_colour,
+                        'itemset_id' => $item->itemset_id,
+                        'optionSet' => [
+                            'id' => $item->optionSet->id,
+                            'name' => app()->getLocale() === 'fr' 
+                                ? $optionTranslations[$item->optionSet->name] ?? $item->optionSet->name 
+                                : $item->optionSet->name,
+                            'help_text' => $this->getLocalizedColumn($item->optionSet, 'help_text'),
+                            'type' => $item->optionSet->type,
+                            'options' => $item->optionSet->options->map(function ($option) use ($optionTranslations) {
+                                $text = $option->text;
+                                if (app()->getLocale() === 'fr') {
+                                    $text = $option->text_fr ?? $optionTranslations[$option->text] ?? $option->text;
+                                }
+                                
+                                return [
+                                    'id' => $option->id,
+                                    'text' => $text,
+                                    'help_text' => $this->getLocalizedColumn($option, 'help_text'),
+                                    'value' => $option->value,
+                                    'reverse_coded_value' => $option->reverse_coded_value,
+                                    'option_set_id' => $option->option_set_id,
+                                ];
+                            })
+                        ]
+                    ];
+
+                    // Debug the item text localization
+                    ds([
+                        'item_text_debug' => [
+                            'id' => $item->id,
+                            'original_text' => $item->text,
+                            'french_text' => $item->text_fr,
+                            'selected_text' => $itemText,
+                            'locale' => app()->getLocale()
+                        ]
+                    ]);
+
+                    return $mappedItem;
+                }),
+                'option_sets' => $itemSet->items->pluck('optionSet')->unique()->map(function ($optionSet) use ($optionTranslations) {
+                    $mappedOptionSet = [
+                        'id' => $optionSet->id,
+                        'name' => app()->getLocale() === 'fr' 
+                            ? $optionTranslations[$optionSet->name] ?? $optionSet->name 
+                            : $optionSet->name,
+                        'help_text' => $this->getLocalizedColumn($optionSet, 'help_text'),
+                        'type' => $optionSet->type,
+                        'options' => $optionSet->options->map(function ($option) use ($optionTranslations) {
+                            $text = $option->text;
+                            if (app()->getLocale() === 'fr') {
+                                $text = $option->text_fr ?? $optionTranslations[$option->text] ?? $option->text;
+                            }
+                            
+                            return [
+                                'id' => $option->id,
+                                'text' => $text,
+                                'help_text' => $this->getLocalizedColumn($option, 'help_text'),
+                                'value' => $option->value,
+                                'reverse_coded_value' => $option->reverse_coded_value,
+                                'option_set_id' => $option->option_set_id,
+                            ];
+                        })
+                    ];
+
+                    // Debug the mapped option set
+                    ds([
+                        'mapped_option_set_debug' => [
+                            'id' => $mappedOptionSet['id'],
+                            'name' => $mappedOptionSet['name'],
+                            'first_option' => $mappedOptionSet['options']->first(),
+                            'locale' => app()->getLocale()
+                        ]
+                    ]);
+
+                    return $mappedOptionSet;
+                })
             ],
             'progress' => $progress,
             'isCompleted' => $isCompleted,
@@ -177,5 +295,13 @@ class HollandCodeController extends BaseTestController
         $formattedResponses['scores'] = $normalizedScores;
         
         return $formattedResponses;
+    }
+
+    protected function getLocalizedColumn($model, $baseColumn)
+    {
+        $locale = app()->getLocale();
+        $localizedColumn = $locale === 'fr' ? $baseColumn . '_fr' : $baseColumn;
+        
+        return $model->$localizedColumn ?? $model->$baseColumn;
     }
 }

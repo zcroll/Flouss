@@ -28,6 +28,10 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\TrackPageVisits::class,
         ]);
 
+        $middleware->alias([
+            'check.result' => \App\Http\Middleware\CheckUserResult::class,
+        ]);
+
         $middleware->validateCsrfTokens(
             except: ['stripe/*', 'webhooks/*']
         );

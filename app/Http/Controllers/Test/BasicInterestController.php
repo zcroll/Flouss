@@ -50,15 +50,69 @@ class BasicInterestController extends BaseTestController
         return Inertia::render('Test/MainTest', [
             'basicInterest' => [
                 'id' => $itemSet->id,
-                'title' => $itemSet->title,
-                'lead_in_text' => $itemSet->lead_in_text,
-                'items' => $itemSet->items,
-                'option_sets' => $itemSet->items->pluck('optionSet')->unique()
+                'title' => $this->getLocalizedColumn($itemSet, 'title'),
+                'lead_in_text' => $this->getLocalizedColumn($itemSet, 'lead_in_text'),
+                'items' => $itemSet->items->map(function ($item) {
+                    return [
+                        'id' => $item->id,
+                        'text' => $this->getLocalizedColumn($item, 'text'),
+                        'help_text' => $this->getLocalizedColumn($item, 'help_text'),
+                        'option_set_id' => $item->option_set_id,
+                        'is_completed' => $item->is_completed,
+                        'career_id' => $item->career_id,
+                        'degree_id' => $item->degree_id,
+                        'image_url' => $item->image_url,
+                        'image_colour' => $item->image_colour,
+                        'itemset_id' => $item->itemset_id,
+                        'optionSet' => [
+                            'id' => $item->optionSet->id,
+                            'name' => $this->getLocalizedColumn($item->optionSet, 'name'),
+                            'help_text' => $this->getLocalizedColumn($item->optionSet, 'help_text'),
+                            'type' => $item->optionSet->type,
+                            'options' => $item->optionSet->options->map(function ($option) {
+                                return [
+                                    'id' => $option->id,
+                                    'text' => $this->getLocalizedColumn($option, 'text'),
+                                    'help_text' => $this->getLocalizedColumn($option, 'help_text'),
+                                    'value' => $option->value,
+                                    'reverse_coded_value' => $option->reverse_coded_value,
+                                    'option_set_id' => $option->option_set_id,
+                                ];
+                            })
+                        ]
+                    ];
+                }),
+                'option_sets' => $itemSet->items->pluck('optionSet')->unique()->map(function ($optionSet) {
+                    return [
+                        'id' => $optionSet->id,
+                        'name' => $this->getLocalizedColumn($optionSet, 'name'),
+                        'help_text' => $this->getLocalizedColumn($optionSet, 'help_text'),
+                        'type' => $optionSet->type,
+                        'options' => $optionSet->options->map(function ($option) {
+                            return [
+                                'id' => $option->id,
+                                'text' => $this->getLocalizedColumn($option, 'text'),
+                                'help_text' => $this->getLocalizedColumn($option, 'help_text'),
+                                'value' => $option->value,
+                                'reverse_coded_value' => $option->reverse_coded_value,
+                                'option_set_id' => $option->option_set_id,
+                            ];
+                        })
+                    ];
+                })
             ],
             'progress' => $progress,
             'isCompleted' => $isCompleted,
             'testStage' => $this->testStage
         ]);
+    }
+
+    protected function getLocalizedColumn($model, $baseColumn)
+    {
+        $locale = app()->getLocale();
+        $localizedColumn = $locale === 'fr' ? $baseColumn . '_fr' : $baseColumn;
+        
+        return $model->$localizedColumn ?? $model->$baseColumn;
     }
 
     protected function renderInitialResponse()

@@ -134,9 +134,9 @@ abstract class BaseTestController extends Controller
     protected function getItemSet()
     {
         return ItemSet::with([
-            'items:id,text,help_text,option_set_id,is_completed,career_id,degree_id,image_url,image_colour,itemset_id',
+            'items:id,text,text_fr,help_text,option_set_id,is_completed,career_id,degree_id,image_url,image_colour,itemset_id',
             'items.optionSet:id,name,help_text,type',
-            'items.optionSet.options:id,text,help_text,value,reverse_coded_value,option_set_id'
+            'items.optionSet.options:id,text,text_fr,help_text,value,reverse_coded_value,option_set_id'
         ])
         ->where('title', $this->itemSetTitle)
         ->first();

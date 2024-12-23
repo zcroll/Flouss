@@ -32,6 +32,7 @@ use App\Http\Controllers\Test\DegreeTestStageController;
 use Pan\Facades\Pan;
 use App\Http\Controllers\Admin\AnalyticsController;
 
+
 // Google Login Routes (place these BEFORE any auth middleware groups)
 Route::get('auth/google', [App\Http\Controllers\Auth\GoogleController::class, 'redirectToGoogle'])
     ->name('auth.google')
@@ -117,21 +118,21 @@ Route::middleware([
 
         Route::middleware(['auth'])->group(function () {
             // Holland Codes SPA routes
-            Route::prefix('holland-codes')->group(function () {
+            Route::prefix('holland-codes')->middleware(['check.result'])->group(function () {
                 Route::get('/', [HollandCodeController::class, 'index'])->name('holland-codes.index');
                 Route::post('/', [HollandCodeController::class, 'storeResponse'])->name('holland-codes.store');
                 Route::post('/go-back', [HollandCodeController::class, 'goBack'])->name('holland-codes.go-back');
             });
 
             // Basic Interests SPA routes
-            Route::prefix('basic-interests')->group(function () {
+            Route::prefix('basic-interests')->middleware(['check.result'])->group(function () {
                 Route::get('/', [BasicInterestController::class, 'index'])->name('basic-interests.index');
                 Route::post('/', [BasicInterestController::class, 'storeResponse'])->name('basic-interests.store');
                 Route::post('/go-back', [BasicInterestController::class, 'goBack'])->name('basic-interests.go-back');
             });
 
             // Add Degree Assessment SPA routes
-            Route::prefix('degree-assessment')->group(function () {
+            Route::prefix('degree-assessment')->middleware(['check.result'])->group(function () {
                 Route::get('/', [DegreeTestStageController::class, 'index'])->name('degree-assessment.index');
                 Route::post('/', [DegreeTestStageController::class, 'storeResponse'])->name('degree-assessment.store');
                 Route::post('/go-back', [DegreeTestStageController::class, 'goBack'])->name('degree-assessment.go-back');
@@ -254,7 +255,7 @@ Route::get('/dashboard/test-fetch', [DashboardController::class, 'testFetch'])
         // ... other admin routes
     });
 
-Route::post('/pan/track', function (Request $request) {
-    Pan::track($request->element, $request->url);
-    return response()->json(['status' => 'success']);
-})->middleware(['web']);
+// Route::post('/pan/track', function (Request $request) {
+//     Pan::track($request->element, $request->url);
+//     return response()->json(['status' => 'success']);
+// })->middleware(['web']);
