@@ -1,6 +1,6 @@
 <template>
   <AppLayout>
-    <div class="min-h-screen">
+    <div class="min-h-screen mt-10">
       <!-- Hero Section -->
       <div class="relative py-16 bg-white">
         <div class="container mx-auto px-4">
@@ -41,27 +41,42 @@
                 </div>
               </div>
 
-              <!-- Related Degrees -->
-              <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <!-- Related Degrees (Coming Soon) -->
+              <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
                 <h2 class="text-xl font-bold text-gray-900 mb-4">
-                  {{ __('formations.related_degrees') }}
+                  {{ __('formations.modules') }}
                 </h2>
-                <div class="space-y-4">
-                  <div v-for="degree in formation.degrees" :key="degree.id" 
-                       class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                    <div>
-                      <h3 class="font-medium text-gray-900">{{ degree.pivot.degree_name }}</h3>
-                      <p class="text-sm text-gray-600">
-                        {{ __('formations.similarity_score') }}: {{ Math.round(degree.pivot.similarity_score * 100) }}%
-                      </p>
-                    </div>
-                    <Link :href="route('degree.show', degree.slug)" 
-                          class="text-[#db492b] hover:text-[#db492b]/80">
-                      {{ __('formations.view_degree') }} →
-                    </Link>
+                <div class="flex flex-col items-center justify-center p-8 bg-gray-50 rounded-lg">
+                  <div class="mb-4">
+                    <BookOpenIcon class="w-12 h-12 text-[#db492b]/60" />
                   </div>
+                  <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                    {{ __('formations.coming_soon') }}
+                  </h3>
+                  <p class="text-gray-600 text-center text-sm">
+                    {{ __('formations.coming_soon_description') }}
+                  </p>
                 </div>
               </div>
+
+              <!-- Admission Openings (Coming Soon) -->
+              <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h2 class="text-xl font-bold text-gray-900 mb-4">
+                  {{ __('formations.admission_openings') }}
+                </h2>
+                <div class="flex flex-col items-center justify-center p-8 bg-gray-50 rounded-lg">
+                  <div class="mb-4">
+                    <ClockIcon class="w-12 h-12 text-[#db492b]/60" />
+                  </div>
+                  <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                    {{ __('formations.coming_soon') }}
+                  </h3>
+                  <p class="text-gray-600 text-center text-sm">
+                    {{ __('formations.coming_soon_description') }}
+                  </p>
+                </div>
+              </div>
+
             </div>
 
             <!-- Right Sidebar -->
@@ -96,7 +111,7 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
-import { AcademicCapIcon } from '@heroicons/vue/24/outline';
+import { AcademicCapIcon, ClockIcon, BookOpenIcon } from '@heroicons/vue/24/outline';
 import { InstitutionTypes } from '@/Enums/InstitutionTypes'
 
 defineProps({

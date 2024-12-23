@@ -1,0 +1,103 @@
+/* Toast Container */
+.Vue-Toastification__container {
+    z-index: 9999;
+}
+
+/* Base Toast Styles */
+.Vue-Toastification__toast {
+    min-height: 54px !important;
+    min-width: 300px !important;
+    padding: 20px 20px !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12) !important;
+    font-family: inherit !important;
+}
+
+/* Success Toast */
+.Vue-Toastification__toast--success {
+    background-color: #066344 !important;
+    border-left: 4px solid #059669 !important;
+}
+
+/* Error Toast */
+.Vue-Toastification__toast--error {
+    background-color: #ef4444 !important;
+    border-left: 4px solid #dc2626 !important;
+}
+
+/* Info Toast */
+.Vue-Toastification__toast--info {
+    background-color: #3b82f6 !important;
+    border-left: 4px solid #2563eb !important;
+}
+
+/* Warning Toast */
+.Vue-Toastification__toast--warning {
+    background-color: #f59e0b !important;
+    border-left: 4px solid #d97706 !important;
+}
+
+/* Toast Body */
+.Vue-Toastification__toast-body {
+    font-size: 0.875rem !important;
+    line-height: 1.25rem !important;
+    padding: 2px 0 !important;
+}
+
+/* Progress Bar */
+.Vue-Toastification__progress-bar {
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1)) !important;
+    height: 4px !important;
+    bottom: 0 !important;
+}
+
+/* Close Button */
+.Vue-Toastification__close-button {
+    color: white !important;
+    opacity: 0.7 !important;
+    align-self: center !important;
+    width: 20px !important;
+    height: 20px !important;
+}
+
+.Vue-Toastification__close-button:hover {
+    opacity: 1 !important;
+}
+
+/* Toast Icon */
+.Vue-Toastification__icon {
+    margin: 4px 12px 4px 0 !important;
+    width: 22px !important;
+    height: 22px !important;
+}
+
+/* Toast Animation */
+.Vue-Toastification__bounce-enter-active {
+    animation: toast-in-right .3s ease-out !important;
+}
+
+.Vue-Toastification__bounce-leave-active {
+    animation: toast-out-right .3s ease-out !important;
+}
+
+@keyframes toast-in-right {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes toast-out-right {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+} 

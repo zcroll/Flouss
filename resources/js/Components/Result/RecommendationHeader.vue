@@ -7,7 +7,7 @@
     </div>
     
     <span class="flex gap-2">
-      <button class="Button DashboardPage__button DashboardPage__button--share">
+      <!-- <button class="Button DashboardPage__button DashboardPage__button--share">
         <span class="Button-icon">
           <svg aria-hidden="true" focusable="false" data-prefix="fad" data-icon="share-from-square"
             class="svg-inline--fa fa-share-from-square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
@@ -22,7 +22,7 @@
           </svg>
         </span>
         <span v-if="!isMobile" class="DashboardPage__button__copy">{{ __('results.share') }}</span>
-      </button>
+      </button> -->
       <Link v-if="!isMobile" :href="headerConfig.viewAllLink" class="Button DashboardPage__button DashboardPage__button--share">
         <span>{{ headerConfig.viewAllText }}</span>
       </Link>
