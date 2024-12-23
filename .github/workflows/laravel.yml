@@ -2,9 +2,9 @@ name: Laravel
 
 on:
   push:
-    branches: [ "Gen.z" ]
+    branches: [ "Gen.z-Dev" ]
   pull_request:
-    branches: [ "Gen.z" ]
+    branches: [ "Gen.z-Dev" ]
 
 jobs:
   laravel-tests:
@@ -38,11 +38,11 @@ jobs:
         git config --global --add safe.directory /domains/gennz.site
         if [ -d ".git" ]; then
           git fetch origin
-          git reset --hard origin/Gen.z
-          git pull origin Gen.z
+          git reset --hard origin/Gen.z-Dev
+          git pull origin Gen.z-Dev
         else
           rm -rf *
-          git clone -b Gen.z https://github.com/zcroll/Flouss.git .
+          git clone -b Gen.z-Dev https://github.com/zcroll/Flouss.git .
         fi
         composer install
         php artisan optimize
