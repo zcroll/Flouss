@@ -65,13 +65,14 @@ const navigate = async (e) => {
   @apply inline-block transition-all duration-300;
   font-family: 'Satoshi', sans-serif;
   font-weight: 500;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.01em;
 }
 
 /* Default (1280px and up) */
 .nav-link {
-  font-size: 0.875rem; /* 14px */
+  font-size: 0.83rem; /* 14px */
   padding: 0.375rem 1rem;
+  font-weight: 550;
 }
 
 /* 1065px to 1279px */

@@ -90,24 +90,86 @@
             </div>
 
             <!-- Pagination -->
-            <div v-if="formations.links?.length > 3" class="mt-12 flex justify-center">
-              <nav class="relative z-0 inline-flex rounded-lg shadow-sm -space-x-px overflow-hidden" aria-label="Pagination">
-                <Link 
-                  v-for="(link, index) in formations.links" 
+            <div v-if="formations.links?.length > 3" class="mt-12">
+              <!-- Desktop Pagination -->
+              <nav class="hidden sm:flex items-center justify-center gap-1" aria-label="Pagination">
+                <Link
+                  v-for="(link, index) in formations.links"
                   :key="index"
                   :href="link.url || ''"
                   :only="['formations', 'filters']"
                   :data="filters"
                   :class="[
-                    'relative inline-flex items-center px-4 py-2 border text-sm font-medium',
-                    link.active 
-                      ? 'z-10 bg-[#db492b] border-[#db492b] text-white'
-                      : 'bg-white border-gray-200 text-gray-500 hover:bg-gray-50',
-                    link.url === null ? 'cursor-not-allowed opacity-50' : ''
+                    'relative inline-flex items-center justify-center min-w-[40px] h-10 text-sm font-medium transition-colors',
+                    index === 0 || index === formations.links.length - 1
+                      ? 'px-3 rounded-lg'
+                      : 'px-4 rounded-md',
+                    link.active
+                      ? 'bg-[#db492b]/90 text-white shadow-sm'
+                      : 'text-gray-700 hover:bg-gray-100',
+                    link.url === null
+                      ? 'pointer-events-none text-gray-400 bg-gray-50'
+                      : 'bg-white',
+                    'border border-gray-200',
+                    !link.active && link.url !== null
+                      ? 'hover:border-[#db492b]/20 hover:text-[#db492b]'
+                      : ''
                   ]"
-                  v-html="link.label"
                   :preserve-scroll="true"
-                />
+                >
+                  <template v-if="index === 0 || index === formations.links.length - 1">
+                    <span v-if="index === 0" class="flex items-center gap-1">
+                      <ChevronLeftIcon class="w-4 h-4" />
+                      <span>Previous</span>
+                    </span>
+                    <span v-else class="flex items-center gap-1">
+                      <span>Next</span>
+                      <ChevronRightIcon class="w-4 h-4" />
+                    </span>
+                  </template>
+                  <template v-else>
+                    <span v-html="link.label"></span>
+                  </template>
+                </Link>
+              </nav>
+
+              <!-- Mobile Pagination -->
+              <nav class="sm:hidden flex items-center justify-between px-2 mb-8" aria-label="Pagination">
+                <Link
+                  :href="formations.prev_page_url || ''"
+                  :only="['formations', 'filters']"
+                  :data="filters"
+                  :class="[
+                    'flex items-center gap-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors',
+                    formations.prev_page_url
+                      ? 'text-gray-700 bg-white border border-gray-200 hover:border-[#db492b]/20 hover:text-[#db492b]'
+                      : 'pointer-events-none text-gray-400 bg-gray-50 border border-gray-200'
+                  ]"
+                  :preserve-scroll="true"
+                >
+                  <ChevronLeftIcon class="w-4 h-4" />
+                  {{ __('formations.previous') }}
+                </Link>
+
+                <span class="text-sm text-gray-700">
+                  Page {{ formations.current_page }} of {{ formations.last_page }}
+                </span>
+
+                <Link
+                  :href="formations.next_page_url || ''"
+                  :only="['formations', 'filters']"
+                  :data="filters"
+                  :class="[
+                    'flex items-center gap-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors',
+                    formations.next_page_url
+                      ? 'text-gray-700 bg-white border border-gray-200 hover:border-[#db492b]/20 hover:text-[#db492b]'
+                      : 'pointer-events-none text-gray-400 bg-gray-50 border border-gray-200'
+                  ]"
+                  :preserve-scroll="true"
+                >
+                  {{ __('formations.next') }}
+                  <ChevronRightIcon class="w-4 h-4" />
+                </Link>
               </nav>
             </div>
           </div>
@@ -127,7 +189,8 @@ import {
   MapPinIcon, 
   Squares2X2Icon,
   ListBulletIcon,
-  ChevronRightIcon
+  ChevronRightIcon,
+  ChevronLeftIcon
 } from '@heroicons/vue/24/outline';
 
 const props = defineProps({
