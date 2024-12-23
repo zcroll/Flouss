@@ -123,6 +123,7 @@ Route::middleware([
                 Route::post('/', [HollandCodeController::class, 'storeResponse'])->name('holland-codes.store');
                 Route::post('/go-back', [HollandCodeController::class, 'goBack'])->name('holland-codes.go-back');
             });
+            //test
 
             // Basic Interests SPA routes
             Route::prefix('basic-interests')->middleware(['check.result'])->group(function () {
