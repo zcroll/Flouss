@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue';
 /*import HowItWork from '@/Components/Home/Test/HowItWork.vue';
 import Final from '@/Components/Home/Test/Final.vue';*/
-import Header from '@/Components/Home/Navbar/Header.vue';
+import Header from '@/Components/helpers/Header.vue';
 import { Link } from '@inertiajs/vue3';
 import __ from '@/lang';
 import anime from 'animejs';
