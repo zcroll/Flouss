@@ -7,7 +7,7 @@ use Illuminate\Http\Client\Request;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
 use Pan\PanConfiguration;
-
+use Illuminate\Support\Facades\Vite;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -32,6 +32,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        JsonResource::withoutWrapping();
+        Vite::useWaterfallPrefetching(concurrency: 10);
     }
 }
