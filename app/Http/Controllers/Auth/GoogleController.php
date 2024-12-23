@@ -35,17 +35,17 @@ class GoogleController extends Controller
             config(['services.google.redirect' => $this->getRedirectUrl()]);
             $googleUser = Socialite::driver('google')->user();
 
-            $user = User::updateOrCreate(
-                [
-                    'email' => $googleUser->email,
-                ],
-                [
-                    'name' => $googleUser->name,
-                    'google_id' => $googleUser->id,
-                    'password' => bcrypt(Str::random(24)),
-                    'email_verified_at' => now(),
-                ]
-            );
+            $user = User::where('email', $googleUser->email)->first();
+
+            if (!$user) {
+                return to_route('login')->with('error', 'No account found with this Google email. Please register first.');
+            }
+
+            if (!$user->google_id) {
+                $user->update([
+                    'google_id' => $googleUser->id
+                ]);
+            }
 
             Auth::login($user, true); // Remember the user
             

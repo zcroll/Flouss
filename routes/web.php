@@ -250,6 +250,5 @@ Route::get('/dashboard/test-fetch', [DashboardController::class, 'testFetch'])
                 
         // Route::post('/bulk-action', [App\Http\Controllers\Admin\TaskController::class, 'bulkAction'])
         //     ->name('admin.tasks.bulk-action');
-    });
-    // ... other admin routes
-});
+    // });
+// });
