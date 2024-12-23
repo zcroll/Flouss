@@ -23,7 +23,6 @@
         "laravel/socialite": "^5.16",
         "laravel/tinker": "^2.9",
         "openai-php/client": "^0.10.3",
-        "panphp/pan": "^0.1.8",
         "php-ai/php-ml": "^0.10.0",
         "phpoffice/phpspreadsheet": "^2.2",
         "predis/predis": "^2.3",

@@ -29,7 +29,6 @@ use App\Http\Controllers\Test\WorkplaceController;
 use App\Http\Controllers\Test\PersonalityController;
 use App\Http\Controllers\Formation\FormationController;
 use App\Http\Controllers\Test\DegreeTestStageController;
-use Pan\Facades\Pan;
 use App\Http\Controllers\Admin\AnalyticsController;
 
 
@@ -212,50 +211,45 @@ Route::get('/dashboard/test-messages', [DashboardController::class, 'testMessage
 Route::get('/dashboard/test-fetch', [DashboardController::class, 'testFetch'])
     ->name('dashboard.test-fetch');
 
-    Route::prefix('adminn')->group(function () {
-        Route::get('/dashboard', function () {
-            return Inertia::render('Admin/Dashboard/index', [
-                'page' => request()->query('tab', 'overview')
-            ]);
-        })->name('admin.dashboard');
+Route::prefix('adminn')->group(function () {
+    Route::get('/dashboard', function () {
+        return Inertia::render('Admin/Dashboard/index', [
+            'page' => request()->query('tab', 'overview')
+        ]);
+    })->name('admin.dashboard');
+    
+    Route::get('dashboard/analytics', [AnalyticsController::class, 'index'])
+        ->name('admin.analytics');
+    
+    Route::post('dashboard/analytics/time-range', [AnalyticsController::class, 'updateTimeRange'])
+        ->name('admin.analytics.update-time');
+    
+    Route::get('/dashboard/reports', function () {
+        return Inertia::render('Admin/Dashboard/index', [
+            'page' => 'reports'
+        ]);
+    })->name('admin.reports');
+    
+    // Task Management Routes
+    Route::prefix('tasks')->group(function () {
+        Route::get('/', function () {
+            return Inertia::render('Admin/Task/index');
+        })->name('admin.tasks.index');
         
-        Route::get('dashboard/analytics', [AnalyticsController::class, 'index'])
-            ->name('admin.analytics');
-        
-        Route::post('dashboard/analytics/time-range', [AnalyticsController::class, 'updateTimeRange'])
-            ->name('admin.analytics.update-time');
-        
-        Route::get('/dashboard/reports', function () {
-            return Inertia::render('Admin/Dashboard/index', [
-                'page' => 'reports'
-            ]);
-        })->name('admin.reports');
-        
-        // Task Management Routes
-        Route::prefix('tasks')->group(function () {
-            Route::get('/', function () {
-                return Inertia::render('Admin/Task/index');
-            })->name('admin.tasks.index');
-            
-            // Route::post('/', [App\Http\Controllers\Admin\TaskController::class, 'store'])
-            //     ->name('admin.tasks.store');
+        // Route::post('/', [App\Http\Controllers\Admin\TaskController::class, 'store'])
+        //     ->name('admin.tasks.store');
                 
-            // Route::get('/{task}', [App\Http\Controllers\Admin\TaskController::class, 'show'])
-            //     ->name('admin.tasks.show');
+        // Route::get('/{task}', [App\Http\Controllers\Admin\TaskController::class, 'show'])
+        //     ->name('admin.tasks.show');
                 
-            // Route::put('/{task}', [App\Http\Controllers\Admin\TaskController::class, 'update'])
-            //     ->name('admin.tasks.update');
+        // Route::put('/{task}', [App\Http\Controllers\Admin\TaskController::class, 'update'])
+        //     ->name('admin.tasks.update');
                 
-            // Route::delete('/{task}', [App\Http\Controllers\Admin\TaskController::class, 'destroy'])
-            //     ->name('admin.tasks.destroy');
+        // Route::delete('/{task}', [App\Http\Controllers\Admin\TaskController::class, 'destroy'])
+        //     ->name('admin.tasks.destroy');
                 
-            // Route::post('/bulk-action', [App\Http\Controllers\Admin\TaskController::class, 'bulkAction'])
-            //     ->name('admin.tasks.bulk-action');
-        });
-        // ... other admin routes
+        // Route::post('/bulk-action', [App\Http\Controllers\Admin\TaskController::class, 'bulkAction'])
+        //     ->name('admin.tasks.bulk-action');
     });
-
-// Route::post('/pan/track', function (Request $request) {
-//     Pan::track($request->element, $request->url);
-//     return response()->json(['status' => 'success']);
-// })->middleware(['web']);
+    // ... other admin routes
+});
