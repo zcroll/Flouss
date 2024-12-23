@@ -211,30 +211,30 @@ Route::get('/dashboard/test-messages', [DashboardController::class, 'testMessage
 Route::get('/dashboard/test-fetch', [DashboardController::class, 'testFetch'])
     ->name('dashboard.test-fetch');
 
-Route::prefix('adminn')->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Admin/Dashboard/index', [
-            'page' => request()->query('tab', 'overview')
-        ]);
-    })->name('admin.dashboard');
+// Route::prefix('adminn')->group(function () {
+//     Route::get('/dashboard', function () {
+//         return Inertia::render('Admin/Dashboard/index', [
+//             'page' => request()->query('tab', 'overview')
+//         ]);
+//     })->name('admin.dashboard');
     
-    Route::get('dashboard/analytics', [AnalyticsController::class, 'index'])
-        ->name('admin.analytics');
+//     Route::get('dashboard/analytics', [AnalyticsController::class, 'index'])
+//         ->name('admin.analytics');
     
-    Route::post('dashboard/analytics/time-range', [AnalyticsController::class, 'updateTimeRange'])
-        ->name('admin.analytics.update-time');
+//     Route::post('dashboard/analytics/time-range', [AnalyticsController::class, 'updateTimeRange'])
+//         ->name('admin.analytics.update-time');
     
-    Route::get('/dashboard/reports', function () {
-        return Inertia::render('Admin/Dashboard/index', [
-            'page' => 'reports'
-        ]);
-    })->name('admin.reports');
+//     Route::get('/dashboard/reports', function () {
+//         return Inertia::render('Admin/Dashboard/index', [
+//             'page' => 'reports'
+//         ]);
+//     })->name('admin.reports');
     
     // Task Management Routes
-    Route::prefix('tasks')->group(function () {
-        Route::get('/', function () {
-            return Inertia::render('Admin/Task/index');
-        })->name('admin.tasks.index');
+    // Route::prefix('tasks')->group(function () {
+    //     Route::get('/', function () {
+    //         return Inertia::render('Admin/Task/index');
+    //     })->name('admin.tasks.index');
         
         // Route::post('/', [App\Http\Controllers\Admin\TaskController::class, 'store'])
         //     ->name('admin.tasks.store');
