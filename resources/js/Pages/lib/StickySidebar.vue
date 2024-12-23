@@ -1,7 +1,7 @@
 <template>
     <div class="mt-[-40px] flex flex-col-reverse lg:container lg:mx-auto lg:flex-row">
         <div class="w-full lg:w-2/3">
-            <div class="relative  rounded-t-3xl p-1 lg:p-0 lg:mx-0 lg:bg-none lg:rounded-none overflow-hidden">
+            <div class="relative  rounded-t-3xl p-1 lg:p-0 lg:mx-0 lg:bg-none lg:rounded-none">
                 <!-- Decorative elements -->
                 <div class="absolute inset-0 overflow-hidden pointer-events-none">
                     <!-- Gradient orbs -->
@@ -12,7 +12,7 @@
                 </div>
                 
                 <!-- Content with glass effect -->
-                <div class="relative border rounded-lg overflow-hidden">
+                <div class="relative">
                     <slot />
                 </div>
             </div>
@@ -43,8 +43,8 @@
                             :key="index"
                             :href="link.url"
                             :class="{
-                                'bg-slate-950 hover:bg-slate-900 active:bg-slate-900': $page.url === link.url,
-                                'bg-stone-700 hover:bg-slate-900 active:bg-slate-900': $page.url !== link.url
+                                'bg-slate-950 hover:bg-slate-950 active:bg-slate-950': $page.url === link.url,
+                                'bg-stone-700 hover:bg-slate-950 active:bg-slate-950': $page.url !== link.url
                             }"
                             class="flex-1 min-w-[60px] flex flex-col items-center justify-center px-1 py-1.5 rounded-xl text-sm font-medium transition-all mx-0.5"
                         >

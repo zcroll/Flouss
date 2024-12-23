@@ -169,7 +169,10 @@
             </aside>
 
             <!-- Formations List -->
-            <Formation :formations="filteredFormations" />
+            <Formation 
+              :formations="filteredFormations" 
+              @clear-filters="clearAllFilters"
+            />
           </div>
         </div>
         <BackToTop />
@@ -291,6 +294,12 @@ export default defineComponent({
     },
     removeType(type) {
       this.selectedTypes = this.selectedTypes.filter(t => t !== type)
+    },
+    clearAllFilters() {
+      this.selectedCategories = []
+      this.selectedCities = []
+      this.selectedNiveaux = []
+      this.selectedTypes = []
     }
   },
   mounted() {

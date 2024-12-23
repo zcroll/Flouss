@@ -27,6 +27,18 @@ return [
     'search_placeholder' => 'Rechercher une formation',
     'region' => 'Région',
     'clear_filters' => 'Effacer les filtres',
+    'previous' => 'Précédent',
+    'next' => 'Suivant',
+    'empty_state' => [
+        'title' => 'Aucune formation trouvée',
+        'description' => 'Aucune formation ne correspond à vos filtres actuels. Essayez d\'ajuster vos critères de recherche ou effacez les filtres pour voir toutes les formations.',
+        'clear_filters' => 'Effacer les filtres'
+    ],
+    'modules' => 'Modules',
+    'admission_openings' => 'Dates d\'admissions',
+    'coming_soon' => 'Bientôt disponible',
+    'coming_soon_description' => 'Nous travaillons actuellement sur cette fonctionnalité pour vous offrir des recommandations pertinentes.',
+
 
 
 

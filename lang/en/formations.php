@@ -26,4 +26,15 @@ return [
     'select_region' => 'Select a region',
     'search_placeholder' => 'Search for a formation',
     'clear_filters' => 'Clear filters',
+    'previous' => 'Previous',
+    'next' => 'Next',
+    'empty_state' => [
+        'title' => 'No formations found',
+        'description' => 'No formations match your current filters. Try adjusting your search criteria or clear the filters to see all formations.',
+        'clear_filters' => 'Clear filters'
+    ],
+    'modules' => 'Modules',
+    'admission_openings' => 'Admission Dates',
+    'coming_soon' => 'Coming soon',
+    'coming_soon_description' => 'We are currently working on this feature to offer you relevant recommendations.',
 ]; 

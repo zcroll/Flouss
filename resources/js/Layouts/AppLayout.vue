@@ -62,35 +62,71 @@ const page = usePage()
 
 // Watch for flash messages
 watch(() => page.props.flash, (flash) => {
+    const toastOptions = {
+        position: "top-right",
+        timeout: 3000,
+        closeOnClick: true,
+        pauseOnFocusLoss: true,
+        pauseOnHover: true,
+        draggable: true,
+        draggablePercent: 0.6,
+        showCloseButtonOnHover: false,
+        hideProgressBar: false,
+        closeButton: true,
+        icon: true,
+        rtl: false
+    };
+
     if (flash.success) {
         toast.success(flash.success, {
-            timeout: 3000
+            ...toastOptions,
+            timeout: 3000,
         });
     }
     if (flash.error) {
         toast.error(flash.error, {
-            timeout: 5000
+            ...toastOptions,
+            timeout: 5000,
         });
     }
     if (flash.message) {
         toast.info(flash.message, {
-            timeout: 3000
+            ...toastOptions,
+            timeout: 3000,
         });
     }
-}, { deep: true })
+}, { deep: true });
 
-// Check for flash messages on mount
+// Update onMounted with the same options
 onMounted(() => {
+    const toastOptions = {
+        position: "top-right",
+        timeout: 3000,
+        closeOnClick: true,
+        pauseOnFocusLoss: true,
+        pauseOnHover: true,
+        draggable: true,
+        draggablePercent: 0.6,
+        showCloseButtonOnHover: false,
+        hideProgressBar: false,
+        closeButton: true,
+        icon: true,
+        rtl: false
+    };
+
     if (page.props.flash.success) {
-        toast.success(page.props.flash.success);
+        toast.success(page.props.flash.success, toastOptions);
     }
     if (page.props.flash.error) {
-        toast.error(page.props.flash.error);
+        toast.error(page.props.flash.error, {
+            ...toastOptions,
+            timeout: 5000,
+        });
     }
     if (page.props.flash.message) {
-        toast.info(page.props.flash.message);
+        toast.info(page.props.flash.message, toastOptions);
     }
-})
+});
 
 </script>
 

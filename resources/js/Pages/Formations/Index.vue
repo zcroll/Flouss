@@ -120,10 +120,10 @@
                   <template v-if="index === 0 || index === formations.links.length - 1">
                     <span v-if="index === 0" class="flex items-center gap-1">
                       <ChevronLeftIcon class="w-4 h-4" />
-                      <span>Previous</span>
+                      <span>{{ __('formations.previous') }}</span>
                     </span>
                     <span v-else class="flex items-center gap-1">
-                      <span>Next</span>
+                      <span>{{ __('formations.next') }}</span>
                       <ChevronRightIcon class="w-4 h-4" />
                     </span>
                   </template>
