@@ -120,11 +120,11 @@ const submit = () => {
             </button>
         </div>
 
-        <p class="mt-8 sm:mt-10 text-center text-sm text-gray-500 px-4 sm:px-0">
+        <!-- <p class="mt-8 sm:mt-10 text-center text-sm text-gray-500 px-4 sm:px-0">
             {{ __('auth.not_a_member') }}
             <Link :href="route('register')" class="font-semibold leading-6 text-[#db492b] hover:text-gray-900">
                 {{ __('auth.sign_up') }}
             </Link>
-        </p>
+        </p> -->
     </AuthenticationCard>
 </template>
