@@ -36,14 +36,9 @@ jobs:
         sshpass -p ${{ secrets.PASSWORD }} ssh -o StrictHostKeyChecking=no -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} '
         cd domains/gennz.site/
         git config --global --add safe.directory /domains/gennz.site
-        if [ -d ".git" ]; then
-          git fetch origin
-          git reset --hard origin/Gen.z-Dev
-          git pull origin Gen.z-Dev
-        else
-          rm -rf *
-          git clone -b Gen.z-Dev https://github.com/zcroll/Flouss.git .
-        fi
+        git fetch origin
+        git reset --hard origin/Gen.z-Dev
+        git push origin Gen.z-Dev --force
         composer install
         php artisan optimize
         php artisan config:cache
