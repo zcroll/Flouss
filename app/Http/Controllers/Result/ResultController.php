@@ -129,7 +129,8 @@ class ResultController extends Controller
             ->groupBy('insight_category_slug')
             ->map(function ($group) {
                 return $group->map(function ($insight) {
-                    return $this->getLocalizedColumn($insight, 'insight');
+                    // Use the localized insight based on current locale
+                    return app()->getLocale() === 'fr' ? $insight->insight_fr : $insight->insight;
                 });
             }) : collect([]);
 
