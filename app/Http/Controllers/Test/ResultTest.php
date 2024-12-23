@@ -38,7 +38,13 @@ class ResultTest extends Controller
                 $result->Archetype = $resultUser['archetype']['archetypes'][0] ?? null;
                 $result->save();
                 
-                // Session::forget('result_user');
+                Session::forget('result_user');
+                Session::forget('holland_codes_progress');
+                Session::forget('basic_interest_progress');
+                Session::forget('degree_progress');
+                Session::forget('current_test_stage');
+                Session::forget('result_user');
+
                 
                 DB::commit();
                 
