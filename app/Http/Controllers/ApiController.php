@@ -10,8 +10,10 @@ use App\Models\Result;
 use App\Http\Resources\ResultResource;
 use App\Models\ArchetypeCareer;
 use App\Models\ChatHistory;
+use App\Models\JobInfo;
+use App\Models\Degree;
+use App\Models\ArchetypeDiscovery;
 use Illuminate\Support\Facades\DB;
-
 
 class ApiController extends Controller
 {
@@ -23,6 +25,14 @@ class ApiController extends Controller
             ->withApiKey('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')
             ->withBaseUri('https://models.inference.ai.azure.com')
             ->make();
+    }
+
+    protected function getLocalizedColumn($model, $baseColumn)
+    {
+        $locale = app()->getLocale();
+        $localizedColumn = $locale === 'fr' ? $baseColumn . '_fr' : $baseColumn;
+
+        return $model->$localizedColumn ?? $model->$baseColumn;
     }
 
     public function getWelcomeMessage()
@@ -37,6 +47,8 @@ class ApiController extends Controller
     {
         $userId = Auth::id();
         $welcomeMessage = $this->getWelcomeMessage();
+
+        ds($welcomeMessage);
         
         // Store welcome message in chat history
         ChatHistory::create([
@@ -98,46 +110,84 @@ Keep explanations simple and direct, using emojis to visually separate topics. A
 
         if ($firstScore) {
             $archetype = $firstScore->Archetype ?? null;
-            $jobs = null;
-            $jobMatches = [];
-            $scales = null;
 
-            if (!empty($firstScore->jobs)) {
-                $decodedJobs = json_decode($firstScore->jobs, true, 512, JSON_THROW_ON_ERROR);
-                if (isset($decodedJobs['job_matches'])) {
-                    $jobMatches = collect($decodedJobs['job_matches'])
-                        ->take(3)
-                        ->pluck('job_title')
-                        ->toArray();
-                }
+            // Transform jobs data with localization
+            $jobs = !empty($firstScore->jobs) 
+                ? (is_string($firstScore->jobs) 
+                    ? json_decode($firstScore->jobs, true, 512, JSON_THROW_ON_ERROR) 
+                    : $firstScore->jobs)
+                : null;
+
+            if ($jobs) {
+                $jobs = collect($jobs)->map(function ($job) {
+                    $jobModel = JobInfo::find($job['id']);
+                    if ($jobModel) {
+                        $job['name'] = $this->getLocalizedColumn($jobModel, 'name');
+                        $job['description'] = $this->getLocalizedColumn($jobModel, 'description');
+                    }
+                    return $job;
+                })->toArray();
+            }
+
+            // Transform degrees data with localization
+            $degrees = !empty($firstScore->degree)
+                ? (is_string($firstScore->degree) 
+                    ? json_decode($firstScore->degree, true, 512, JSON_THROW_ON_ERROR) 
+                    : $firstScore->degree)
+                : null;
+
+            if ($degrees) {
+                $degrees = collect($degrees)->map(function ($degree) {
+                    $degreeModel = Degree::find($degree['id']);
+                    if ($degreeModel) {
+                        $degree['name'] = $this->getLocalizedColumn($degreeModel, 'name');
+                        $degree['description'] = $this->getLocalizedColumn($degreeModel, 'description');
+                    }
+                    return $degree;
+                })->toArray();
             }
 
             $Archetype = DB::table('persona')->where('name', $archetype[0] ?? '')->first();
+            $archetypeDiscovery = ArchetypeDiscovery::where('slug', '=', strtolower($archetype[0] ?? ''))->first();
 
-            if (!empty($jobMatches)) {
+            if ($jobs) {
                 $systemContext .= app()->getLocale() === 'fr' ? 
-                    " Selon leur évaluation, leurs meilleures correspondances professionnelles incluent: " . implode(", ", $jobMatches) . "." :
-                    " Based on their assessment, their top career matches include: " . implode(", ", $jobMatches) . ".";
+                    " Vos correspondances professionnelles recommandées sont: " :
+                    " Your recommended job matches are: ";
+                foreach ($jobs as $job) {
+                    $systemContext .= "{$job['name']}, ";
+                }
+                $systemContext = rtrim($systemContext, ', ') . ".";
+            }
+
+            if ($degrees) {
+                $systemContext .= app()->getLocale() === 'fr' ? 
+                    " Les diplômes recommandés sont: " :
+                    " Recommended degrees are: ";
+                foreach ($degrees as $degree) {
+                    $systemContext .= "{$degree['name']}, ";
+                }
+                $systemContext = rtrim($systemContext, ', ') . ".";
             }
 
             if ($Archetype) {
                 $systemContext .= app()->getLocale() === 'fr' ? 
-                    " Leur archétype de personnalité est {$Archetype->name}." :
-                    " Their personality archetype is {$Archetype->name}.";
+                    " Votre archétype de personnalité est {$Archetype->name}." :
+                    " Your personality archetype is {$Archetype->name}.";
 
                 if (!empty($Archetype->scales)) {
                     $scales = json_decode($Archetype->scales, true);
                     $systemContext .= app()->getLocale() === 'fr' ? 
-                        " Leurs principaux traits de personnalité sont:" :
-                        " Their key personality traits are:";
+                        " Vos principaux traits de personnalité sont:" :
+                        " Your key personality traits are:";
                     foreach ($scales as $scale) {
                         $systemContext .= " {$scale['trait']}: {$scale['score']}%,";
                     }
                     $systemContext = rtrim($systemContext, ',') . ".";
                 }
 
-                if (!empty($Archetype->description)) {
-                    $systemContext .= " {$Archetype->description}";
+                if ($archetypeDiscovery) {
+                    $systemContext .= " " . $this->getLocalizedColumn($archetypeDiscovery, 'verbose_description');
                 }
             }
         }
@@ -164,6 +214,7 @@ Keep explanations simple and direct, using emojis to visually separate topics. A
                 'response' => $aiResponse
             ]);
             ds($chatHistory);
+            ds($aiResponse);
 
             return response()->json([
                 'aiMessage' => $aiResponse,

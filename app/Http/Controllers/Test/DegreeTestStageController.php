@@ -269,17 +269,15 @@ class DegreeTestStageController extends BaseTestController
             $degrees = Degree::whereHas('degreeJobsRelation', function($query) use ($jobIds) {
                 $query->whereIn('job_id', $jobIds);
             })
-            ->select('id', 'name', 'slug', 'degree_level', 'salary', 'satisfaction', 'satisfaction_raw', 'image')
+            ->select('id', 'name', 'slug', 'degree_level', 'salary', 'image')
             ->get()
             ->map(function($degree) {
-                return [
+                return [        
                     'id' => $degree->id,
                     'name' => $degree->name,
                     'slug' => $degree->slug,
                     'degree_level' => $degree->degree_level,
                     'salary' => $degree->salary,
-                    'satisfaction' => $degree->satisfaction,
-                    'satisfaction_raw' => $degree->satisfaction_raw,
                     'image' => $degree->image
                 ];
             })
