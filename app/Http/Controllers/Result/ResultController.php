@@ -124,15 +124,20 @@ class ResultController extends Controller
         $ArchetypeData = DB::table('persona')->where('name', '=',$archetype)->first();
         ds(['ArchetypeData'=>$ArchetypeData]);
 
-        $insights = $ArchetypeData ? Insight::where('persona_id', $ArchetypeData->id)
-            ->get()
-            ->groupBy('insight_category_slug')
-            ->map(function ($group) {
-                return $group->map(function ($insight) {
-                    // Use the localized insight based on current locale
-                    return app()->getLocale() === 'fr' ? $insight->insight_fr : $insight->insight;
+        // Get insights with proper localization
+        $insights = collect([]);
+        if ($ArchetypeData) {
+            $insights = Insight::where('persona_id', $ArchetypeData->id)
+                ->get()
+                ->groupBy('insight_category_slug')
+                ->map(function ($group) {
+                    return $group->map(function ($insight) {
+                        // Check current locale and return appropriate column
+                        $locale = app()->getLocale();
+                        return $locale === 'fr' ? $insight->insight_fr : $insight->insight;
+                    });
                 });
-            }) : collect([]);
+        }
 
         // Fetch Archetype Discovery
         $archetypeDiscovery = ArchetypeDiscovery::where('slug', '=', strtolower($archetype))->first();
