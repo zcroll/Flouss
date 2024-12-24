@@ -47,7 +47,7 @@
         "gsap": "^3.12.5",
         "lodash": "^4.17.21",
         "lucide-react": "^0.460.0",
-        "lucide-vue-next": "^0.460.0",
+        "lucide-vue-next": "^0.469.0",
         "motion": "^10.18.0",
         "node-ray": "^2.1.2",
         "php-parser": "^3.2.1",

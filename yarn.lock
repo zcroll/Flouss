@@ -5700,10 +5700,10 @@ lucide-react@^0.460.0:
   resolved "https://registry.npmjs.org/lucide-react/-/lucide-react-0.460.0.tgz"
   integrity sha512-BVtq/DykVeIvRTJvRAgCsOwaGL8Un3Bxh8MbDxMhEWlZay3T4IpEKDEpwt5KZ0KJMHzgm6jrltxlT5eXOWXDHg==
 
-lucide-vue-next@^0.460.0:
-  version "0.460.0"
-  resolved "https://registry.npmjs.org/lucide-vue-next/-/lucide-vue-next-0.460.0.tgz"
-  integrity sha512-IhM1tm3gPhc3u6RagNra4W6Oe48Mz0l3fAJzk0oSLzsRQqt3WU3XiX5ngRyjIs8fzCtvgzu7fC6Qk7XVhS00DQ==
+lucide-vue-next@^0.469.0:
+  version "0.469.0"
+  resolved "https://registry.yarnpkg.com/lucide-vue-next/-/lucide-vue-next-0.469.0.tgz#3c081c39664aaf8c9f29028bededd2a72de4b34f"
+  integrity sha512-EjOap+vY3xEzCMrnaccDHO4BH3k3Lr+sOyvzRQCaayYxkxKla0w6Jr4h3cHAzA4vMSp63Dcy7vDiGeCPcCY+Gg==
 
 magic-string@^0.30.11:
   version "0.30.12"

@@ -8,7 +8,7 @@
                 :src="animationPath"
                 :autoplay="false"
                 :loop="true"
-                :style="{ width: '120%', height: '120%' }"
+                :style="{ width: '100%', height: '100%', transform: 'scale(1.1)' }"
             />
         </div>
     </div>
@@ -28,61 +28,8 @@ const props = defineProps({
 const playerRef = ref(null);
 let dotLottieInstance = null;
 
-// Map archetypes to their corresponding animation files
-const animationMapping = {
-
-
-
-    'caregiver': 'defender',
-    'designer': 'executive',
-    'guardian': 'consul',
-    'mentor': 'consul',
-    'producer': 'logistician',
-    'protector': 'defender',
-    'scholar': 'logistician',
-
-
-    'advocat': 'advocate',
-    'anchor': 'protagonist',
-    'captain': 'protagonist',
-    'composer': 'advocate',
-    'humanitarian': 'mediator',
-    'kingpin': 'protagonist',
-    'philosopher': 'advocate',
-    'supporter': 'campaigner',
-
-
-    'architect': 'architect',
-    'builder': 'virtuoso',
-    'explorer': 'campaigner',
-    'groundbreaker': 'commander',
-    'researcher': 'logician',
-    'strategist': 'architect',
-
-   
-    'creator': 'adventurer',
-    'enthusiast': 'entrepreneur',
-    'innovator': 'entrepreneur',
-    'inventor': 'logistician',
-    'luminary': 'entertainer',
-    'mastermind': 'architect',
-    'maverick': 'debater',
-    'technician': 'virtuoso',
-    'visionary': 'debater'
-};
-
 const animationPath = computed(() => {
-    // Convert archetype to lowercase for case-insensitive matching
-    const archetypeKey = props.archetype.toLowerCase();
-    const animationType = animationMapping[archetypeKey];
-    
-    // If no mapping found, use the first animation as default
-    if (!animationType) {
-        console.warn(`No animation mapping found for archetype: ${props.archetype}`);
-        return '/personality_animations/advocate_animation.json';
-    }
-    
-    return `/personality_animations/${animationType}_animation.json`;
+    return '/personality_animations/architect_animation.json';
 });
 
 onMounted(() => {
@@ -104,7 +51,7 @@ const handleAnimationError = async () => {
     try {
         console.log('Loading fallback animation...');
         if (dotLottieInstance) {
-            await dotLottieInstance.load('/personality_animations/advocate_animation.json');
+            await dotLottieInstance.load('/personality_animations/architect_animation.json');
         }
     } catch (error) {
         console.error('Error loading fallback animation:', error);
@@ -136,16 +83,21 @@ const pauseAnimation = async () => {
 <style scoped>
 .avatar-container {
     position: relative;
+    width: 100%;
+    height: 100%;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .avatar-image {
-    width: 90%;
-    height: 90%;
+    width: 100%;
+    height: 100%;
     transition: transform 0.3s ease;
 }
 
 .avatar-container:hover .avatar-image {
-    transform: scale(1.1);
+    transform: scale(1.05);
 }
 </style> 

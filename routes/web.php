@@ -260,3 +260,7 @@ Route::get('/dashboard/test-fetch', [DashboardController::class, 'testFetch'])
 //     Pan::track($request->element, $request->url);
 //     return response()->json(['status' => 'success']);
 // })->middleware(['web']);
+
+Route::get('/uittesting', function () {
+    return Inertia::render('UItesting/Dashboard');
+})->name('uittesting');
