@@ -10,11 +10,11 @@
             
             <!-- Content -->
             <div class="relative">
-                <h1 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-4">
-                    Explore Academic Paths
+                <h1 class="text-3xl md:text-4xl font-bold mb-4" :class="classes.text">
+                    {{ __('degrees.explore_degrees') }}
                 </h1>
                 <p class="text-gray-600 text-lg max-w-2xl">
-                    Discover and explore various degree programs that can help you achieve your career goals.
+                    {{ __('degrees.discover_education') }}
                 </p>
             </div>
         </div>
@@ -29,38 +29,37 @@
                             {{ __('degrees.search') }}
                         </label>
                         <div class="relative group">
-                            <Search class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 transition-colors group-hover:text-yellow-400" />
-                            <input id="search-desktop" 
-                                   v-model="searchQuery" 
-                                   type="text" 
-                                   :placeholder="__('degrees.search_degrees')"
-                                   class="w-full pl-12 pr-6 py-3 text-gray-900 placeholder-gray-500 bg-white/80 backdrop-blur-md rounded-full border border-white/20 focus:ring-2 focus:ring-yellow-400/20 focus:border-yellow-400 transition duration-200" 
-                                   @input="debouncedSearch" 
+                            <Search class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 transition-colors" :class="classes.hover" />
+                            <input 
+                                id="search-desktop" 
+                                v-model="searchQuery" 
+                                type="text" 
+                                :placeholder="__('degrees.search_degrees')"
+                                class="w-full pl-12 pr-6 py-3 text-gray-900 placeholder-gray-500 bg-white/80 backdrop-blur-md rounded-full border border-white/20 transition duration-200"
+                                :class="classes.focus"
+                                @input="debouncedSearch" 
                             />
                         </div>
                     </div>
 
                     <div class="flex-1">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('degrees.sort_by') }}</label>
-                        <div class="relative group">
-                            <select 
-                                v-model="selectedSort"
-                                class="appearance-none w-full pl-6 pr-12 py-3 text-gray-900 bg-white/80 backdrop-blur-md rounded-full border border-white/20 focus:ring-2 focus:ring-yellow-400/20 focus:border-yellow-400 transition duration-200"
-                                @change="applyFilters"
-                            >
-                                <option selected value="">{{ __('degrees.select_sorting_option') }}</option>
-                                <option value="salary_desc">{{ __('degrees.highest_salary') }}</option>
-                                <option value="satisfaction_desc">{{ __('degrees.highest_satisfaction') }}</option>
-                            </select>
-                            <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400 transition-colors group-hover:text-yellow-400">
-                                <ChevronDown class="h-5 w-5" />
-                            </div>
-                        </div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ __('degrees.degree_levels') }}
+                        </label>
+                        <CustomMultiSelect 
+                            v-model="selectedDegreeTypes" 
+                            :options="degreeTypeOptions"
+                            :placeholder="__('degrees.select_degree_types')"
+                            class="backdrop-blur-md"
+                        />
                     </div>
 
                     <div class="flex items-end">
-                        <button @click="resetFilters"
-                                class="group px-6 py-3 bg-white/80 border border-white/20 backdrop-blur-xl text-gray-700 font-medium rounded-full hover:bg-yellow-400 hover:text-white hover:border-transparent focus:ring-2 focus:ring-yellow-400/50 focus:ring-offset-2 transition duration-200">
+                        <button 
+                            @click="resetFilters"
+                            class="group px-6 py-3 bg-white/80 border border-white/20 backdrop-blur-xl text-gray-700 font-medium rounded-full focus:ring-2 focus:ring-offset-2 transition duration-200"
+                            :class="[classes.hover, classes.focus]"
+                        >
                             <span class="flex items-center gap-2">
                                 <RefreshCw class="w-4 h-4 transition-transform group-hover:rotate-180" />
                                 {{ __('degrees.reset_filters') }}
@@ -71,72 +70,67 @@
             </div>
 
             <!-- Mobile Filters -->
-            <div class="sm:hidden">
-                <Sheet>
-                    <SheetTrigger asChild>
-                        <Button variant="outline" 
-                                class="w-full flex justify-between items-center bg-white/80 backdrop-blur-xl rounded-full border border-white/20">
-                            <span class="flex items-center gap-2">
-                                <Search class="w-5 h-5" />
-                                {{ __('degrees.filters') }}
+            <Sheet>
+                <SheetTrigger asChild>
+                    <Button variant="outline" 
+                            class="w-full sm:hidden flex justify-between items-center bg-white/80 backdrop-blur-xl rounded-full border border-white/20">
+                        <span class="flex items-center gap-2">
+                            <Search class="w-5 h-5" />
+                            {{ __('degrees.filters') }}
+                        </span>
+                        <div class="flex items-center gap-1">
+                            <span v-if="activeFiltersCount" 
+                                  class="text-white text-xs font-medium px-2 py-0.5 rounded-full"
+                                  :class="classes.active">
+                                {{ activeFiltersCount }}
                             </span>
-                            <div class="flex items-center gap-1">
-                                <span v-if="activeFiltersCount" 
-                                      class="bg-yellow-400 text-white text-xs font-medium px-2 py-0.5 rounded-full">
-                                    {{ activeFiltersCount }}
-                                </span>
-                                <ChevronDown class="w-4 h-4" />
-                            </div>
-                        </Button>
-                    </SheetTrigger>
-                    <SheetContent side="bottom" class="rounded-t-3xl bg-white/95 backdrop-blur-xl">
-                        <!-- Mobile filter content -->
-                        <div class="space-y-6 p-4">
-                            <!-- Search -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">
-                                    {{ __('degrees.search') }}
-                                </label>
-                                <div class="relative">
-                                    <Search class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                                    <input v-model="searchQuery" 
-                                           type="text" 
-                                           :placeholder="__('degrees.search_degrees')"
-                                           class="w-full pl-12 pr-6 py-3 bg-white/80 rounded-full border border-gray-200" 
-                                    />
-                                </div>
-                            </div>
-
-                            <!-- Sort By -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">
-                                    {{ __('degrees.sort_by') }}
-                                </label>
-                                <div class="relative group">
-                                    <select 
-                                        v-model="selectedSort"
-                                        class="appearance-none w-full pl-6 pr-12 py-3 text-gray-900 bg-white/80 backdrop-blur-md rounded-full border border-white/20 focus:ring-2 focus:ring-yellow-400/20 focus:border-yellow-400 transition duration-200"
-                                        @change="applyFilters"
-                                    >
-                                        <option selected value="">{{ __('degrees.select_sorting_option') }}</option>
-                                        <option value="salary_desc">{{ __('degrees.highest_salary') }}</option>
-                                        <option value="satisfaction_desc">{{ __('degrees.highest_satisfaction') }}</option>
-                                    </select>
-                                    <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400 transition-colors group-hover:text-yellow-400">
-                                        <ChevronDown class="h-5 w-5" />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Reset Button -->
-                            <button @click="resetFilters"
-                                    class="w-full px-6 py-3 bg-yellow-400 text-white font-medium rounded-full hover:bg-yellow-500 transition-colors duration-200">
-                                {{ __('degrees.reset_filters') }}
-                            </button>
+                            <ChevronDown class="w-4 h-4" />
                         </div>
-                    </SheetContent>
-                </Sheet>
-            </div>
+                    </Button>
+                </SheetTrigger>
+                <SheetContent side="bottom" class="rounded-t-3xl bg-white/95 backdrop-blur-xl">
+                    <!-- Mobile filter content -->
+                    <div class="space-y-6 p-4">
+                        <!-- Search -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                {{ __('degrees.search') }}
+                            </label>
+                            <div class="relative">
+                                <Search class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                                <input 
+                                    v-model="searchQuery" 
+                                    type="text" 
+                                    :placeholder="__('degrees.search_degrees')"
+                                    class="w-full pl-12 pr-6 py-3 bg-white/80 rounded-full border border-gray-200" 
+                                    :class="classes.focus"
+                                />
+                            </div>
+                        </div>
+
+                        <!-- Degree Types -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                {{ __('degrees.degree_levels') }}
+                            </label>
+                            <CustomMultiSelect 
+                                v-model="selectedDegreeTypes" 
+                                :options="degreeTypeOptions"
+                                :placeholder="__('degrees.select_degree_types')"
+                            />
+                        </div>
+
+                        <!-- Reset Button -->
+                        <button 
+                            @click="resetFilters"
+                            class="w-full px-6 py-3 font-medium rounded-full transition-colors duration-200"
+                            :class="[classes.button, classes.text]"
+                        >
+                            {{ __('degrees.reset_filters') }}
+                        </button>
+                    </div>
+                </SheetContent>
+            </Sheet>
         </div>
 
         <!-- Degrees Grid -->
@@ -148,7 +142,8 @@
             >
                 <!-- Header with Image and Title -->
                 <div class="flex items-center gap-4 mb-6">
-                    <div class="w-16 h-16 rounded-2xl overflow-hidden bg-white/50 p-3 backdrop-blur-sm border border-white/20 group-hover:border-yellow-400/20 transition-colors duration-300">
+                    <div class="w-16 h-16 rounded-2xl overflow-hidden bg-white/50 p-3 backdrop-blur-sm border border-white/20 transition-colors duration-300"
+                         :class="classes.border">
                         <img :src="degree.image" 
                              :alt="`image for ${degree.name}`"
                              class="w-full h-full object-contain filter contrast-125 transition-transform duration-300 group-hover:scale-110" 
@@ -156,34 +151,38 @@
                     </div>
                     <div>
                         <h3 class="text-lg font-bold text-gray-900">{{ degree.name }}</h3>
-                        <p class="text-sm text-gray-500">{{ degree.level }}</p>
+                        <p class="text-sm" :class="classes.text">{{ degree.type }}</p>
                     </div>
                 </div>
                 
                 <!-- Degree Details -->
                 <div class="space-y-4 mb-6">
+                    <!-- Description -->
                     <div>
                         <p class="text-sm text-gray-600 line-clamp-2">{{ degree.description }}</p>
                     </div>
 
                     <!-- Key Details -->
                     <div class="grid grid-cols-2 gap-4">
-                        <template v-for="(value, key) in degreeDetails(degree)" :key="key">
-                            <div v-if="value" class="space-y-1">
-                                <h4 class="text-xs font-medium text-gray-500 uppercase tracking-wider">{{ formatLabel(key) }}</h4>
-                                <p class="text-sm text-gray-700">{{ value }}</p>
-                            </div>
-                        </template>
+                        <div class="space-y-1">
+                            <h4 class="text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</h4>
+                            <p class="text-sm text-gray-700">{{ degree.duration }} Years</p>
+                        </div>
+                        <div class="space-y-1">
+                            <h4 class="text-xs font-medium text-gray-500 uppercase tracking-wider">Level</h4>
+                            <p class="text-sm text-gray-700">{{ degree.level }}</p>
+                        </div>
                     </div>
 
-                    <!-- Fields/Specializations -->
-                    <div v-if="degree.fields?.length" class="space-y-2">
-                        <h4 class="text-xs font-medium text-gray-500 uppercase tracking-wider">Fields</h4>
+                    <!-- Skills -->
+                    <div v-if="degree.skills?.length" class="space-y-2">
+                        <h4 class="text-xs font-medium text-gray-500 uppercase tracking-wider">Key Skills</h4>
                         <div class="flex flex-wrap gap-2">
-                            <span v-for="field in degree.fields" 
-                                  :key="field"
-                                  class="px-3 py-1 bg-white/50 text-gray-600 text-xs rounded-full border border-white/20 group-hover:border-yellow-400/20 transition-colors duration-300">
-                                {{ field }}
+                            <span v-for="skill in degree.skills" 
+                                  :key="skill"
+                                  class="px-3 py-1 bg-white/50 text-xs rounded-full border border-white/20 transition-colors duration-300"
+                                  :class="classes.border">
+                                {{ skill }}
                             </span>
                         </div>
                     </div>
@@ -191,9 +190,10 @@
                 
                 <!-- Action Button -->
                 <Link :href="`/degree/${degree.slug}`" 
-                      class="inline-flex items-center justify-between w-full px-6 py-3 bg-white/60 backdrop-blur-sm text-gray-700 font-medium rounded-full border border-white/20 group-hover:bg-yellow-400 group-hover:text-white group-hover:border-transparent transition-all duration-300">
+                      class="inline-flex items-center justify-between w-full px-6 py-3 bg-white/60 backdrop-blur-sm font-medium rounded-full border border-white/20 transition-all duration-300"
+                      :class="[classes.button, classes.text]">
                     <span>Learn More</span>
-                    <ArrowRight class="w-5 h-4 transform group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" />
                 </Link>
             </div>
         </div>
@@ -209,8 +209,11 @@
                     {{ __("degrees.no_degrees_found") }}
                 </h3>
                 <p class="text-gray-600 mb-6">Try adjusting your search or filters</p>
-                <button @click="resetFilters"
-                        class="px-6 py-3 bg-yellow-400 text-white font-medium rounded-full hover:bg-yellow-500 transition-colors duration-300 flex items-center gap-2 mx-auto">
+                <button 
+                    @click="resetFilters"
+                    class="px-6 py-3 font-medium rounded-full transition-colors duration-300 flex items-center gap-2 mx-auto"
+                    :class="classes.button"
+                >
                     <RefreshCw class="w-4 h-4" />
                     {{ __("degrees.reset_filters") }}
                 </button>
@@ -220,9 +223,11 @@
         <!-- Load More -->
         <WhenVisible v-if="hasMorePages">
             <div class="flex justify-center mt-8">
-                <button @click="loadMore"
-                        class="group px-8 py-3 bg-white/60 backdrop-blur-xl text-gray-700 font-medium rounded-full hover:bg-white/80 transition-all duration-300 flex items-center gap-2"
-                        :disabled="isLoading">
+                <button 
+                    @click="loadMore"
+                    class="group px-8 py-3 bg-white/60 backdrop-blur-xl text-gray-700 font-medium rounded-full hover:bg-white/80 transition-all duration-300 flex items-center gap-2"
+                    :disabled="isLoading"
+                >
                     <span>Load More</span>
                     <ArrowDown class="w-4 h-4 transform group-hover:translate-y-1 transition-transform" />
                 </button>
@@ -235,16 +240,16 @@
 
 <script setup>
 import { ref, watch, onMounted, onUnmounted, computed } from "vue";
-import { router, Link } from "@inertiajs/vue3";
-import AppLayout from "@/Layouts/AppLayout.vue";
+import { router, Link, usePage } from "@inertiajs/vue3";
+import CustomMultiSelect from "@/Components/helpers/CustomMultiSelect.vue";
 import debounce from "lodash/debounce";
-import { usePage } from "@inertiajs/vue3";
 import { WhenVisible } from "@inertiajs/vue3";
 import BackToTop from "@/Components/helpers/BackToTop.vue";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/Components/ui/sheet"
+import { Sheet, SheetContent, SheetTrigger } from "@/Components/ui/sheet"
 import { Button } from "@/Components/ui/button"
 import MainLayout from "@/Layouts/MainLayout.vue";
 import { Search, ArrowRight, ChevronDown, RefreshCw, ArrowDown, SearchX } from 'lucide-vue-next';
+import { useArchetypeTheme } from "@/composables/useArchetypeTheme";
 
 defineOptions({
     layout: MainLayout,
@@ -256,21 +261,22 @@ const props = defineProps({
   language: String,
 });
 
-const searchQuery = ref(props.filters.q || "");
-const selectedDegreeLevels = ref(
-  props.filters.level
-    ? props.filters.level.map((level) =>
-      degreeLevelOptions.find((option) => option.value === level)
-    )
-    : []
-);
-const selectedSort = ref(props.filters.sort || "");
+// Initialize theme
+const archetype = computed(() => usePage().props.auth.user.archetype || 'Creator')
+const { classes, themeColors } = useArchetypeTheme(archetype);
 
-const degreeLevelOptions = [
+// State
+const searchQuery = ref(props.filters.q || "");
+const selectedDegreeTypes = ref(props.filters.type ? props.filters.type.map(type => ({
+  value: type,
+  label: type
+})) : []);
+
+const degreeTypeOptions = [
   { value: "Associate", label: "Associate" },
   { value: "Bachelor's", label: "Bachelor's" },
   { value: "Master's", label: "Master's" },
-  { value: "Doctorate", label: "Doctorate" },
+  { value: "Doctorate", label: "Doctorate" }
 ];
 
 const debouncedSearch = debounce(() => {
@@ -287,8 +293,7 @@ watch(
     if (newLanguage !== oldLanguage) {
       // Reset filters and reload data
       searchQuery.value = "";
-      selectedDegreeLevels.value = [];
-      selectedSort.value = "";
+      selectedDegreeTypes.value = [];
       page.value = 1;
       hasMorePages.value = true;
 
@@ -302,7 +307,7 @@ watch(
 );
 
 const degrees = ref(props.degrees);
-const page = ref(1);
+const pageNum = ref(1);
 const isLoading = ref(false);
 const hasMorePages = ref(true);
 
@@ -310,11 +315,11 @@ const loadMore = () => {
   if (isLoading.value || !hasMorePages.value) return;
 
   isLoading.value = true;
-  page.value++;
+  pageNum.value++;
 
   router.reload({
     data: {
-      page: page.value,
+      page: pageNum.value,
       ...props.filters,
     },
     preserveState: true,
@@ -337,9 +342,8 @@ const loadMore = () => {
 const applyFilters = () => {
   const params = {};
   if (searchQuery.value) params.q = searchQuery.value;
-  if (selectedDegreeLevels.value.length > 0)
-    params.level = selectedDegreeLevels.value.map((level) => level.value);
-  if (selectedSort.value) params.sort = selectedSort.value;
+  if (selectedDegreeTypes.value.length > 0)
+    params.type = selectedDegreeTypes.value.map((type) => type.value);
 
   router.visit(window.location.pathname, {
     data: params,
@@ -349,7 +353,7 @@ const applyFilters = () => {
     only: ["degrees"],
     onSuccess: () => {
       degrees.value = usePage().props.degrees;
-      page.value = 1;
+      pageNum.value = 1;
       hasMorePages.value = true;
     },
   });
@@ -357,8 +361,7 @@ const applyFilters = () => {
 
 const resetFilters = () => {
   searchQuery.value = "";
-  selectedDegreeLevels.value = [];
-  selectedSort.value = "";
+  selectedDegreeTypes.value = [];
   router.visit(window.location.pathname, {
     preserveState: true,
     preserveScroll: true,
@@ -377,7 +380,7 @@ onUnmounted(() => {
 });
 
 watch(
-  [selectedDegreeLevels, selectedSort],
+  [selectedDegreeTypes],
   () => {
     applyFilters();
   },
@@ -406,21 +409,9 @@ const showFilters = ref(false);
 const activeFiltersCount = computed(() => {
   let count = 0;
   if (searchQuery.value) count++;
-  if (selectedSort.value) count++;
+  if (selectedDegreeTypes.value.length > 0) count++;
   return count;
 });
-
-// Add helper functions
-const degreeDetails = (degree) => ({
-  duration: degree.duration,
-  avg_salary: degree.avg_salary,
-  level: degree.level,
-  institution: degree.institution
-});
-
-const formatLabel = (key) => {
-  return key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-};
 </script>
 
 <style scoped>
@@ -464,4 +455,3 @@ const formatLabel = (key) => {
   background-color: rgba(250, 204, 21, 0.7);
 }
 </style>
-

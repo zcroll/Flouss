@@ -10,7 +10,10 @@
              @mouseover="showDetails = true"
              @mouseleave="showDetails = false">
           <!-- Glow Effect -->
-          <div class="absolute inset-0 bg-yellow-400/20 rounded-full blur-3xl scale-90 animate-pulse-slow"></div>
+          <div :class="[
+            `bg-${themeColors.primary}-400/20`,
+            'absolute inset-0 rounded-full blur-3xl scale-90 animate-pulse-slow'
+          ]"></div>
           
           <ArchetypeAvatar 
             :archetype="archetype.slug" 
@@ -35,8 +38,14 @@
                 <!-- Animated Rarity Badge -->
                 <div class="rarity-badge"
                      :class="{ 'show-badge': showDetails }">
-                  <div class="px-3 py-1.5 bg-white/80 backdrop-blur-sm rounded-full border border-yellow-400/20 shadow-lg relative overflow-hidden">
-                    <span class="text-sm font-medium bg-gradient-to-r from-yellow-600 to-yellow-400 bg-clip-text text-transparent relative z-10">
+                  <div :class="[
+                    classes.border,
+                    'px-3 py-1.5 bg-white/80 backdrop-blur-sm rounded-full shadow-lg relative overflow-hidden'
+                  ]">
+                    <span :class="[
+                      classes.text,
+                      'text-sm font-medium relative z-10'
+                    ]">
                       {{ archetype.rarity_string }}
                     </span>
                     <!-- Shine Effect -->
@@ -50,7 +59,10 @@
             <!-- Stats -->
             <div class="space-y-6">
               <!-- Top Traits -->
-              <div class="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-xl">
+              <div :class="[
+                classes.border,
+                'bg-white/60 backdrop-blur-sm rounded-2xl p-6 border shadow-xl'
+              ]">
                 <h3 class="text-lg font-semibold text-gray-800 mb-4">Top Traits</h3>
                 <div class="space-y-4">
                   <div v-for="(value, trait, index) in topTraits" 
@@ -61,11 +73,14 @@
                          '--progress': showDetails ? value : 0
                        }">
                     <div class="flex justify-between text-sm mb-2">
-                      <span class="font-medium text-gray-700">{{ trait }}</span>
-                      <span class="text-gray-500">{{ Math.round(value * 100) }}%</span>
+                      <span class="font-medium" :class="[classes.text.dark]">{{ trait }}</span>
+                      <span class="text-red-500">{{ Math.round(value * 100) }}%</span>
                     </div>
-                    <div class="h-2.5 bg-gray-100 rounded-full overflow-hidden">
-                      <div class="progress-bar h-full bg-gradient-to-r from-yellow-400 to-yellow-300 rounded-full">
+                    <div class="h-2.5" :class="[classes.background.dark, 'rounded-full overflow-hidden']">
+                      <div :class="[
+                        'bg-gray-500',
+                        'progress-bar h-full rounded-full'
+                      ]">
                       </div>
                     </div>
                   </div>
@@ -80,7 +95,11 @@
 
   <!-- Bottom section -->
   <div class="relative">
-    <BottomCards :favorite-jobs="favoriteJobs" :favorite-degrees="favoriteDegrees" />
+    <BottomCards 
+      :favorite-jobs="favoriteJobs" 
+      :favorite-degrees="favoriteDegrees"
+      :archetype="archetype.slug"
+    />
     <AIChat 
       :predefined-questions="predefinedQuestions"
       :initial-messages="chatHistory"
@@ -90,14 +109,15 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { Head } from '@inertiajs/vue3'
+import { ref, computed } from 'vue'
+import { Head, usePage } from '@inertiajs/vue3'
 import MainLayout from '@/Layouts/MainLayout.vue'
 import ArchetypeAvatar from '@/Components/Result/Archetype_Avatar/ArchetypeAvatar.vue'
 import BottomCards from '@/Components/BottomCards.vue'
 import AIChat from '@/Components/Dashboard/AIChat.vue'
+import { useArchetypeTheme } from '@/composables/useArchetypeTheme'
 
-defineProps({
+const props = defineProps({
   hasResult: {
     type: Boolean,
     required: true
@@ -139,6 +159,17 @@ defineOptions({
 })
 
 const showDetails = ref(false)
+
+// Get theme based on archetype
+const archetypeRef = computed(() => props.archetype.slug)
+const { classes, themeColors } = useArchetypeTheme(archetypeRef)
+
+// Debug logging
+console.log('Dashboard Archetype:', archetypeRef.value)
+console.log('Dashboard Theme:', {
+  colors: themeColors.value,
+  classes: classes.value
+})
 </script>
 
 <style scoped>
@@ -160,7 +191,7 @@ const showDetails = ref(false)
   transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1) var(--delay);
 }
 
-/* Animations */
+/* Enhanced animations */
 @keyframes pulse-slow {
   0%, 100% {
     opacity: 0.4;
@@ -174,6 +205,28 @@ const showDetails = ref(false)
 
 .animate-pulse-slow {
   animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Enhanced shine effect */
+.shine-effect {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+  animation: shine 3s infinite;
+}
+
+@keyframes shine {
+  0% { left: -100%; }
+  20% { left: 100%; }
+  100% { left: 100%; }
 }
 
 /* Transitions */
@@ -207,34 +260,6 @@ const showDetails = ref(false)
 .rarity-badge.show-badge {
   opacity: 1;
   transform: translateY(0) scale(1);
-}
-
-/* Shine Effect */
-.shine-effect {
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(
-    120deg,
-    transparent,
-    rgba(255, 255, 255, 0.6),
-    transparent
-  );
-  animation: shine 3s infinite;
-}
-
-@keyframes shine {
-  0% {
-    left: -100%;
-  }
-  20% {
-    left: 100%;
-  }
-  100% {
-    left: 100%;
-  }
 }
 
 /* Make the badge slightly more glossy */

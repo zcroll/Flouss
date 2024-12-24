@@ -16,7 +16,7 @@
     </template>
 
     <!-- Main Content -->
-    <div class="space-y-8">
+    <div :class="[classes.gradient, 'space-y-8']">
       <Breadcrumbs 
         :items="[
           { name: 'Home', route: 'dashboard' },
@@ -28,7 +28,7 @@
       />
 
       <!-- Table of Contents -->
-      <aside class="bg-white/50 backdrop-blur-sm rounded-2xl border border-white/20 p-6 shadow-sm">
+      <aside :class="[classes.border, 'bg-white/50 backdrop-blur-sm rounded-2xl p-6 shadow-sm']">
         <h2 class="text-lg font-semibold text-gray-900 mb-4">
           {{ __('career.in_this_article') }}
         </h2>
@@ -38,7 +38,7 @@
                :key="category" 
                class="space-y-2">
             <button 
-              class="w-full text-left flex items-center justify-between text-gray-900 font-medium hover:text-yellow-500 transition-colors"
+              :class="[classes.hover, 'w-full text-left flex items-center justify-between text-gray-900 font-medium transition-colors']"
               @click="toggleSection(index)"
             >
               <span>{{ category }}</span>
@@ -58,7 +58,7 @@
                 <li v-for="item in items" :key="item.id">
                   <a 
                     :href="`#section-${item.id}`"
-                    class="text-gray-600 hover:text-yellow-500 transition-colors"
+                    :class="[classes.hover, 'text-gray-600 transition-colors']"
                     @click.prevent="highlightAndScroll(item.id)"
                   >
                     {{ item.name }}
@@ -75,17 +75,17 @@
         <div v-for="environment in workEnvironments" 
              :key="environment.id"
              :id="`section-${environment.id}`"
-             class="bg-white/50 backdrop-blur-sm rounded-2xl border border-white/20 p-6 shadow-sm transition-all duration-300"
-             :class="{ 'highlight': isHighlighted(environment.id) }">
+             :class="[classes.border, 'bg-white/50 backdrop-blur-sm rounded-2xl p-6 shadow-sm transition-all duration-300', { 'highlight': isHighlighted(environment.id) }]">
           <h3 class="text-xl font-semibold text-gray-900 mb-4">
             {{ environment.name }}
           </h3>
           
           <p class="text-gray-600 mb-6">{{ environment.description }}</p>
           
-          <div v-if="environment.score" class="relative h-8 bg-gray-100 rounded-full overflow-hidden">
+          <div v-if="environment.score" class="relative h-8 rounded-full overflow-hidden" :class="[classes.background.dark]">
             <div 
-              class="absolute inset-y-0 left-0 bg-gradient-to-r from-yellow-400 to-yellow-500 transition-all duration-1000"
+              :class="[classes.button]"
+              class="absolute inset-y-0 left-0 transition-all duration-1000"
               :style="{ width: `${environment.score}%` }"
             >
               <span class="absolute inset-0 flex items-center justify-end pr-4 text-white font-medium">
@@ -109,6 +109,7 @@ import { Link } from '@inertiajs/vue3';
 import BackToTop from "@/Components/helpers/BackToTop.vue";
 import Breadcrumbs from '@/Components/helpers/Breadcrumbs.vue';
 import MainLayout from "@/Layouts/MainLayout.vue";
+import { useArchetypeTheme } from '@/composables/useArchetypeTheme';
 
 defineOptions({ layout: MainLayout });
 
@@ -122,6 +123,9 @@ const props = defineProps({
         required: true,
     },
 });
+
+const archetype = ref(props.occupation.personality || 'Creator');
+const { themeColors, classes } = useArchetypeTheme(archetype);
 
 // Add state for tracking highlighted section
 const highlightedId = ref(null);

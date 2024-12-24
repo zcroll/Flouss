@@ -9,8 +9,8 @@
         'h-14 w-14 rounded-full flex items-center justify-center transition-all duration-300',
         { 'delay-100': index > 0 },
         checkActive(item.route)
-          ? 'bg-yellow-400 hover:bg-yellow-500 nav-active shadow-lg'
-          : 'bg-white/90 hover:bg-white/100 hover:scale-105 backdrop-blur-xl shadow-md'
+          ? [classes.active, 'shadow-lg']
+          : ['bg-white/90 hover:bg-white/100 hover:scale-105 backdrop-blur-xl shadow-md']
       ]"
     >
       <component 
@@ -20,26 +20,31 @@
           'h-7 w-7',
           checkActive(item.route) 
             ? 'text-white transform scale-110' 
-            : 'text-gray-600 group-hover:text-gray-800'
+            : [classes.icon, classes.hover]
         ]" 
       />
       
       <!-- Tooltip -->
-      <span class="nav-tooltip">
+      <span 
+        class="nav-tooltip"
+        :class="[classes.text]"
+      >
         {{ item.name }}
       </span>
 
       <!-- Glass effect overlay -->
       <div 
         class="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        style="background: linear-gradient(145deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%); backdrop-filter: blur(8px);"
+        :class="[`bg-${themeColors.primary}-50/10`]"
+        style="backdrop-filter: blur(8px);"
       ></div>
     </Link>
   </nav>
 </template>
 
 <script setup>
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import { 
   HomeIcon,
   ClipboardDocumentListIcon,
@@ -47,6 +52,7 @@ import {
   AcademicCapIcon,
   BookOpenIcon
 } from '@heroicons/vue/24/outline';
+import { useArchetypeTheme } from '@/composables/useArchetypeTheme';
 
 const navigationItems = [
   { name: 'Dashboard', route: 'dashboard' },
@@ -68,16 +74,12 @@ const getIcon = (name) => {
 
 const checkActive = (routeName) => {
   const currentRoute = route().current();
-  
-  // Handle index routes (jobs.index, degrees.index, etc)
-  if (routeName.endsWith('.index')) {
-    const baseRoute = routeName.split('.')[0];
-    return currentRoute === routeName || currentRoute.startsWith(`${baseRoute}.`);
-  }
-  
-  // Handle other routes
-  return currentRoute === routeName || currentRoute.startsWith(`${routeName}.`);
+  return currentRoute.startsWith(routeName);
 };
+
+// Get theme based on user's archetype
+const archetype = computed(() => usePage().props.auth.user.archetype || 'Creator')
+const { classes, themeColors } = useArchetypeTheme(archetype)
 </script>
 
 <style scoped>
@@ -95,10 +97,10 @@ const checkActive = (routeName) => {
   content: '';
   position: absolute;
   inset: -3px;
-  background: linear-gradient(45deg, rgba(250, 204, 21, 0.4), rgba(250, 204, 21, 0.2));
   border-radius: 9999px;
   z-index: -1;
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  background: v-bind(`linear-gradient(45deg, rgba(var(--${themeColors?.primary || 'yellow'}-rgb), 0.4), rgba(var(--${themeColors?.primary || 'yellow'}-rgb), 0.2))`);
 }
 
 .nav-tooltip {
@@ -141,7 +143,7 @@ const checkActive = (routeName) => {
 }
 
 .nav-active .nav-icon {
-  filter: drop-shadow(0 0 8px rgba(250, 204, 21, 0.3));
+  filter: v-bind(`drop-shadow(0 0 8px rgba(var(--${themeColors?.primary || 'yellow'}-rgb), 0.3))`);
   z-index: 2;
 }
 

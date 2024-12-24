@@ -10,11 +10,11 @@
       
       <!-- Content -->
       <div class="relative">
-        <h1 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-4">
-          Explore Career Opportunities
+        <h1 class="text-3xl md:text-4xl font-bold mb-4" :class="classes.text">
+          {{ __('jobs.explore_opportunities') }}
         </h1>
         <p class="text-gray-600 text-lg max-w-2xl">
-          Discover and explore detailed information about various career paths that match your interests and skills.
+          {{ __('jobs.discover_careers') }}
         </p>
       </div>
     </div>
@@ -29,13 +29,14 @@
               {{ __('jobs.search') }}
             </label>
             <div class="relative group">
-              <Search class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 transition-colors group-hover:text-yellow-400" />
+              <Search class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 transition-colors" :class="classes.hover" />
               <input 
                 id="search-desktop" 
                 v-model="searchQuery" 
                 type="text" 
                 :placeholder="__('jobs.search_jobs')"
-                class="w-full pl-12 pr-6 py-3 text-gray-900 placeholder-gray-500 bg-white/80 backdrop-blur-md rounded-full border border-white/20 focus:ring-2 focus:ring-yellow-400/20 focus:border-yellow-400 transition duration-200" 
+                class="w-full pl-12 pr-6 py-3 text-gray-900 placeholder-gray-500 bg-white/80 backdrop-blur-md rounded-full border border-white/20 transition duration-200"
+                :class="classes.focus"
                 @input="debouncedSearch" 
               />
             </div>
@@ -56,7 +57,8 @@
           <div class="flex items-end">
             <button 
               @click="resetFilters"
-              class="group px-6 py-3 bg-white/80 border border-white/20 backdrop-blur-xl text-gray-700 font-medium rounded-full hover:bg-yellow-400 hover:text-white hover:border-transparent focus:ring-2 focus:ring-yellow-400/50 focus:ring-offset-2 transition duration-200"
+              class="group px-6 py-3 bg-white/80 border border-white/20 backdrop-blur-xl text-gray-700 font-medium rounded-full focus:ring-2 focus:ring-offset-2 transition duration-200"
+              :class="[classes.hover, classes.focus]"
             >
               <span class="flex items-center gap-2">
                 <RefreshCw class="w-4 h-4 transition-transform group-hover:rotate-180" />
@@ -79,7 +81,8 @@
               </span>
               <div class="flex items-center gap-1">
                 <span v-if="activeFiltersCount" 
-                      class="bg-yellow-400 text-white text-xs font-medium px-2 py-0.5 rounded-full">
+                      class="text-white text-xs font-medium px-2 py-0.5 rounded-full"
+                      :class="classes.active">
                   {{ activeFiltersCount }}
                 </span>
                 <ChevronDown class="w-4 h-4" />
@@ -101,6 +104,7 @@
                     type="text" 
                     :placeholder="__('jobs.search_jobs')"
                     class="w-full pl-12 pr-6 py-3 bg-white/80 rounded-full border border-gray-200" 
+                    :class="classes.focus"
                   />
                 </div>
               </div>
@@ -120,7 +124,8 @@
               <!-- Reset Button -->
               <button 
                 @click="resetFilters"
-                class="w-full px-6 py-3 bg-yellow-400 text-white font-medium rounded-full hover:bg-yellow-500 transition-colors duration-200"
+                class="w-full px-6 py-3 font-medium rounded-full transition-colors duration-200"
+                :class="[classes.button, classes.text]"
               >
                 {{ __('jobs.reset_filters') }}
               </button>
@@ -139,7 +144,8 @@
       >
         <!-- Header with Image and Title -->
         <div class="flex items-center gap-4 mb-6">
-          <div class="w-16 h-16 rounded-2xl overflow-hidden bg-white/50 p-3 backdrop-blur-sm border border-white/20 group-hover:border-yellow-400/20 transition-colors duration-300">
+          <div class="w-16 h-16 rounded-2xl overflow-hidden bg-white/50 p-3 backdrop-blur-sm border border-white/20 transition-colors duration-300"
+               :class="classes.border">
             <img :src="job.image" 
                  :alt="`image for ${job.name}`"
                  class="w-full h-full object-contain filter contrast-125 transition-transform duration-300 group-hover:scale-110" 
@@ -147,7 +153,7 @@
           </div>
           <div>
             <h3 class="text-lg font-bold text-gray-900">{{ job.name }}</h3>
-            <p class="text-sm text-gray-500">{{ job.category }}</p>
+            <p class="text-sm" :class="classes.text">{{ job.category }}</p>
           </div>
         </div>
         
@@ -164,7 +170,8 @@
             <div class="flex flex-wrap gap-2">
               <span v-for="(level, idx) in job.education_levels" 
                     :key="idx"
-                    class="px-3 py-1 bg-yellow-400/10 text-yellow-600 text-xs rounded-full border border-yellow-400/20">
+                    class="px-3 py-1 text-xs rounded-full"
+                    :class="[classes.border, classes.text]">
                 {{ level }}
               </span>
             </div>
@@ -186,7 +193,8 @@
             <div class="flex flex-wrap gap-2">
               <span v-for="skill in job.skills" 
                     :key="skill"
-                    class="px-3 py-1 bg-white/50 text-gray-600 text-xs rounded-full border border-white/20 group-hover:border-yellow-400/20 transition-colors duration-300">
+                    class="px-3 py-1 bg-white/50 text-xs rounded-full border border-white/20 transition-colors duration-300"
+                    :class="classes.border">
                 {{ skill }}
               </span>
             </div>
@@ -195,7 +203,8 @@
         
         <!-- Action Button -->
         <Link :href="`/career/${job.slug}`" 
-              class="inline-flex items-center justify-between w-full px-6 py-3 bg-white/60 backdrop-blur-sm text-gray-700 font-medium rounded-full border border-white/20 group-hover:bg-yellow-400 group-hover:text-white group-hover:border-transparent transition-all duration-300">
+              class="inline-flex items-center justify-between w-full px-6 py-3 bg-white/60 backdrop-blur-sm font-medium rounded-full border border-white/20 transition-all duration-300"
+              :class="[classes.button, classes.text]">
           <span>Learn More</span>
           <ArrowRight class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" />
         </Link>
@@ -215,7 +224,8 @@
         <p class="text-gray-600 mb-6">Try adjusting your search or filters</p>
         <button 
           @click="resetFilters"
-          class="px-6 py-3 bg-yellow-400 text-white font-medium rounded-full hover:bg-yellow-500 transition-colors duration-300 flex items-center gap-2 mx-auto"
+          class="px-6 py-3 font-medium rounded-full transition-colors duration-300 flex items-center gap-2 mx-auto"
+          :class="classes.button"
         >
           <RefreshCw class="w-4 h-4" />
           {{ __("jobs.reset_filters") }}
@@ -253,6 +263,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/Co
 import { Button } from "@/Components/ui/button"
 import MainLayout from "@/Layouts/MainLayout.vue";
 import { Search, ArrowRight, ChevronDown, RefreshCw, ArrowDown, SearchX } from 'lucide-vue-next'
+import { useArchetypeTheme } from '@/composables/useArchetypeTheme';
 
 const props = defineProps({
   jobs: Object,
@@ -262,6 +273,10 @@ const props = defineProps({
 defineOptions({
     layout: MainLayout,
 })
+
+// Initialize theme
+const archetype = ref('Creator'); // Set default archetype or get from props
+const { classes } = useArchetypeTheme(archetype);
 
 // Add showFilters ref
 const showFilters = ref(false);
@@ -457,4 +472,3 @@ const formatLabel = (key) => {
   background-color: rgba(250, 204, 21, 0.7);
 }
 </style>
-

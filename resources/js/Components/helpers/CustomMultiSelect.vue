@@ -1,8 +1,18 @@
 <template>
     <div class="relative" ref="multiSelectRef">
         <div
-            class="relative w-full cursor-default rounded-xl bg-white py-2 pl-3 pr-10 text-left border border-[#db492b]/20 focus:outline-none focus-visible:border-[#db492b] focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-[#db492b]/20 sm:text-sm shadow-sm"
-            :class="{ 'ring-2 ring-[#db492b]/20 border-[#db492b]': isOpen }"
+            class="relative w-full cursor-default rounded-xl bg-white py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 sm:text-sm shadow-sm"
+            :style="{
+                borderWidth: '1px',
+                borderColor: isOpen 
+                    ? `rgb(var(--${themeColors?.primary || 'yellow'}-rgb))` 
+                    : `rgb(var(--${themeColors?.primary || 'yellow'}-rgb), 0.2)`,
+                '--tw-ring-color': `rgb(var(--${themeColors?.primary || 'yellow'}-rgb), 0.2)`
+            }"
+            :class="{ 
+                'ring-2': isOpen,
+                [classes?.focus]: true 
+            }"
             @click="toggleDropdown"
         >
             <div class="flex flex-wrap gap-1 min-h-[1.5rem]">
@@ -10,17 +20,24 @@
                 <span
                     v-for="item in modelValue"
                     :key="item.value"
-                    class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#db492b]/10 text-[#db492b] text-sm"
+                    class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-sm"
+                    :style="{
+                        backgroundColor: `rgb(var(--${themeColors?.primary || 'yellow'}-rgb), 0.1)`,
+                        color: `rgb(var(--${themeColors?.primary || 'yellow'}-rgb))`
+                    }"
                 >
                     {{ item.label }}
                     <button
                         type="button"
                         @click.stop="removeItem(item)"
-                        class="group relative rounded-sm hover:bg-[#db492b]/20 p-0.5 transition duration-200"
+                        class="group relative rounded-sm p-0.5 transition duration-200"
+                        :style="{
+                            '&:hover': {
+                                backgroundColor: `rgb(var(--${themeColors?.primary || 'yellow'}-rgb), 0.2)`
+                            }
+                        }"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-                        </svg>
+                        <XMarkIcon class="h-3 w-3" />
                     </button>
                 </span>
 
@@ -43,34 +60,36 @@
 
             <!-- Dropdown indicator -->
             <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                <svg
-                    class="h-5 w-5 text-gray-400"
-                    :class="{ 'transform rotate-180 transition-transform duration-200': isOpen }"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                >
-                    <path
-                        fill-rule="evenodd"
-                        d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
-                        clip-rule="evenodd"
-                    />
-                </svg>
+                <ChevronUpDownIcon
+                    class="h-5 w-5 transition-transform duration-200"
+                    :class="[classes?.icon, { 'transform rotate-180': isOpen }]"
+                />
             </span>
         </div>
 
         <!-- Options dropdown -->
         <div
             v-show="isOpen"
-            class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-xl bg-white py-1 text-base shadow-lg border border-[#db492b]/20 focus:outline-none sm:text-sm"
+            class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-xl bg-white py-1 text-base shadow-lg focus:outline-none sm:text-sm"
+            :style="{
+                borderWidth: '1px',
+                borderColor: `rgb(var(--${themeColors?.primary || 'yellow'}-rgb), 0.2)`
+            }"
         >
             <div
                 v-for="option in filteredOptions"
                 :key="option.value"
-                class="relative cursor-pointer select-none py-2 pl-3 pr-9 text-gray-900 transition duration-200"
-                :class="{
-                    'bg-[#db492b] text-white': highlightedOption === option,
-                    'hover:bg-[#db492b]/10': highlightedOption !== option
+                class="relative cursor-pointer select-none py-2 pl-3 pr-9 transition duration-200"
+                :style="{
+                    backgroundColor: highlightedOption === option 
+                        ? `rgb(var(--${themeColors?.primary || 'yellow'}-rgb))` 
+                        : 'transparent',
+                    color: highlightedOption === option ? 'white' : 'inherit',
+                    '&:hover': {
+                        backgroundColor: highlightedOption !== option 
+                            ? `rgb(var(--${themeColors?.primary || 'yellow'}-rgb), 0.1)` 
+                            : ''
+                    }
                 }"
                 @click="toggleOption(option)"
             >
@@ -82,11 +101,13 @@
                 <span
                     v-if="isSelected(option)"
                     class="absolute inset-y-0 right-0 flex items-center pr-4"
-                    :class="{ 'text-white': highlightedOption === option, 'text-[#db492b]': highlightedOption !== option }"
+                    :style="{
+                        color: highlightedOption === option 
+                            ? 'white' 
+                            : `rgb(var(--${themeColors?.primary || 'yellow'}-rgb))`
+                    }"
                 >
-                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                    </svg>
+                    <CheckIcon class="h-5 w-5" />
                 </span>
             </div>
 
@@ -104,7 +125,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import { onClickOutside } from '@vueuse/core';
-import '../../../../public/css/vueMultiselect.css';
+import { XMarkIcon, ChevronUpDownIcon, CheckIcon } from '@heroicons/vue/20/solid';
 
 const props = defineProps({
     modelValue: {
@@ -118,6 +139,14 @@ const props = defineProps({
     placeholder: {
         type: String,
         default: 'Select options'
+    },
+    themeColors: {
+        type: Object,
+        default: () => ({ primary: 'yellow' })
+    },
+    classes: {
+        type: Object,
+        default: () => ({})
     }
 });
 

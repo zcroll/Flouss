@@ -6,8 +6,14 @@
                 <!-- Background Decorative Elements -->
                 <div class="absolute inset-0 overflow-hidden pointer-events-none">
                     <!-- Gradient Orbs -->
-                    <div class="absolute top-0 left-0 w-32 h-32 bg-yellow-400/10 rounded-full blur-2xl transform -translate-x-1/2 -translate-y-1/2"></div>
-                    <div class="absolute bottom-1/4 right-0 w-40 h-40 bg-yellow-500/10 rounded-full blur-2xl transform translate-x-1/2"></div>
+                    <div :class="[
+                        'absolute top-0 left-0 w-32 h-32 rounded-full blur-2xl transform -translate-x-1/2 -translate-y-1/2',
+                        classes.background
+                    ]"></div>
+                    <div :class="[
+                        'absolute bottom-1/4 right-0 w-40 h-40 rounded-full blur-2xl transform translate-x-1/2',
+                        classes.background
+                    ]"></div>
                     
                     <!-- Subtle Grid Pattern -->
                     <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.03)_1px,transparent_1px)] bg-[size:32px_32px] opacity-20"></div>
@@ -64,7 +70,7 @@
                             class="flex flex-col items-center justify-center px-3 py-2 rounded-xl text-sm font-medium transition-all"
                             :class="[
                                 $page.url === link.url 
-                                    ? 'bg-yellow-400 text-white shadow-md' 
+                                    ? classes.active
                                     : 'bg-white/50 text-gray-600 hover:bg-white/80'
                             ]"
                         >
@@ -112,7 +118,7 @@
                                 class="group w-full flex items-center gap-3 py-2.5 px-4 text-sm font-medium rounded-xl transition-all duration-300"
                                 :class="[
                                     $page.url === link.url 
-                                        ? 'bg-yellow-400 text-white shadow-md' 
+                                        ? classes.active
                                         : 'text-gray-600 hover:bg-white/80'
                                 ]"
                             >
@@ -122,7 +128,7 @@
                                     :class="[
                                         $page.url === link.url 
                                             ? 'text-white' 
-                                            : 'text-gray-400 group-hover:text-gray-600'
+                                            : classes.icon + ' group-hover:text-gray-600'
                                     ]"
                                 />
                                 {{ __(`stickybar.${link.text.toLowerCase().replace(" ", "_")}`) }}
@@ -133,9 +139,15 @@
 
                 <!-- Decorative Background -->
                 <div class="absolute inset-0 -z-10">
-                    <div class="absolute inset-0 bg-gradient-to-br from-yellow-100/20 to-yellow-50/20"></div>
-                    <div class="absolute top-0 left-0 w-40 h-40 bg-yellow-200/10 rounded-full blur-2xl transform -translate-x-1/2 -translate-y-1/2"></div>
-                    <div class="absolute bottom-0 right-0 w-40 h-40 bg-yellow-300/10 rounded-full blur-2xl transform translate-x-1/2 translate-y-1/2"></div>
+                    <div :class="['absolute inset-0', classes.gradient]"></div>
+                    <div :class="[
+                        'absolute top-0 left-0 w-40 h-40 rounded-full blur-2xl transform -translate-x-1/2 -translate-y-1/2',
+                        classes.background
+                    ]"></div>
+                    <div :class="[
+                        'absolute bottom-0 right-0 w-40 h-40 rounded-full blur-2xl transform translate-x-1/2 translate-y-1/2',
+                        classes.background
+                    ]"></div>
                 </div>
             </div>
         </div>
@@ -147,6 +159,7 @@ import { Link, router } from '@inertiajs/vue3';
 import { ref, computed, watch } from 'vue';
 import __ from '@/lang';
 import FavoriteButton from '@/Components/helpers/FavoriteButton.vue';
+import { useArchetypeTheme } from '@/composables/useArchetypeTheme';
 import { 
     HomeIcon, 
     BriefcaseIcon, 
@@ -157,7 +170,6 @@ import {
     BookOpenIcon,
     ClipboardDocumentListIcon
 } from '@heroicons/vue/24/outline';
-
 
 const props = defineProps({
     type: {
@@ -179,13 +191,19 @@ const props = defineProps({
     disableStepsLink: Boolean,
     isFavorited: {
         type: Boolean,
+    },
+    archetype: {
+        type: String,
+        default: 'Creator'
     }
 });
+
+// Initialize theme
+const { themeColors, classes } = useArchetypeTheme(ref(props.archetype));
 
 watch(() => props.isFavorited, (newValue) => {
     console.log('isFavorited changed:', newValue);
 });
-
 
 const isSmallScreen = ref(false);
 

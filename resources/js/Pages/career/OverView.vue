@@ -50,11 +50,11 @@
                     </h3>
                     <nav class="space-y-2">
                         <a href="#responsibilities-duties"
-                           class="block text-gray-600 hover:text-yellow-500 transition-colors">
+                           :class="[classes.hover, 'block text-gray-600 transition-colors']">
                             {{ __('career.responsibilities_and_duties') }}
                         </a>
                         <a href="#related-jobs"
-                           class="block text-gray-600 hover:text-yellow-500 transition-colors">
+                           :class="[classes.hover, 'block text-gray-600 transition-colors']">
                             {{ __('career.related_jobs') }}
                         </a>
                     </nav>
@@ -71,7 +71,7 @@
                     <li v-for="duty in jobInfoDuties"
                         :key="duty.id"
                         class="flex items-start gap-3 text-gray-600">
-                        <div class="mt-1.5 h-2 w-2 rounded-full bg-yellow-400 flex-shrink-0"></div>
+                        <div :class="[`bg-${themeColors.primary}-400`, 'mt-1.5 h-2 w-2 rounded-full flex-shrink-0']"></div>
                         <p>{{ duty.duty_description }}</p>
                     </li>
                 </ul>
@@ -108,10 +108,11 @@ import StickySidebar from "@/Pages/lib/StickySidebar.vue";
 import BackToTop from "@/Components/helpers/BackToTop.vue";
 import Breadcrumbs from '@/Components/helpers/Breadcrumbs.vue';
 import MainLayout from "@/Layouts/MainLayout.vue";
+import { useArchetypeTheme } from '@/composables/useArchetypeTheme';
 
 defineOptions({ layout: MainLayout });
 
-defineProps({
+const props = defineProps({
     occupation: {
         type: Object,
         required: true,
@@ -133,6 +134,9 @@ defineProps({
         required: true,
     },
 });
+
+const archetype = computed(() => props.occupation.personality || 'Creator');
+const { themeColors, classes } = useArchetypeTheme(archetype);
 </script>
 
 <style scoped>
