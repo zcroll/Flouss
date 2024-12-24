@@ -29,7 +29,7 @@ const playerRef = ref(null);
 let dotLottieInstance = null;
 
 const animationPath = computed(() => {
-    return '/personality_animations/architect_animation.json';
+    return '/personality_animations/adventurer_animation.json';
 });
 
 onMounted(() => {

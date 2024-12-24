@@ -1,111 +1,96 @@
 <template>
-  <AppLayout title="Results">
-    <div class="min-h-screen mt-10">
-      <!-- Hero Section with Archetype -->
-      <Deferred :data="['Archetype', 'archetypeDiscovery']">
-        <template #fallback>
-          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="bg-gray-100 h-64 rounded-2xl"></div>
-          </div>
-        </template>
-        
-        <div class="relative overflow-hidden">
-          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <Folder 
-              :archetype="Archetype" 
-              :archetype-jobs="ArchetypeJobs" 
-              :archetype-discovery="archetypeDiscovery"
-              :user-id="userId" 
-              class="shadow-xl rounded-2xl"
-            />
-          </div>
-        </div>
-      </Deferred>
-
-      <!-- Careers Section -->
-      <Deferred data="jobs">
-        <template #fallback>
-          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="space-y-6">
-              <!-- Header Skeleton -->
-              <div class="h-8 bg-gray-100 rounded w-48"></div>
-              <SkeletonLoader />
-            </div>
-          </div>
-        </template>
-
-        <!-- Actual content -->
-        <div class="relative">
-          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="relative">
-              <RecommendationHeader 
-                :headerConfig="{
-                  title: __('results.top_careers'),
-                  viewAllLink: '/jobs/',
-                  viewAllText: __('results.View_All_careers')
-                }" 
-              />
-              <CareersList 
-                :displayed-jobs="displayedJobs" 
-                :show-all-jobs="showAllJobs"
-                :has-more-jobs="jobs && jobs.length > displayedJobs.length" 
-                @select-job="selectedJob = $event"
-                @toggle-show-more="showAllJobs = true" 
-              />
-            </div>
-          </div>
-        </div>
-      </Deferred>
-
-      <!-- Degrees Section -->
-      <Deferred data="degrees">
-        <template #fallback>
-          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="space-y-6">
-              <!-- Header Skeleton -->
-              <div class="h-8 bg-gray-100 rounded w-48"></div>
-              <SkeletonLoader />
-            </div>
-          </div>
-        </template>
-
-        <!-- Actual content -->
-        <div class="relative">
-          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="relative">
-              <RecommendationHeader 
-                :headerConfig="{
-                  title: __('results.top_degrees'),
-                  viewAllLink: '/degrees/',
-                  viewAllText: __('results.View_All_degrees')
-                }" 
-              />
-              <DegreeList 
-                :displayed-degrees="displayedDegrees" 
-                :show-all-degrees="showAllDegrees"
-                :has-more-degrees="degrees && degrees.length > displayedDegrees.length" 
-                @select-degree="selectedDegree = $event"
-                @toggle-show-more="showAllDegrees = true" 
-              />
-            </div>
-          </div>
-        </div>
-      </Deferred>
-
-      <!-- DataShare section -->
-      <div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <DataShare class="rounded-3xl shadow-sm p-8" />
+  <Head title="Results" />
+  
+  <div class="space-y-12">
+    <!-- Hero Section with Archetype -->
+    <Deferred :data="['Archetype', 'archetypeDiscovery']">
+      <template #fallback>
+        <div class="w-full h-[400px] bg-white/40 backdrop-blur-sm rounded-3xl animate-pulse"></div>
+      </template>
+      
+      <div class="relative overflow-hidden">
+        <div class="bg-white/40 backdrop-blur-sm rounded-3xl border border-white/20 shadow-xl">
+          <Folder 
+            :archetype="Archetype" 
+            :archetype-jobs="ArchetypeJobs" 
+            :archetype-discovery="archetypeDiscovery"
+            :user-id="userId" 
+          />
         </div>
       </div>
+    </Deferred>
+
+    <!-- Careers Section -->
+    <Deferred data="jobs">
+      <template #fallback>
+        <div class="space-y-6">
+          <div class="h-8 bg-white/40 backdrop-blur-sm rounded-xl w-48 animate-pulse"></div>
+          <SkeletonLoader />
+        </div>
+      </template>
+
+      <div class="space-y-4">
+        <RecommendationHeader 
+          :headerConfig="{
+            title: __('results.top_careers'),
+            viewAllLink: '/jobs/',
+            viewAllText: __('results.View_All_careers')
+          }" 
+          class="bg-white/40 backdrop-blur-sm rounded-2xl p-4 border border-white/20"
+        />
+        <div class="bg-white/40 backdrop-blur-sm rounded-2xl border border-white/20 shadow-xl p-6">
+          <CareersList 
+            :displayed-jobs="displayedJobs" 
+            :show-all-jobs="showAllJobs"
+            :has-more-jobs="jobs && jobs.length > displayedJobs.length" 
+            @select-job="selectedJob = $event"
+            @toggle-show-more="showAllJobs = true" 
+          />
+        </div>
+      </div>
+    </Deferred>
+
+    <!-- Degrees Section -->
+    <Deferred data="degrees">
+      <template #fallback>
+        <div class="space-y-6">
+          <div class="h-8 bg-white/40 backdrop-blur-sm rounded-xl w-48 animate-pulse"></div>
+          <SkeletonLoader />
+        </div>
+      </template>
+
+      <div class="space-y-4">
+        <RecommendationHeader 
+          :headerConfig="{
+            title: __('results.top_degrees'),
+            viewAllLink: '/degrees/',
+            viewAllText: __('results.View_All_degrees')
+          }" 
+          class="bg-white/40 backdrop-blur-sm rounded-2xl p-4 border border-white/20"
+        />
+        <div class="bg-white/40 backdrop-blur-sm rounded-2xl border border-white/20 shadow-xl p-6">
+          <DegreeList 
+            :displayed-degrees="displayedDegrees" 
+            :show-all-degrees="showAllDegrees"
+            :has-more-degrees="degrees && degrees.length > displayedDegrees.length" 
+            @select-degree="selectedDegree = $event"
+            @toggle-show-more="showAllDegrees = true" 
+          />
+        </div>
+      </div>
+    </Deferred>
+
+    <!-- DataShare section -->
+    <div class="bg-white/40 backdrop-blur-sm rounded-3xl border border-white/20 shadow-xl p-8">
+      <DataShare />
     </div>
-  </AppLayout>
+  </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
-import { Link, Deferred } from '@inertiajs/vue3';
-import AppLayout from '@/Layouts/AppLayout.vue';
+import { Head, Link, Deferred } from '@inertiajs/vue3';
+import MainLayout from '@/Layouts/MainLayout.vue';
 import Folder from '@/Components/Result/Folder.vue';
 import DataShare from '@/Components/Result/DataShare.vue';
 import RecommendationHeader from '@/Components/Result/RecommendationHeader.vue';
@@ -146,6 +131,10 @@ const props = defineProps({
   }
 });
 
+defineOptions({
+  layout: MainLayout,
+})
+
 const selectedJob = ref(null);
 const showAllJobs = ref(false);
 const selectedDegree = ref(null);
@@ -177,3 +166,32 @@ const submitFeedback = () => {
   });
 };
 </script>
+
+<style scoped>
+/* Glass morphism effects */
+.backdrop-blur-sm {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Smooth transitions */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+
+/* Loading animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+</style>

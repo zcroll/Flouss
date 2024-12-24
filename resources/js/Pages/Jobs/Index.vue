@@ -1,170 +1,244 @@
-
 <template>
-  <AppLayout
-    name="Jobs"
-  >
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 mt-20">
-      <div class="flex flex-col gap-6">
-        <!-- Filter section -->
-        <div class="w-full">
-          <!-- Desktop Filters -->
-          <div class="hidden sm:block bg-white border-2 border-[#db492b]/20 rounded-2xl p-6 shadow-lg shadow-[#db492b]/5">
-            <div class="flex gap-4">
-              <div class="flex-1">
-                <label for="search-desktop" class="block text-sm font-semibold text-gray-700 mb-1">{{ __('jobs.search') }}</label>
-                <input id="search-desktop" v-model="searchQuery" type="text" :placeholder="__('jobs.search_jobs')"
-                  class="w-full px-4 py-2.5 text-gray-900 placeholder-gray-500 bg-white border border-[#db492b]/20 rounded-xl shadow-sm focus:ring-2 focus:ring-[#db492b]/20 focus:border-[#db492b] transition duration-200"
-                  @input="debouncedSearch" />
-              </div>
-
-              <div class="flex-1">
-                <label class="block text-sm font-semibold text-gray-700 mb-1">{{ __('jobs.education_levels') }}</label>
-                <CustomMultiSelect v-model="selectedEducationLevels" :options="educationLevelOptions"
-                  :placeholder="__('jobs.select_education_levels')" />
-              </div>
-
-              <div class="flex items-end mb-1">
-                <button @click="resetFilters"
-                  class="px-6 py-2.5 bg-[#db492b] text-white font-semibold rounded-xl hover:bg-[#db492b]/90 focus:ring-2 focus:ring-[#db492b]/50 focus:ring-offset-2 transition duration-200">
-                  {{ __('jobs.reset_filters') }}
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Mobile Filters -->
-          <div class="sm:hidden mt-4">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="outline" class="w-full flex justify-between items-center ">
-                  <span class="flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                            d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                    </svg>
-                    {{ __('jobs.filters') }}
-                  </span>
-                  <div class="flex items-center gap-1">
-                    <span v-if="activeFiltersCount" class="bg-[#db492b] text-white text-xs font-medium px-2 py-0.5 rounded-full">
-                      {{ activeFiltersCount }}
-                    </span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </div>
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="top" class="h-[90vh] rounded-b-xl">
-                <SheetHeader>
-                  <SheetTitle class="text-lg font-semibold">{{ __('jobs.filters') }}</SheetTitle>
-                </SheetHeader>
-                <div class="mt-6 space-y-6">
-                  <!-- Search -->
-                  <div>
-                    <label for="search-mobile" class="block text-sm font-medium text-gray-700 mb-2">
-                      {{ __('jobs.search') }}
-                    </label>
-                    <input
-                      id="search-mobile"
-                      v-model="searchQuery"
-                      type="text"
-                      :placeholder="__('jobs.search_jobs')"
-                      class="w-full px-4 py-2.5 text-gray-900 placeholder-gray-500 bg-white border border-[#db492b]/20 rounded-xl shadow-sm focus:ring-2 focus:ring-[#db492b]/20 focus:border-[#db492b] transition duration-200"
-                      @input="debouncedSearch"
-                    />
-                  </div>
-
-                  <!-- Education Levels -->
-                  <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                      {{ __('jobs.education_levels') }}
-                    </label>
-                    <CustomMultiSelect
-                      v-model="selectedEducationLevels"
-                      :options="educationLevelOptions"
-                      :placeholder="__('jobs.select_education_levels')"
-                    />
-                  </div>
-
-                  <!-- Apply/Reset Buttons -->
-                  <div class="flex gap-3 mt-8">
-                    <Button 
-                      variant="outline" 
-                      class="flex-1 rounded-lg border-2 border-black/60 text-black"
-                      @click="resetFilters"
-                    >
-                      {{ __('jobs.reset_filters') }}
-                    </Button>
-                    <Button 
-                      class="flex-1 bg-black/90 rounded-lg text-white px-4 py-2"
-                      @click="applyFilters"
-                    >
-                      {{ __('jobs.search') }}
-                    </Button>
-                  </div>
-                </div>
-              </SheetContent>
-            </Sheet>
-          </div>
-        </div>
-
-        <!-- Main content -->
-        <div class="w-full lg:w-4/4">
-          <div class="Listings__Results min-h-[800px]" role="feed" aria-busy="false" aria-live="assertive" aria-atomic="true">
-            <div class="">
-              <div v-if="jobs.data.length > 0" class="degrees-grid">
-                <article v-for="(job, index) in jobs.data" :key="job.id" 
-                  :aria-setsize="jobs.meta.total" :aria-posinset="index + 1"
-                  class="degree-card">
-                  <div class="degree-card__content">
-                    <div class="degree-card__header">
-                      <img :src="job.image" :alt="`image for ${job.name}`"
-                        class="degree-card__image" />
-                      <div class="degree-card__title-section">
-                        <h3 class="degree-card__title">{{ job.name }}</h3>
-                      </div>
-                    </div>
-            
-                    <div>
-                      <p class="text-sm text-gray-600 line-clamp-2">{{ job.description }}</p>
-                    </div>
-
-                    <Link :href="`/career/${job.slug}`" class="degree-card__link">
-                      <span class="sr-only">{{ job.name }}</span>
-                    </Link>
-                  </div>
-                </article>
-              </div>
-              <div v-else class="text-center py-8">
-                <p class="text-xl font-bold text-gray-900 mb-4 tracking-tight font-['aktiv-grotesk','Helvetica Neue',Helvetica,Arial,sans-serif]">
-                  {{ __("jobs.no_jobs_found") }}
-                </p>
-                <button @click="resetFilters"
-                  class="px-6 py-2.5 bg-black text-white font-black rounded-xl hover:bg-gray-800 transition-all duration-300 shadow-sm hover:shadow-md text-sm uppercase">
-                  {{ __("jobs.reset_filters") }}
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <WhenVisible v-if="hasMorePages" :params="{
-            data: {
-              page: page + 1,
-              ...props.filters,
-            },
-            only: ['jobs'],
-            preserveUrl: true,
-          }">
-            <template #default>
-              <div></div>
-            </template>
-          </WhenVisible>
-          <BackToTop />
-        </div>
+  <Head title="Jobs" />
+  <div class="flex-1 flex flex-col space-y-8">
+    <!-- Hero Section -->
+    <div class="relative bg-white/60 backdrop-blur-xl rounded-3xl p-8 overflow-hidden">
+      <!-- Background Pattern -->
+      <div class="absolute inset-0 opacity-5">
+        <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,...'); background-size: 20px 20px;"></div>
+      </div>
+      
+      <!-- Content -->
+      <div class="relative">
+        <h1 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-4">
+          Explore Career Opportunities
+        </h1>
+        <p class="text-gray-600 text-lg max-w-2xl">
+          Discover and explore detailed information about various career paths that match your interests and skills.
+        </p>
       </div>
     </div>
-  </AppLayout
-    >
+
+    <!-- Filter section -->
+    <div class="sticky top-4 z-30">
+      <!-- Desktop Filters -->
+      <div class="hidden sm:block bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-sm border border-white/20">
+        <div class="flex gap-6">
+          <div class="flex-1">
+            <label for="search-desktop" class="block text-sm font-medium text-gray-700 mb-2">
+              {{ __('jobs.search') }}
+            </label>
+            <div class="relative group">
+              <Search class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 transition-colors group-hover:text-yellow-400" />
+              <input 
+                id="search-desktop" 
+                v-model="searchQuery" 
+                type="text" 
+                :placeholder="__('jobs.search_jobs')"
+                class="w-full pl-12 pr-6 py-3 text-gray-900 placeholder-gray-500 bg-white/80 backdrop-blur-md rounded-full border border-white/20 focus:ring-2 focus:ring-yellow-400/20 focus:border-yellow-400 transition duration-200" 
+                @input="debouncedSearch" 
+              />
+            </div>
+          </div>
+
+          <div class="flex-1">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              {{ __('jobs.education_levels') }}
+            </label>
+            <CustomMultiSelect 
+              v-model="selectedEducationLevels" 
+              :options="educationLevelOptions"
+              :placeholder="__('jobs.select_education_levels')"
+              class="backdrop-blur-md"
+            />
+          </div>
+
+          <div class="flex items-end">
+            <button 
+              @click="resetFilters"
+              class="group px-6 py-3 bg-white/80 border border-white/20 backdrop-blur-xl text-gray-700 font-medium rounded-full hover:bg-yellow-400 hover:text-white hover:border-transparent focus:ring-2 focus:ring-yellow-400/50 focus:ring-offset-2 transition duration-200"
+            >
+              <span class="flex items-center gap-2">
+                <RefreshCw class="w-4 h-4 transition-transform group-hover:rotate-180" />
+                {{ __('jobs.reset_filters') }}
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Filters -->
+      <div class="sm:hidden">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline" 
+                    class="w-full flex justify-between items-center bg-white/80 backdrop-blur-xl rounded-full border border-white/20">
+              <span class="flex items-center gap-2">
+                <Search class="w-5 h-5" />
+                {{ __('jobs.filters') }}
+              </span>
+              <div class="flex items-center gap-1">
+                <span v-if="activeFiltersCount" 
+                      class="bg-yellow-400 text-white text-xs font-medium px-2 py-0.5 rounded-full">
+                  {{ activeFiltersCount }}
+                </span>
+                <ChevronDown class="w-4 h-4" />
+              </div>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="bottom" class="rounded-t-3xl bg-white/95 backdrop-blur-xl">
+            <!-- Mobile filter content -->
+            <div class="space-y-6 p-4">
+              <!-- Search -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  {{ __('jobs.search') }}
+                </label>
+                <div class="relative">
+                  <Search class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <input 
+                    v-model="searchQuery" 
+                    type="text" 
+                    :placeholder="__('jobs.search_jobs')"
+                    class="w-full pl-12 pr-6 py-3 bg-white/80 rounded-full border border-gray-200" 
+                  />
+                </div>
+              </div>
+
+              <!-- Education Levels -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  {{ __('jobs.education_levels') }}
+                </label>
+                <CustomMultiSelect 
+                  v-model="selectedEducationLevels" 
+                  :options="educationLevelOptions"
+                  :placeholder="__('jobs.select_education_levels')"
+                />
+              </div>
+
+              <!-- Reset Button -->
+              <button 
+                @click="resetFilters"
+                class="w-full px-6 py-3 bg-yellow-400 text-white font-medium rounded-full hover:bg-yellow-500 transition-colors duration-200"
+              >
+                {{ __('jobs.reset_filters') }}
+              </button>
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
+    </div>
+
+    <!-- Jobs Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div v-for="(job, index) in jobs.data" 
+           :key="job.id"
+           class="group relative bg-white/60 backdrop-blur-xl rounded-3xl p-6 shadow-sm border border-white/20 hover:shadow-lg transition-all duration-300"
+           :style="{ animationDelay: `${index * 100}ms` }"
+      >
+        <!-- Header with Image and Title -->
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-16 h-16 rounded-2xl overflow-hidden bg-white/50 p-3 backdrop-blur-sm border border-white/20 group-hover:border-yellow-400/20 transition-colors duration-300">
+            <img :src="job.image" 
+                 :alt="`image for ${job.name}`"
+                 class="w-full h-full object-contain filter contrast-125 transition-transform duration-300 group-hover:scale-110" 
+            />
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900">{{ job.name }}</h3>
+            <p class="text-sm text-gray-500">{{ job.category }}</p>
+          </div>
+        </div>
+        
+        <!-- Job Details -->
+        <div class="space-y-4 mb-6">
+          <!-- Description -->
+          <div>
+            <p class="text-sm text-gray-600 line-clamp-2">{{ job.description }}</p>
+          </div>
+
+          <!-- Requirements -->
+          <div class="space-y-2">
+            <h4 class="text-xs font-medium text-gray-500 uppercase tracking-wider">Requirements</h4>
+            <div class="flex flex-wrap gap-2">
+              <span v-for="(level, idx) in job.education_levels" 
+                    :key="idx"
+                    class="px-3 py-1 bg-yellow-400/10 text-yellow-600 text-xs rounded-full border border-yellow-400/20">
+                {{ level }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Key Details -->
+          <div class="grid grid-cols-2 gap-4">
+            <template v-for="(value, key) in jobDetails(job)" :key="key">
+              <div v-if="value" class="space-y-1">
+                <h4 class="text-xs font-medium text-gray-500 uppercase tracking-wider">{{ formatLabel(key) }}</h4>
+                <p class="text-sm text-gray-700">{{ value }}</p>
+              </div>
+            </template>
+          </div>
+
+          <!-- Skills -->
+          <div v-if="job.skills?.length" class="space-y-2">
+            <h4 class="text-xs font-medium text-gray-500 uppercase tracking-wider">Key Skills</h4>
+            <div class="flex flex-wrap gap-2">
+              <span v-for="skill in job.skills" 
+                    :key="skill"
+                    class="px-3 py-1 bg-white/50 text-gray-600 text-xs rounded-full border border-white/20 group-hover:border-yellow-400/20 transition-colors duration-300">
+                {{ skill }}
+              </span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Action Button -->
+        <Link :href="`/career/${job.slug}`" 
+              class="inline-flex items-center justify-between w-full px-6 py-3 bg-white/60 backdrop-blur-sm text-gray-700 font-medium rounded-full border border-white/20 group-hover:bg-yellow-400 group-hover:text-white group-hover:border-transparent transition-all duration-300">
+          <span>Learn More</span>
+          <ArrowRight class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" />
+        </Link>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div v-if="jobs.data.length === 0" 
+         class="flex flex-col items-center justify-center py-12 bg-white/60 backdrop-blur-xl rounded-3xl border border-white/20">
+      <div class="text-center">
+        <div class="mb-4">
+          <SearchX class="w-12 h-12 text-gray-400 mx-auto" />
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-2">
+          {{ __("jobs.no_jobs_found") }}
+        </h3>
+        <p class="text-gray-600 mb-6">Try adjusting your search or filters</p>
+        <button 
+          @click="resetFilters"
+          class="px-6 py-3 bg-yellow-400 text-white font-medium rounded-full hover:bg-yellow-500 transition-colors duration-300 flex items-center gap-2 mx-auto"
+        >
+          <RefreshCw class="w-4 h-4" />
+          {{ __("jobs.reset_filters") }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Load More -->
+    <WhenVisible v-if="hasMorePages">
+      <div class="flex justify-center mt-8">
+        <button 
+          @click="loadMore"
+          class="group px-8 py-3 bg-white/60 backdrop-blur-xl text-gray-700 font-medium rounded-full hover:bg-white/80 transition-all duration-300 flex items-center gap-2"
+          :disabled="isLoading"
+        >
+          <span>Load More</span>
+          <ArrowDown class="w-4 h-4 transform group-hover:translate-y-1 transition-transform" />
+        </button>
+      </div>
+    </WhenVisible>
+
+    <BackToTop />
+  </div>
 </template>
 
 <script setup>
@@ -177,12 +251,17 @@ import { WhenVisible } from '@inertiajs/vue3';
 import BackToTop from '@/Components/helpers/BackToTop.vue';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/Components/ui/sheet"
 import { Button } from "@/Components/ui/button"
+import MainLayout from "@/Layouts/MainLayout.vue";
+import { Search, ArrowRight, ChevronDown, RefreshCw, ArrowDown, SearchX } from 'lucide-vue-next'
 
 const props = defineProps({
   jobs: Object,
   filters: Object,
   language: String
 });
+defineOptions({
+    layout: MainLayout,
+})
 
 // Add showFilters ref
 const showFilters = ref(false);
@@ -324,8 +403,58 @@ const activeFiltersCount = computed(() => {
   if (selectedEducationLevels.value.length) count++;
   return count;
 });
+
+const jobDetails = (job) => ({
+  salary_range: job.salary_range,
+  experience: job.experience,
+  location: job.location,
+  employment_type: job.employment_type
+});
+
+const formatLabel = (key) => {
+  return key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+};
 </script>
+
 <style scoped>
-@import '/public/css/listing_page.css';
+/* Animations */
+.grid > div {
+  animation: fadeInUp 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scrollbar styling */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(250, 204, 21, 0.5) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(250, 204, 21, 0.5);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(250, 204, 21, 0.7);
+}
 </style>
 

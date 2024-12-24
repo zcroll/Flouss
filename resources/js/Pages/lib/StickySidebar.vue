@@ -1,109 +1,141 @@
 <template>
-    <div class="mt-[-40px] flex flex-col-reverse lg:container lg:mx-auto lg:flex-row">
+    <div class="relative flex flex-col-reverse lg:container lg:mx-auto lg:flex-row lg:gap-8">
+        <!-- Main Content Area -->
         <div class="w-full lg:w-2/3">
-            <div class="relative  rounded-t-3xl p-1 lg:p-0 lg:mx-0 lg:bg-none lg:rounded-none">
-                <!-- Decorative elements -->
+            <div class="relative rounded-t-3xl p-6 lg:p-8">
+                <!-- Background Decorative Elements -->
                 <div class="absolute inset-0 overflow-hidden pointer-events-none">
-                    <!-- Gradient orbs -->
-                    <div class="absolute top-0 left-0 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl transform -translate-x-1/2 -translate-y-1/2"></div>
-                    <div class="absolute top-1/4 right-0 w-40 h-40 bg-purple-500/10 rounded-full blur-2xl transform translate-x-1/2"></div>
-                    <!-- Subtle grid -->
+                    <!-- Gradient Orbs -->
+                    <div class="absolute top-0 left-0 w-32 h-32 bg-yellow-400/10 rounded-full blur-2xl transform -translate-x-1/2 -translate-y-1/2"></div>
+                    <div class="absolute bottom-1/4 right-0 w-40 h-40 bg-yellow-500/10 rounded-full blur-2xl transform translate-x-1/2"></div>
+                    
+                    <!-- Subtle Grid Pattern -->
                     <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.03)_1px,transparent_1px)] bg-[size:32px_32px] opacity-20"></div>
                 </div>
-                
-                <!-- Content with glass effect -->
-                <div class="relative">
-                    <slot />
+
+                <!-- Content with Glass Effect -->
+                <div class="relative bg-white/60 backdrop-blur-xl rounded-3xl border border-white/20 shadow-sm p-8">
+                    <!-- Title Section -->
+                    <div class="mb-8">
+                        <h1 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+                            {{ title }}
+                        </h1>
+                        <p class="mt-4 text-gray-600 text-lg">
+                            <slot name="description" />
+                        </p>
+                    </div>
+
+                    <!-- Main Content -->
+                    <div class="space-y-6">
+                        <slot />
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Sticky Sidebar -->
-        <div class="w-full lg:w-1/3 lg:mb-0 lg:pl-8 pb-5 pt-8">
-            <!-- Mobile Navigation Bar (Fixed Bottom) -->
+        <div class="w-full lg:w-1/3 lg:mb-0">
+            <!-- Mobile Navigation Bar -->
             <div v-if="isSmallScreen"
-                 class="fixed top-0 left-0 right-0 bg-[#353535] text-white shadow-lg z-50 rounded-b-2xl">
-                <div class="flex items-center justify-between px-3 py-2 border-b border-gray-700">
-                    <img :src="image" alt="Icon" class="w-8 h-8 rounded-md"/>
-
-                    <h3 class="text-sm font-bold ml-2 flex-1 truncate">{{ title }}</h3>
+                 class="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-xl shadow-lg z-50 rounded-b-2xl border-b border-white/20">
+                <div class="flex items-center justify-between px-4 py-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl overflow-hidden bg-white/50 p-2 backdrop-blur-sm border border-white/20">
+                            <img :src="image" :alt="title" class="w-full h-full object-contain"/>
+                        </div>
+                        <h3 class="text-base font-semibold text-gray-900 truncate">{{ title }}</h3>
+                    </div>
                     <FavoriteButton
                         :model-id="id"
                         :model-type="type"
                         :initial-is-favorited="isFavorited"
                         :show-label="false"
                         class="ml-2"
-                        :key="id"
                     />
                 </div>
+
+                <!-- Mobile Navigation Links -->
                 <div class="w-full overflow-x-auto scrollbar-hide">
-                    <div class="flex w-full px-1 py-2">
+                    <div class="flex w-full px-2 py-2 gap-1">
                         <Link
                             v-for="(link, index) in links"
                             :key="index"
                             :href="link.url"
-                            :class="{
-                                'bg-slate-950 hover:bg-slate-950 active:bg-slate-950': $page.url === link.url,
-                                'bg-stone-700 hover:bg-slate-950 active:bg-slate-950': $page.url !== link.url
-                            }"
-                            class="flex-1 min-w-[60px] flex flex-col items-center justify-center px-1 py-1.5 rounded-xl text-sm font-medium transition-all mx-0.5"
+                            class="flex flex-col items-center justify-center px-3 py-2 rounded-xl text-sm font-medium transition-all"
+                            :class="[
+                                $page.url === link.url 
+                                    ? 'bg-yellow-400 text-white shadow-md' 
+                                    : 'bg-white/50 text-gray-600 hover:bg-white/80'
+                            ]"
                         >
                             <component 
                                 :is="getLinkIcon(link.text)" 
-                                class="w-5 h-5 mb-0.5"
+                                class="w-5 h-5 mb-1"
                             />
-                            <span class="text-[10px] text-center leading-tight">{{ 
-                                getShortLabel(link.text)
-                            }}</span>
+                            <span class="text-[11px] text-center leading-tight">
+                                {{ getShortLabel(link.text) }}
+                            </span>
                         </Link>
                     </div>
                 </div>
             </div>
 
             <!-- Desktop Sticky Sidebar -->
-            <div v-else class="sticky top-[100px] bg-card text-card-foreground rounded-xl border shadow-sm">
-                <div class="p-6 relative z-10">
-                    <div class="flex items-center space-x-4 pb-6 border-b">
-                        <div class="h-16 w-16 overflow-hidden rounded-2xl ring-2 ring-muted">
-                            <img :src="image" alt="Icon" class="h-full w-full object-cover"/>
+            <div v-else 
+                 class="sticky top-8 bg-white/60 backdrop-blur-xl rounded-3xl border border-white/20 shadow-sm overflow-hidden">
+                <div class="p-6 relative">
+                    <!-- Header -->
+                    <div class="flex items-center gap-4 pb-6 border-b border-gray-200/50">
+                        <div class="w-16 h-16 rounded-2xl overflow-hidden bg-white/50 p-3 backdrop-blur-sm border border-white/20">
+                            <img :src="image" :alt="title" class="w-full h-full object-contain"/>
                         </div>
-                        <h3 class="text-lg font-semibold leading-none truncate flex-1">
-                            {{ title }}
-                        </h3>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-lg font-semibold text-gray-900 truncate">
+                                {{ title }}
+                            </h3>
+                        </div>
                         <FavoriteButton
                             :model-id="id"
                             :model-type="type"
                             :initial-is-favorited="isFavorited"
                             :show-label="true"
-                            :key="id"
                         />
                     </div>
 
-
+                    <!-- Navigation Links -->
                     <nav class="mt-6">
                         <div class="space-y-1">
                             <Link
                                 v-for="(link, index) in links"
                                 :key="index"
                                 :href="link.url"
+                                class="group w-full flex items-center gap-3 py-2.5 px-4 text-sm font-medium rounded-xl transition-all duration-300"
                                 :class="[
-                                    'w-full flex items-center py-2 px-3 text-sm font-medium rounded-lg transition-colors',
                                     $page.url === link.url 
-                                        ? 'bg-primary text-primary-foreground hover:bg-primary/90'
-                                        : 'hover:bg-muted'
+                                        ? 'bg-yellow-400 text-white shadow-md' 
+                                        : 'text-gray-600 hover:bg-white/80'
                                 ]"
                             >
+                                <component 
+                                    :is="getLinkIcon(link.text)" 
+                                    class="w-5 h-5 transition-colors duration-300"
+                                    :class="[
+                                        $page.url === link.url 
+                                            ? 'text-white' 
+                                            : 'text-gray-400 group-hover:text-gray-600'
+                                    ]"
+                                />
                                 {{ __(`stickybar.${link.text.toLowerCase().replace(" ", "_")}`) }}
                             </Link>
                         </div>
                     </nav>
                 </div>
-            
 
-                <!-- Decorative background elements -->
-                <div class="absolute top-0 left-0 w-full h-full overflow-hidden opacity-10">
-                    <div class="absolute top-0 left-0 w-40 h-40 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
-                    <div class="absolute bottom-0 right-0 w-60 h-60 bg-white rounded-full transform translate-x-1/2 translate-y-1/2"></div>
+                <!-- Decorative Background -->
+                <div class="absolute inset-0 -z-10">
+                    <div class="absolute inset-0 bg-gradient-to-br from-yellow-100/20 to-yellow-50/20"></div>
+                    <div class="absolute top-0 left-0 w-40 h-40 bg-yellow-200/10 rounded-full blur-2xl transform -translate-x-1/2 -translate-y-1/2"></div>
+                    <div class="absolute bottom-0 right-0 w-40 h-40 bg-yellow-300/10 rounded-full blur-2xl transform translate-x-1/2 translate-y-1/2"></div>
                 </div>
             </div>
         </div>

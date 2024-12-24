@@ -66,7 +66,7 @@ class DashboardController extends Controller
                 if ($archetype) {
                     $archetypeDiscovery = DB::table('archetype_discoveries')
                         ->where('slug', '=', strtolower($archetype))
-                        ->select(['slug', 'rarity_string', 'rationale', 'scales'])
+                        ->select(['slug', 'rarity_string', 'rationale', ])
                         ->first();
                 }
                    // Get top 2 traits from scores
@@ -137,6 +137,7 @@ class DashboardController extends Controller
 
             // ds(['chathistory'=>$chatHistory->toArray()]);
 ds(['archetype'=>$archetypeDiscovery]);
+ds(['topTraits'=>$topTraits]);
             return Inertia::render('Dashboard', [
                 'hasResult' => $hasResult,
                 'favoriteJobs' => $favoriteJobs,

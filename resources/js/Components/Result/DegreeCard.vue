@@ -1,33 +1,200 @@
 <template>
-    <div class="HorizontalCard HorizontalCard--wide" :aria-labelledby="`HorizontalCard-${degree.slug}`" @click="$emit('select', degree)">
-      <img class="HorizontalCard-image" :src="degree.image" :alt="degree.name" role="presentation" aria-hidden="true" />
-      <div class="HorizontalCard-wrap">
-        <div :id="`HorizontalCard-${degree.slug}`" class="HorizontalCard-name">
-          <Link :href="`/degree/${degree.slug}`" class="HorizontalCard-name-link" tabindex="0"
-            aria-label="Click here to view degree details.">
-            {{ degree.name }}
-          </Link>
-        </div>
+  <div 
+    class="degree-card group"
+    :aria-labelledby="`degree-${degree.slug}`" 
+    @click="$emit('select', degree)"
+  >
+    <!-- Image Container -->
+    <div class="image-container">
+      <img 
+        :src="degree.image" 
+        :alt="degree.name" 
+        class="degree-image"
+        role="presentation" 
+        aria-hidden="true" 
+      />
+    </div>
+
+    <!-- Content -->
+    <div class="content-wrap">
+      <div :id="`degree-${degree.slug}`" class="degree-name">
+        <Link 
+          :href="`/degree/${degree.slug}`" 
+          class="degree-link"
+          tabindex="0"
+          aria-label="Click here to view degree details."
+        >
+          {{ degree.name }}
+        </Link>
       </div>
-      <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-right"
-        class="svg-inline--fa fa-chevron-right fa-sm HorizontalCard-arrow" role="img" xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 320 512">
-        <path fill="currentColor"
-          d="M96 480c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L242.8 256L73.38 86.63c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25l-192 192C112.4 476.9 104.2 480 96 480z">
-        </path>
+    </div>
+
+    <!-- Arrow Icon -->
+    <div class="arrow-container">
+      <svg 
+        class="arrow-icon"
+        xmlns="http://www.w3.org/2000/svg" 
+        viewBox="0 0 24 24" 
+        fill="none" 
+        stroke="currentColor" 
+        stroke-width="2" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+      >
+        <path d="M9 18l6-6-6-6" />
       </svg>
     </div>
-  </template>
-  
-  <script setup>
-  import { Link } from '@inertiajs/vue3';
-  
-  defineProps({
-    degree: {
-      type: Object,
-      required: true
-    }
-  });
-  
-  defineEmits(['select']);
-  </script>
+  </div>
+</template>
+
+<script setup>
+import { Link } from '@inertiajs/vue3';
+
+defineProps({
+  degree: {
+    type: Object,
+    required: true
+  }
+});
+
+defineEmits(['select']);
+</script>
+
+<style scoped>
+.degree-card {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 1rem;
+  cursor: pointer;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  position: relative;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes slideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Add delay for each card */
+.degree-card:nth-child(1) { animation-delay: 0.1s; }
+.degree-card:nth-child(2) { animation-delay: 0.2s; }
+.degree-card:nth-child(3) { animation-delay: 0.3s; }
+.degree-card:nth-child(4) { animation-delay: 0.4s; }
+.degree-card:nth-child(5) { animation-delay: 0.5s; }
+/* ... add more if needed */
+
+.degree-card:hover {
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateY(-2px);
+  border-color: rgba(250, 204, 21, 0.3);
+  box-shadow: 
+    0 8px 20px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(250, 204, 21, 0.3);
+}
+
+.image-container {
+  width: 60px;
+  height: 60px;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: rgba(250, 204, 21, 0.1);
+  border: 1px solid rgba(250, 204, 21, 0.2);
+}
+
+.degree-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.degree-card:hover .degree-image {
+  transform: scale(1.1);
+}
+
+.content-wrap {
+  flex: 1;
+  padding: 0 1.5rem;
+  min-width: 0; /* Prevents text overflow issues */
+}
+
+.degree-name {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.degree-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.degree-link:hover {
+  color: #facc15;
+}
+
+.arrow-container {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.arrow-icon {
+  width: 20px;
+  height: 20px;
+  color: #9ca3af;
+  transition: all 0.3s ease;
+}
+
+.degree-card:hover .arrow-icon {
+  color: #facc15;
+  transform: translateX(4px);
+}
+
+/* Focus styles for accessibility */
+.degree-card:focus-within {
+  outline: 2px solid #facc15;
+  outline-offset: 2px;
+}
+
+/* Add shine effect */
+.degree-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: 0.5s;
+}
+
+.degree-card:hover::after {
+  left: 100%;
+}
+</style>
