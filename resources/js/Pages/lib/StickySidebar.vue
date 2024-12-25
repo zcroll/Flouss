@@ -165,7 +165,7 @@ const props = defineProps({
         type: Object,
         required: true,
         validator: (obj) => {
-            // Unified validation for career/degree/job objects
+            if (!obj) return false;
             const requiredProps = ['id', 'slug', 'name', 'image'];
             return requiredProps.every(prop => prop in obj);
         }
@@ -173,16 +173,28 @@ const props = defineProps({
     disableStepsLink: Boolean,
 });
 
-// Initialize modelProps before using it in the template
-const modelProps = computed(() => ({
-    title: props.model?.name || '',
-    image: props.model?.image || '',
-    salary: props.model?.salary,
-    personality: props.model?.personality || 'N/A',
-    satisfaction: props.model?.satisfaction || 'N/A',
-    archetype: props.model?.personality,
-    isFavorited: props.model?.is_favorited
-}));
+// Add null checks to computed properties
+const modelProps = computed(() => {
+    if (!props.model) return {
+        title: '',
+        image: '',
+        salary: null,
+        personality: 'N/A',
+        satisfaction: 'N/A',
+        archetype: null,
+        isFavorited: false
+    };
+
+    return {
+        title: props.model.name || '',
+        image: props.model.image || '',
+        salary: props.model.salary,
+        personality: props.model.personality || 'N/A',
+        satisfaction: props.model.satisfaction || 'N/A',
+        archetype: props.model.personality,
+        isFavorited: props.model.is_favorited ?? false
+    };
+});
 
 // Initialize theme with null check
 watch(() => props.model?.personality, (newValue) => {
@@ -220,7 +232,7 @@ onBeforeUnmount(() => {
     window.removeEventListener("resize", updateScreenSize);
 });
 
-// Memoize links computation
+// Update links computation with better null checking
 const links = computed(() => {
     if (!props.model?.slug) return [];
 
@@ -244,7 +256,7 @@ const links = computed(() => {
         ]
     };
 
-    return linkConfigs[props.type] || [];
+    return (linkConfigs[props.type] || []).filter(link => !link.disabled);
 });
 
 const getLinkIcon = (text) => {

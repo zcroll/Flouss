@@ -10,7 +10,7 @@
                 satisfaction: degree.satisfaction || __('degreeOverview.notAvailable'),
                 is_favorited: degree.is_favorited
             }">
-                <div class="w-full lg:w-4/4 space-y-12 px-6 lg:px-16 py-12 bg-white shadow-2xl">
+                <div>
                     <Breadcrumbs :items="[
                         { name: 'Home', route: 'dashboard' },
                         { name: 'Degrees', route: 'degrees.index' },
