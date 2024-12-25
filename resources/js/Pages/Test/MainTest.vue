@@ -45,13 +45,13 @@
                 </template>
                 <template v-else>
                     <section v-if="!isReady || loading" class="Assessment">
-                        <div class="loading">Loading...</div>
+                        <div class="loading">{{ __('test.loading') }}</div>
                     </section>
                     <section v-else-if="error" class="Assessment">
                         <div class="error">
                             <h3>Error Occurred</h3>
                             <p>{{ error }}</p>
-                            <button @click="retryFetch" :disabled="form.processing">Retry</button>
+                            <button @click="retryFetch" :disabled="form.processing">{{ __('test.retry') }}</button>
                         </div>
                     </section>
                     <section v-else class="Assessment" tabindex="-1" data-testid="assessment-test">
@@ -90,17 +90,16 @@
                                 @close="handleDiscoveryClose"
                             />
 
-                            <section class="discovery"
-                                     v-if="isComplete">
-                                <NextStep
-                                    :title="testStageStore.nextStageName || 'Complete'"
-                                    :description="testStageStore.currentStageDescription || 'You have completed this section.'"
-                                    :button-text="testStageStore.nextStageName ? `Continue to ${testStageStore.nextStageName}` : 'View Results'"
-                                    :current-stage="testStageStore.currentStage"
-                                    @continue="continueToNextSection"
-                                    :disabled="form.processing"
-                                />
-                            </section>
+                            <section class="discovery" v-if="isComplete">
+    <NextStep
+        :title="testStageStore.nextStageName || __('test.Complete')"
+        :description="testStageStore.currentStageDescription || __('test.You_have_completed_this_section')"
+        :button-text="testStageStore.nextStageName ? `Continue ` : __('test.View_Results')"
+        :current-stage="testStageStore.currentStage"
+        @continue="continueToNextSection"
+        :disabled="form.processing"
+    />
+</section>
                         </div>
                     </section>
                 </template>

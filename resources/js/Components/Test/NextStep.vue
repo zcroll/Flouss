@@ -11,12 +11,12 @@
       aria-live="assertive"
     >
       <div>
-        <h4 aria-hidden="true">Next Step</h4>
+        <h4 aria-hidden="true">{{ __('test.next_step') }}</h4>
         <h3 aria-hidden="true">{{ title }}</h3>
 
         <div v-if="error" class="error-message">
           {{ error }}
-          <button class="retry-button" @click="handleRetry">Retry</button>
+          <button class="retry-button" @click="handleRetry">{{ __('test.retry') }}</button>
         </div>
         <button 
           id="interstitial-enter-button"
@@ -26,7 +26,7 @@
         >
           <span v-if="loading" class="loading-indicator">
             <span class="spinner"></span>
-            Transitioning...
+            {{ __('test.transitioning') }}
           </span>
           <span v-else>
             {{ buttonText }}

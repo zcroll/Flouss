@@ -9,9 +9,9 @@
       />
 
       <form @submit.prevent="submitAnswer" ref="formRef">
-        <h4 v-if="testData?.lead_in_text">
+        <!-- <h4 v-if="testData?.lead_in_text">
           {{ testData.lead_in_text }}
-        </h4>
+        </h4> -->
         <h3 aria-hidden="true" v-if="currentItem">
           {{ currentItem.text }}
         </h3>
@@ -42,8 +42,8 @@
 
     <div v-else class="Assessment__completion">
       <div class="Assessment__completion-content">
-        <h2>Basic Interests Assessment Complete!</h2>
-        <p>Great job! You've completed the Basic Interests assessment.</p>
+        <h2>{{ __('assessment.complete') }}</h2>
+        <p>{{ __('assessment.congratulations') }}</p>
         <div class="Assessment__completion-actions">
           <NextStep 
             :test-stage="testStage"

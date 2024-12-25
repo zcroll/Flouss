@@ -101,4 +101,34 @@ return [
             'traits' => 'Organized, Detail-oriented, Systematic, Structured, Efficient'
         ]
     ],
+    'retry' => 'retry',
+    'Transitioninig' => 'Transitioning ...',
+    'next_step' => 'Next Step',
+    'complete' => 'Complete',
+    'You_have_completed_this_section' => 'You have completed this section.',
+    'View_Results' => 'View Results',
+    'transitioning' => 'Transitioning ...',
+
+    'assessment' => [
+        'complete' => 'Basic Interests Assessment Completed!',
+        'congratulations' => 'Congratulations! You have completed the Basic Interests Assessment.',
+    ],
+
+    'holland_code_description' => 'Discover your career interests and personality type',
+    'holland_codes' => 'Holland Codes',
+    'next_holland_codes' => 'Basic Interest Assessment',
+
+    'Basic_Interest' => 'Basic Interest',
+    'basic_interest_description' => 'Explore your specific areas of interest',
+    'next_basic_interest' => 'To Degree Assessment',
+
+    'Degree_Assessment' => 'Degree Assessment',
+
+    'Degree_Assessment_desription' => 'Find your ideal degree path',
+
+    'Basic_Interest_Assessment' => 'to Basic Interest Assessment',
+    
+
+
+
 ];

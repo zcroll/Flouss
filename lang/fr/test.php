@@ -101,4 +101,29 @@ return [
             'traits' => 'Organisé, Méthodique, Systématique, Structuré, Efficace'
         ]
     ],
+ 
+    'retry' => 'Réessayer',
+    'Transitioninig' => 'Transition en cours ...',
+    'complete' => 'Terminé',
+    'You_have_completed_this_section' => 'Vous avez terminé cette section.',
+    'View_Results' => 'Voir les résultats',
+    'transitioning' => 'Transition en cours ...',
+    'next_step' => 'Étape suivante',
+    'assessment' => [
+        'complete' => 'Évaluation des intérêts de base terminée !',
+        'congratulations' => 'Bravo ! Vous avez terminé l\'évaluation des intérêts de base.',
+    ],
+    'holland_code_description' => 'Découvrez vos intérêts professionnels et votre type de personnalité',
+    'holland_codes' => 'Codes Holland',
+    'next_holland_codes' => 'Évaluation des Intérêts de Base',
+
+    'Basic_Interest' => 'Intérêt de Base',
+    'basic_interest_description' => 'Explorez vos domaines d\'intérêt spécifiques',
+    'next_basic_interest' => 'Vers l\'Évaluation des Diplômes',
+
+    'Degree_Assessment' => 'Évaluation des Diplômes',
+
+    'Degree_Assessment_desription' => 'Trouvez votre parcours de diplôme idéal',
+
+    'Basic_Interest_Assessment' => 'vers l\'Évaluation des Intérêts de Base',
 ];

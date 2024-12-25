@@ -5,6 +5,7 @@ import { useDegreeStore } from './degreeStore';
 import { useTestProgressStore } from './testProgressStore';
 import { router } from '@inertiajs/vue3';
 import axios from 'axios';
+import __ from '@/lang';
 
 export const useTestStageStore = defineStore('testStage', {
     state: () => ({
@@ -26,25 +27,27 @@ export const useTestStageStore = defineStore('testStage', {
         },
         stageInfo: {
             'holland_codes': {
-                name: 'Holland Codes',
-                description: 'Discover your career interests and personality type',
+                name: __('test.holland_codes'),
+                description: __('test.holland_code_description'),
                 nextStage: 'basic_interests',
-                nextStageName: 'Basic Interest Assessment',
-                route: 'holland-codes.index'
+                nextStageName: __('test.holland_codes_nextStageName'),
+                route: 'holland-codes.index',
+
             },
             'basic_interests': {
-                name: 'Basic Interest',
-                description: 'Explore your specific areas of interest',
+                name: __('test.Basic_Interest'),
+                description: __('test.basic_interest_description'),
                 nextStage: 'degree',
-                nextStageName: 'Degree Assessment',
-                route: 'basic-interests.index'
+                nextStageName: __('test.next_basic_interest'),
+                route: 'basic-interests.index',
             },
             'degree': {
-                name: 'Degree Assessment',
-                description: 'Find your ideal degree path',
+                name: __('test.Degree_Assessment'),
+                description: __('test.Degree_Assessment_desription'),
                 nextStage: null,
                 nextStageName: null,
-                route: 'degree-assessment.index'
+                route: 'degree-assessment.index',
+
             }
         },
         loading: false,
