@@ -6,23 +6,23 @@
            height: activeCard === 'complete' ? '280px' : '60px',
            marginTop: activeCard === 'complete' ? '-220px' : '0',
            zIndex: activeCard === 'complete' ? 10 : 1,
-           backgroundColor: `rgb(var(--${themeColors.primary}-rgb), 0.05)`,
-           border: `1px solid rgb(var(--${themeColors.primary}-rgb), 0.1)`
+           backgroundColor: `rgb(var(--${themeStore.currentTheme.primary}-rgb), 0.05)`,
+           border: `1px solid rgb(var(--${themeStore.currentTheme.primary}-rgb), 0.1)`
          }"
          @mouseenter="activeCard = 'complete'"
          @mouseleave="activeCard = null">
       <div class="p-2">
         <div class="flex items-center justify-between mb-1.5">
           <div class="flex items-center gap-2">
-            <span :class="[classes.text, 'text-sm font-medium']">Favorite Jobs</span>
+            <span :class="[`text-${themeStore.currentTheme.primary}-600`, 'text-sm font-medium']">Favorite Jobs</span>
             <span :class="[
-              `bg-${themeColors.primary}-100/30`,
-              classes.text,
+              `bg-${themeStore.currentTheme.primary}-100/30`,
+              `text-${themeStore.currentTheme.primary}-600`,
               'text-xs px-2 py-0.5 rounded-full',
               { 'opacity-0': activeCard === 'complete' }
             ]">{{ props.favoriteJobs.length }}</span>
           </div>
-          <div :class="[classes.button, 'h-5 w-5 rounded-full flex items-center justify-center']">
+          <div :class="[`bg-${themeStore.currentTheme.button}`, 'h-5 w-5 rounded-full flex items-center justify-center']">
             <ArrowRight class="h-3.5 w-3.5 text-white" />
           </div>
         </div>
@@ -60,7 +60,7 @@
                   <h4 class="text-sm font-medium text-gray-700 truncate">{{ job.name }}</h4>
                 </div>
                 <ArrowRight :class="[
-                  classes.icon,
+                  `text-${themeStore.currentTheme.primary}-600`,
                   'w-3.5 h-3.5 transform group-hover/job:translate-x-0.5 transition-transform'
                 ]" />
               </Link>
@@ -76,23 +76,23 @@
            height: activeCard === 'degrees' ? '280px' : '60px',
            marginTop: activeCard === 'degrees' ? '-220px' : '0',
            zIndex: activeCard === 'degrees' ? 10 : 1,
-           backgroundColor: `rgb(var(--${themeColors.primary}-rgb), 0.05)`,
-           border: `1px solid rgb(var(--${themeColors.primary}-rgb), 0.1)`
+           backgroundColor: `rgb(var(--${themeStore.currentTheme.primary}-rgb), 0.05)`,
+           border: `1px solid rgb(var(--${themeStore.currentTheme.primary}-rgb), 0.1)`
          }"
          @mouseenter="activeCard = 'degrees'"
          @mouseleave="activeCard = null">
       <div class="p-2">
         <div class="flex items-center justify-between mb-1.5">
           <div class="flex items-center gap-2">
-            <span :class="[classes.text, 'text-sm font-medium']">Favorite Degrees</span>
+            <span :class="[`text-${themeStore.currentTheme.primary}-600`, 'text-sm font-medium']">Favorite Degrees</span>
             <span :class="[
-              `bg-${themeColors.primary}-100/30`,
-              classes.text,
+              `bg-${themeStore.currentTheme.primary}-100/30`,
+              `text-${themeStore.currentTheme.primary}-600`,
               'text-xs px-2 py-0.5 rounded-full',
               { 'opacity-0': activeCard === 'degrees' }
             ]">{{ props.favoriteDegrees.length }}</span>
           </div>
-          <div :class="[classes.button, 'h-5 w-5 rounded-full flex items-center justify-center']">
+          <div :class="[`bg-${themeStore.currentTheme.button}`, 'h-5 w-5 rounded-full flex items-center justify-center']">
             <ArrowRight class="h-3.5 w-3.5 text-white" />
           </div>
         </div>
@@ -129,7 +129,7 @@
                   <h4 class="text-sm font-medium text-gray-700 truncate">{{ degree.name }}</h4>
                 </div>
                 <ArrowRight :class="[
-                  classes.icon,
+                  `text-${themeStore.currentTheme.primary}-600`,
                   'w-3.5 h-3.5 transform group-hover/degree:translate-x-0.5 transition-transform'
                 ]" />
               </Link>
@@ -145,23 +145,23 @@
            height: activeCard === 'watch' ? '280px' : '60px',
            marginTop: activeCard === 'watch' ? '-220px' : '0',
            zIndex: activeCard === 'watch' ? 10 : 1,
-           backgroundColor: `rgb(var(--${themeColors.primary}-rgb), 0.05)`,
-           border: `1px solid rgb(var(--${themeColors.primary}-rgb), 0.1)`
+           backgroundColor: `rgb(var(--${themeStore.currentTheme.primary}-rgb), 0.05)`,
+           border: `1px solid rgb(var(--${themeStore.currentTheme.primary}-rgb), 0.1)`
          }"
          @mouseenter="activeCard = 'watch'"
          @mouseleave="activeCard = null">
       <div class="p-2">
         <div class="flex items-center justify-between mb-1.5">
           <div class="flex items-center gap-2">
-            <span :class="[classes.text, 'text-sm font-medium']">Watch</span>
+            <span :class="[`text-${themeStore.currentTheme.primary}-600`, 'text-sm font-medium']">Watch</span>
             <span :class="[
-              `bg-${themeColors.primary}-100/30`,
-              classes.text,
+              `bg-${themeStore.currentTheme.primary}-100/30`,
+              `text-${themeStore.currentTheme.primary}-600`,
               'text-xs px-2 py-0.5 rounded-full',
               { 'opacity-0': activeCard === 'watch' }
             ]">{{ streamingPlatforms.length }}</span>
           </div>
-          <div :class="[classes.button, 'h-5 w-5 rounded-full flex items-center justify-center']">
+          <div :class="[`bg-${themeStore.currentTheme.button}`, 'h-5 w-5 rounded-full flex items-center justify-center']">
             <ArrowRight class="h-3.5 w-3.5 text-white" />
           </div>
         </div>
@@ -196,7 +196,7 @@
                   <h4 class="text-sm font-medium text-gray-700 truncate">{{ platform.name }}</h4>
                 </div>
                 <ArrowRight :class="[
-                  classes.icon,
+                  `text-${themeStore.currentTheme.primary}-600`,
                   'w-3.5 h-3.5 transform group-hover/platform:translate-x-0.5 transition-transform'
                 ]" />
               </Link>
@@ -209,12 +209,12 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { Link } from '@inertiajs/vue3'
 import { ArrowRight, Play, Tv, Monitor, Laptop } from 'lucide-vue-next'
-import { useArchetypeTheme } from '@/composables/useArchetypeTheme'
+import { useThemeStore } from '@/stores/theme/themeStore'
 
-// Define props with archetype
+// Define props
 const props = defineProps({
   favoriteJobs: {
     type: Array,
@@ -225,20 +225,14 @@ const props = defineProps({
     type: Array,
     required: true,
     default: () => []
-  },
-  // Add archetype prop
-  archetype: {
-    type: String,
-    required: true
   }
 })
 
 // Reactive state
 const activeCard = ref(null)
 
-// Get theme based on prop archetype
-const archetypeRef = computed(() => props.archetype)
-const { classes, themeColors } = useArchetypeTheme(archetypeRef)
+// Initialize theme store
+const themeStore = useThemeStore()
 
 const streamingPlatforms = [
   { name: 'Crunchyroll', icon: Play },
@@ -268,7 +262,7 @@ const streamingPlatforms = [
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
   @apply rounded-full;
-  background-color: v-bind(`rgb(var(--${themeColors?.primary || 'yellow'}-rgb), 0.2)`);
+  background-color: v-bind(`rgb(var(--${themeStore.currentTheme.primary}-rgb), 0.2)`);
 }
 
 @keyframes count-up {

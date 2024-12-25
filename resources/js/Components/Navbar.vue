@@ -1,43 +1,28 @@
 <template>
   <nav class="flex flex-col items-center gap-5">
-    <Link
-      v-for="(item, index) in navigationItems" 
-      :key="item.route"
-      :href="route(item.route)"
-      class="nav-link group relative"
-      :class="[
+    <Link v-for="(item, index) in navigationItems" :key="item.route" :href="route(item.route)"
+      class="nav-link group relative" :class="[
         'h-14 w-14 rounded-full flex items-center justify-center transition-all duration-300',
         { 'delay-100': index > 0 },
         checkActive(item.route)
-          ? [classes.active, 'shadow-lg']
+          ? [`bg-${themeStore.currentTheme.primary}-500`, 'shadow-lg'] 
           : ['bg-white/90 hover:bg-white/100 hover:scale-105 backdrop-blur-xl shadow-md']
-      ]"
-    >
-      <component 
-        :is="getIcon(item.name)" 
-        class="nav-icon transition-all duration-300 ease-in-out"
-        :class="[
-          'h-7 w-7',
-          checkActive(item.route) 
-            ? 'text-white transform scale-110' 
-            : [classes.icon, classes.hover]
-        ]" 
-      />
-      
+      ]">
+      <component :is="getIcon(item.name)" class="nav-icon transition-all duration-300 ease-in-out" :class="[
+        'h-7 w-7',
+        checkActive(item.route)
+          ? 'text-white transform scale-110'
+          : [`text-${themeStore.currentTheme.primary}-500`, `group-hover:text-${themeStore.currentTheme.primary}-600`]
+      ]" />
+
       <!-- Tooltip -->
-      <span 
-        class="nav-tooltip"
-        :class="[classes.text]"
-      >
+      <span class="nav-tooltip" :class="[`text-${themeStore.currentTheme.primary}-500`]">
         {{ item.name }}
       </span>
 
       <!-- Glass effect overlay -->
-      <div 
-        class="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        :class="[`bg-${themeColors.primary}-50/10`]"
-        style="backdrop-filter: blur(8px);"
-      ></div>
+      <div class="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        :class="[`bg-${themeStore.currentTheme.primary}-50/10`]" style="backdrop-filter: blur(8px);"></div>
     </Link>
   </nav>
 </template>
@@ -45,14 +30,14 @@
 <script setup>
 import { Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
-import { 
+import {
   HomeIcon,
   ClipboardDocumentListIcon,
   BriefcaseIcon,
   AcademicCapIcon,
   BookOpenIcon
 } from '@heroicons/vue/24/outline';
-import { useArchetypeTheme } from '@/composables/useArchetypeTheme';
+import { useThemeStore } from '@/stores/theme/themeStore';
 
 const navigationItems = [
   { name: 'Dashboard', route: 'dashboard' },
@@ -63,7 +48,7 @@ const navigationItems = [
 ];
 
 const getIcon = (name) => {
-  switch(name) {
+  switch (name) {
     case 'Results': return ClipboardDocumentListIcon;
     case 'Jobs': return BriefcaseIcon;
     case 'Degrees': return AcademicCapIcon;
@@ -77,9 +62,7 @@ const checkActive = (routeName) => {
   return currentRoute.startsWith(routeName);
 };
 
-// Get theme based on user's archetype
-const archetype = computed(() => usePage().props.auth.user.archetype || 'Creator')
-const { classes, themeColors } = useArchetypeTheme(archetype)
+const themeStore = useThemeStore();
 </script>
 
 <style scoped>
@@ -100,7 +83,10 @@ const { classes, themeColors } = useArchetypeTheme(archetype)
   border-radius: 9999px;
   z-index: -1;
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  background: v-bind(`linear-gradient(45deg, rgba(var(--${themeColors?.primary || 'yellow'}-rgb), 0.4), rgba(var(--${themeColors?.primary || 'yellow'}-rgb), 0.2))`);
+  background: linear-gradient(45deg, 
+    rgba(var(--color-primary), 0.4), 
+    rgba(var(--color-primary), 0.2)
+  );
 }
 
 .nav-tooltip {
@@ -130,6 +116,7 @@ const { classes, themeColors } = useArchetypeTheme(archetype)
     opacity: 1;
     transform: scale(1);
   }
+
   50% {
     opacity: 0.5;
     transform: scale(1.1);
@@ -143,7 +130,7 @@ const { classes, themeColors } = useArchetypeTheme(archetype)
 }
 
 .nav-active .nav-icon {
-  filter: v-bind(`drop-shadow(0 0 8px rgba(var(--${themeColors?.primary || 'yellow'}-rgb), 0.3))`);
+  filter: drop-shadow(0 0 8px rgba(var(--color-primary), 0.3));
   z-index: 2;
 }
 

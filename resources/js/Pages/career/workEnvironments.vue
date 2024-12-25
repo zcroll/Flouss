@@ -1,66 +1,46 @@
 <template>
+
   <Head title="Work Environments" />
-  <StickySidebar
-    :slug="occupation.slug"
-    :title="occupation.name"
-    :image="occupation.image"
-    type="career"
-    :salary="occupation.salary"
-    :personality="occupation.personality || 'N/A'"
-    :satisfaction="occupation.satisfaction || 'N/A'"
-    :id="occupation.id"
-    :isFavorited="occupation.is_favorited"
-  >
+  <StickySidebar type="career" :model="occupation">
     <template #description>
       Explore the various work environments and settings where {{ occupation.name }}s typically work.
     </template>
 
     <!-- Main Content -->
-    <div :class="[classes.gradient, 'space-y-8']">
-      <Breadcrumbs 
-        :items="[
-          { name: 'Home', route: 'dashboard' },
-          { name: 'Jobs', route: 'jobs.index' },
-          { name: occupation.name, route: 'career', params: { id: occupation.id } },
-          { name: 'Work Environments' }
-        ]"
-        class="mb-8"
-      />
+    <div class="space-y-8">
+      <Breadcrumbs :items="[
+        { name: 'Home', route: 'dashboard' },
+        { name: 'Jobs', route: 'jobs.index' },
+        { name: occupation.name, route: 'career', params: { id: occupation.id } },
+        { name: 'Work Environments' }
+      ]" class="mb-8" />
 
       <!-- Table of Contents -->
-      <aside :class="[classes.border, 'bg-white/50 backdrop-blur-sm rounded-2xl p-6 shadow-sm']">
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">
+      <aside class="bg-white/60 backdrop-blur-xl rounded-3xl border border-white/20 shadow-sm p-6">
+        <h2 class="text-lg font-semibold mb-4" :class="themeStore.isDarkMode ? 'text-white' : 'text-gray-900'">
           {{ __('career.in_this_article') }}
         </h2>
-        
+
         <div class="space-y-4">
-          <div v-for="(items, category, index) in groupedByCategory" 
-               :key="category" 
-               class="space-y-2">
-            <button 
-              :class="[classes.hover, 'w-full text-left flex items-center justify-between text-gray-900 font-medium transition-colors']"
-              @click="toggleSection(index)"
-            >
+          <div v-for="(items, category, index) in groupedByCategory" :key="category" class="space-y-2">
+            <button class="w-full text-left flex items-center justify-between font-medium transition-colors"
+              :class="themeStore.isDarkMode ? 'text-white hover:text-gray-300' : 'text-gray-900 hover:text-gray-600'"
+              @click="toggleSection(index)">
               <span>{{ category }}</span>
-              <svg 
-                class="w-5 h-5 transition-transform duration-200"
-                :class="{ 'rotate-180': openSections[index] }"
-                xmlns="http://www.w3.org/2000/svg" 
-                viewBox="0 0 20 20" 
-                fill="currentColor"
-              >
-                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+              <svg class="w-5 h-5 transition-transform duration-200" :class="{ 'rotate-180': openSections[index] }"
+                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd" />
               </svg>
             </button>
-            
+
             <transition name="slide">
               <ul v-show="openSections[index]" class="pl-4 space-y-2">
                 <li v-for="item in items" :key="item.id">
-                  <a 
-                    :href="`#section-${item.id}`"
-                    :class="[classes.hover, 'text-gray-600 transition-colors']"
-                    @click.prevent="highlightAndScroll(item.id)"
-                  >
+                  <a :href="`#section-${item.id}`" class="transition-colors"
+                    :class="themeStore.isDarkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'"
+                    @click.prevent="highlightAndScroll(item.id)">
                     {{ item.name }}
                   </a>
                 </li>
@@ -72,22 +52,21 @@
 
       <!-- Work Environments List -->
       <div class="space-y-6">
-        <div v-for="environment in workEnvironments" 
-             :key="environment.id"
-             :id="`section-${environment.id}`"
-             :class="[classes.border, 'bg-white/50 backdrop-blur-sm rounded-2xl p-6 shadow-sm transition-all duration-300', { 'highlight': isHighlighted(environment.id) }]">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">
+        <div v-for="environment in workEnvironments" :key="environment.id" :id="`section-${environment.id}`"
+          class="bg-white/60 backdrop-blur-xl rounded-3xl border border-white/20 shadow-sm p-6 transition-all duration-300"
+          :class="{ 'highlight': isHighlighted(environment.id) }">
+          <h3 class="text-xl font-semibold mb-4" :class="themeStore.isDarkMode ? 'text-white' : 'text-gray-900'">
             {{ environment.name }}
           </h3>
-          
-          <p class="text-gray-600 mb-6">{{ environment.description }}</p>
-          
-          <div v-if="environment.score" class="relative h-8 rounded-full overflow-hidden" :class="[classes.background.dark]">
-            <div 
-              :class="[classes.button]"
+
+          <p class="mb-6" :class="themeStore.isDarkMode ? 'text-gray-300' : 'text-gray-600'">{{ environment.description
+            }}
+          </p>
+
+          <div v-if="environment.score" class="relative h-8 rounded-full overflow-hidden bg-gray-100">
+            <div :class="`bg-${themeStore.currentTheme.primary}-600`"
               class="absolute inset-y-0 left-0 transition-all duration-1000"
-              :style="{ width: `${environment.score}%` }"
-            >
+              :style="{ width: `${environment.score}%` }">
               <span class="absolute inset-0 flex items-center justify-end pr-4 text-white font-medium">
                 {{ environment.score }}%
               </span>
@@ -109,61 +88,63 @@ import { Link } from '@inertiajs/vue3';
 import BackToTop from "@/Components/helpers/BackToTop.vue";
 import Breadcrumbs from '@/Components/helpers/Breadcrumbs.vue';
 import MainLayout from "@/Layouts/MainLayout.vue";
-import { useArchetypeTheme } from '@/composables/useArchetypeTheme';
+import { useThemeStore } from '@/stores/theme/themeStore';
 
 defineOptions({ layout: MainLayout });
 
 const props = defineProps({
-    occupation: {
-        type: Object,
-        required: true,
-    },
-    workEnvironments: {
-        type: Array,
-        required: true,
-    },
+  occupation: {
+    type: Object,
+    required: true,
+    validator: (obj) => {
+      return ['id', 'slug', 'name', 'image'].every(prop => prop in obj);
+    }
+  },
+  workEnvironments: {
+    type: Array,
+    required: true,
+  },
 });
 
-const archetype = ref(props.occupation.personality || 'Creator');
-const { themeColors, classes } = useArchetypeTheme(archetype);
+const themeStore = useThemeStore();
 
 // Add state for tracking highlighted section
 const highlightedId = ref(null);
 
 const groupedByCategory = computed(() => {
-    return props.workEnvironments.reduce((acc, item) => {
-        (acc[item.category] = acc[item.category] || []).push(item);
-        return acc;
-    }, {});
+  return props.workEnvironments.reduce((acc, item) => {
+    (acc[item.category] = acc[item.category] || []).push(item);
+    return acc;
+  }, {});
 });
 
 const openSections = ref(Object.keys(groupedByCategory.value).map(() => false));
 
 const toggleSection = (index) => {
-    openSections.value[index] = !openSections.value[index];
+  openSections.value[index] = !openSections.value[index];
 };
 
 // Add isHighlighted method
 const isHighlighted = (id) => highlightedId.value === id;
 
 const highlightAndScroll = (id) => {
-    const element = document.getElementById(`section-${id}`);
-    if (element) {
-        // Set the highlighted ID
-        highlightedId.value = id;
-        
-        // Clear the highlight after animation
-        setTimeout(() => {
-            highlightedId.value = null;
-        }, 2000);
+  const element = document.getElementById(`section-${id}`);
+  if (element) {
+    // Set the highlighted ID
+    highlightedId.value = id;
 
-        // Smooth scroll to the element
-        element.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'start',
-            inline: 'nearest'
-        });
-    }
+    // Clear the highlight after animation
+    setTimeout(() => {
+      highlightedId.value = null;
+    }, 2000);
+
+    // Smooth scroll to the element
+    element.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+      inline: 'nearest'
+    });
+  }
 };
 </script>
 
@@ -185,15 +166,17 @@ const highlightAndScroll = (id) => {
 }
 
 @keyframes glow {
-  0% { 
+  0% {
     box-shadow: 0 0 0 rgba(250, 204, 21, 0.5);
     transform: scale(1);
   }
-  50% { 
+
+  50% {
     box-shadow: 0 0 20px rgba(250, 204, 21, 0.5);
     transform: scale(1.02);
   }
-  100% { 
+
+  100% {
     box-shadow: 0 0 0 rgba(250, 204, 21, 0.5);
     transform: scale(1);
   }
@@ -214,6 +197,7 @@ section {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

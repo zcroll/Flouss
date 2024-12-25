@@ -1,34 +1,28 @@
 <template>
+
   <Head title="Dashboard" />
-  
+
   <!-- Avatar Section -->
   <div class="flex-1 flex items-center justify-center relative" style="margin-top: -10rem">
     <div class="absolute inset-0 flex items-center justify-center">
       <div class="relative flex items-center gap-12">
         <!-- Avatar Container with Glow -->
-        <div class="relative w-[400px] h-[400px]" 
-             @mouseover="showDetails = true"
-             @mouseleave="showDetails = false">
+        <div class="relative w-[400px] h-[400px]" @mouseover="showDetails = true" @mouseleave="showDetails = false">
           <!-- Glow Effect -->
           <div :class="[
-            `bg-${themeColors.primary}-400/20`,
+            `bg-${themeStore.currentTheme.primary}-400/20`,
             'absolute inset-0 rounded-full blur-3xl scale-90 animate-pulse-slow'
           ]"></div>
-          
-          <ArchetypeAvatar 
-            :archetype="archetype.slug" 
-            class="w-full h-full transform scale-110 relative z-10"
-          />
+
+          <ArchetypeAvatar :archetype="archetype.slug" class="w-full h-full transform scale-110 relative z-10" />
         </div>
 
         <!-- Details Panel -->
-        <div class="w-[340px] relative overflow-hidden"
-             :class="{ 'pointer-events-none': !showDetails }">
-          <div class="space-y-8 transition-all duration-500 ease-out"
-               :class="[
-                 showDetails ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20',
-                 'transform'
-               ]">
+        <div class="w-[340px] relative overflow-hidden" :class="{ 'pointer-events-none': !showDetails }">
+          <div class="space-y-8 transition-all duration-500 ease-out" :class="[
+            showDetails ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20',
+            'transform'
+          ]">
             <!-- Title & Description -->
             <div class="space-y-3">
               <div class="flex items-start justify-between">
@@ -36,14 +30,13 @@
                   {{ archetype.slug }}
                 </h2>
                 <!-- Animated Rarity Badge -->
-                <div class="rarity-badge"
-                     :class="{ 'show-badge': showDetails }">
+                <div class="rarity-badge" :class="{ 'show-badge': showDetails }">
                   <div :class="[
-                    classes.border,
+                    `border-${themeStore.currentTheme.border}`,
                     'px-3 py-1.5 bg-white/80 backdrop-blur-sm rounded-full shadow-lg relative overflow-hidden'
                   ]">
                     <span :class="[
-                      classes.text,
+                      `text-${themeStore.currentTheme.primary}-600`,
                       'text-sm font-medium relative z-10'
                     ]">
                       {{ archetype.rarity_string }}
@@ -60,26 +53,43 @@
             <div class="space-y-6">
               <!-- Top Traits -->
               <div :class="[
-                classes.border,
-                'bg-white/60 backdrop-blur-sm rounded-2xl p-6 border shadow-xl'
+                themeStore.getThemeClasses('border'),
+                'bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-xl transition-colors duration-300',
+                themeStore.isDarkMode ? 'bg-gray-800/60' : 'bg-white/60'
               ]">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4">Top Traits</h3>
+                <h3 :class="[
+                  'text-lg font-semibold mb-4',
+                  themeStore.isDarkMode ? 'text-white' : 'text-gray-800'
+                ]">
+                  Top Traits
+                </h3>
                 <div class="space-y-4">
-                  <div v-for="(value, trait, index) in topTraits" 
-                       :key="trait"
-                       class="trait-item"
-                       :style="{
-                         '--delay': `${index * 200}ms`,
-                         '--progress': showDetails ? value : 0
-                       }">
+                  <div v-for="(value, trait, index) in topTraits" :key="trait" class="trait-item" :style="{
+                    '--delay': `${index * 200}ms`,
+                    '--progress': showDetails ? value : 0
+                  }">
                     <div class="flex justify-between text-sm mb-2">
-                      <span class="font-medium" :class="[classes.text.dark]">{{ trait }}</span>
-                      <span class="text-red-500">{{ Math.round(value * 100) }}%</span>
+                      <span class="font-medium" :class="[
+                        `text-${themeStore.currentTheme.primary}-600`,
+                        themeStore.isDarkMode ? `text-${themeStore.currentTheme.primary}-400` : `text-${themeStore.currentTheme.primary}-600`
+                      ]">
+                        {{ trait }}
+                      </span>
+                      <span :class="[
+                        themeStore.isDarkMode ? 'text-red-400' : 'text-red-500'
+                      ]">
+                        {{ Math.round(value * 100) }}%
+                      </span>
                     </div>
-                    <div class="h-2.5" :class="[classes.background.dark, 'rounded-full overflow-hidden']">
-                      <div :class="[
-                        'bg-gray-500',
-                        'progress-bar h-full rounded-full'
+                    <div class="h-2.5 rounded-full overflow-hidden transition-colors duration-300" :class="[
+                      themeStore.isDarkMode
+                        ? `bg-${themeStore.currentTheme.primary}-900/50`
+                        : `bg-${themeStore.currentTheme.primary}-100/50`
+                    ]">
+                      <div class="progress-bar h-full rounded-full transition-all duration-500" :class="[
+                        themeStore.isDarkMode
+                          ? `bg-${themeStore.currentTheme.primary}-400`
+                          : `bg-${themeStore.currentTheme.primary}-500`
                       ]">
                       </div>
                     </div>
@@ -95,16 +105,8 @@
 
   <!-- Bottom section -->
   <div class="relative">
-    <BottomCards 
-      :favorite-jobs="favoriteJobs" 
-      :favorite-degrees="favoriteDegrees"
-      :archetype="archetype.slug"
-    />
-    <AIChat 
-      :predefined-questions="predefinedQuestions"
-      :initial-messages="chatHistory"
-      class="z-50"
-    />
+    <BottomCards :favorite-jobs="favoriteJobs" :favorite-degrees="favoriteDegrees" :archetype="archetype.slug" />
+    <AIChat :predefined-questions="predefinedQuestions" :initial-messages="chatHistory" class="z-50" />
   </div>
 </template>
 
@@ -115,7 +117,7 @@ import MainLayout from '@/Layouts/MainLayout.vue'
 import ArchetypeAvatar from '@/Components/Result/Archetype_Avatar/ArchetypeAvatar.vue'
 import BottomCards from '@/Components/BottomCards.vue'
 import AIChat from '@/Components/Dashboard/AIChat.vue'
-import { useArchetypeTheme } from '@/composables/useArchetypeTheme'
+import { useThemeStore } from '@/stores/theme/themeStore'
 
 const props = defineProps({
   hasResult: {
@@ -159,16 +161,12 @@ defineOptions({
 })
 
 const showDetails = ref(false)
-
-// Get theme based on archetype
-const archetypeRef = computed(() => props.archetype.slug)
-const { classes, themeColors } = useArchetypeTheme(archetypeRef)
+const themeStore = useThemeStore()
 
 // Debug logging
-console.log('Dashboard Archetype:', archetypeRef.value)
+console.log('Dashboard Archetype:', props.archetype.slug)
 console.log('Dashboard Theme:', {
-  colors: themeColors.value,
-  classes: classes.value
+  theme: themeStore.currentTheme
 })
 </script>
 
@@ -182,21 +180,32 @@ console.log('Dashboard Theme:', {
 }
 
 .trait-item {
-  --progress: 0;
-  --delay: 0ms;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.5s ease forwards;
+  animation-delay: var(--delay);
 }
 
 .progress-bar {
   width: calc(var(--progress) * 100%);
-  transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1) var(--delay);
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Enhanced animations */
 @keyframes pulse-slow {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 0.4;
     transform: scale(0.9);
   }
+
   50% {
     opacity: 0.6;
     transform: scale(0.95);
@@ -214,19 +223,25 @@ console.log('Dashboard Theme:', {
   left: -100%;
   width: 50%;
   height: 100%;
-  background: linear-gradient(
-    120deg,
-    transparent,
-    rgba(255, 255, 255, 0.6),
-    transparent
-  );
+  background: linear-gradient(120deg,
+      transparent,
+      rgba(255, 255, 255, 0.6),
+      transparent);
   animation: shine 3s infinite;
 }
 
 @keyframes shine {
-  0% { left: -100%; }
-  20% { left: 100%; }
-  100% { left: 100%; }
+  0% {
+    left: -100%;
+  }
+
+  20% {
+    left: 100%;
+  }
+
+  100% {
+    left: 100%;
+  }
 }
 
 /* Transitions */
@@ -264,10 +279,8 @@ console.log('Dashboard Theme:', {
 
 /* Make the badge slightly more glossy */
 .rarity-badge div {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.9),
-    rgba(255, 255, 255, 0.6)
-  );
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.9),
+      rgba(255, 255, 255, 0.6));
 }
 </style>

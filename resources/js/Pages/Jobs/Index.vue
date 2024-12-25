@@ -1,19 +1,30 @@
 <template>
+
   <Head title="Jobs" />
   <div class="flex-1 flex flex-col space-y-8">
     <!-- Hero Section -->
-    <div class="relative bg-white/60 backdrop-blur-xl rounded-3xl p-8 overflow-hidden">
+    <div :class="[
+      themeClasses.card,
+      'relative p-8 overflow-hidden'
+    ]">
       <!-- Background Pattern -->
       <div class="absolute inset-0 opacity-5">
-        <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,...'); background-size: 20px 20px;"></div>
+        <div class="absolute inset-0"
+          style="background-image: url('data:image/svg+xml,...'); background-size: 20px 20px;"></div>
       </div>
-      
+
       <!-- Content -->
       <div class="relative">
-        <h1 class="text-3xl md:text-4xl font-bold mb-4" :class="classes.text">
+        <h1 :class="[
+          'text-3xl md:text-4xl font-bold mb-4',
+          themeStore.isDarkMode ? 'text-white' : 'text-gray-900'
+        ]">
           {{ __('jobs.explore_opportunities') }}
         </h1>
-        <p class="text-gray-600 text-lg max-w-2xl">
+        <p :class="[
+          'text-lg max-w-2xl',
+          themeStore.isDarkMode ? 'text-gray-300' : 'text-gray-600'
+        ]">
           {{ __('jobs.discover_careers') }}
         </p>
       </div>
@@ -22,23 +33,21 @@
     <!-- Filter section -->
     <div class="sticky top-4 z-30">
       <!-- Desktop Filters -->
-      <div class="hidden sm:block bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-sm border border-white/20">
+      <div :class="[
+        themeClasses.card,
+        'hidden sm:block'
+      ]">
         <div class="flex gap-6">
           <div class="flex-1">
             <label for="search-desktop" class="block text-sm font-medium text-gray-700 mb-2">
               {{ __('jobs.search') }}
             </label>
             <div class="relative group">
-              <Search class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 transition-colors" :class="classes.hover" />
-              <input 
-                id="search-desktop" 
-                v-model="searchQuery" 
-                type="text" 
-                :placeholder="__('jobs.search_jobs')"
+              <Search class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 transition-colors"
+                :class="themeClasses.hover" />
+              <input id="search-desktop" v-model="searchQuery" type="text" :placeholder="__('jobs.search_jobs')"
                 class="w-full pl-12 pr-6 py-3 text-gray-900 placeholder-gray-500 bg-white/80 backdrop-blur-md rounded-full border border-white/20 transition duration-200"
-                :class="classes.focus"
-                @input="debouncedSearch" 
-              />
+                :class="themeClasses.focus" @input="debouncedSearch" />
             </div>
           </div>
 
@@ -46,20 +55,14 @@
             <label class="block text-sm font-medium text-gray-700 mb-2">
               {{ __('jobs.education_levels') }}
             </label>
-            <CustomMultiSelect 
-              v-model="selectedEducationLevels" 
-              :options="educationLevelOptions"
-              :placeholder="__('jobs.select_education_levels')"
-              class="backdrop-blur-md"
-            />
+            <CustomMultiSelect v-model="selectedEducationLevels" :options="educationLevelOptions"
+              :placeholder="__('jobs.select_education_levels')" class="backdrop-blur-md" />
           </div>
 
           <div class="flex items-end">
-            <button 
-              @click="resetFilters"
+            <button @click="resetFilters"
               class="group px-6 py-3 bg-white/80 border border-white/20 backdrop-blur-xl text-gray-700 font-medium rounded-full focus:ring-2 focus:ring-offset-2 transition duration-200"
-              :class="[classes.hover, classes.focus]"
-            >
+              :class="[themeClasses.hover, themeClasses.focus]">
               <span class="flex items-center gap-2">
                 <RefreshCw class="w-4 h-4 transition-transform group-hover:rotate-180" />
                 {{ __('jobs.reset_filters') }}
@@ -73,16 +76,15 @@
       <div class="sm:hidden">
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="outline" 
-                    class="w-full flex justify-between items-center bg-white/80 backdrop-blur-xl rounded-full border border-white/20">
+            <Button variant="outline"
+              class="w-full flex justify-between items-center bg-white/80 backdrop-blur-xl rounded-full border border-white/20">
               <span class="flex items-center gap-2">
                 <Search class="w-5 h-5" />
                 {{ __('jobs.filters') }}
               </span>
               <div class="flex items-center gap-1">
-                <span v-if="activeFiltersCount" 
-                      class="text-white text-xs font-medium px-2 py-0.5 rounded-full"
-                      :class="classes.active">
+                <span v-if="activeFiltersCount" class="text-white text-xs font-medium px-2 py-0.5 rounded-full"
+                  :class="themeClasses.active">
                   {{ activeFiltersCount }}
                 </span>
                 <ChevronDown class="w-4 h-4" />
@@ -99,13 +101,9 @@
                 </label>
                 <div class="relative">
                   <Search class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                  <input 
-                    v-model="searchQuery" 
-                    type="text" 
-                    :placeholder="__('jobs.search_jobs')"
-                    class="w-full pl-12 pr-6 py-3 bg-white/80 rounded-full border border-gray-200" 
-                    :class="classes.focus"
-                  />
+                  <input v-model="searchQuery" type="text" :placeholder="__('jobs.search_jobs')"
+                    class="w-full pl-12 pr-6 py-3 bg-white/80 rounded-full border border-gray-200"
+                    :class="themeClasses.focus" />
                 </div>
               </div>
 
@@ -114,19 +112,14 @@
                 <label class="block text-sm font-medium text-gray-700 mb-2">
                   {{ __('jobs.education_levels') }}
                 </label>
-                <CustomMultiSelect 
-                  v-model="selectedEducationLevels" 
-                  :options="educationLevelOptions"
-                  :placeholder="__('jobs.select_education_levels')"
-                />
+                <CustomMultiSelect v-model="selectedEducationLevels" :options="educationLevelOptions"
+                  :placeholder="__('jobs.select_education_levels')" />
               </div>
 
               <!-- Reset Button -->
-              <button 
-                @click="resetFilters"
+              <button @click="resetFilters"
                 class="w-full px-6 py-3 font-medium rounded-full transition-colors duration-200"
-                :class="[classes.button, classes.text]"
-              >
+                :class="[themeClasses.button, themeClasses.text]">
                 {{ __('jobs.reset_filters') }}
               </button>
             </div>
@@ -137,26 +130,31 @@
 
     <!-- Jobs Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div v-for="(job, index) in jobs.data" 
-           :key="job.id"
-           class="group relative bg-white/60 backdrop-blur-xl rounded-3xl p-6 shadow-sm border border-white/20 hover:shadow-lg transition-all duration-300"
-           :style="{ animationDelay: `${index * 100}ms` }"
-      >
+      <div v-for="(job, index) in jobs.data" :key="job.id" :class="[themeClasses.card]"
+        :style="{ animationDelay: `${index * 100}ms` }">
         <!-- Header with Image and Title -->
         <div class="flex items-center gap-4 mb-6">
-          <div class="w-16 h-16 rounded-2xl overflow-hidden bg-white/50 p-3 backdrop-blur-sm border border-white/20 transition-colors duration-300"
-               :class="classes.border">
-            <img :src="job.image" 
-                 :alt="`image for ${job.name}`"
-                 class="w-full h-full object-contain filter contrast-125 transition-transform duration-300 group-hover:scale-110" 
-            />
+          <div :class="[
+            'w-16 h-16 rounded-2xl overflow-hidden p-3 transition-colors duration-300',
+            themeStore.isDarkMode
+              ? 'bg-gray-700/50'
+              : 'bg-white/50',
+            themeStore.getThemeClasses('border')
+          ]">
+            <img :src="job.image" :alt="`image for ${job.name}`"
+              class="w-full h-full object-contain filter contrast-125 transition-transform duration-300 group-hover:scale-110" />
           </div>
           <div>
-            <h3 class="text-lg font-bold text-gray-900">{{ job.name }}</h3>
-            <p class="text-sm" :class="classes.text">{{ job.category }}</p>
+            <h3 :class="[
+              'text-lg font-bold',
+              themeStore.isDarkMode ? 'text-white' : 'text-gray-900'
+            ]">
+              {{ job.name }}
+            </h3>
+            <p :class="themeClasses.text">{{ job.category }}</p>
           </div>
         </div>
-        
+
         <!-- Job Details -->
         <div class="space-y-4 mb-6">
           <!-- Description -->
@@ -168,10 +166,8 @@
           <div class="space-y-2">
             <h4 class="text-xs font-medium text-gray-500 uppercase tracking-wider">Requirements</h4>
             <div class="flex flex-wrap gap-2">
-              <span v-for="(level, idx) in job.education_levels" 
-                    :key="idx"
-                    class="px-3 py-1 text-xs rounded-full"
-                    :class="[classes.border, classes.text]">
+              <span v-for="(level, idx) in job.education_levels" :key="idx" class="px-3 py-1 text-xs rounded-full"
+                :class="[themeStore.getThemeClasses('border'), themeClasses.text]">
                 {{ level }}
               </span>
             </div>
@@ -191,29 +187,28 @@
           <div v-if="job.skills?.length" class="space-y-2">
             <h4 class="text-xs font-medium text-gray-500 uppercase tracking-wider">Key Skills</h4>
             <div class="flex flex-wrap gap-2">
-              <span v-for="skill in job.skills" 
-                    :key="skill"
-                    class="px-3 py-1 bg-white/50 text-xs rounded-full border border-white/20 transition-colors duration-300"
-                    :class="classes.border">
+              <span v-for="skill in job.skills" :key="skill"
+                class="px-3 py-1 bg-white/50 text-xs rounded-full border border-white/20 transition-colors duration-300"
+                :class="themeStore.getThemeClasses('border')">
                 {{ skill }}
               </span>
             </div>
           </div>
         </div>
-        
+
         <!-- Action Button -->
-        <Link :href="`/career/${job.slug}`" 
-              class="inline-flex items-center justify-between w-full px-6 py-3 bg-white/60 backdrop-blur-sm font-medium rounded-full border border-white/20 transition-all duration-300"
-              :class="[classes.button, classes.text]">
-          <span>Learn More</span>
-          <ArrowRight class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" />
+        <Link :href="`/career/${job.slug}`"
+          class="inline-flex items-center justify-between w-full px-6 py-3 bg-white/60 backdrop-blur-sm font-medium rounded-full border border-white/20 transition-all duration-300"
+          :class="[themeClasses.button, themeClasses.text]">
+        <span>Learn More</span>
+        <ArrowRight class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" />
         </Link>
       </div>
     </div>
 
     <!-- Empty State -->
-    <div v-if="jobs.data.length === 0" 
-         class="flex flex-col items-center justify-center py-12 bg-white/60 backdrop-blur-xl rounded-3xl border border-white/20">
+    <div v-if="jobs.data.length === 0"
+      class="flex flex-col items-center justify-center py-12 bg-white/60 backdrop-blur-xl rounded-3xl border border-white/20">
       <div class="text-center">
         <div class="mb-4">
           <SearchX class="w-12 h-12 text-gray-400 mx-auto" />
@@ -222,11 +217,9 @@
           {{ __("jobs.no_jobs_found") }}
         </h3>
         <p class="text-gray-600 mb-6">Try adjusting your search or filters</p>
-        <button 
-          @click="resetFilters"
+        <button @click="resetFilters"
           class="px-6 py-3 font-medium rounded-full transition-colors duration-300 flex items-center gap-2 mx-auto"
-          :class="classes.button"
-        >
+          :class="themeClasses.button">
           <RefreshCw class="w-4 h-4" />
           {{ __("jobs.reset_filters") }}
         </button>
@@ -236,11 +229,9 @@
     <!-- Load More -->
     <WhenVisible v-if="hasMorePages">
       <div class="flex justify-center mt-8">
-        <button 
-          @click="loadMore"
+        <button @click="loadMore"
           class="group px-8 py-3 bg-white/60 backdrop-blur-xl text-gray-700 font-medium rounded-full hover:bg-white/80 transition-all duration-300 flex items-center gap-2"
-          :disabled="isLoading"
-        >
+          :disabled="isLoading">
           <span>Load More</span>
           <ArrowDown class="w-4 h-4 transform group-hover:translate-y-1 transition-transform" />
         </button>
@@ -254,29 +245,72 @@
 <script setup>
 import { ref, watch, onMounted, onUnmounted, computed } from 'vue';
 import { router, Link, usePage } from '@inertiajs/vue3';
-import AppLayout from "@/Layouts/AppLayout.vue";
+import MainLayout from "@/Layouts/MainLayout.vue";
 import CustomMultiSelect from '@/Components/helpers/CustomMultiSelect.vue';
 import debounce from 'lodash/debounce';
 import { WhenVisible } from '@inertiajs/vue3';
 import BackToTop from '@/Components/helpers/BackToTop.vue';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/Components/ui/sheet"
+import { Sheet, SheetContent, SheetTrigger } from "@/Components/ui/sheet"
 import { Button } from "@/Components/ui/button"
-import MainLayout from "@/Layouts/MainLayout.vue";
 import { Search, ArrowRight, ChevronDown, RefreshCw, ArrowDown, SearchX } from 'lucide-vue-next'
-import { useArchetypeTheme } from '@/composables/useArchetypeTheme';
+import { useThemeStore } from '@/stores/theme/themeStore'
 
 const props = defineProps({
   jobs: Object,
   filters: Object,
   language: String
 });
+
 defineOptions({
-    layout: MainLayout,
+  layout: MainLayout,
 })
 
-// Initialize theme
-const archetype = ref('Creator'); // Set default archetype or get from props
-const { classes } = useArchetypeTheme(archetype);
+// Initialize theme store
+const themeStore = useThemeStore()
+
+// Theme-based classes
+const themeClasses = computed(() => ({
+  card: [
+    'group relative backdrop-blur-xl rounded-3xl p-6 shadow-sm transition-all duration-300',
+    themeStore.isDarkMode
+      ? 'bg-gray-800/60 border-gray-700'
+      : 'bg-white/60 border-white/20',
+    themeStore.getThemeClasses('border')
+  ],
+  input: [
+    'w-full rounded-full border transition duration-200',
+    themeStore.isDarkMode
+      ? 'bg-gray-800/80 text-white placeholder-gray-400 border-gray-700'
+      : 'bg-white/80 text-gray-900 placeholder-gray-500 border-white/20',
+    themeStore.getThemeClasses('ring')
+  ],
+  button: [
+    'transition-colors duration-200',
+    themeStore.isDarkMode
+      ? `bg-${themeStore.currentTheme.primary}-600 hover:bg-${themeStore.currentTheme.primary}-700`
+      : `bg-${themeStore.currentTheme.primary}-500 hover:bg-${themeStore.currentTheme.primary}-600`,
+    'text-white'
+  ],
+  text: [
+    themeStore.isDarkMode
+      ? `text-${themeStore.currentTheme.primary}-400`
+      : `text-${themeStore.currentTheme.primary}-600`
+  ],
+  badge: [
+    'px-3 py-1 text-xs rounded-full transition-colors duration-300',
+    themeStore.isDarkMode
+      ? `bg-${themeStore.currentTheme.primary}-900/50 text-${themeStore.currentTheme.primary}-300`
+      : `bg-${themeStore.currentTheme.primary}-50 text-${themeStore.currentTheme.primary}-700`
+  ],
+  active: [
+    themeStore.isDarkMode
+      ? `bg-${themeStore.currentTheme.primary}-600`
+      : `bg-${themeStore.currentTheme.primary}-500`
+  ]
+}))
+
+// Replace the old classes object with themeClasses
+const classes = themeClasses
 
 // Add showFilters ref
 const showFilters = ref(false);
@@ -433,7 +467,7 @@ const formatLabel = (key) => {
 
 <style scoped>
 /* Animations */
-.grid > div {
+.grid>div {
   animation: fadeInUp 0.6s ease-out forwards;
   opacity: 0;
 }
@@ -443,6 +477,7 @@ const formatLabel = (key) => {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

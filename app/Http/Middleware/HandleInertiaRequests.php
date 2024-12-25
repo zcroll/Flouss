@@ -9,6 +9,9 @@ use Inertia\Middleware;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Arr;
+use App\Models\Result;
+use Illuminate\Support\Facades\Log;
+
 class HandleInertiaRequests extends Middleware
 {
     /**
@@ -65,7 +68,18 @@ class HandleInertiaRequests extends Middleware
             // Auth user data
             'auth' => [
                 'user' => fn () => $request->user()
-                    ? $request->user()->only('id', 'name', 'email')
+                    ? array_merge(
+                        $request->user()->only('id', 'name', 'email'),
+                        [
+                            'archetype' => tap($request->user()
+                                ? Result::where('user_id', $request->user()->id)
+                                    ->latest()
+                                    ->first()?->Archetype
+                                : null, function($archetype) {
+                                    Log::info('User archetype:', ['archetype' => $archetype]);
+                                })
+                        ]
+                    )
                     : null,
             ],
             

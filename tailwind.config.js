@@ -103,4 +103,11 @@ export default {
   },
 
   plugins: [forms, require('tailwindcss-animate')],
+
+  safelist: [
+    {
+      pattern: /(bg|text|border|ring)-(blue|emerald|violet|amber)-(50|100|200|300|400|500|600|700|800|900|950)/,
+      variants: ['hover', 'dark', 'dark:hover']
+    }
+  ]
 }
