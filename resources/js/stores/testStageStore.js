@@ -74,7 +74,6 @@ export const useTestStageStore = defineStore('testStage', {
                 await this.fetchCurrentStage();
                 this.initialized = true;
             } catch (error) {
-                console.error('Failed to initialize test stage store:', error);
             }
         },
 
@@ -144,7 +143,6 @@ export const useTestStageStore = defineStore('testStage', {
 
                 this.currentStage = response.data.currentStage;
 
-                // Update progress for all stages
                 const progressStore = useTestProgressStore();
                 const progress = response.data.progress;
 
@@ -157,7 +155,6 @@ export const useTestStageStore = defineStore('testStage', {
                     });
                 });
 
-                // Fetch data based on current stage
                 if (this.currentStage === 'basic_interests') {
                     const basicInterestStore = useBasicInterestStore();
                     await basicInterestStore.fetchData();
@@ -167,7 +164,6 @@ export const useTestStageStore = defineStore('testStage', {
                 }
             } catch (error) {
                 this.error = 'Failed to fetch current stage';
-                console.error('Error fetching current stage:', error);
             } finally {
                 this.loading = false;
             }
@@ -189,14 +185,11 @@ export const useTestStageStore = defineStore('testStage', {
                 }
 
                 this.currentStage = response.data.currentStage;
-
-                // Fetch data for the new stage
                 await this.fetchStageData(newStage);
 
                 return true;
             } catch (error) {
                 this.error = error.response?.data?.message || 'Failed to change stage';
-                console.error('Error changing stage:', error);
                 return false;
             } finally {
                 this.loading = false;

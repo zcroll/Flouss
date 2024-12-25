@@ -287,19 +287,11 @@ const continueToNextSection = async () => {
 };
 
 watch(() => currentTestData.value, (newData) => {
-    console.log('currentTestData changed:', {
-        data: newData,
-        stage: testStageStore.currentStage,
-        storeData: currentStore.value?.data
-    });
+
 }, {immediate: true});
 
 watch(() => currentStore.value, (newStore) => {
-    console.log('currentStore changed:', {
-        store: newStore,
-        data: newStore?.data,
-        currentItem: newStore?.currentItem
-    });
+  
 }, {immediate: true});
 
 const handleTutorialComplete = () => {

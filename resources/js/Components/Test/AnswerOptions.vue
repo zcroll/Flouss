@@ -77,25 +77,12 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue', 'submit']);
 
 const handleChange = (event, option) => {
-  console.log('Option change:', { 
-    optionId: option.id,
-    optionValue: option.value,
-    currentItem: props.currentItem,
-    currentResponse: props.store.responses[props.currentItem?.id]
-  });
-  
   emit('update:modelValue', option.value);
   emit('submit');
 };
 
 // Watch for store responses changes
 watch(() => props.store.responses[props.currentItem?.id], (newResponse) => {
-  console.log('Store response changed:', {
-    itemId: props.currentItem?.id,
-    newResponse,
-    allResponses: props.store.responses
-  });
-  
   if (newResponse !== undefined) {
     emit('update:modelValue', newResponse);
   } else {
@@ -104,13 +91,6 @@ watch(() => props.store.responses[props.currentItem?.id], (newResponse) => {
 }, { immediate: true });
 
 onMounted(() => {
-  console.log('AnswerOptions mounted:', {
-    currentItem: props.currentItem,
-    modelValue: props.modelValue,
-    storeResponses: props.store.responses,
-    currentResponse: props.store.responses[props.currentItem?.id]
-  });
-  
   // Set initial value from store response
   const response = props.store.responses[props.currentItem?.id];
   if (response !== undefined) {

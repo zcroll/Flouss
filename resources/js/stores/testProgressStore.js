@@ -3,7 +3,6 @@ import { router } from '@inertiajs/vue3';
 
 export const useTestProgressStore = defineStore('testProgress', {
   state: () => ({
-    debug: true,
     currentStage: 'holland_codes',
     stageConfig: {
       holland_codes: {
@@ -59,8 +58,7 @@ export const useTestProgressStore = defineStore('testProgress', {
         validResponses: 0,
         percentage: 0,
         canTransition: false,
-        archetypeDiscovery: null,
-        debug: []
+        archetypeDiscovery: null
       },
       basic_interests: {
         completed: false,
@@ -68,8 +66,7 @@ export const useTestProgressStore = defineStore('testProgress', {
         validResponses: 0,
         percentage: 0,
         canTransition: false,
-        jobMatching: null,
-        debug: []
+        jobMatching: null
       },
       degree: {
         completed: false,
@@ -77,41 +74,18 @@ export const useTestProgressStore = defineStore('testProgress', {
         validResponses: 0,
         percentage: 0,
         canTransition: false,
-        degreeMatching: null,
-        debug: []
+        degreeMatching: null
       }
     }
   }),
 
   actions: {
-    logDebug(stage, action, data) {
-      if (!this.debug) return;
-      
-      const timestamp = new Date().toISOString();
-      const debugEntry = { timestamp, action, data };
-      
-      if (this.stages[stage]) {
-        this.stages[stage].debug.push(debugEntry);
-        console.log(`[${stage}][${action}]`, data);
-      }
-    },
-
     markStageComplete(stage) {
       if (!this.stages[stage]) return;
-
-      this.logDebug(stage, 'markComplete:before', {
-        stage,
-        currentState: { ...this.stages[stage] }
-      });
 
       this.stages[stage].completed = true;
       this.stages[stage].canTransition = true;
       this.stages[stage].percentage = 100;
-
-      this.logDebug(stage, 'markComplete:after', {
-        stage,
-        newState: { ...this.stages[stage] }
-      });
     },
 
     updateStageProgress(stage, progressData) {
@@ -120,21 +94,12 @@ export const useTestProgressStore = defineStore('testProgress', {
       const stageData = this.stages[stage];
       const stageConfig = this.stageConfig[stage];
 
-      this.logDebug(stage, 'updateProgress:start', {
-        stage,
-        progressData,
-        currentState: { ...stageData }
-      });
-
       if (typeof progressData === 'object') {
-        // Map fields according to stage configuration
         const fields = stageConfig.progressFields;
         
-        // Update standard progress fields with fallbacks
         stageData.currentIndex = progressData[fields.currentIndex] || progressData.currentIndex || 0;
         stageData.validResponses = progressData[fields.validResponses] || progressData.validResponses || 0;
         
-        // Calculate percentage based on valid responses if available
         if (stageData.validResponses && stageConfig.totalQuestions) {
           stageData.percentage = Math.min(
             Math.round((stageData.validResponses / stageConfig.totalQuestions) * 100),
@@ -144,12 +109,10 @@ export const useTestProgressStore = defineStore('testProgress', {
           stageData.percentage = progressData[fields.percentage] || progressData.percentage || 0;
         }
         
-        // Handle stage-specific special data
         if (fields.specialData && progressData[fields.specialData]) {
           stageData[fields.specialData] = progressData[fields.specialData];
         }
 
-        // Handle completion
         const isCompleted = progressData[fields.completed] || progressData.completed || false;
         if (isCompleted || stageData.percentage >= 100) {
           this.markStageComplete(stage);
@@ -163,11 +126,6 @@ export const useTestProgressStore = defineStore('testProgress', {
           this.markStageComplete(stage);
         }
       }
-
-      this.logDebug(stage, 'updateProgress:end', {
-        stage,
-        newState: { ...stageData }
-      });
     },
 
     setCurrentStage(stage) {
@@ -189,21 +147,16 @@ export const useTestProgressStore = defineStore('testProgress', {
       return currentIndex > 0 ? sequence[currentIndex - 1] : null;
     },
 
-    // Debug helper
     dumpState() {
       return {
         currentStage: this.currentStage,
         stages: Object.entries(this.stages).reduce((acc, [key, value]) => {
-          acc[key] = {
-            ...value,
-            debug: value.debug?.length || 0
-          };
+          acc[key] = { ...value };
           return acc;
         }, {})
       };
     },
 
-    // Add a method to calculate progress based on responses
     calculateProgress(stage) {
       const stageData = this.stages[stage];
       const config = this.stageConfig[stage];
@@ -238,7 +191,6 @@ export const useTestProgressStore = defineStore('testProgress', {
       const stageData = state.stages[stage];
       if (!stageData) return 0;
 
-      // If we have valid responses, calculate based on that
       if (stageData.validResponses && state.stageConfig[stage]?.totalQuestions) {
         return Math.min(
           Math.round((stageData.validResponses / state.stageConfig[stage].totalQuestions) * 100),
@@ -263,7 +215,6 @@ export const useTestProgressStore = defineStore('testProgress', {
       return 'not-started';
     },
 
-    // Special data getters
     archetypeDiscovery: (state) => state.stages.holland_codes?.archetypeDiscovery || null,
     jobMatching: (state) => state.stages.basic_interests?.jobMatching || null,
     degreeMatching: (state) => state.stages.degree?.degreeMatching || null,
@@ -273,7 +224,6 @@ export const useTestProgressStore = defineStore('testProgress', {
       return currentStage?.completed && currentStage?.canTransition;
     },
 
-    // Add a getter for valid responses count
     validResponsesCount: (state) => (stage) => {
       return state.stages[stage]?.validResponses || 0;
     }

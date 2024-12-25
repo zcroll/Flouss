@@ -24,7 +24,7 @@ export const createBaseTestStore = (storeName, options = {}) => {
             },
             loading: false,
             error: null,
-            debug: true,
+            debug: false,
             initialized: false,
             form: useForm({
                 type: 'answered',
@@ -37,19 +37,8 @@ export const createBaseTestStore = (storeName, options = {}) => {
         }),
 
         actions: {
-            logDebug(action, data) {
-                if (!this.debug) return;
-                console.log(`[${storeName}][${action}]`, {
-                    ...data,
-                    timestamp: new Date().toISOString()
-                });
-            },
-
             initialize(data) {
-                this.logDebug('initialize', { data });
-                
                 const storeData = data[options.dataKey];
-                this.logDebug('initialize:storeData', { storeData });
                 
                 if (storeData) {
                     this.data = {
@@ -59,11 +48,6 @@ export const createBaseTestStore = (storeName, options = {}) => {
                         items: storeData.items || [],
                         option_sets: storeData.option_sets || []
                     };
-                    
-                    this.logDebug('initialize:afterDataSet', { 
-                        data: this.data,
-                        hasLeadIn: !!this.data.lead_in_text
-                    });
                 }
                 
                 if (data.progress) {
@@ -76,17 +60,13 @@ export const createBaseTestStore = (storeName, options = {}) => {
 
             setProgress(progress) {
                 if (!progress) return;
-                
-                this.logDebug('setProgress:before', { progress });
 
-                // Update progress with controller data
                 this.progress = {
                     ...this.progress,
                     ...progress,
                     totalQuestions: this.data?.items?.length || this.progress.totalQuestions
                 };
 
-                // Convert response values to numbers
                 if (progress.responses) {
                     this.responses = Object.fromEntries(
                         Object.entries(progress.responses).map(([key, value]) => [
@@ -100,11 +80,6 @@ export const createBaseTestStore = (storeName, options = {}) => {
                     progress.current_index || 0,
                     this.progress.totalQuestions - 1
                 );
-
-                this.logDebug('setProgress:after', { 
-                    progress: this.progress,
-                    responses: this.responses
-                });
                 
                 this.setCurrentItem();
             },
@@ -117,18 +92,11 @@ export const createBaseTestStore = (storeName, options = {}) => {
                 
                 this.currentItem = this.data.items[safeIndex] || null;
                 this.currentItemIndex = safeIndex;
-                
-                this.logDebug('setCurrentItem', {
-                    currentIndex: this.currentItemIndex,
-                    totalItems,
-                    hasCurrentItem: !!this.currentItem
-                });
             },
 
             async submitAnswer(formData) {
                 if (this.form.processing) return;
 
-                this.logDebug('submitAnswer:start', { formData });
                 this.error = null;
 
                 this.form.clearErrors();
@@ -140,15 +108,12 @@ export const createBaseTestStore = (storeName, options = {}) => {
                     preserveState: true,
                     preserveScroll: true,
                     onSuccess: (page) => {
-                        this.logDebug('submitAnswer:success', { page });
-                        
                         if (page.props.progress) {
                             this.responses[formData.itemId] = formData.answer;
                             this.setProgress(page.props.progress);
                         }
                     },
                     onError: () => {
-                        this.logDebug('submitAnswer:error', { errors: this.form.errors });
                         this.error = 'Failed to submit answer';
                     }
                 });
@@ -156,8 +121,6 @@ export const createBaseTestStore = (storeName, options = {}) => {
 
             async goBack() {
                 if (this.currentItemIndex <= 0 || this.form.processing) return;
-                
-                this.logDebug('goBack:start', { currentIndex: this.currentItemIndex });
 
                 this.form.post(options.goBackRoute, {
                     preserveState: true,
@@ -176,7 +139,6 @@ export const createBaseTestStore = (storeName, options = {}) => {
             async fetchData() {
                 if (this.form.processing) return;
                 
-                this.logDebug('fetchData:start');
                 this.error = null;
 
                 try {
@@ -184,16 +146,13 @@ export const createBaseTestStore = (storeName, options = {}) => {
                         preserveState: true,
                         preserveScroll: true,
                         onSuccess: (page) => {
-                            this.logDebug('fetchData:success', { page });
                             this.initialize(page.props);
                         },
-                        onError: (errors) => {
-                            this.logDebug('fetchData:error', { errors });
+                        onError: () => {
                             this.error = 'Failed to fetch data';
                         }
                     });
                 } catch (error) {
-                    this.logDebug('fetchData:error', { error });
                     this.error = error.message;
                     throw error;
                 }
