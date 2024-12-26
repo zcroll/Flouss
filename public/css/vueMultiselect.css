@@ -1,0 +1,25 @@
+.custom-multiselect {
+    position: relative;
+    width: 100%;
+}
+
+/* Custom scrollbar styling */
+.overflow-auto::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.overflow-auto::-webkit-scrollbar-track {
+    background-color: #f8f8f8;
+    border-radius: 3px;
+}
+
+.overflow-auto::-webkit-scrollbar-thumb {
+    background-color: rgba(219, 73, 43, 0.2);
+    border-radius: 3px;
+    transition: background-color 0.2s ease;
+}
+
+.overflow-auto::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(219, 73, 43, 0.4);
+}

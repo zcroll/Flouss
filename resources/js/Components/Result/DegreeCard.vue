@@ -3,13 +3,13 @@
     class="group relative flex items-center gap-6 rounded-xl border p-5 transition-all duration-300 hover:-translate-y-0.5"
     :class="[
       themeStore.getThemeClasses('background', 'light'),
-      `border-${themeStore.currentTheme.border.secondary}/20`,
+      themeStore.getThemeClasses('border'),
       'hover:shadow-lg hover:shadow-black/5 backdrop-blur-sm'
     ]" :aria-labelledby="`degree-${degree.slug}`" @click="$emit('select', degree)">
     <!-- Image Container -->
     <div class="relative h-16 w-16 overflow-hidden rounded-xl shadow-sm" :class="[
       `bg-${themeStore.currentTheme.button.secondary}/5`,
-      `border border-${themeStore.currentTheme.border.secondary}/10`
+      themeStore.getThemeClasses('border')
     ]">
       <img :src="degree.image" :alt="degree.name"
         class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110" role="presentation"

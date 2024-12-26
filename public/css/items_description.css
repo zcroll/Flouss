@@ -1,0 +1,51 @@
+body {
+    font-family: 'aktiv-grotesk-std', 'aktiv-grotesk', 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+
+    margin: 0;
+    padding: 0;
+}
+
+
+
+/* Custom list-style for larger bullets */
+ul.list-custom {
+    list-style: none; /* Remove default bullets */
+ /* Adjust padding for custom bullets */
+}
+
+ul.list-custom li {
+    position: relative;
+    padding-left: 2rem; /* Space between bullet and text */
+}
+
+ul.list-custom li::before {
+    content: '•'; /* Bullet character */
+    position: absolute;
+    padding-left: 0px;
+    left: 0;
+    top: 0.1rem;
+    font-size: 1.8rem; /* Adjust size of the bullet */
+    color: #a36fb2; /* Adjust bullet color */
+}
+
+.trait-type{
+    box-sizing: border-box;
+    background-color: transparent;
+    text-decoration: none;
+    transition:
+        color 0.2s ease-in-out, border-bottom 0.2s ease-in-out;
+    border-bottom: 0px;
+    color: rgb(36, 36, 36);
+    font-weight: 300;
+    font-family:
+        aktiv-grotesk, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.heading-type{
+    font-size: 2.25rem;
+    font-weight: 300;
+    font-family:
+        aktiv-grotesk, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}

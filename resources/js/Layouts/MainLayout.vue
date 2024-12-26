@@ -59,7 +59,7 @@
               <SheetTrigger>
                 <div class="relative group cursor-pointer">
                   <div
-                    :class="[`bg-${themeStore.currentTheme.primary}-400/20`, 'absolute inset-0 rounded-full blur-md transition-opacity opacity-0 group-hover:opacity-100']">
+                    :class="[`bg-${themeStore.currentTheme.button}-400/20`, 'absolute inset-0 rounded-full blur-md transition-opacity opacity-0 group-hover:opacity-100']">
                   </div>
                   <img :src="$page.props.auth.user.profile_photo_url" :alt="$page.props.auth.user.name" :class="[
                     `border-${themeStore.currentTheme.border}`,
@@ -68,13 +68,17 @@
                 </div>
               </SheetTrigger>
 
-              <SheetContent side="right" class="w-[280px] bg-white/95 backdrop-blur-2xl rounded-2xl border-none p-0"
-                :class="[`shadow-[0_0_40px_rgba(var(--${themeStore.currentTheme.primary}-rgb),0.1)]`]">
+              <SheetContent side="right" :class="[
+                'w-[280px] backdrop-blur-2xl rounded-2xl border-none p-0',
+                themeStore.isDarkMode 
+                  ? `bg-gray-900/95 ${themeStore.getThemeClasses('background').light}`
+                  : `bg-white/95 ${themeStore.getThemeClasses('background').light}`
+              ]">
                 <div class="p-6">
                   <div class="flex items-center gap-4 mb-6">
                     <div class="relative">
                       <div
-                        :class="[`bg-${themeStore.currentTheme.primary}-400/20`, 'absolute inset-0 rounded-full blur-lg']">
+                        :class="[`bg-${themeStore.currentTheme.button}-400/20`, 'absolute inset-0 rounded-full blur-lg']">
                       </div>
                       <img :src="$page.props.auth.user.profile_photo_url" :alt="$page.props.auth.user.name" :class="[
                         `border-${themeStore.currentTheme.border}`,
@@ -82,42 +86,63 @@
                       ]" />
                     </div>
                     <div>
-                      <h3 class="font-medium text-gray-900">{{ $page.props.auth.user.name }}</h3>
-                      <p class="text-sm text-gray-500">{{ themeStore.currentArchetype }}</p>
+                      <h3 :class="[
+                        'font-medium',
+                        themeStore.isDarkMode ? 'text-white' : 'text-gray-900'
+                      ]">{{ $page.props.auth.user.name }}</h3>
+                      <p :class="[
+                        'text-sm',
+                        themeStore.isDarkMode ? 'text-gray-400' : 'text-gray-500'
+                      ]">{{ themeStore.currentArchetype }}</p>
                     </div>
                   </div>
 
-
-
-                  <div class="my-4 border-t dark:border-gray-700"></div>
+                  <div class="my-4" :class="[
+                    'border-t',
+                    themeStore.isDarkMode ? 'border-gray-700' : 'border-gray-200'
+                  ]"></div>
 
                   <div class="space-y-1">
                     <Link :href="route('profile.show')" :class="[
-                      `hover:bg-${themeStore.currentTheme.primary}-50`,
+                      `hover:bg-${themeStore.currentTheme.button}/10`,
                       'flex items-center gap-3 w-full px-4 py-3 rounded-xl transition-colors'
                     ]" @click="isOpen = false">
-                    <UserIcon class="w-5 h-5 text-gray-500" />
-                    <span class="text-sm font-medium text-gray-700">Profile Settings</span>
+                    <UserIcon :class="[
+                      'w-5 h-5',
+                      themeStore.isDarkMode ? 'text-gray-400' : 'text-gray-500'
+                    ]" />
+                    <span :class="[
+                      'text-sm font-medium',
+                      themeStore.isDarkMode ? 'text-gray-200' : 'text-gray-700'
+                    ]">Profile Settings</span>
                     </Link>
 
                     <button @click="themeStore.toggleDarkMode" :class="[
-                      `hover:bg-${themeStore.currentTheme.primary}-50`,
+                      `hover:bg-${themeStore.currentTheme.button}/10`,
                       'flex items-center gap-3 w-full px-4 py-3 rounded-xl transition-colors'
                     ]">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
+                      <svg xmlns="http://www.w3.org/2000/svg" :class="[
+                        'h-5 w-5',
+                        themeStore.isDarkMode ? 'text-gray-400' : 'text-gray-500'
+                      ]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           :d="themeStore.isDarkMode ? 'M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z' : 'M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z'" />
                       </svg>
-                      <span class="text-sm font-medium text-gray-700">
+                      <span :class="[
+                        'text-sm font-medium',
+                        themeStore.isDarkMode ? 'text-gray-200' : 'text-gray-700'
+                      ]">
                         {{ themeStore.isDarkMode ? 'Light Mode' : 'Dark Mode' }}
                       </span>
                     </button>
 
                     <form @submit.prevent="logout" class="mt-4">
-                      <button type="submit"
-                        class="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 transition-colors"
-                        @click="isOpen = false">
+                      <button type="submit" :class="[
+                        'flex items-center gap-3 w-full px-4 py-3 rounded-xl transition-colors',
+                        themeStore.isDarkMode 
+                          ? 'text-red-400 hover:bg-red-900/20'
+                          : 'text-red-600 hover:bg-red-50'
+                      ]" @click="isOpen = false">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                           stroke="currentColor">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
