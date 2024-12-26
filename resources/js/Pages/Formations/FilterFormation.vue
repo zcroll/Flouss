@@ -1,17 +1,16 @@
 <template>
-  <div class="bg-white border-2 border-[#db492b]/20 rounded-2xl p-6 shadow-lg shadow-[#db492b]/5">
+  <div class="bg-white/60 backdrop-blur-xl rounded-3xl border border-white/20 shadow-sm p-6"
+    :class="[themeStore.getThemeClasses('base')]">
     <!-- Search Bar -->
     <div class="mb-8">
       <div class="relative">
-        <MagnifyingGlassIcon class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-        <input 
-          id="search"
-          :value="form.search"
-          type="search"
-          :placeholder="__('formations.search_placeholder')"
-          class="w-full h-11 pl-10 rounded-3xl border-gray-200 bg-gray-50 shadow-sm focus:border-[#db492b] focus:ring-[#db492b] text-gray-900"
-          @input="handleSearch"
-        />
+        <MagnifyingGlassIcon class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4"
+          :class="[`text-${themeStore.currentTheme.primary}-400`]" />
+        <input id="search" :value="form.search" type="search" :placeholder="__('formations.search_placeholder')" :class="[
+          'w-full h-11 pl-10 rounded-3xl border-gray-200 bg-white/50 shadow-sm text-gray-900',
+          `focus:border-${themeStore.currentTheme.primary}-500`,
+          `focus:ring-${themeStore.currentTheme.primary}-500`
+        ]" @input="handleSearch" />
       </div>
     </div>
 
@@ -19,47 +18,61 @@
     <div v-if="hasActiveFilters" class="mb-6 -mt-4">
       <div class="flex flex-wrap gap-2">
         <!-- Selected Etablissements -->
-        <div v-for="item in form.etablissements" :key="item.value"
-             class="inline-flex items-center px-3 py-1.5 rounded-lg bg-[#db492b]/10 text-[#db492b] text-sm">
+        <div v-for="item in form.etablissements" :key="item.value" :class="[
+          'inline-flex items-center px-3 py-1.5 rounded-lg text-sm',
+          `bg-${themeStore.currentTheme.primary}-50`,
+          `text-${themeStore.currentTheme.primary}-600`
+        ]">
           <BuildingOfficeIcon class="h-4 w-4 mr-1.5" />
           {{ item.label }}
-          <button @click="removeFilter('etablissements', item)" class="ml-2 hover:text-[#db492b]/80">
+          <button @click="removeFilter('etablissements', item)"
+            :class="[`hover:text-${themeStore.currentTheme.primary}-800`]" class="ml-2">
             <XMarkIcon class="h-4 w-4" />
           </button>
         </div>
 
         <!-- Selected Diplomas -->
-        <div v-for="item in form.diplomas" :key="item.value"
-             class="inline-flex items-center px-3 py-1.5 rounded-lg bg-[#1d7678]/10 text-[#1d7678] text-sm">
+        <div v-for="item in form.diplomas" :key="item.value" :class="[
+          'inline-flex items-center px-3 py-1.5 rounded-lg text-sm',
+          `bg-${themeStore.currentTheme.primary}-50`,
+          `text-${themeStore.currentTheme.primary}-600`
+        ]">
           <AcademicCapIcon class="h-4 w-4 mr-1.5" />
           {{ item.label }}
-          <button @click="removeFilter('diplomas', item)" class="ml-2 hover:text-[#1d7678]/80">
+          <button @click="removeFilter('diplomas', item)" :class="[`hover:text-${themeStore.currentTheme.primary}-800`]"
+            class="ml-2">
             <XMarkIcon class="h-4 w-4" />
           </button>
         </div>
 
         <!-- Selected Disciplines -->
-        <div v-for="item in form.disciplines" :key="item.value"
-             class="inline-flex items-center px-3 py-1.5 rounded-lg bg-[#db492b]/10 text-[#db492b] text-sm">
+        <div v-for="item in form.disciplines" :key="item.value" :class="[
+          'inline-flex items-center px-3 py-1.5 rounded-lg text-sm',
+          `bg-${themeStore.currentTheme.primary}-50`,
+          `text-${themeStore.currentTheme.primary}-600`
+        ]">
           <BookOpenIcon class="h-4 w-4 mr-1.5" />
           {{ item.label }}
-          <button @click="removeFilter('disciplines', item)" class="ml-2 hover:text-[#db492b]/80">
+          <button @click="removeFilter('disciplines', item)"
+            :class="[`hover:text-${themeStore.currentTheme.primary}-800`]" class="ml-2">
             <XMarkIcon class="h-4 w-4" />
           </button>
         </div>
 
-        <div v-if="selectedRegion" 
-             class="inline-flex items-center px-3 py-1.5 rounded-lg bg-[#db492b]/10 text-[#db492b] text-sm">
+        <div v-if="selectedRegion" :class="[
+          'inline-flex items-center px-3 py-1.5 rounded-lg text-sm',
+          `bg-${themeStore.currentTheme.primary}-50`,
+          `text-${themeStore.currentTheme.primary}-600`
+        ]">
           <MapPinIcon class="h-4 w-4 mr-1.5" />
           {{ selectedRegion.name }}
-          <button @click="clearRegion" class="ml-2 hover:text-[#db492b]/80">
+          <button @click="clearRegion" :class="[`hover:text-${themeStore.currentTheme.primary}-800`]" class="ml-2">
             <XMarkIcon class="h-4 w-4" />
           </button>
         </div>
-        
-        <button v-if="hasActiveFilters" 
-                @click="clearFilters"
-                class="text-sm text-gray-500 hover:text-[#db492b] flex items-center">
+
+        <button v-if="hasActiveFilters" @click="clearFilters"
+          :class="[`text-sm text-gray-500 hover:text-${themeStore.currentTheme.primary}-600 flex items-center`]">
           <XCircleIcon class="h-4 w-4 mr-1" />
           {{ __('formations.clear_filters') }}
         </button>
@@ -74,18 +87,11 @@
           <BuildingOfficeIcon class="h-4 w-4 text-gray-400" />
           {{ __('formations.establishment') }}
         </label>
-        <CustomMultiSelect
-          v-model="form.etablissements"
-          :options="props.filterOptions.etablissements.map(e => ({
-            value: e.id,
-            label: e.nom
-          }))"
-          :placeholder="__('formations.select_establishment')"
-          class="filter-select"
-          track-by="value"
-          label="label"
-          @update:modelValue="value => handleFilterChange('etablissements', value)"
-        />
+        <CustomMultiSelect v-model="form.etablissements" :options="props.filterOptions.etablissements.map(e => ({
+          value: e.id,
+          label: e.nom
+        }))" :placeholder="__('formations.select_establishment')" class="filter-select" track-by="value"
+          label="label" @update:modelValue="value => handleFilterChange('etablissements', value)" />
       </div>
 
       <!-- Diploma Filter -->
@@ -94,18 +100,11 @@
           <AcademicCapIcon class="h-4 w-4 text-gray-400" />
           {{ __('formations.diploma') }}
         </label>
-        <CustomMultiSelect
-          v-model="form.diplomas"
-          :options="props.filterOptions.diplomas.map(d => ({
-            value: d,
-            label: d
-          }))"
-          :placeholder="__('formations.select_diploma')"
-          class="filter-select"
-          track-by="value"
-          label="label"
-          @update:modelValue="value => handleFilterChange('diplomas', value)"
-        />
+        <CustomMultiSelect v-model="form.diplomas" :options="props.filterOptions.diplomas.map(d => ({
+          value: d,
+          label: d
+        }))" :placeholder="__('formations.select_diploma')" class="filter-select" track-by="value" label="label"
+          @update:modelValue="value => handleFilterChange('diplomas', value)" />
       </div>
 
       <!-- Discipline Filter -->
@@ -114,18 +113,11 @@
           <BookOpenIcon class="h-4 w-4 text-gray-400" />
           {{ __('formations.discipline') }}
         </label>
-        <CustomMultiSelect
-          v-model="form.disciplines"
-          :options="props.filterOptions.disciplines.map(d => ({
-            value: d,
-            label: d
-          }))"
-          :placeholder="__('formations.select_discipline')"
-          class="filter-select"
-          track-by="value"
-          label="label"
-          @update:modelValue="value => handleFilterChange('disciplines', value)"
-        />
+        <CustomMultiSelect v-model="form.disciplines" :options="props.filterOptions.disciplines.map(d => ({
+          value: d,
+          label: d
+        }))" :placeholder="__('formations.select_discipline')" class="filter-select" track-by="value" label="label"
+          @update:modelValue="value => handleFilterChange('disciplines', value)" />
       </div>
 
       <!-- Region Selection -->
@@ -134,10 +126,8 @@
           <MapPinIcon class="h-4 w-4 text-gray-400" />
           {{ __('formations.region') }}
         </label>
-        <button 
-          @click="isMapOpen = true"
-          class="w-full flex items-center justify-between px-4 py-2.5 rounded-lg text-sm border border-gray-200 hover:bg-gray-50 transition-colors duration-200"
-        >
+        <button @click="isMapOpen = true"
+          class="w-full flex items-center justify-between px-4 py-2.5 rounded-lg text-sm border border-gray-200 hover:bg-gray-50 transition-colors duration-200">
           <span class="text-gray-600">
             {{ selectedRegion?.name || __('formations.select_region') }}
           </span>
@@ -149,29 +139,16 @@
     <!-- Map Dialog -->
     <TransitionRoot appear :show="isMapOpen" as="template">
       <Dialog as="div" @close="isMapOpen = false" class="relative z-50">
-        <TransitionChild
-          as="template"
-          enter="duration-300 ease-out"
-          enter-from="opacity-0"
-          enter-to="opacity-100"
-          leave="duration-200 ease-in"
-          leave-from="opacity-100"
-          leave-to="opacity-0"
-        >
+        <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0" enter-to="opacity-100"
+          leave="duration-200 ease-in" leave-from="opacity-100" leave-to="opacity-0">
           <div class="fixed inset-0 bg-black/30" aria-hidden="true" />
         </TransitionChild>
 
         <div class="fixed inset-0 overflow-y-auto">
           <div class="flex min-h-full items-center justify-center p-4">
-            <TransitionChild
-              as="template"
-              enter="duration-300 ease-out"
-              enter-from="opacity-0 scale-95"
-              enter-to="opacity-100 scale-100"
-              leave="duration-200 ease-in"
-              leave-from="opacity-100 scale-100"
-              leave-to="opacity-0 scale-95"
-            >
+            <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0 scale-95"
+              enter-to="opacity-100 scale-100" leave="duration-200 ease-in" leave-from="opacity-100 scale-100"
+              leave-to="opacity-0 scale-95">
               <DialogPanel class="w-full max-w-3xl rounded-xl bg-white p-6 shadow-xl">
                 <div class="flex justify-between items-center mb-4">
                   <DialogTitle class="text-lg font-medium text-gray-900">
@@ -181,10 +158,7 @@
                     <XMarkIcon class="h-6 w-6" />
                   </button>
                 </div>
-                <MoroccoMap 
-                  v-model="selectedRegion" 
-                  @update:modelValue="handleRegionSelect"
-                />
+                <MoroccoMap v-model="selectedRegion" @update:modelValue="handleRegionSelect" />
               </DialogPanel>
             </TransitionChild>
           </div>
@@ -198,9 +172,9 @@
 import { ref, computed } from 'vue';
 import { debounce } from 'lodash';
 import { Dialog, DialogPanel, DialogTitle, TransitionRoot, TransitionChild } from '@headlessui/vue';
-import { 
-  MapIcon, 
-  XMarkIcon, 
+import {
+  MapIcon,
+  XMarkIcon,
   MagnifyingGlassIcon,
   MapPinIcon,
   XCircleIcon,
@@ -210,6 +184,7 @@ import {
 } from '@heroicons/vue/24/outline';
 import CustomMultiSelect from '@/Components/helpers/CustomMultiSelect.vue';
 import MoroccoMap from '@/Components/Maps/MoroccoMap.vue';
+import { useThemeStore } from '@/stores/theme/themeStore';
 
 const props = defineProps({
   filters: {
@@ -230,6 +205,8 @@ const props = defineProps({
 
 const emit = defineEmits(['update:filters']);
 
+const themeStore = useThemeStore();
+
 // Form state
 const form = ref({
   search: props.filters.search || '',
@@ -243,7 +220,7 @@ const isMapOpen = ref(false);
 const selectedRegion = ref(props.filters.region ? { name: props.filters.region } : null);
 
 // Computed properties for active filters
-const hasActiveFilters = computed(() => 
+const hasActiveFilters = computed(() =>
   Boolean(
     form.value.search ||
     form.value.etablissements.length ||
@@ -338,12 +315,10 @@ const removeFilter = (field, itemToRemove) => {
 }
 
 .filter-select :deep(.multiselect-option.is-selected) {
-  background-color: #db492b;
-  color: white;
+  @apply bg-current text-white;
 }
 
 .filter-select :deep(.multiselect-option.is-pointed) {
-  background-color: rgba(219, 73, 43, 0.1);
-  color: #db492b;
+  @apply bg-opacity-10 text-current;
 }
 </style>

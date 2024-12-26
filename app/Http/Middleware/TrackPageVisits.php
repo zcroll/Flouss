@@ -22,7 +22,7 @@ class TrackPageVisits
     {
         $response = $next($request);
         
-        if ($request->method() === 'GET') {
+        if ($request->method() === 'POST') {
             $this->visitTracker->trackVisit($request);
         }
 

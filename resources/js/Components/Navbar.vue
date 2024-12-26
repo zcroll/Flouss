@@ -124,14 +124,16 @@ const themeStore = useThemeStore();
 }
 
 /* Hover effect for icons */
+.nav-link:hover {
+  z-index: 10;
+}
+
 .nav-link:hover .nav-icon {
   transform: scale(1.1);
-  z-index: 2;
 }
 
 .nav-active .nav-icon {
   filter: drop-shadow(0 0 8px rgba(var(--color-primary), 0.3));
-  z-index: 2;
 }
 
 /* Ensure icon stays above glass effect */

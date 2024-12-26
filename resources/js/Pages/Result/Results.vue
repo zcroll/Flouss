@@ -1,21 +1,26 @@
 <template>
+
   <Head title="Results" />
-  
+
   <div class="space-y-12">
     <!-- Hero Section with Archetype -->
     <Deferred :data="['Archetype', 'archetypeDiscovery']">
       <template #fallback>
-        <div class="w-full h-[400px] bg-white/40 backdrop-blur-sm rounded-3xl animate-pulse"></div>
+        <div class="w-full h-[600px] rounded-3xl animate-pulse" :class="themeStore.getThemeClasses('background').light">
+        </div>
       </template>
-      
-      <div class="relative overflow-hidden">
-        <div class="bg-white/40 backdrop-blur-sm rounded-3xl border border-white/20 shadow-xl">
-          <Folder 
-            :archetype="Archetype" 
-            :archetype-jobs="ArchetypeJobs" 
-            :archetype-discovery="archetypeDiscovery"
-            :user-id="userId" 
-          />
+
+      <!-- Archetype Section -->
+      <div class="min-h-[600px] relative flex items-center justify-center">
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="w-full h-full rounded-3xl border" :class="[
+            themeStore.getThemeClasses('background', 'light'),
+            `border-${themeStore.currentTheme.border.secondary}/20`,
+            'shadow-lg shadow-black/5 backdrop-blur-sm'
+          ]">
+            <Folder :archetype="Archetype" :archetype-jobs="ArchetypeJobs" :archetype-discovery="archetypeDiscovery"
+              :user-id="userId" :top-traits="topTraits" />
+          </div>
         </div>
       </div>
     </Deferred>
@@ -24,28 +29,28 @@
     <Deferred data="jobs">
       <template #fallback>
         <div class="space-y-6">
-          <div class="h-8 bg-white/40 backdrop-blur-sm rounded-xl w-48 animate-pulse"></div>
+          <div class="h-8 rounded-xl w-48 animate-pulse" :class="themeStore.getThemeClasses('background').light">
+          </div>
           <SkeletonLoader />
         </div>
       </template>
 
       <div class="space-y-4">
-        <RecommendationHeader 
-          :headerConfig="{
-            title: __('results.top_careers'),
-            viewAllLink: '/jobs/',
-            viewAllText: __('results.View_All_careers')
-          }" 
-          class="bg-white/40 backdrop-blur-sm rounded-2xl p-4 border border-white/20"
-        />
-        <div class="bg-white/40 backdrop-blur-sm rounded-2xl border border-white/20 shadow-xl p-6">
-          <CareersList 
-            :displayed-jobs="displayedJobs" 
-            :show-all-jobs="showAllJobs"
-            :has-more-jobs="jobs && jobs.length > displayedJobs.length" 
-            @select-job="selectedJob = $event"
-            @toggle-show-more="showAllJobs = true" 
-          />
+        <RecommendationHeader :headerConfig="{
+          title: __('results.top_careers'),
+          viewAllLink: '/jobs/',
+          viewAllText: __('results.View_All_careers')
+        }" class="rounded-2xl p-4 border" :class="[
+          themeStore.getThemeClasses('background').light,
+          themeStore.getThemeClasses('border')
+        ]" />
+        <div class="" :class="[
+          themeStore.getThemeClasses('background').light,
+          themeStore.getThemeClasses('border')
+        ]">
+          <CareersList :displayed-jobs="displayedJobs" :show-all-jobs="showAllJobs"
+            :has-more-jobs="jobs && jobs.length > displayedJobs.length" @select-job="selectedJob = $event"
+            @toggle-show-more="showAllJobs = true" />
         </div>
       </div>
     </Deferred>
@@ -54,28 +59,28 @@
     <Deferred data="degrees">
       <template #fallback>
         <div class="space-y-6">
-          <div class="h-8 bg-white/40 backdrop-blur-sm rounded-xl w-48 animate-pulse"></div>
+          <div class="h-8 rounded-xl w-48 animate-pulse" :class="themeStore.getThemeClasses('background').light">
+          </div>
           <SkeletonLoader />
         </div>
       </template>
 
       <div class="space-y-4">
-        <RecommendationHeader 
-          :headerConfig="{
-            title: __('results.top_degrees'),
-            viewAllLink: '/degrees/',
-            viewAllText: __('results.View_All_degrees')
-          }" 
-          class="bg-white/40 backdrop-blur-sm rounded-2xl p-4 border border-white/20"
-        />
-        <div class="bg-white/40 backdrop-blur-sm rounded-2xl border border-white/20 shadow-xl p-6">
-          <DegreeList 
-            :displayed-degrees="displayedDegrees" 
-            :show-all-degrees="showAllDegrees"
-            :has-more-degrees="degrees && degrees.length > displayedDegrees.length" 
-            @select-degree="selectedDegree = $event"
-            @toggle-show-more="showAllDegrees = true" 
-          />
+        <RecommendationHeader :headerConfig="{
+          title: __('results.top_degrees'),
+          viewAllLink: '/degrees/',
+          viewAllText: __('results.View_All_degrees')
+        }" class="rounded-2xl p-4 border" :class="[
+          themeStore.getThemeClasses('background').light,
+          themeStore.getThemeClasses('border')
+        ]" />
+        <div class="rounded-2xl " :class="[
+          themeStore.getThemeClasses('background').light,
+          themeStore.getThemeClasses('border')
+        ]">
+          <DegreeList :displayed-degrees="displayedDegrees" :show-all-degrees="showAllDegrees"
+            :has-more-degrees="degrees && degrees.length > displayedDegrees.length"
+            @select-degree="selectedDegree = $event" @toggle-show-more="showAllDegrees = true" />
         </div>
       </div>
     </Deferred>
@@ -88,7 +93,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { Head, Link, Deferred } from '@inertiajs/vue3';
 import MainLayout from '@/Layouts/MainLayout.vue';
 import Folder from '@/Components/Result/Folder.vue';
@@ -99,6 +104,7 @@ import DegreeList from '@/Components/Result/DegreeList.vue';
 import Feedback from '@/Components/Result/Feedback.vue';
 import SkeletonLoader from '@/Components/Result/SkeletonLoader.vue';
 import { useForm } from '@inertiajs/vue3';
+import { useThemeStore } from '@/stores/theme/themeStore';
 
 const props = defineProps({
   userId: {
@@ -128,6 +134,11 @@ const props = defineProps({
   degrees: {
     type: Array,
     required: true
+  },
+  topTraits: {
+    type: Object,
+    required: true,
+    default: () => ({})
   }
 });
 
@@ -165,6 +176,12 @@ const submitFeedback = () => {
     },
   });
 };
+
+const themeStore = useThemeStore();
+
+onMounted(() => {
+  themeStore.initializeTheme();
+});
 </script>
 
 <style scoped>
@@ -183,9 +200,12 @@ const submitFeedback = () => {
 
 /* Loading animation */
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 0.5;
   }
+
   50% {
     opacity: 0.7;
   }
@@ -193,5 +213,10 @@ const submitFeedback = () => {
 
 .animate-pulse {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Add any additional styles needed */
+.min-h-[600px] {
+  min-height: 600px;
 }
 </style>

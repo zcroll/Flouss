@@ -16,10 +16,10 @@ class JobFilterController extends Controller
 
         $query = JobInfo::query()
             ->select('id', 'name', 'name_fr', 'image', 'slug', 'salary', 'satisfaction')
-            ->with(['jobInfoTypes' => function($query) use ($locale) {
+            ->with(['jobInfoTypes' => function ($query) use ($locale) {
                 $query->select('id', $locale === 'fr' ? 'type_description_fr' : 'type_description');
             }])
-            ->with(['jobInfoDetail' => function($query) use ($locale) {
+            ->with(['jobInfoDetail' => function ($query) use ($locale) {
                 $query->select('id', 'job_info_id', $locale === 'fr' ? 'role_description_main_fr' : 'role_description_main');
             }])
             ->when($locale === 'fr', function ($query) {
@@ -36,7 +36,7 @@ class JobFilterController extends Controller
             $filters['q'] = $search;
             $query->where(function ($query) use ($search, $nameColumn) {
                 $query->where($nameColumn, 'like', "%{$search}%")
-                      ->orWhere('slug', 'like', "%{$search}%");
+                    ->orWhere('slug', 'like', "%{$search}%");
             });
         }
 
@@ -88,8 +88,7 @@ class JobFilterController extends Controller
                 ];
             }),
             'filters' => $filters
-            
+
         ]);
-        
     }
 }

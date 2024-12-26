@@ -1,29 +1,42 @@
 <template>
-  <div class="DashboardPage__careers">
-    <CareerCard v-for="job in displayedJobs" :key="job.slug" :job="job" @select="$emit('select-job', job)" />
-    
-    <div class="DashboardPage__careers__buttons">
-      <button v-if="!showAllJobs && hasMoreJobs" 
-        class="Button DashboardPage__button DashboardPage__button--careers"
-        @click="$emit('toggle-show-more')">
+  <div class="space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <TransitionGroup tag="div" class="contents" enter-active-class="transition-all duration-300 ease-out"
+        enter-from-class="opacity-0 translate-y-4" enter-to-class="opacity-100 translate-y-0"
+        leave-active-class="transition-all duration-300 ease-in" leave-from-class="opacity-100 translate-y-0"
+        leave-to-class="opacity-0 translate-y-4">
+        <CareerCard v-for="job in displayedJobs" :key="job.slug" :job="job" @select="$emit('select-job', job)" />
+      </TransitionGroup>
+    </div>
+
+    <div class="flex justify-center" v-if="!showAllJobs && hasMoreJobs">
+      <button
+        class="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium shadow-sm transition-all duration-200"
+        :class="[
+          themeStore.getThemeClasses('button'),
+          themeStore.getThemeClasses('hover'),
+          'text-white',
+          themeStore.getThemeClasses('border'),
+          `focus:ring-2 focus:ring-${themeStore.currentTheme.button.primary} focus:ring-offset-2 focus:outline-none`
+        ]" @click="$emit('toggle-show-more')">
         {{ __("results.See_more_matches") }}
-        <span class="Button-icon">
-          <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down"
-            class="svg-inline--fa fa-chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-            <path fill="currentColor"
-              d="M224 416c-8.188 0-16.38-3.125-22.62-9.375l-192-192c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L224 338.8l169.4-169.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-192 192C240.4 412.9 232.2 416 224 416z">
-            </path>
-          </svg>
-        </span>
+        <svg class="h-4 w-4 transition-transform duration-200 group-hover:translate-y-0.5"
+          xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 9l6 6 6-6" />
+        </svg>
       </button>
     </div>
   </div>
 </template>
 
 <script setup>
+import { useThemeStore } from '@/stores/theme/themeStore';
 import CareerCard from './CareerCard.vue';
 
-const props = defineProps({
+const themeStore = useThemeStore();
+
+defineProps({
   displayedJobs: {
     type: Array,
     required: true
@@ -39,5 +52,18 @@ const props = defineProps({
 });
 
 defineEmits(['select-job', 'toggle-show-more']);
-</script> 
+</script>
 
+<style scoped>
+.Button {
+  @apply font-medium text-sm;
+}
+
+.Button-icon {
+  @apply transition-transform duration-200;
+}
+
+.Button:hover .Button-icon {
+  @apply transform translate-y-0.5;
+}
+</style>
