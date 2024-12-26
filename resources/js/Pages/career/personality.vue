@@ -25,7 +25,7 @@
         <CardHeader>
           <CardTitle>{{ __('career.in_this_article') }}</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent :class="`border-${themeStore.currentTheme.border}`">
           <nav class="space-y-2">
             <NavigationLink href="#holland-codes" :theme="themeStore.currentTheme">
               {{ __('career.primary_interests') }}

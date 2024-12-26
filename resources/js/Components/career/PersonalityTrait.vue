@@ -4,6 +4,9 @@ import { Progress } from '@/Components/ui/progress';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/Components/ui/accordion';
 import __ from '@/lang';
 import { computed } from 'vue';
+import { useThemeStore } from '@/stores/theme/themeStore';
+
+const themeStore = useThemeStore();
 
 const props = defineProps({
   trait: {
@@ -29,48 +32,51 @@ const score = computed(() => {
   return Math.round(value * 100);
 });
 
-const progressStyle = computed(() => ({
-  width: `${score.value}%`
+const progressClasses = computed(() => ({
+  'relative h-4 w-full overflow-hidden rounded-full': true,
+  [`[&>[role=progressbar]]:bg-${themeStore.currentTheme.button}`]: true,
+  'bg-gray-200 dark:bg-gray-800': true
 }));
 </script>
 
 <template>
-  <Accordion type="single" collapsible>
-    <AccordionItem :value="trait.id || trait.scale_id">
-      <AccordionTrigger>
-        <div class="w-full">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-semibold">
-              {{ isBigFive
-                ? __(trait.short_name)
-                : __(`career.${formatName(trait.trait_name).toLowerCase()}`)
-              }}
-            </h3>
-          </div>
+  <Card :class="`bg-${themeStore.currentTheme.background.light} border border-gray-200`">
+    <CardContent class="p-4">
+      <Accordion type="single" collapsible>
+        <AccordionItem :value="trait.id || trait.scale_id" class="border-none">
+          <AccordionTrigger>
+            <div class="w-full">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold">
+                  {{ isBigFive
+                    ? __(trait.short_name)
+                    : __(`career.${formatName(trait.trait_name).toLowerCase()}`)
+                  }}
+                </h3>
+              </div>
 
-          <div class="relative w-full h-4 bg-gray-200 rounded-full overflow-hidden">
-            <div class="h-full rounded-full transition-all" :class="`bg-${theme.button}`" :style="progressStyle">
-              <span class="absolute right-2 text-xs text-white font-medium leading-4">
-                {{ score }}%
-              </span>
+              <div class="relative w-full">
+                <Progress :model-value="score" :class="progressClasses">
+                  <span class="absolute right-2 top-0 text-xs text-white font-medium leading-4">
+                    {{ score }}%
+                  </span>
+                </Progress>
+              </div>
             </div>
-          </div>
-        </div>
-      </AccordionTrigger>
-      <AccordionContent>
-        <Card :class="`bg-${theme.background.light}`">
-          <CardContent class="pt-4">
-            {{ isBigFive
-              ? __(trait.definition)
-              : __(`career.${formatName(trait.trait_name).toLowerCase()}_definition`)
-            }}
-          </CardContent>
-        </Card>
-      </AccordionContent>
-    </AccordionItem>
-  </Accordion>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div class="pt-4">
+              {{ isBigFive
+                ? __(trait.definition)
+                : __(`career.${formatName(trait.trait_name).toLowerCase()}_definition`)
+              }}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+    </CardContent>
+  </Card>
 </template>
-
 <style scoped>
 .accordion-trigger {
   width: 100%;
