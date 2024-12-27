@@ -4,8 +4,12 @@
     'h-screen p-4 overflow-hidden transition-colors duration-300',
     themeStore.isDarkMode ? 'dark bg-gray-900' : 'bg-white'
   ]">
-    <div class="w-full h-full max-w-[120rem] rounded-[48px] p-12 shadow-2xl relative overflow-hidden backdrop-blur-lg"
-      :class="[themeStore.isDarkMode ? 'bg-gray-800/40' : 'bg-white/40']" :style="{
+    <div
+      class="w-full h-full max-w-[120rem] rounded-[48px] p-12 md:shadow-2xl relative overflow-hidden backdrop-blur-lg"
+      :class="[
+        themeStore.isDarkMode ? 'bg-gray-800/40' : 'bg-white/40',
+        'md:p-12 p-4 md:rounded-[48px] rounded-none'
+      ]" :style="{
         backgroundPosition: '80% center',
         backgroundSize: 'contain',
         backgroundRepeat: 'no-repeat',
@@ -36,23 +40,24 @@
 
         <!-- Rest of the header content with dark mode classes -->
         <div class="flex items-center gap-6">
-          <div class="relative group">
-            <Search :class="[
-              'absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 group-hover:scale-110 transition-all duration-300',
+
+
+          <!-- Theme Switch Button -->
+          <button @click="themeStore.toggleDarkMode" :class="[
+            `hover:bg-${themeStore.currentTheme.button}/10`,
+            'p-2.5 rounded-full transition-colors'
+          ]">
+            <svg xmlns="http://www.w3.org/2000/svg" :class="[
+              'h-5 w-5',
               themeStore.isDarkMode ? 'text-gray-400' : 'text-gray-500'
-            ]" />
-            <input type="search" placeholder="Search" :class="[
-              `focus:ring-${themeStore.currentTheme.ring}`,
-              'pl-12 pr-4 py-2.5 rounded-full w-56 text-base transition-all duration-300',
-              themeStore.isDarkMode
-                ? 'bg-gray-800/90 text-white placeholder-gray-400'
-                : 'bg-white/90 text-gray-900 placeholder-gray-500'
-            ]" />
-          </div>
-          <button class="relative group">
-            <Bell class="h-6 w-6 group-hover:scale-110 transition-all duration-300 text-gray-500" />
-            <span class="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full" />
+            ]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                :d="themeStore.isDarkMode ? 'M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z' : 'M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z'" />
+            </svg>
           </button>
+
+          <NotificationDropdown />
+
           <div class="flex items-center gap-3">
             <span class="text-base text-gray-700">Hi, {{ $page.props.auth.user.name }}</span>
             <Sheet v-model:open="isOpen">
@@ -70,7 +75,7 @@
 
               <SheetContent side="right" :class="[
                 'w-[280px] backdrop-blur-2xl rounded-2xl border-none p-0',
-                themeStore.isDarkMode 
+                themeStore.isDarkMode
                   ? `bg-gray-900/95 ${themeStore.getThemeClasses('background').light}`
                   : `bg-white/95 ${themeStore.getThemeClasses('background').light}`
               ]">
@@ -117,29 +122,10 @@
                     ]">Profile Settings</span>
                     </Link>
 
-                    <button @click="themeStore.toggleDarkMode" :class="[
-                      `hover:bg-${themeStore.currentTheme.button}/10`,
-                      'flex items-center gap-3 w-full px-4 py-3 rounded-xl transition-colors'
-                    ]">
-                      <svg xmlns="http://www.w3.org/2000/svg" :class="[
-                        'h-5 w-5',
-                        themeStore.isDarkMode ? 'text-gray-400' : 'text-gray-500'
-                      ]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          :d="themeStore.isDarkMode ? 'M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z' : 'M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z'" />
-                      </svg>
-                      <span :class="[
-                        'text-sm font-medium',
-                        themeStore.isDarkMode ? 'text-gray-200' : 'text-gray-700'
-                      ]">
-                        {{ themeStore.isDarkMode ? 'Light Mode' : 'Dark Mode' }}
-                      </span>
-                    </button>
-
                     <form @submit.prevent="logout" class="mt-4">
                       <button type="submit" :class="[
                         'flex items-center gap-3 w-full px-4 py-3 rounded-xl transition-colors',
-                        themeStore.isDarkMode 
+                        themeStore.isDarkMode
                           ? 'text-red-400 hover:bg-red-900/20'
                           : 'text-red-600 hover:bg-red-50'
                       ]" @click="isOpen = false">
@@ -160,12 +146,23 @@
       </header>
 
       <!-- Main Content -->
-      <div class="flex gap-8 h-[calc(100%-theme(spacing.8))] justify-center">
-        <div class="shrink-0">
-          <Navbar />
+      <div class="flex gap-8 h-[calc(100%-theme(spacing.8))] justify-center relative">
+        <!-- Desktop Navbar -->
+        <div class="shrink-0 hidden md:block">
+          <Navbar :is-mobile="false" />
         </div>
-        <div class="flex-1 relative flex flex-col justify-between overflow-y-auto custom-scrollbar">
+        <div class="flex-1 relative flex flex-col justify-between overflow-y-auto custom-scrollbar pb-20 md:pb-0">
           <slot />
+        </div>
+
+        <!-- Mobile Bottom Navbar -->
+        <div class="fixed bottom-0 left-0 right-0 md:hidden backdrop-blur-2xl z-50 px-2 py-1" :class="[
+          themeStore.isDarkMode
+            ? 'bg-gray-900/40'
+            : 'bg-white/40',
+          'shadow-[0_-8px_30px_rgba(0,0,0,0.12)]'
+        ]">
+          <Navbar :is-mobile="true" />
         </div>
       </div>
     </div>
@@ -199,6 +196,7 @@ import { UserIcon } from '@heroicons/vue/24/outline'
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "@/Components/ui/sheet"
 import Navbar from '@/Components/Navbar.vue'
 import { useThemeStore } from '@/stores/theme/themeStore'
+import NotificationDropdown from '@/Components/ui/notification/NotificationDropdown.vue'
 
 const isOpen = ref(false)
 const themeStore = useThemeStore()

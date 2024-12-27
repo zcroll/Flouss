@@ -78,7 +78,7 @@ const progressClasses = computed(() => ({
   </Card>
 </template>
 <style scoped>
-.accordion-trigger {
+.accordion-trigger {    
   width: 100%;
 }
-</style>
+</style>            

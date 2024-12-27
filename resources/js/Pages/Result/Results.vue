@@ -29,7 +29,7 @@
     <Deferred data="jobs">
       <template #fallback>
         <div class="space-y-6">
-          <div class="h-8 rounded-xl w-48 animate-pulse" :class="themeStore.getThemeClasses('background').light">
+          <div class="h-8 rounded-xl w-48 animate-pulse" >
           </div>
           <SkeletonLoader />
         </div>
@@ -41,12 +41,10 @@
           viewAllLink: '/jobs/',
           viewAllText: __('results.View_All_careers')
         }" class="rounded-2xl p-4 border" :class="[
-          themeStore.getThemeClasses('background').light,
-          themeStore.getThemeClasses('border')
+      
         ]" />
         <div class="" :class="[
-          themeStore.getThemeClasses('background').light,
-          themeStore.getThemeClasses('border')
+       
         ]">
           <CareersList :displayed-jobs="displayedJobs" :show-all-jobs="showAllJobs"
             :has-more-jobs="jobs && jobs.length > displayedJobs.length" @select-job="selectedJob = $event"
@@ -71,12 +69,10 @@
           viewAllLink: '/degrees/',
           viewAllText: __('results.View_All_degrees')
         }" class="rounded-2xl p-4 border" :class="[
-          themeStore.getThemeClasses('background').light,
-          themeStore.getThemeClasses('border')
+  
         ]" />
         <div class="rounded-2xl " :class="[
-          themeStore.getThemeClasses('background').light,
-          themeStore.getThemeClasses('border')
+  
         ]">
           <DegreeList :displayed-degrees="displayedDegrees" :show-all-degrees="showAllDegrees"
             :has-more-degrees="degrees && degrees.length > displayedDegrees.length"

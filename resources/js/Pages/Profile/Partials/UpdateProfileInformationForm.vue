@@ -1,40 +1,68 @@
 <script setup>
 import { ref } from 'vue';
-import { Link, router, useForm } from '@inertiajs/vue3';
+import { Link, router } from '@inertiajs/vue3';
+import { useForm } from 'vee-validate';
+import { toTypedSchema } from '@vee-validate/zod';
+import * as z from 'zod';
+
 import ActionMessage from '@/Components/helpers/ActionMessage.vue';
-import FormSection from '@/Components/helpers/FormSection.vue';
+import {
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage
+} from '@/components/ui/form';
 import InputError from '@/Components/helpers/InputError.vue';
-import InputLabel from '@/Components/helpers/InputLabel.vue';
 import PrimaryButton from '@/Components/helpers/PrimaryButton.vue';
 import SecondaryButton from '@/Components/helpers/SecondaryButton.vue';
-import TextInput from '@/Components/helpers/TextInput.vue';
+import { Input } from '@/Components/ui/input';
+import Form from '@/components/ui/form/Form.vue';
+import FormControl from '@/components/ui/form/FormControl.vue';
 
 const props = defineProps({
     user: Object,
 });
 
+// Form validation schema
+const formSchema = toTypedSchema(z.object({
+    name: z.string().min(2).max(50),
+    email: z.string().email(),
+    photo: z.any().optional()
+}));
+
+// Form state using vee-validate
 const form = useForm({
-    _method: 'PUT',
-    name: props.user.name,
-    email: props.user.email,
-    photo: null,
+    validationSchema: formSchema,
+    initialValues: {
+        name: props.user.name,
+        email: props.user.email,
+        photo: null
+    }
 });
 
 const verificationLinkSent = ref(null);
 const photoPreview = ref(null);
 const photoInput = ref(null);
 
-const updateProfileInformation = () => {
-    if (photoInput.value) {
-        form.photo = photoInput.value.files[0];
+const onSubmit = form.handleSubmit((values) => {
+    const formData = new FormData();
+    formData.append('_method', 'PUT');
+    formData.append('name', values.name);
+    formData.append('email', values.email);
+
+    if (photoInput.value?.files[0]) {
+        formData.append('photo', photoInput.value.files[0]);
     }
 
-    form.post(route('user-profile-information.update'), {
+    router.post(route('user-profile-information.update'), formData, {
         errorBag: 'updateProfileInformation',
         preserveScroll: true,
         onSuccess: () => clearPhotoFileInput(),
     });
-};
+});
 
 const sendEmailVerification = () => {
     verificationLinkSent.value = true;
@@ -47,7 +75,7 @@ const selectNewPhoto = () => {
 const updatePhotoPreview = () => {
     const photo = photoInput.value.files[0];
 
-    if (! photo) return;
+    if (!photo) return;
 
     const reader = new FileReader();
 
@@ -76,93 +104,87 @@ const clearPhotoFileInput = () => {
 </script>
 
 <template>
-    <FormSection @submitted="updateProfileInformation">
-        <template #title>
-            {{ __('profile.profile_information') }}
-        </template>
+    <Form @submit="onSubmit">
+        <div class="space-y-8">
+            <div>
+                <h2 class="text-lg font-medium text-slate-100">
+                    {{ __('profile.profile_information') }}
+                </h2>
+                <p class="mt-1 text-sm text-slate-300">
+                    {{ __('profile.update_profile_information') }}
+                </p>
+            </div>
 
-        <template #description>
-            {{ __('profile.update_profile_information') }}
-        </template>
+            <div class="space-y-6">
+                <!-- Profile Photo -->
+                <div v-if="$page.props.jetstream.managesProfilePhotos">
+                    <FormField name="photo">
+                        <FormItem>
+                            <FormLabel class="text-slate-100">{{ __('profile.photo') }}</FormLabel>
+                            <FormControl>
+                                <input type="file" class="hidden" ref="photoInput" @change="updatePhotoPreview">
+                            </FormControl>
 
-        <template #form>
-            <!-- Profile Photo -->
-            <div v-if="$page.props.jetstream.managesProfilePhotos" class="col-span-6 sm:col-span-4">
-                <!-- Photo File Input -->
-                <input
-                    type="file"
-                    class="hidden"
-                    ref="photoInput"
-                    @change="updatePhotoPreview"
-                >
+                            <!-- Current Profile Photo -->
+                            <div v-show="!photoPreview" class="mt-2">
+                                <img :src="user.profile_photo_url" :alt="user.name"
+                                    class="rounded-full h-20 w-20 object-cover">
+                            </div>
 
-                <label class="block font-medium text-sm text-slate-300" for="photo">
-                    {{ __('profile.photo') }}
-                </label>
+                            <!-- New Profile Photo Preview -->
+                            <div v-show="photoPreview" class="mt-2">
+                                <span class="block rounded-full w-20 h-20 bg-cover bg-no-repeat bg-center"
+                                    :style="'background-image: url(\'' + photoPreview + '\');'" />
+                            </div>
 
-                <!-- Current Profile Photo -->
-                <div v-show="! photoPreview" class="mt-2">
-                    <img :src="user.profile_photo_url" :alt="user.name" class="rounded-full h-20 w-20 object-cover">
+                            <div class="mt-2 flex gap-2">
+                                <SecondaryButton type="button" @click.prevent="selectNewPhoto">
+                                    {{ __('profile.select_new_photo') }}
+                                </SecondaryButton>
+
+                                <SecondaryButton v-if="user.profile_photo_path" type="button"
+                                    @click.prevent="deletePhoto">
+                                    {{ __('profile.remove_photo') }}
+                                </SecondaryButton>
+                            </div>
+
+                            <FormMessage />
+                        </FormItem>
+                    </FormField>
                 </div>
 
-                <!-- New Profile Photo Preview -->
-                <div v-show="photoPreview" class="mt-2">
-                    <span
-                        class="block rounded-full w-20 h-20 bg-cover bg-no-repeat bg-center"
-                        :style="'background-image: url(\'' + photoPreview + '\');'"
-                    />
-                </div>
+                <!-- Name -->
+                <FormField v-slot="{ componentField }" name="name">
+                    <FormItem>
+                        <FormLabel class="text-slate-100">{{ __('profile.name') }}</FormLabel>
+                        <FormControl>
+                            <Input type="text" class="bg-zinc-700 text-slate-100" v-bind="componentField" />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                </FormField>
 
-                <SecondaryButton class="mt-2 mr-2" type="button" @click.prevent="selectNewPhoto">
-                    {{ __('profile.select_new_photo') }}
-                </SecondaryButton>
-
-                <SecondaryButton
-                    v-if="user.profile_photo_path"
-                    type="button"
-                    class="mt-2"
-                    @click.prevent="deletePhoto"
-                >
-                    {{ __('profile.remove_photo') }}
-                </SecondaryButton>
-
-                <InputError :message="form.errors.photo" class="mt-2" />
+                <!-- Email -->
+                <FormField v-slot="{ componentField }" name="email">
+                    <FormItem>
+                        <FormLabel class="text-slate-100">{{ __('profile.email') }}</FormLabel>
+                        <FormControl>
+                            <Input type="email" class="bg-zinc-700 text-slate-100" v-bind="componentField" />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                </FormField>
             </div>
 
-            <!-- Name -->
-            <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="name" :value="__('profile.name')" class="text-slate-100" />
-                <TextInput
-                    id="name"
-                    v-model="form.name"
-                    type="text"
-                    class="mt-1 block w-full bg-zinc-700 text-slate-100"
-                    autocomplete="name"
-                />
-                <InputError :message="form.errors.name" class="mt-2" />
+            <div class="flex items-center gap-4">
+                <ActionMessage :on="form.recentlySuccessful" class="text-slate-100">
+                    {{ __('profile.saved') }}
+                </ActionMessage>
+
+                <PrimaryButton :disabled="form.isSubmitting">
+                    {{ __('profile.save') }}
+                </PrimaryButton>
             </div>
-
-            <!-- Email -->
-            <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="email" :value="__('profile.email')" class="text-slate-100" />
-                <TextInput
-                    id="email"
-                    v-model="form.email"
-                    type="email"
-                    class="mt-1 block w-full bg-zinc-700 text-slate-100"
-                />
-                <InputError :message="form.errors.email" class="mt-2" />
-            </div>
-        </template>
-
-        <template #actions>
-            <ActionMessage :on="form.recentlySuccessful" class="mr-3 text-slate-100">
-                {{ __('profile.saved') }}
-            </ActionMessage>
-
-            <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                {{ __('profile.save') }}
-            </PrimaryButton>
-        </template>
-    </FormSection>
+        </div>
+    </Form>
 </template>

@@ -13,11 +13,11 @@
       <button
         class="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium shadow-sm transition-all duration-200"
         :class="[
-          themeStore.getThemeClasses('button'),
-          themeStore.getThemeClasses('hover'),
+          `bg-${themeStore.currentTheme.button}`,
+          `hover:bg-${themeStore.currentTheme.hover}`,
           'text-white',
-          themeStore.getThemeClasses('border'),
-          `focus:ring-2 focus:ring-${themeStore.currentTheme.button.primary} focus:ring-offset-2 focus:outline-none`
+          `border-${themeStore.currentTheme.border}`,
+          `focus:ring-2 focus:ring-${themeStore.currentTheme.ring} focus:ring-offset-2 focus:outline-none`
         ]" @click="$emit('toggle-show-more')">
         {{ __("results.See_more_matches") }}
         <svg class="h-4 w-4 transition-transform duration-200 group-hover:translate-y-0.5"

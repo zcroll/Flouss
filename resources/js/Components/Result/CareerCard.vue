@@ -8,7 +8,7 @@
     ]" :aria-labelledby="`career-${job.slug}`" @click="$emit('select', job)">
     <!-- Image Container -->
     <div class="relative h-16 w-16 overflow-hidden rounded-xl shadow-sm" :class="[
-      `bg-${themeStore.currentTheme.button.secondary}/5`,
+      `bg-${themeStore.currentTheme.button}/5`,
       themeStore.getThemeClasses('border')
     ]">
       <img :src="job.image" :alt="job.career"
@@ -18,11 +18,14 @@
 
     <!-- Content -->
     <div class="flex-1 min-w-0">
-      <div :id="`career-${job.slug}`" class="font-medium text-base transition-colors duration-200"
-        :class="themeStore.getThemeClasses('text')">
+      <div :id="`career-${job.slug}`" class="font-medium text-base transition-colors duration-200">
         <Link :href="`/career/${job.slug}`"
-          class="block truncate hover:underline focus:outline-none focus:ring-2 rounded-md"
-          :class="`focus:ring-${themeStore.currentTheme.button.primary}`" tabindex="0">
+          class="block truncate focus:outline-none focus:ring-2 rounded-md transition-colors duration-200"
+          :class="[
+            `focus:ring-${themeStore.currentTheme.ring}`,
+            `hover:text-${themeStore.currentTheme.hover}`,
+            `dark:hover:text-${themeStore.currentTheme.hover}`
+          ]" tabindex="0">
         {{ job.name }}
         </Link>
       </div>
@@ -31,7 +34,7 @@
     <!-- Arrow Icon -->
     <div
       class="flex items-center transition-transform duration-300 group-hover:translate-x-1 opacity-40 group-hover:opacity-100"
-      :class="`text-${themeStore.currentTheme.button.primary}`">
+      :class="`text-${themeStore.currentTheme.button}`">
       <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M9 18l6-6-6-6" />

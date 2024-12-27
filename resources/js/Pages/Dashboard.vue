@@ -3,11 +3,12 @@
   <Head title="Dashboard" />
 
   <!-- Avatar Section -->
-  <div class="flex-1 flex items-center justify-center relative" style="margin-top: -10rem">
+  <div class="flex-1 flex items-center justify-center relative" :class="{ 'md:mt-[-10rem]': true }">
     <div class="absolute inset-0 flex items-center justify-center">
-      <div class="relative flex items-center gap-12">
+      <div class="relative flex md:flex-row flex-col items-center md:gap-12 gap-6 px-4 md:px-0">
         <!-- Avatar Container with Glow -->
-        <div class="relative w-[400px] h-[400px]" @mouseover="showDetails = true" @mouseleave="showDetails = false">
+        <div class="relative md:w-[400px] md:h-[400px] w-[280px] h-[280px]" @mouseover="showDetails = true"
+          @mouseleave="showDetails = false">
           <!-- Glow Effect -->
           <div :class="[
             `bg-${themeStore.currentTheme.primary}-400/20`,
@@ -18,26 +19,27 @@
         </div>
 
         <!-- Details Panel -->
-        <div class="w-[340px] relative overflow-hidden" :class="{ 'pointer-events-none': !showDetails }">
-          <div class="space-y-8 transition-all duration-500 ease-out" :class="[
-            showDetails ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20',
+        <div class="md:w-[340px] w-full relative overflow-hidden" :class="{ 'pointer-events-none': !showDetails }">
+          <div class="space-y-6 md:space-y-8 transition-all duration-500 ease-out" :class="[
+            showDetails ? 'opacity-100 md:translate-x-0' : 'opacity-0 md:translate-x-20',
             'transform'
           ]">
             <!-- Title & Description -->
             <div class="space-y-3">
               <div class="flex items-start justify-between">
-                <h2 class="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+                <h2
+                  class="text-2xl md:text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
                   {{ archetype.slug }}
                 </h2>
                 <!-- Animated Rarity Badge -->
                 <div class="rarity-badge" :class="{ 'show-badge': showDetails }">
                   <div :class="[
                     `border-${themeStore.currentTheme.border}`,
-                    'px-3 py-1.5 bg-white/80 backdrop-blur-sm rounded-full shadow-lg relative overflow-hidden'
+                    'px-2 md:px-3 py-1 md:py-1.5 bg-white/80 backdrop-blur-sm rounded-full shadow-lg relative overflow-hidden'
                   ]">
                     <span :class="[
                       `text-${themeStore.currentTheme.primary}-600`,
-                      'text-sm font-medium relative z-10'
+                      'text-xs md:text-sm font-medium relative z-10'
                     ]">
                       {{ archetype.rarity_string }}
                     </span>
@@ -46,29 +48,29 @@
                   </div>
                 </div>
               </div>
-              <p class="text-xl text-gray-600 font-light leading-relaxed">{{ archetype.rationale }}</p>
+              <p class="text-base md:text-xl text-gray-600 font-light leading-relaxed">{{ archetype.rationale }}</p>
             </div>
 
             <!-- Stats -->
-            <div class="space-y-6">
+            <div class="space-y-4 md:space-y-6">
               <!-- Top Traits -->
               <div :class="[
                 themeStore.getThemeClasses('border'),
-                'bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-xl transition-colors duration-300',
+                'bg-white/60 backdrop-blur-sm rounded-xl md:rounded-2xl p-4 md:p-6 shadow-xl transition-colors duration-300',
                 themeStore.isDarkMode ? 'bg-gray-800/60' : 'bg-white/60'
               ]">
                 <h3 :class="[
-                  'text-lg font-semibold mb-4',
+                  'text-base md:text-lg font-semibold mb-3 md:mb-4',
                   themeStore.isDarkMode ? 'text-white' : 'text-gray-800'
                 ]">
                   Top Traits
                 </h3>
-                <div class="space-y-4">
+                <div class="space-y-3 md:space-y-4">
                   <div v-for="(value, trait, index) in topTraits" :key="trait" class="trait-item" :style="{
                     '--delay': `${index * 200}ms`,
                     '--progress': showDetails ? value : 0
                   }">
-                    <div class="flex justify-between text-sm mb-2">
+                    <div class="flex justify-between text-xs md:text-sm mb-1.5 md:mb-2">
                       <span class="font-medium" :class="[
                         `text-${themeStore.currentTheme.primary}-600`,
                         themeStore.isDarkMode ? `text-${themeStore.currentTheme.primary}-400` : `text-${themeStore.currentTheme.primary}-600`
@@ -81,7 +83,7 @@
                         {{ Math.round(value * 100) }}%
                       </span>
                     </div>
-                    <div class="h-2.5 rounded-full overflow-hidden transition-colors duration-300" :class="[
+                    <div class="h-2 md:h-2.5 rounded-full overflow-hidden transition-colors duration-300" :class="[
                       themeStore.isDarkMode
                         ? `bg-${themeStore.currentTheme.primary}-900/50`
                         : `bg-${themeStore.currentTheme.primary}-100/50`
@@ -104,7 +106,7 @@
   </div>
 
   <!-- Bottom section -->
-  <div class="relative">
+  <div class="relative mt-8 md:mt-0">
     <BottomCards :favorite-jobs="favoriteJobs" :favorite-degrees="favoriteDegrees" :archetype="archetype.slug" />
     <AIChat :predefined-questions="predefinedQuestions" :initial-messages="chatHistory" class="z-50" />
   </div>
@@ -282,5 +284,30 @@ console.log('Dashboard Theme:', {
   background: linear-gradient(135deg,
       rgba(255, 255, 255, 0.9),
       rgba(255, 255, 255, 0.6));
+}
+
+/* Mobile-specific animations */
+@media (max-width: 768px) {
+  .trait-item {
+    animation-duration: 0.3s;
+  }
+
+  .rarity-badge {
+    transition-delay: 0.1s;
+  }
+}
+
+/* Adjust shine effect for mobile */
+@media (max-width: 768px) {
+  .shine-effect {
+    width: 30%;
+  }
+}
+
+/* Ensure smooth scrolling on mobile */
+@media (max-width: 768px) {
+  .custom-scrollbar {
+    -webkit-overflow-scrolling: touch;
+  }
 }
 </style>

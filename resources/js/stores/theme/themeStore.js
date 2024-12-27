@@ -16,26 +16,26 @@ export const useThemeStore = defineStore('theme', () => {
       primary: 'blue',
       accent: 'sky',
       base: isDarkMode.value ? {
-        from: 'dark:from-blue-950',
-        via: 'dark:via-gray-900',
-        to: 'dark:to-blue-900'
+        from: 'dark:from-blue-900', // Darker navy blue
+        via: 'dark:via-blue-800',
+        to: 'dark:to-blue-700'
       } : {
-        from: 'from-blue-50',
-        via: 'via-white',
-        to: 'to-blue-100'
+        from: 'from-blue-200', // Lighter baby blue
+        via: 'via-blue-100',
+        to: 'to-blue-50'
       },
-      button: isDarkMode.value ? 'blue-600' : 'blue-500',
-      hover: isDarkMode.value ? 'blue-700' : 'blue-600',
-      border: isDarkMode.value ? 'blue-800' : 'blue-200',
-      ring: isDarkMode.value ? 'blue-900' : 'blue-100',
+      button: isDarkMode.value ? 'blue-800' : 'blue-400', // Adjusted for new colors
+      hover: isDarkMode.value ? 'blue-900' : 'blue-500',
+      border: isDarkMode.value ? 'blue-950' : 'blue-300',
+      ring: isDarkMode.value ? 'blue-900' : 'blue-200',
       background: isDarkMode.value ? {
-        light: 'dark:bg-blue-900',
-        medium: 'dark:bg-blue-800',
-        dark: 'dark:bg-blue-700'
+        light: 'dark:bg-blue-800',
+        medium: 'dark:bg-blue-900',
+        dark: 'dark:bg-blue-950'
       } : {
-        light: 'bg-blue-50',
-        medium: 'bg-blue-100',
-        dark: 'bg-blue-600'
+        light: 'bg-blue-100',
+        medium: 'bg-blue-200',
+        dark: 'bg-blue-400'
       }
     },
     // Success theme - Fresh green  
