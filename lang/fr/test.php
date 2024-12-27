@@ -131,5 +131,7 @@ return [
     'Your_career_matches' => 'Vos correspondances de carrière',
     'Your_degree_matches' => 'Vos correspondances de diplôme',
 
-    'up_next' =>'À venir'
+    'up_next' =>'À venir',
+
+    'Complete' => 'Terminé'
 ];

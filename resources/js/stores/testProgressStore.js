@@ -1,12 +1,13 @@
 import { defineStore } from 'pinia';
 import { router } from '@inertiajs/vue3';
+import __ from '@/lang';
 
 export const useTestProgressStore = defineStore('testProgress', {
   state: () => ({
     currentStage: 'holland_codes',
     stageConfig: {
       holland_codes: {
-        name: 'Your personality archetype',
+        name: __('test.Your_personality_archetype'),
         time: '~ 3 mins',
         totalQuestions: 48,
         nextStage: 'basic_interests',
@@ -21,7 +22,7 @@ export const useTestProgressStore = defineStore('testProgress', {
         }
       },
       basic_interests: {
-        name: 'Your career matches',
+        name: __('test.Your_career_matches'),
         time: '~ 3 mins',
         totalQuestions: 27,
         nextStage: 'degree',
@@ -36,7 +37,7 @@ export const useTestProgressStore = defineStore('testProgress', {
         }
       },
       degree: {
-        name: 'Your degree matches',
+        name: __('test.Your_degree_matches'),
         time: '~ 3 mins',
         totalQuestions: 7,
         nextStage: null,

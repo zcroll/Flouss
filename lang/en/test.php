@@ -132,7 +132,9 @@ return [
     'Your_career_matches' => 'Your career matches',
     'Your_degree_matches' => 'Your degree matches',
 
-    'up_next' =>'Up Next'
+    'up_next' =>'Up Next',
+
+    'Complete' => 'Complete'
 
     
 
