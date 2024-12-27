@@ -72,24 +72,64 @@
   <div class="md:hidden">
     <!-- Mobile Toggle Button -->
     <button
-      @click="isOpen = !isOpen"
-      class="fixed bottom-20 right-4 z-50 bg-violet-500 p-3 rounded-full shadow-lg transition-all duration-200 hover:shadow-violet-500/25"
+    @click="isOpen = !isOpen"
+    @mouseenter="isHovered = true"
+    @mouseleave="isHovered = false"
+    class="group fixed bottom-20 right-4 z-50 p-4 rounded-full transition-all duration-300
+           bg-gradient-to-br from-violet-500 to-violet-600
+           hover:from-violet-400 hover:to-violet-600
+           shadow-lg hover:shadow-xl
+           hover:-translate-y-0.5
+           active:translate-y-0.5
+           overflow-hidden"
+  >
+    <!-- Shine effect overlay -->
+    <div class="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100
+                bg-gradient-to-br from-white/20 to-transparent
+                transition-opacity duration-300" />
+    
+    <!-- 3D bottom edge -->
+    <div class="absolute -bottom-1 left-0 right-0 h-2
+                bg-violet-800/50 rounded-full
+                transform transition-all duration-200
+                group-active:scale-y-0" />
+    
+    <!-- Glow effect -->
+    <div class="absolute -inset-1 bg-violet-500/20 rounded-full blur-lg
+                opacity-0 group-hover:opacity-100
+                transition-opacity duration-300" />
+    
+    <!-- Main icon -->
+    <svg 
+      xmlns="http://www.w3.org/2000/svg" 
+      class="relative h-6 w-6 text-white transform transition-transform duration-300
+             group-hover:scale-110 group-active:scale-95"
+      fill="none" 
+      viewBox="0 0 24 24" 
+      stroke="currentColor"
     >
-      <svg 
-        xmlns="http://www.w3.org/2000/svg" 
-        class="h-6 w-6 text-white" 
-        fill="none" 
-        viewBox="0 0 24 24" 
-        stroke="currentColor"
-      >
-        <path 
-          stroke-linecap="round" 
-          stroke-linejoin="round" 
-          stroke-width="2" 
-          d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-        />
-      </svg>
-    </button>
+      <path 
+        stroke-linecap="round" 
+        stroke-linejoin="round" 
+        stroke-width="2" 
+        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+      />
+    </svg>
+
+    <!-- Ripple particles -->
+    <div class="absolute inset-0 pointer-events-none">
+      <div v-for="i in 3" :key="i"
+           class="absolute h-2 w-2 rounded-full bg-white/40
+                  animate-ping opacity-0 group-hover:opacity-100"
+           :style="{
+             top: `${Math.random() * 100}%`,
+             left: `${Math.random() * 100}%`,
+             animationDelay: `${i * 0.2}s`,
+             animationDuration: '1.5s'
+           }" />
+    </div>
+  </button>
+    
 
     <!-- Mobile Chat Window -->
     <div
@@ -251,4 +291,20 @@ watch(isOpen, (newValue) => {
 :deep(body.chat-open) {
   overflow: hidden;
 }
+/* Optional: Custom animation for the ripple effect */
+@keyframes ping {
+  0% {
+    transform: scale(0.2);
+    opacity: 0.6;
+  }
+  70%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.animate-ping {
+  animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
 </style>

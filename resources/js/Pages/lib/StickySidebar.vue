@@ -22,7 +22,11 @@
         <div class="w-full lg:w-1/3 lg:mb-0 lg:pl-8 pb-5 pt-8">
             <!-- Mobile Navigation Bar (Fixed Bottom) -->
             <div v-if="isSmallScreen"
-                 class="fixed top-0 left-0 right-0 bg-[#353535] text-white shadow-lg z-50 rounded-b-2xl">
+                 class="fixed top-0 left-0 right-0 bg-[#353535] text-white shadow-lg z-50 rounded-b-2xl"
+                 @click="toggleLinks"
+                 @touchstart="startDrag"
+                 @touchmove.prevent="onDrag"
+                 @touchend="endDrag">
                 <div class="flex items-center justify-between px-3 py-2 border-b border-gray-700">
                     <img :src="image" alt="Icon" class="w-8 h-8 rounded-md"/>
 
@@ -36,7 +40,8 @@
                         :key="id"
                     />
                 </div>
-                <div class="w-full overflow-x-auto scrollbar-hide">
+                <div class="w-1/6 h-1 bg-gray-300 rounded-full mx-auto my-2"></div>
+                <div v-if="showLinks" class="w-full overflow-x-auto scrollbar-hide">
                     <div class="flex w-full px-1 py-2">
                         <Link
                             v-for="(link, index) in links"
@@ -240,6 +245,24 @@ const getSecondBoxContent = computed(() => {
 });
 
 const isAnimating = ref(false);
+
+const showLinks = ref(false);
+
+const toggleLinks = () => {
+    showLinks.value = !showLinks.value;
+};
+
+const startDrag = (event) => {
+    // Logic to handle drag start
+};
+
+const onDrag = (event) => {
+    // Logic to handle dragging
+};
+
+const endDrag = (event) => {
+    // Logic to handle drag end
+};
 </script>
 
 <style scoped>

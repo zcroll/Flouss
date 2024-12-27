@@ -30,7 +30,7 @@ export const useTestStageStore = defineStore('testStage', {
                 name: __('test.holland_codes'),
                 description: __('test.holland_code_description'),
                 nextStage: 'basic_interests',
-                nextStageName: __('test.holland_codes_nextStageName'),
+                nextStageName: __('test.next_holland_codes'),
                 route: 'holland-codes.index',
 
             },

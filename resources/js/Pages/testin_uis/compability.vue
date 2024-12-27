@@ -3,18 +3,18 @@
     <main class="layout--sidebar__body__main" role="document">
       <article aria-labelledby="document-title">
         <section>
-          <div id="compatibility-container" 
-               :data-name="careerName" 
-               :data-a="careerName" 
-               :data-slug="careerSlug" 
-               :data-id="careerId" 
-               :data-score="compatibilityScore" 
-               :data-intersect="intersectScore" 
-               :data-unlocked="isUnlocked" 
-               :data-article="article" 
-               :data-subject="subject" 
+          <div id="compatibility-container"
+               :data-name="careerName"
+               :data-a="careerName"
+               :data-slug="careerSlug"
+               :data-id="careerId"
+               :data-score="compatibilityScore"
+               :data-intersect="intersectScore"
+               :data-unlocked="isUnlocked"
+               :data-article="article"
+               :data-subject="subject"
                :data-share-url="shareUrl">
-            
+
             <div>
               <div class="jenny-card" id="overall">
                 <header>
@@ -27,11 +27,11 @@
                     <!-- Toolbar buttons here -->
                   </div>
                 </header>
-                
+
                 <div class="sticky-header" :class="{ 'sticky-header--unstuck': !isSticky }">
                   <!-- Venn diagram component here -->
                 </div>
-  
+
                 <div id="MatchInsights" data-testid="match-insights" class="match-insights match-insights--loaded">
                   <div class="match-insights__section">
                     <div class="match-insights__cards">
@@ -40,9 +40,9 @@
                         <h3 class="match-insight-cards__title">
                           The following are qualities that you do not measure high in, but this also makes you a good match. These qualities are not as important for {{ careerName }}:
                         </h3>
-                        
+
                         <!-- Match insight cards component here -->
-                        
+
                       </section>
                     </div>
                   </div>
@@ -51,25 +51,25 @@
             </div>
           </div>
         </section>
-  
+
         <div id="back-top-container" data-target="document-title"></div>
       </article>
-  
+
       <!-- Feedback component here -->
-  
+
       <aside tabindex="0" aria-labelledby="up-next__title" aria-describedby="up-next-container" class="up-next">
-        <h2 id="up-next__title">Up Next</h2>
-        <div id="up-next-container" 
-             :data-title="upNextTitle" 
-             :data-variant="upNextVariant" 
-             :data-copy="upNextCopy" 
+        <h2 id="up-next__title">{{__('test.up_next')}}</h2>
+        <div id="up-next-container"
+             :data-title="upNextTitle"
+             :data-variant="upNextVariant"
+             :data-copy="upNextCopy"
              :data-ctalink="upNextCtaLink">
           <!-- Up next card component here -->
         </div>
       </aside>
     </main>
   </template>
-  
+
   <script>
   export default {
     data() {

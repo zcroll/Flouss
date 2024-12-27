@@ -126,4 +126,10 @@ return [
     'Degree_Assessment_desription' => 'Trouvez votre parcours de diplôme idéal',
 
     'Basic_Interest_Assessment' => 'vers l\'Évaluation des Intérêts de Base',
+
+    'Your_personality_archetype' => 'Votre archétype de personnalité',
+    'Your_career_matches' => 'Vos correspondances de carrière',
+    'Your_degree_matches' => 'Vos correspondances de diplôme',
+
+    'up_next' =>'À venir'
 ];

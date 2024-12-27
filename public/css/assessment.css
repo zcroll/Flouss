@@ -578,7 +578,7 @@ svg:not(:host).svg-inline--fa {
 @media all and (min-width: 768px) and (min-height: 840px) {
     .Roadmap .Assessment__scroll-container {
         height: calc(100% - 72px);
-        min-height: 800px;
+        min-height: 600px;
         overflow-y: hidden;
     }
 }
@@ -933,8 +933,8 @@ svg:not(:host).svg-inline--fa {
 }
 @media all and (min-width: 1010px) {
     .Assessment__RadioItem .RadioField--label:before {
-        height: 39px;
-        width: 39px;
+        height: 30px;
+        width: 30px;
         border: 1.5px solid #ffffff;
         border-radius: 4.5px;
     }
@@ -2039,6 +2039,30 @@ svg:not(:host).svg-inline--fa {
         font-size: 28px;
     }
 }
+@media screen and (max-height: 570px) {
+    .Assessment__Item h3 {
+        font-size: 17px; /* Set font size to 200px */
+    }
+    .RadioField--label__inner{
+        font-size: 13px;
+    }
+    .Roadmap .Assessment__ItemSetLeadIn {
+        font-size: 16px;
+        padding: auto;
+        margin-top: 10px;
+    }
+    .Roadmap .Assessment__Item > div {
+        padding-top: 20px;
+    }
+    .RadioField--label{
+        width: 10px;
+        height: 10px;
+    }
+    .Assessment__Interstitial [class*="alans-butt"]{
+        width: 20px;
+        height: auto;
+    }
+}
 .DiscoveryButton:before {
     content: "";
     background-color: rgba(0, 0, 0, 0.25);
@@ -2052,4 +2076,5 @@ svg:not(:host).svg-inline--fa {
     height: 100%;
     display: block;
 }
+
 

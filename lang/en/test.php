@@ -127,6 +127,13 @@ return [
     'Degree_Assessment_desription' => 'Find your ideal degree path',
 
     'Basic_Interest_Assessment' => 'to Basic Interest Assessment',
+
+    'Your_personality_archetype' => 'Your personality archetype',
+    'Your_career_matches' => 'Your career matches',
+    'Your_degree_matches' => 'Your degree matches',
+
+    'up_next' =>'Up Next'
+
     
 
 

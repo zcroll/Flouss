@@ -252,7 +252,9 @@ onMounted(() => {
                                     <Dropdown align="right" width="60">
                                         <template #trigger>
                                             <button v-if="$page.props.jetstream.managesProfilePhotos" class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
-                                                <img class="h-8 w-8 rounded-full object-cover" :src="$page.props.auth.user.profile_photo_url" :alt="$page.props.auth.user.name" />
+                                                <span class="h-8 w-8 rounded-full bg-gray-500 text-white flex items-center justify-center">
+                                                    {{ $page.props.auth.user.name.charAt(0) }}
+                                                </span>
                                             </button>
                                             <span v-else class="inline-flex rounded-md">
                                                 <button type="button" class="inline-flex h-[30px] items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition ease-in-out duration-150">
@@ -292,11 +294,11 @@ onMounted(() => {
                             <div class="lg:hidden">
                                 <Sheet v-model:open="isOpen">
                                     <SheetTrigger class="inline-flex items-center justify-center p-1 rounded-full border-2 border-stone-300/20 transition-all duration-200">
-                                        <img class="h-6 w-6 rounded-full object-cover"
-                                             :src="$page.props.auth.user.profile_photo_url"
-                                             :alt="$page.props.auth.user.name" />
+                                        <span class="h-6 w-6 rounded-full bg-gray-500 text-white flex items-center justify-center">
+                                            {{ $page.props.auth.user.name.charAt(0) }}
+                                        </span>
                                     </SheetTrigger>
-                                    <SheetContent side="right" class="w-[250px] bg-gray-50 rounded-b-xl backdrop-blur-xl ">
+                                    <SheetContent side="right" class="w-[250px] bg-gray-50 backdrop-blur-xl ">
                                         <SheetHeader>
                                             <Link :href="route('profile.show')"
                                                   class="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-stone-800/50 text-gray-900 transition-colors"

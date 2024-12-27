@@ -26,7 +26,7 @@
         </div>
         <div class="Journey--minimized">
           <div>
-            <div class="Journey__head">Up Next</div>
+            <div class="Journey__head">{{ __('test.up_next') }}</div>
             <div class="Journey__next-name">{{ nextMilestoneName }}</div>
           </div>
           <div class="Journey__progress">

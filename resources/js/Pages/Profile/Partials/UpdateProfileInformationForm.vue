@@ -100,9 +100,16 @@ const clearPhotoFileInput = () => {
                     {{ __('profile.photo') }}
                 </label>
 
-                <!-- Current Profile Photo -->
-                <div v-show="! photoPreview" class="mt-2">
-                    <img :src="user.profile_photo_url" :alt="user.name" class="rounded-full h-20 w-20 object-cover">
+                <!-- Current Profile Photo or Initials -->
+                <div v-show="!photoPreview" class="mt-2">
+                    <template v-if="user.profile_photo_url">
+                        <img :src="user.profile_photo_url" :alt="user.name" class="rounded-full h-20 w-20 object-cover">
+                    </template>
+                    <template v-else>
+                        <span class="h-20 w-20 rounded-full bg-gray-500 text-white flex items-center justify-center text-2xl">
+                            {{ user.name.charAt(0) }}
+                        </span>
+                    </template>
                 </div>
 
                 <!-- New Profile Photo Preview -->
