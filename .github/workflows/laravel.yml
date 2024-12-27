@@ -38,7 +38,6 @@ jobs:
         git config --global --add safe.directory /domains/gennz.site
         if [ -d ".git" ]; then
           git fetch origin
-          git reset --hard origin/Gen.z
           git pull origin Gen.z
         else
           rm -rf *
