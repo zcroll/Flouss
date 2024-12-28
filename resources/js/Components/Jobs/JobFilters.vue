@@ -1,26 +1,24 @@
 <template>
-  <div class="sticky top-4 z-30">
+  <div class="sticky top-1 z-30">
     <!-- Desktop Filters -->
-    <Card :class="[
-      'hidden sm:block'
-    ]">
-      <CardContent class="p-6">
-        <div class="flex gap-6">
+    <Card :class="['hidden sm:block']">
+      <CardContent class="p-4">
+        <div class="flex gap-4">
           <div class="flex-1">
-            <label for="search-desktop" class="block text-sm font-medium text-gray-700 mb-2">
+            <label for="search-desktop" class="block text-sm font-medium text-gray-700 mb-1">
               {{ __('jobs.search') }}
             </label>
             <div class="relative group">
-              <Search class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 transition-colors"
+              <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 transition-colors"
                 :class="themeClasses.hover" />
               <input id="search-desktop" v-model="searchQuery" type="text" :placeholder="__('jobs.search_jobs')"
-                class="w-full pl-12 pr-6 py-3 text-gray-900 placeholder-gray-500 bg-white/80 backdrop-blur-md rounded-full border border-white/20 transition duration-200"
+                class="w-full pl-10 pr-4 py-2 text-gray-900 placeholder-gray-500 bg-white/80 backdrop-blur-md rounded-full border border-white/20 transition duration-200"
                 :class="themeClasses.focus" @input="debouncedSearch" />
             </div>
           </div>
 
           <div class="flex-1">
-            <label class="block text-sm font-medium text-gray-700 mb-2">
+            <label class="block text-sm font-medium text-gray-700 mb-1">
               {{ __('jobs.education_levels') }}
             </label>
             <CustomMultiSelect v-model="selectedEducationLevels" :options="educationLevelOptions"
@@ -29,9 +27,9 @@
 
           <div class="flex items-end">
             <button @click="resetFilters"
-              class="group px-6 py-3 bg-white/80 border border-white/20 backdrop-blur-xl text-gray-700 font-medium rounded-full focus:ring-2 focus:ring-offset-2 transition duration-200"
+              class="group px-4 py-2 bg-white/80 border border-white/20 backdrop-blur-xl text-gray-700 font-medium rounded-full focus:ring-2 focus:ring-offset-2 transition duration-200"
               :class="[themeClasses.hover, themeClasses.focus]">
-              <span class="flex items-center gap-2">
+              <span class="flex items-center gap-1">
                 <RefreshCw class="w-4 h-4 transition-transform group-hover:rotate-180" />
                 {{ __('jobs.reset_filters') }}
               </span>
@@ -48,7 +46,7 @@
           <Button variant="outline"
             class="w-full flex justify-between items-center bg-white/80 backdrop-blur-xl rounded-full border border-white/20">
             <span class="flex items-center gap-2">
-              <Search class="w-5 h-5" />
+              <Search class="w-4 h-4" />
               {{ __('jobs.filters') }}
             </span>
             <div class="flex items-center gap-1">
@@ -56,28 +54,28 @@
                 :class="themeClasses.active">
                 {{ activeFiltersCount }}
               </span>
-              <ChevronDown class="w-4 h-4" />
+              <ChevronDown class="w-3 h-3" />
             </div>
           </Button>
         </SheetTrigger>
-        <SheetContent side="bottom" class="rounded-t-3xl bg-white/95 backdrop-blur-xl">
-          <div class="space-y-6 p-4">
+        <SheetContent side="bottom" class="rounded-t-2xl bg-white/95 backdrop-blur-xl">
+          <div class="space-y-4 p-3">
             <!-- Search -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
+              <label class="block text-sm font-medium text-gray-700 mb-1">
                 {{ __('jobs.search') }}
               </label>
               <div class="relative">
-                <Search class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                 <input v-model="searchQuery" type="text" :placeholder="__('jobs.search_jobs')"
-                  class="w-full pl-12 pr-6 py-3 bg-white/80 rounded-full border border-gray-200"
+                  class="w-full pl-10 pr-4 py-2 bg-white/80 rounded-full border border-gray-200"
                   :class="themeClasses.focus" />
               </div>
             </div>
 
             <!-- Education Levels -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
+              <label class="block text-sm font-medium text-gray-700 mb-1">
                 {{ __('jobs.education_levels') }}
               </label>
               <CustomMultiSelect v-model="selectedEducationLevels" :options="educationLevelOptions"
@@ -86,7 +84,7 @@
 
             <!-- Reset Button -->
             <button @click="resetFilters"
-              class="w-full px-6 py-3 font-medium rounded-full transition-colors duration-200"
+              class="w-full px-4 py-2 font-medium rounded-full transition-colors duration-200"
               :class="[themeClasses.button, themeClasses.text]">
               {{ __('jobs.reset_filters') }}
             </button>

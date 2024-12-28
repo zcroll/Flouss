@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Auth;
 
 class JobInfo extends Model
 {
@@ -78,11 +79,11 @@ class JobInfo extends Model
     public function formations(): BelongsToMany
     {
         return $this->belongsToMany(Formation::class, 'job_formation')
-                    ->withPivot('similarity_score');
+            ->withPivot('similarity_score');
     }
 
     public function degreeJobs()
-    { 
+    {
         return $this->hasMany(DegreeJob::class, 'job_title', 'name');
     }
 
@@ -118,9 +119,9 @@ class JobInfo extends Model
 
     public function isFavorite(): bool
     {
-        if (!auth()->check()) {
+        if (!Auth::check()) {
             return false;
         }
-        return $this->favorites()->where('user_id', auth()->id())->exists();
+        return $this->favorites()->where('user_id', Auth::id())->exists();
     }
 }

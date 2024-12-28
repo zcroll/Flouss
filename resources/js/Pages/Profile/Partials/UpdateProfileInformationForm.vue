@@ -1,18 +1,23 @@
 <script setup>
 import { ref } from 'vue';
 import { Link, router, useForm } from '@inertiajs/vue3';
-import ActionMessage from '@/Components/helpers/ActionMessage.vue';
-import FormSection from '@/Components/helpers/FormSection.vue';
-import InputError from '@/Components/helpers/InputError.vue';
-import InputLabel from '@/Components/helpers/InputLabel.vue';
-import PrimaryButton from '@/Components/helpers/PrimaryButton.vue';
-import SecondaryButton from '@/Components/helpers/SecondaryButton.vue';
-import TextInput from '@/Components/helpers/TextInput.vue';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/Components/ui/card";
+import { Label } from "@/Components/ui/label";
+import { Input } from "@/Components/ui/input";
+import { Button } from "@/Components/ui/button";
+import { Toast } from "@/Components/ui/toast";
+import { Alert, AlertDescription } from "@/Components/ui/alert";
+import { useToast } from "@/Components/ui/toast";
+import { useThemeStore } from '@/stores/theme/themeStore';
 
 const props = defineProps({
     user: Object,
 });
 
+const themeStore = useThemeStore();
+const { toast } = useToast();
+
+// Form handling with Inertia
 const form = useForm({
     _method: 'PUT',
     name: props.user.name,
@@ -20,10 +25,11 @@ const form = useForm({
     photo: null,
 });
 
-const verificationLinkSent = ref(null);
+// File handling refs
 const photoPreview = ref(null);
 const photoInput = ref(null);
 
+// Form submission handler
 const updateProfileInformation = () => {
     if (photoInput.value) {
         form.photo = photoInput.value.files[0];
@@ -32,29 +38,40 @@ const updateProfileInformation = () => {
     form.post(route('user-profile-information.update'), {
         errorBag: 'updateProfileInformation',
         preserveScroll: true,
-        onSuccess: () => clearPhotoFileInput(),
+        onFinish: () => {
+            clearPhotoFileInput();
+        },
+        onSuccess: () => {
+            toast({
+                title: "Profile Updated",
+                description: "Your profile information has been successfully updated.",
+                variant: "success",
+            });
+        },
+        onError: (errors) => {
+            if (Object.keys(errors).length > 0) {
+                const firstError = Object.values(errors)[0];
+                toast({
+                    title: "Update Failed",
+                    description: firstError,
+                    variant: "destructive",
+                });
+            }
+        },
     });
 };
 
-const sendEmailVerification = () => {
-    verificationLinkSent.value = true;
-};
-
-const selectNewPhoto = () => {
-    photoInput.value.click();
-};
+// Photo handling methods
+const selectNewPhoto = () => photoInput.value.click();
 
 const updatePhotoPreview = () => {
     const photo = photoInput.value.files[0];
-
     if (!photo) return;
 
     const reader = new FileReader();
-
     reader.onload = (e) => {
         photoPreview.value = e.target.result;
     };
-
     reader.readAsDataURL(photo);
 };
 
@@ -64,6 +81,18 @@ const deletePhoto = () => {
         onSuccess: () => {
             photoPreview.value = null;
             clearPhotoFileInput();
+            toast({
+                title: "Photo Removed",
+                description: "Your profile photo has been removed successfully.",
+                variant: "success",
+            });
+        },
+        onError: () => {
+            toast({
+                title: "Error",
+                description: "There was a problem removing your profile photo.",
+                variant: "destructive",
+            });
         },
     });
 };
@@ -76,72 +105,76 @@ const clearPhotoFileInput = () => {
 </script>
 
 <template>
-    <FormSection @submitted="updateProfileInformation">
-        <template #title>
-            {{ __('profile.profile_information') }}
-        </template>
+    <Card class="w-full" :class="[themeStore.isDarkMode ? 'bg-gray-900' : 'bg-white']">
+        <CardHeader>
+            <CardTitle :class="[themeStore.isDarkMode ? 'text-white' : 'text-gray-900']">{{ __('profile.profile_information') }}</CardTitle>
+            <CardDescription :class="[themeStore.isDarkMode ? 'text-gray-400' : 'text-gray-500']">{{ __('profile.update_profile_information') }}</CardDescription>
+        </CardHeader>
 
-        <template #description>
-            {{ __('profile.update_profile_information') }}
-        </template>
+        <CardContent>
+            <form @submit.prevent="updateProfileInformation" class="space-y-6">
+                <!-- Profile Photo -->
+                <div v-if="$page.props.jetstream.managesProfilePhotos">
+                    <Input type="file" class="hidden" ref="photoInput" @change="updatePhotoPreview" accept="image/*" />
 
-        <template #form>
-            <!-- Profile Photo -->
-            <div v-if="$page.props.jetstream.managesProfilePhotos" class="col-span-6 sm:col-span-4">
-                <!-- Photo File Input -->
-                <input type="file" class="hidden" ref="photoInput" @change="updatePhotoPreview">
+                    <Label for="photo" :class="[themeStore.isDarkMode ? 'text-white' : 'text-gray-900']">{{ __('profile.photo') }}</Label>
 
-                <label class="block font-medium text-sm text-slate-300" for="photo">
-                    {{ __('profile.photo') }}
-                </label>
+                    <!-- Current/Preview Photo -->
+                    <div class="mt-2">
+                        <div v-show="!photoPreview" class="relative h-20 w-20">
+                            <img :src="user.profile_photo_url" :alt="user.name"
+                                class="rounded-full h-20 w-20 object-cover">
+                        </div>
 
-                <!-- Current Profile Photo -->
-                <div v-show="!photoPreview" class="mt-2">
-                    <img :src="user.profile_photo_url" :alt="user.name" class="rounded-full h-20 w-20 object-cover">
+                        <div v-show="photoPreview" class="relative h-20 w-20">
+                            <span class="block rounded-full w-20 h-20 bg-cover bg-no-repeat bg-center"
+                                :style="'background-image: url(\'' + photoPreview + '\');'" />
+                        </div>
+                    </div>
+
+                    <div class="mt-2 flex gap-2">
+                        <Button type="button" variant="secondary" @click="selectNewPhoto" 
+                            :class="themeStore.getThemeClasses('button')">
+                            {{ __('profile.select_new_photo') }}
+                        </Button>
+
+                        <Button v-if="user.profile_photo_path" type="button" variant="destructive" @click="deletePhoto">
+                            {{ __('profile.remove_photo') }}
+                        </Button>
+                    </div>
+
+                    <Alert v-if="form.errors.photo" variant="destructive" class="mt-2">
+                        <AlertDescription>{{ form.errors.photo }}</AlertDescription>
+                    </Alert>
                 </div>
 
-                <!-- New Profile Photo Preview -->
-                <div v-show="photoPreview" class="mt-2">
-                    <span class="block rounded-full w-20 h-20 bg-cover bg-no-repeat bg-center"
-                        :style="'background-image: url(\'' + photoPreview + '\');'" />
+                <!-- Name -->
+                <div class="space-y-2">
+                    <Label for="name" :class="[themeStore.isDarkMode ? 'text-white' : 'text-gray-900']">{{ __('profile.name') }}</Label>
+                    <Input id="name" v-model="form.name" type="text" autocomplete="name"
+                        :class="[{ 'border-red-500': form.errors.name }, themeStore.isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900']" />
+                    <Alert v-if="form.errors.name" variant="destructive">
+                        <AlertDescription>{{ form.errors.name }}</AlertDescription>
+                    </Alert>
                 </div>
 
-                <SecondaryButton class="mt-2 mr-2" type="button" @click.prevent="selectNewPhoto">
-                    {{ __('profile.select_new_photo') }}
-                </SecondaryButton>
+                <!-- Email -->
+                <div class="space-y-2">
+                    <Label for="email" :class="[themeStore.isDarkMode ? 'text-white' : 'text-gray-900']">{{ __('profile.email') }}</Label>
+                    <Input id="email" v-model="form.email" type="email"
+                        :class="[{ 'border-red-500': form.errors.email }, themeStore.isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900']" />
+                    <Alert v-if="form.errors.email" variant="destructive">
+                        <AlertDescription>{{ form.errors.email }}</AlertDescription>
+                    </Alert>
+                </div>
+            </form>
+        </CardContent>
 
-                <SecondaryButton v-if="user.profile_photo_path" type="button" class="mt-2" @click.prevent="deletePhoto">
-                    {{ __('profile.remove_photo') }}
-                </SecondaryButton>
-
-                <InputError :message="form.errors.photo" class="mt-2" />
-            </div>
-
-            <!-- Name -->
-            <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="name" :value="__('profile.name')" class="text-slate-100" />
-                <TextInput id="name" v-model="form.name" type="text"
-                    class="mt-1 block w-full bg-zinc-700 text-slate-100" autocomplete="name" />
-                <InputError :message="form.errors.name" class="mt-2" />
-            </div>
-
-            <!-- Email -->
-            <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="email" :value="__('profile.email')" class="text-slate-100" />
-                <TextInput id="email" v-model="form.email" type="email"
-                    class="mt-1 block w-full bg-zinc-700 text-slate-100" />
-                <InputError :message="form.errors.email" class="mt-2" />
-            </div>
-        </template>
-
-        <template #actions>
-            <ActionMessage :on="form.recentlySuccessful" class="mr-3 text-slate-100">
-                {{ __('profile.saved') }}
-            </ActionMessage>
-
-            <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+        <CardFooter class="flex justify-end space-x-2">
+            <Button type="submit" @click="updateProfileInformation" :disabled="form.processing"
+                :class="[{ 'opacity-50': form.processing }, themeStore.getThemeClasses('button'), themeStore.getThemeClasses('hover')]">
                 {{ __('profile.save') }}
-            </PrimaryButton>
-        </template>
-    </FormSection>
+            </Button>
+        </CardFooter>
+    </Card>
 </template>

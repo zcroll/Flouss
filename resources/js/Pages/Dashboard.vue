@@ -162,7 +162,7 @@ const props = defineProps({
 })
 
 defineOptions({
-  layout: MainLayout,
+  layout: MainLayout
 })
 
 const showDetails = ref(false)

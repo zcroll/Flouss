@@ -48,4 +48,4 @@ class Handler extends ExceptionHandler
         ])->toResponse($request)
             ->setStatusCode($status);
     }
-} 
+}

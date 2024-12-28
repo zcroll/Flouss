@@ -34,7 +34,7 @@
     --ring: 222.2 84% 4.9%;
 
     --radius: 0.5rem;
-    
+
     --vis-tooltip-background-color: none !important;
     --vis-tooltip-border-color: none !important;
     --vis-tooltip-text-color: none !important;
@@ -84,7 +84,70 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Add this to your global CSS */
+.toast-viewport {
+  position: fixed !important;
+  top: 1.5rem !important;
+  right: 1.5rem !important;
+  z-index: 100 !important;
+}
+
+.toast {
+  @apply backdrop-blur-md border shadow-lg;
+  transition: all 0.3s ease;
+}
+
+/* Use theme colors for variants */
+.toast[data-variant='success'] {
+  @apply dark:border-green-500/10 border-green-500/20;
+}
+
+.toast[data-variant='error'] {
+  @apply dark:border-destructive/10 border-destructive/20;
+}
+
+.toast[data-variant='default'] {
+  @apply dark:border-gray-500/10 border-gray-400/20;
+}
+
+/* Add glassy animation */
+.toast[data-state='open'] {
+  animation: slideIn 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.toast[data-state='closed'] {
+  animation: fadeOut 150ms ease-in-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(calc(100% + 1rem));
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+/* Add hover effect with theme colors */
+.toast:hover {
+  @apply transition-all duration-200 transform -translate-y-px dark:bg-gray-800/10 bg-white/80;
 }

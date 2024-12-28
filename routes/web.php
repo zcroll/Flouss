@@ -56,11 +56,14 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
+    // Single route for toggling favorites
+    Route::post('/favorites', [FavoriteController::class, 'store'])
+        ->name('favorites.store');
+
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::middleware('auth')->group(function () {
-        Route::post('/favorites', [FavoriteController::class, 'store'])->name('favorites.store');
-        Route::delete('/favorites/{favorite}', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
+        // Remove favorites routes from here
         Route::controller(ActivityProgressController::class)->group(function () {
             Route::get('/activities', 'index')->name('activity.index');
             Route::post('/activities', 'submitAnswer')->name('activity.submit-answer');
@@ -103,7 +106,7 @@ Route::middleware([
         Route::get('/degrees', [DegreeFilterController::class, 'index'])->name('degrees.index');
         Route::get('/jobs', [JobFilterController::class, 'index'])->name('jobs.index');
 
-   
+
         // Chat routes
         Route::post('/chat', [ApiController::class, 'sendMessage'])->name('chat.send');
 
@@ -180,24 +183,24 @@ Route::get('/testt', function () {
 })->name('testt');
 
 Route::get('/im', function () {
-  return Inertia::render('im');
+    return Inertia::render('im');
 })->name('im');
 
 Route::get('/career-test', function () {
-  return Inertia::render('Career-Test');
+    return Inertia::render('Career-Test');
 })->name('Career-Test');
 
 Route::get('/for-organizations', function () {
-  return Inertia::render('For-organizations');
+    return Inertia::render('For-organizations');
 })->name('For-organizations');
 
 Route::get('/ruller', function () {
-  return Inertia::render('ruller');
+    return Inertia::render('ruller');
 });
 
-Route::get('/api',[ApiController::class,'index']);
+Route::get('/api', [ApiController::class, 'index']);
 
-Route::get('/test-result',[ResultController::class,'index']);
+Route::get('/test-result', [ResultController::class, 'index']);
 
 Route::get('/dashboard/test-messages', [DashboardController::class, 'testMessages'])
     ->name('dashboard.test-messages');
@@ -205,48 +208,48 @@ Route::get('/dashboard/test-messages', [DashboardController::class, 'testMessage
 Route::get('/dashboard/test-fetch', [DashboardController::class, 'testFetch'])
     ->name('dashboard.test-fetch');
 
-    Route::prefix('adminn')->group(function () {
-        Route::get('/dashboard', function () {
-            return Inertia::render('Admin/Dashboard/index', [
-                'page' => request()->query('tab', 'overview')
-            ]);
-        })->name('admin.dashboard');
-        
-        Route::get('dashboard/analytics', [AnalyticsController::class, 'index'])
-            ->name('admin.analytics');
-        
-        Route::post('dashboard/analytics/time-range', [AnalyticsController::class, 'updateTimeRange'])
-            ->name('admin.analytics.update-time');
-        
-        Route::get('/dashboard/reports', function () {
-            return Inertia::render('Admin/Dashboard/index', [
-                'page' => 'reports'
-            ]);
-        })->name('admin.reports');
-        
-        // Task Management Routes
-        Route::prefix('tasks')->group(function () {
-            Route::get('/', function () {
-                return Inertia::render('Admin/Task/index');
-            })->name('admin.tasks.index');
-            
-            // Route::post('/', [App\Http\Controllers\Admin\TaskController::class, 'store'])
-            //     ->name('admin.tasks.store');
-                
-            // Route::get('/{task}', [App\Http\Controllers\Admin\TaskController::class, 'show'])
-            //     ->name('admin.tasks.show');
-                
-            // Route::put('/{task}', [App\Http\Controllers\Admin\TaskController::class, 'update'])
-            //     ->name('admin.tasks.update');
-                
-            // Route::delete('/{task}', [App\Http\Controllers\Admin\TaskController::class, 'destroy'])
-            //     ->name('admin.tasks.destroy');
-                
-            // Route::post('/bulk-action', [App\Http\Controllers\Admin\TaskController::class, 'bulkAction'])
-            //     ->name('admin.tasks.bulk-action');
-        });
-        // ... other admin routes
+Route::prefix('adminn')->group(function () {
+    Route::get('/dashboard', function () {
+        return Inertia::render('Admin/Dashboard/index', [
+            'page' => request()->query('tab', 'overview')
+        ]);
+    })->name('admin.dashboard');
+
+    Route::get('dashboard/analytics', [AnalyticsController::class, 'index'])
+        ->name('admin.analytics');
+
+    Route::post('dashboard/analytics/time-range', [AnalyticsController::class, 'updateTimeRange'])
+        ->name('admin.analytics.update-time');
+
+    Route::get('/dashboard/reports', function () {
+        return Inertia::render('Admin/Dashboard/index', [
+            'page' => 'reports'
+        ]);
+    })->name('admin.reports');
+
+    // Task Management Routes
+    Route::prefix('tasks')->group(function () {
+        Route::get('/', function () {
+            return Inertia::render('Admin/Task/index');
+        })->name('admin.tasks.index');
+
+        // Route::post('/', [App\Http\Controllers\Admin\TaskController::class, 'store'])
+        //     ->name('admin.tasks.store');
+
+        // Route::get('/{task}', [App\Http\Controllers\Admin\TaskController::class, 'show'])
+        //     ->name('admin.tasks.show');
+
+        // Route::put('/{task}', [App\Http\Controllers\Admin\TaskController::class, 'update'])
+        //     ->name('admin.tasks.update');
+
+        // Route::delete('/{task}', [App\Http\Controllers\Admin\TaskController::class, 'destroy'])
+        //     ->name('admin.tasks.destroy');
+
+        // Route::post('/bulk-action', [App\Http\Controllers\Admin\TaskController::class, 'bulkAction'])
+        //     ->name('admin.tasks.bulk-action');
     });
+    // ... other admin routes
+});
 
 // Route::post('/pan/track', function (Request $request) {
 //     Pan::track($request->element, $request->url);

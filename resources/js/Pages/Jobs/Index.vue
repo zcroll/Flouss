@@ -1,17 +1,16 @@
 <template>
   <Head title="Jobs" />
-  <div class="flex-1 flex flex-col space-y-8 container mx-auto px-4 max-w-7xl">
     <!-- Hero Section -->
-    <Card :class="['relative p-8 overflow-hidden']">
+    <!-- <Card :class="['relative p-8 overflow-hidden']"> -->
       <!-- Background Pattern -->
-      <CardContent>
+      <!-- <CardContent>
         <div class="absolute inset-0 opacity-5">
           <div class="absolute inset-0"
             style="background-image: url('data:image/svg+xml,...'); background-size: 20px 20px;"></div>
         </div>
 
         <!-- Content -->
-        <div class="relative">
+        <!-- <div class="relative">
           <h1 :class="[
             'text-3xl md:text-4xl font-bold mb-4',
             themeStore.isDarkMode ? 'text-white' : 'text-gray-900'
@@ -25,11 +24,11 @@
             {{ __('jobs.discover_careers') }}
           </p>
         </div>
-      </CardContent>
-    </Card>
+      </CardContent> -->
+    <!-- </Card> --> -->
 
     <!-- Filters -->
-    <JobFilters :initial-filters="filters" @update:filters="handleFiltersUpdate" @reset="resetFilters" />
+    <JobFilters :initial-filters="filters" @update:filters="handleFiltersUpdate" @reset="resetFilters" class="mb-4" />
 
     <!-- Jobs Grid -->
     <TransitionGroup 
@@ -43,7 +42,7 @@
         v-for="(job, index) in jobs.data" 
         :key="job.id" 
         :job="job"
-        :style="{ animationDelay: `${index * 100}ms` }"
+        :style="{ animationDelay: `${index * 10}ms` }"
         class="job-card"
       />
     </TransitionGroup>
@@ -60,7 +59,6 @@
     <div ref="infiniteScrollTrigger" class="h-4 w-full"></div>
 
     <BackToTop />
-  </div>
 </template>
 
 <script setup>

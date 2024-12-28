@@ -3,33 +3,7 @@
   <Head title="Degrees" />
   <div class="flex-1 flex flex-col space-y-8 container mx-auto px-4 max-w-7xl">
     <!-- Hero Section -->
-    <Card :class="[
-      'relative p-8 overflow-hidden'
-    ]">
-      <!-- Background Pattern -->
-      <CardContent>
-        <div class="absolute inset-0 opacity-5">
-          <div class="absolute inset-0"
-            style="background-image: url('data:image/svg+xml,...'); background-size: 20px 20px;"></div>
-        </div>
-
-        <!-- Content -->
-        <div class="relative">
-          <h1 :class="[
-            'text-3xl md:text-4xl font-bold mb-4',
-            themeStore.isDarkMode ? 'text-white' : 'text-gray-900'
-          ]">
-            {{ __('degrees.explore_degrees') }}
-          </h1>
-          <p :class="[
-            'text-lg max-w-2xl',
-            themeStore.isDarkMode ? 'text-gray-300' : 'text-gray-600'
-          ]">
-            {{ __('degrees.discover_education') }}
-          </p>
-        </div>
-      </CardContent>
-    </Card>
+   
 
     <!-- Filters -->
     <DegreeFilters :initial-filters="filters" @update:filters="handleFiltersUpdate" @reset="resetFilters" />
@@ -46,7 +20,7 @@
         v-for="(degree, index) in degrees.data" 
         :key="degree.id" 
         :degree="degree"
-        :style="{ animationDelay: `${index * 100}ms` }"
+        :style="{ animationDelay: `${index * 10}ms` }"
         class="degree-card"
       />
     </TransitionGroup>

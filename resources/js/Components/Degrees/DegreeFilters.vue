@@ -1,26 +1,23 @@
 <template>
-  <div class="sticky top-4 z-30">
+  <div class="sticky top-1 z-10">
     <!-- Desktop Filters -->
-    <Card :class="[
-      'hidden sm:block'
-    ]">
-      <CardContent class="p-6">
-        <div class="flex gap-6">
+    <Card class="hidden sm:block">
+      <CardContent class="p-4">
+        <div class="flex gap-4">
           <div class="flex-1">
-            <label for="search-desktop" class="block text-sm font-medium text-gray-700 mb-2">
+            <label for="search-desktop" class="block text-sm font-medium text-gray-700 mb-1">
               {{ __('degrees.search') }}
             </label>
             <div class="relative group">
-              <Search class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 transition-colors"
-                :class="themeClasses.hover" />
+              <Search class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" :class="themeClasses.hover" />
               <input id="search-desktop" v-model="searchQuery" type="text" :placeholder="__('degrees.search_degrees')"
-                class="w-full pl-12 pr-6 py-3 text-gray-900 placeholder-gray-500 bg-white/80 backdrop-blur-md rounded-full border border-white/20 transition duration-200"
+                class="w-full pl-10 pr-4 py-2 text-gray-900 placeholder-gray-500 bg-white/80 backdrop-blur-md rounded-full border border-white/20"
                 :class="themeClasses.focus" @input="debouncedSearch" />
             </div>
           </div>
 
           <div class="flex-1">
-            <label class="block text-sm font-medium text-gray-700 mb-2">
+            <label class="block text-sm font-medium text-gray-700 mb-1">
               {{ __('degrees.degree_levels') }}
             </label>
             <CustomMultiSelect v-model="selectedDegreeTypes" :options="degreeTypeOptions"
@@ -29,9 +26,9 @@
 
           <div class="flex items-end">
             <button @click="resetFilters"
-              class="group px-6 py-3 bg-white/80 border border-white/20 backdrop-blur-xl text-gray-700 font-medium rounded-full focus:ring-2 focus:ring-offset-2 transition duration-200"
+              class="group px-4 py-2 bg-white/80 border border-white/20 backdrop-blur-xl text-gray-700 font-medium rounded-full focus:ring-2 focus:ring-offset-2"
               :class="[themeClasses.hover, themeClasses.focus]">
-              <span class="flex items-center gap-2">
+              <span class="flex items-center gap-1">
                 <RefreshCw class="w-4 h-4 transition-transform group-hover:rotate-180" />
                 {{ __('degrees.reset_filters') }}
               </span>
@@ -48,7 +45,7 @@
           <Button variant="outline"
             class="w-full flex justify-between items-center bg-white/80 backdrop-blur-xl rounded-full border border-white/20">
             <span class="flex items-center gap-2">
-              <Search class="w-5 h-5" />
+              <Search class="w-4 h-4" />
               {{ __('degrees.filters') }}
             </span>
             <div class="flex items-center gap-1">
@@ -56,28 +53,28 @@
                 :class="themeClasses.active">
                 {{ activeFiltersCount }}
               </span>
-              <ChevronDown class="w-4 h-4" />
+              <ChevronDown class="w-3 h-3" />
             </div>
           </Button>
         </SheetTrigger>
-        <SheetContent side="bottom" class="rounded-t-3xl bg-white/95 backdrop-blur-xl">
-          <div class="space-y-6 p-4">
+        <SheetContent side="bottom" class="rounded-t-2xl bg-white/95 backdrop-blur-xl">
+          <div class="space-y-4 p-3">
             <!-- Search -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
+              <label class="block text-sm font-medium text-gray-700 mb-1">
                 {{ __('degrees.search') }}
               </label>
               <div class="relative">
-                <Search class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                <Search class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />
                 <input v-model="searchQuery" type="text" :placeholder="__('degrees.search_degrees')"
-                  class="w-full pl-12 pr-6 py-3 bg-white/80 rounded-full border border-gray-200"
+                  class="w-full pl-10 pr-4 py-2 bg-white/80 rounded-full border border-gray-200"
                   :class="themeClasses.focus" />
               </div>
             </div>
 
             <!-- Degree Types -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
+              <label class="block text-sm font-medium text-gray-700 mb-1">
                 {{ __('degrees.degree_levels') }}
               </label>
               <CustomMultiSelect v-model="selectedDegreeTypes" :options="degreeTypeOptions"
@@ -86,7 +83,7 @@
 
             <!-- Reset Button -->
             <button @click="resetFilters"
-              class="w-full px-6 py-3 font-medium rounded-full transition-colors duration-200"
+              class="w-full px-4 py-2 font-medium rounded-full transition-colors duration-200"
               :class="[themeClasses.button, themeClasses.text]">
               {{ __('degrees.reset_filters') }}
             </button>
@@ -115,9 +112,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['update:filters', 'reset']);
-
 const themeStore = useThemeStore();
-
 const searchQuery = ref(props.initialFilters.q || '');
 const selectedDegreeTypes = ref(props.initialFilters.type ? props.initialFilters.type.map(type => ({
   value: type,
@@ -135,7 +130,6 @@ const themeClasses = computed(() => ({
   hover: themeStore.isDarkMode ? 'hover:text-white' : 'hover:text-gray-900',
   focus: themeStore.isDarkMode ? 'focus:ring-gray-500' : 'focus:ring-primary-500',
   button: [
-    'transition-colors duration-200',
     themeStore.isDarkMode
       ? `bg-${themeStore.currentTheme.primary}-600 hover:bg-${themeStore.currentTheme.primary}-700`
       : `bg-${themeStore.currentTheme.primary}-500 hover:bg-${themeStore.currentTheme.primary}-600`,
@@ -153,16 +147,12 @@ const themeClasses = computed(() => ({
   ]
 }));
 
-const debouncedSearch = debounce(() => {
-  emitFilters();
-}, 300);
+const debouncedSearch = debounce(() => emitFilters(), 300);
 
 const emitFilters = () => {
   const filters = {};
   if (searchQuery.value) filters.q = searchQuery.value;
-  if (selectedDegreeTypes.value.length > 0) {
-    filters.type = selectedDegreeTypes.value.map(type => type.value);
-  }
+  if (selectedDegreeTypes.value.length) filters.type = selectedDegreeTypes.value.map(type => type.value);
   emit('update:filters', filters);
 };
 
@@ -179,9 +169,7 @@ const activeFiltersCount = computed(() => {
   return count;
 });
 
-watch([selectedDegreeTypes], () => {
-  emitFilters();
-}, { deep: true });
+watch([selectedDegreeTypes], () => emitFilters(), { deep: true });
 
 watch(() => props.initialFilters, (newFilters) => {
   searchQuery.value = newFilters.q || '';

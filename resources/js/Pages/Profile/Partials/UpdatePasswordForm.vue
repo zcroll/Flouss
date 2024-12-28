@@ -1,15 +1,18 @@
 <script setup>
 import { ref } from 'vue';
 import { useForm } from '@inertiajs/vue3';
-import ActionMessage from '@/Components/helpers/ActionMessage.vue';
-import FormSection from '@/Components/helpers/FormSection.vue';
-import InputError from '@/Components/helpers/InputError.vue';
-import InputLabel from '@/Components/helpers/InputLabel.vue';
-import PrimaryButton from '@/Components/helpers/PrimaryButton.vue';
-import TextInput from '@/Components/helpers/TextInput.vue';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/Components/ui/card";
+import { Button } from "@/Components/ui/button";
+import { Input } from "@/Components/ui/input";
+import { Label } from "@/Components/ui/label";
+import { Alert, AlertDescription } from "@/Components/ui/alert";
+import { useToast } from "@/Components/ui/toast";
+import { useThemeStore } from '@/stores/theme/themeStore';
 
 const passwordInput = ref(null);
 const currentPasswordInput = ref(null);
+const themeStore = useThemeStore();
+const { toast } = useToast();
 
 const form = useForm({
     current_password: '',
@@ -21,80 +24,102 @@ const updatePassword = () => {
     form.put(route('user-password.update'), {
         errorBag: 'updatePassword',
         preserveScroll: true,
-        onSuccess: () => form.reset(),
-        onError: () => {
+        onSuccess: () => {
+            form.reset();
+            toast({
+                title: "Password Updated",
+                description: "Your password has been successfully updated.",
+                variant: "success",
+            });
+        },
+        onError: (errors) => {
             if (form.errors.password) {
                 form.reset('password', 'password_confirmation');
-                passwordInput.value.focus();
+                passwordInput.value?.focus();
             }
 
             if (form.errors.current_password) {
                 form.reset('current_password');
-                currentPasswordInput.value.focus();
+                currentPasswordInput.value?.focus();
             }
+
+            toast({
+                title: "Error",
+                description: Object.values(errors)[0],
+                variant: "destructive",
+            });
         },
     });
 };
 </script>
 
 <template>
-    <FormSection @submitted="updatePassword">
-        <template #title>
-            {{ __('profile.update_password') }}
-        </template>
+    <Card class="w-full" :class="[themeStore.isDarkMode ? 'bg-gray-900' : 'bg-white']">
+        <CardHeader>
+            <CardTitle :class="[themeStore.isDarkMode ? 'text-white' : 'text-gray-900']">
+                {{ __('profile.update_password') }}
+            </CardTitle>
+            <CardDescription :class="[themeStore.isDarkMode ? 'text-gray-400' : 'text-gray-500']">
+                {{ __('profile.ensure_account_security') }}
+            </CardDescription>
+        </CardHeader>
 
-        <template #description>
-            {{ __('profile.ensure_account_security') }}
-        </template>
+        <CardContent>
+            <form @submit.prevent="updatePassword" class="space-y-6">
+                <!-- Current Password -->
+                <div class="space-y-2">
+                    <Label for="current_password" :class="[themeStore.isDarkMode ? 'text-white' : 'text-gray-900']">
+                        {{ __('profile.current_password') }}
+                    </Label>
+                    <Input id="current_password" ref="currentPasswordInput" v-model="form.current_password"
+                        type="password" :class="[
+                            { 'border-red-500': form.errors.current_password },
+                            themeStore.isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'
+                        ]" autocomplete="current-password" />
+                    <Alert v-if="form.errors.current_password" variant="destructive">
+                        <AlertDescription>{{ form.errors.current_password }}</AlertDescription>
+                    </Alert>
+                </div>
 
-        <template #form>
-            <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="current_password" :value="__('profile.current_password')" class="text-zinc-300" />
-                <TextInput
-                    id="current_password"
-                    ref="currentPasswordInput"
-                    v-model="form.current_password"
-                    type="password"
-                    class="mt-1 block w-full bg-zinc-700 text-stone-300"
-                    autocomplete="current-password"
-                />
-                <InputError :message="form.errors.current_password" class="mt-2 text-zinc-300" />
-            </div>
+                <!-- New Password -->
+                <div class="space-y-2">
+                    <Label for="password" :class="[themeStore.isDarkMode ? 'text-white' : 'text-gray-900']">
+                        {{ __('profile.new_password') }}
+                    </Label>
+                    <Input id="password" ref="passwordInput" v-model="form.password" type="password" :class="[
+                        { 'border-red-500': form.errors.password },
+                        themeStore.isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'
+                    ]" autocomplete="new-password" />
+                    <Alert v-if="form.errors.password" variant="destructive">
+                        <AlertDescription>{{ form.errors.password }}</AlertDescription>
+                    </Alert>
+                </div>
 
-            <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="password" :value="__('profile.new_password')" class="text-zinc-300" />
-                <TextInput
-                    id="password"
-                    ref="passwordInput"
-                    v-model="form.password"
-                    type="password"
-                    class="mt-1 block w-full bg-zinc-700 text-zinc-300"
-                    autocomplete="new-password"
-                />
-                <InputError :message="form.errors.password" class="mt-2 text-zinc-300" />
-            </div>
+                <!-- Confirm Password -->
+                <div class="space-y-2">
+                    <Label for="password_confirmation"
+                        :class="[themeStore.isDarkMode ? 'text-white' : 'text-gray-900']">
+                        {{ __('profile.confirm_password') }}
+                    </Label>
+                    <Input id="password_confirmation" v-model="form.password_confirmation" type="password" :class="[
+                        { 'border-red-500': form.errors.password_confirmation },
+                        themeStore.isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'
+                    ]" autocomplete="new-password" />
+                    <Alert v-if="form.errors.password_confirmation" variant="destructive">
+                        <AlertDescription>{{ form.errors.password_confirmation }}</AlertDescription>
+                    </Alert>
+                </div>
+            </form>
+        </CardContent>
 
-            <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="password_confirmation" :value="__('profile.confirm_password')" class="text-zinc-300" />
-                <TextInput
-                    id="password_confirmation"
-                    v-model="form.password_confirmation"
-                    type="password"
-                    class="mt-1 block w-full bg-zinc-700 text-zinc-300"
-                    autocomplete="new-password"
-                />
-                <InputError :message="form.errors.password_confirmation" class="mt-2 text-zinc-300" />
-            </div>
-        </template>
-
-        <template #actions>
-            <ActionMessage :on="form.recentlySuccessful" class="me-3 text-zinc-300">
-                {{ __('profile.saved') }}
-            </ActionMessage>
-
-            <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+        <CardFooter class="flex justify-end space-x-2">
+            <Button type="submit" @click="updatePassword" :disabled="form.processing" :class="[
+                { 'opacity-50': form.processing },
+                themeStore.getThemeClasses('button'),
+                themeStore.getThemeClasses('hover')
+            ]">
                 {{ __('profile.save') }}
-            </PrimaryButton>
-        </template>
-    </FormSection>
+            </Button>
+        </CardFooter>
+    </Card>
 </template>

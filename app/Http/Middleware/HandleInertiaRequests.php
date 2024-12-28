@@ -48,46 +48,45 @@ class HandleInertiaRequests extends Middleware
             'languages' => LanguageResource::collection(Lang::cases()),
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
-            'translations' => function() {
-                return cache()->rememberForever('translations' . app()->getLocale(), function() {
-
-                
-                return collect(File::allFiles(base_path('lang/' . app()->getLocale())))
-                    ->flatMap(function ($file) {
-
-                        return Arr::dot(
-                          File::getRequire($file->getRealPath()),
-                        $filename = $file->getBasename('.' . $file->getExtension()) . '.' 
+            'translations' => function () {
+                return cache()->rememberForever('translations' . app()->getLocale(), function () {
 
 
-                        );
-                    });
-                   
-            });
-        },
+                    return collect(File::allFiles(base_path('lang/' . app()->getLocale())))
+                        ->flatMap(function ($file) {
+
+                            return Arr::dot(
+                                File::getRequire($file->getRealPath()),
+                                $filename = $file->getBasename('.' . $file->getExtension()) . '.'
+
+
+                            );
+                        });
+                });
+            },
             // Auth user data
             'auth' => [
-                'user' => fn () => $request->user()
+                'user' => fn() => $request->user()
                     ? array_merge(
                         $request->user()->only('id', 'name', 'email'),
                         [
                             'archetype' => tap($request->user()
                                 ? Result::where('user_id', $request->user()->id)
-                                    ->latest()
-                                    ->first()?->Archetype
-                                : null, function($archetype) {
-                                    Log::info('User archetype:', ['archetype' => $archetype]);
-                                })
+                                ->latest()
+                                ->first()?->Archetype
+                                : null, function ($archetype) {
+                                Log::info('User archetype:', ['archetype' => $archetype]);
+                            })
                         ]
                     )
                     : null,
             ],
-            
+
             // Flash messages
             'flash' => [
-                'message' => fn () => $request->session()->get('message'),
-                'error' => fn () => $request->session()->get('error'),
-                'success' => fn () => $request->session()->get('success'),
+                'message' => fn() => $request->session()->get('message'),
+                'error' => fn() => $request->session()->get('error'),
+                'success' => fn() => $request->session()->get('success'),
             ],
         ]);
     }

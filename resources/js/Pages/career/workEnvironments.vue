@@ -7,88 +7,106 @@
     </template>
 
     <!-- Main Content -->
-    <div class="space-y-8">
+    <div class="space-y-6">
       <Breadcrumbs :items="[
         { name: 'Home', route: 'dashboard' },
         { name: 'Jobs', route: 'jobs.index' },
         { name: occupation.name, route: 'career', params: { id: occupation.id } },
         { name: 'Work Environments' }
-      ]" class="mb-8" />
+      ]" />
 
       <!-- Table of Contents -->
-      <aside class="bg-white/60 backdrop-blur-xl rounded-3xl border border-white/20 shadow-sm p-6">
-        <h2 class="text-lg font-semibold mb-4" :class="themeStore.isDarkMode ? 'text-white' : 'text-gray-900'">
-          {{ __('career.in_this_article') }}
-        </h2>
+      <Card>
+        <CardHeader class="pb-3">
+          <CardTitle class="text-base">{{ __('career.in_this_article') }}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div class="space-y-1">
+            <div v-for="(items, category) in groupedByCategory" :key="category">
+              <Button variant="ghost" class="w-full justify-between px-2 h-8 text-sm font-medium" :class="[
+                'transition-colors duration-200',
+                selectedCategory === category ?
+                  `text-${themeStore.currentTheme.primary}` :
+                  'text-muted-foreground'
+              ]" @click="toggleCategory(category)">
+                {{ category }}
+                <Icon :name="selectedCategory === category ? 'chevron-down' : 'chevron-right'"
+                  class="h-4 w-4 transition-transform duration-200"
+                  :class="selectedCategory === category ? 'rotate-180' : ''" />
+              </Button>
 
-        <div class="space-y-4">
-          <div v-for="(items, category, index) in groupedByCategory" :key="category" class="space-y-2">
-            <button class="w-full text-left flex items-center justify-between font-medium transition-colors"
-              :class="themeStore.isDarkMode ? 'text-white hover:text-gray-300' : 'text-gray-900 hover:text-gray-600'"
-              @click="toggleSection(index)">
-              <span>{{ category }}</span>
-              <svg class="w-5 h-5 transition-transform duration-200" :class="{ 'rotate-180': openSections[index] }"
-                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clip-rule="evenodd" />
-              </svg>
-            </button>
-
-            <transition name="slide">
-              <ul v-show="openSections[index]" class="pl-4 space-y-2">
-                <li v-for="item in items" :key="item.id">
-                  <a :href="`#section-${item.id}`" class="transition-colors"
-                    :class="themeStore.isDarkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'"
-                    @click.prevent="highlightAndScroll(item.id)">
-                    {{ item.name }}
-                  </a>
-                </li>
-              </ul>
-            </transition>
+              <div v-show="selectedCategory === category" class="animate-accordion-down mt-1 pl-4 space-y-1">
+                <Button v-for="item in items" :key="item.id" variant="ghost" size="sm"
+                  class="w-full justify-start h-7 text-xs font-normal" :class="[
+                    'transition-colors duration-200',
+                    highlightedId === item.id ?
+                      `text-${themeStore.currentTheme.primary}` :
+                      'text-muted-foreground hover:text-foreground'
+                  ]" @click="highlightAndScroll(item.id)">
+                  {{ item.name }}
+                </Button>
+              </div>
+            </div>
           </div>
-        </div>
-      </aside>
+        </CardContent>
+      </Card>
 
       <!-- Work Environments List -->
       <div class="space-y-6">
-        <div v-for="environment in workEnvironments" :key="environment.id" :id="`section-${environment.id}`"
-          class="bg-white/60 backdrop-blur-xl rounded-3xl border border-white/20 shadow-sm p-6 transition-all duration-300"
-          :class="{ 'highlight': isHighlighted(environment.id) }">
-          <h3 class="text-xl font-semibold mb-4" :class="themeStore.isDarkMode ? 'text-white' : 'text-gray-900'">
-            {{ environment.name }}
-          </h3>
+        <Card v-for="environment in workEnvironments" :key="environment.id" :id="`section-${environment.id}`" :class="[
+          'transition-all duration-300 group hover:shadow-lg',
+          { 'ring-2 ring-primary': isHighlighted(environment.id) }
+        ]">
+          <CardHeader>
+            <CardTitle class="flex items-center gap-2 text-lg">
+              <Icon :name="getEnvironmentIcon(environment.category)" variant="muted" />
+              {{ environment.name }}
+            </CardTitle>
+          </CardHeader>
+          <CardContent class="space-y-4">
+            <p class="text-sm text-muted-foreground">{{ environment.description }}</p>
 
-          <p class="mb-6" :class="themeStore.isDarkMode ? 'text-gray-300' : 'text-gray-600'">{{ environment.description
-            }}
-          </p>
-
-          <div v-if="environment.score" class="relative h-8 rounded-full overflow-hidden bg-gray-100">
-            <div :class="`bg-${themeStore.currentTheme.primary}-600`"
-              class="absolute inset-y-0 left-0 transition-all duration-1000"
-              :style="{ width: `${environment.score}%` }">
-              <span class="absolute inset-0 flex items-center justify-end pr-4 text-white font-medium">
-                {{ environment.score }}%
-              </span>
+            <div v-if="environment.score" class="space-y-2">
+              <div class="flex items-center justify-between text-sm">
+                <span class="text-muted-foreground">Match Score</span>
+                <span class="font-medium">{{ environment.score }}%</span>
+              </div>
+              <Progress :value="environment.score" :class="`bg-${themeStore.currentTheme.button}/20`" />
             </div>
-          </div>
-        </div>
+
+            <div class="flex gap-2 flex-wrap mt-4">
+              <Badge v-for="skill in environment.skills" :key="skill" variant="secondary" class="text-xs"
+                :class="`bg-${themeStore.currentTheme.background.light} group-hover:bg-${themeStore.currentTheme.button}/20`">
+                {{ skill }}
+              </Badge>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
 
-    <BackToTop />
+    <ScrollToTop />
   </StickySidebar>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
-import StickySidebar from "@/Pages/lib/StickySidebar.vue";
-import AppLayout from "@/Layouts/AppLayout.vue";
-import { Link } from '@inertiajs/vue3';
-import BackToTop from "@/Components/helpers/BackToTop.vue";
-import Breadcrumbs from '@/Components/helpers/Breadcrumbs.vue';
-import MainLayout from "@/Layouts/MainLayout.vue";
+import { Head } from '@inertiajs/vue3';
 import { useThemeStore } from '@/stores/theme/themeStore';
+import MainLayout from "@/Layouts/MainLayout.vue";
+import StickySidebar from "@/Pages/lib/StickySidebar.vue";
+import Breadcrumbs from '@/Components/helpers/Breadcrumbs.vue';
+import ScrollToTop from "@/Components/helpers/ScrollToTop.vue";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/Components/ui/card";
+import { Progress } from "@/Components/ui/progress";
+import { Badge } from "@/Components/ui/badge";
+import { Button } from "@/Components/ui/button";
+import { Icon } from "@/Components/ui/icon";
 
 defineOptions({ layout: MainLayout });
 
@@ -107,8 +125,7 @@ const props = defineProps({
 });
 
 const themeStore = useThemeStore();
-
-// Add state for tracking highlighted section
+const selectedCategory = ref(null);
 const highlightedId = ref(null);
 
 const groupedByCategory = computed(() => {
@@ -118,27 +135,21 @@ const groupedByCategory = computed(() => {
   }, {});
 });
 
-const openSections = ref(Object.keys(groupedByCategory.value).map(() => false));
-
-const toggleSection = (index) => {
-  openSections.value[index] = !openSections.value[index];
+const toggleCategory = (category) => {
+  selectedCategory.value = selectedCategory.value === category ? null : category;
 };
 
-// Add isHighlighted method
 const isHighlighted = (id) => highlightedId.value === id;
 
 const highlightAndScroll = (id) => {
   const element = document.getElementById(`section-${id}`);
   if (element) {
-    // Set the highlighted ID
     highlightedId.value = id;
 
-    // Clear the highlight after animation
     setTimeout(() => {
       highlightedId.value = null;
     }, 2000);
 
-    // Smooth scroll to the element
     element.scrollIntoView({
       behavior: 'smooth',
       block: 'start',
@@ -146,61 +157,60 @@ const highlightAndScroll = (id) => {
     });
   }
 };
+
+const getEnvironmentIcon = (category) => {
+  const icons = {
+    'Office': 'building-office',
+    'Field': 'map',
+    'Laboratory': 'beaker',
+    'Remote': 'computer-desktop',
+  };
+  return icons[category] || 'office-building';
+};
 </script>
 
 <style scoped>
-.slide-enter-active,
-.slide-leave-active {
-  transition: all 0.3s ease-out;
+.animate-accordion-down {
+  overflow: hidden;
+  animation: slideDown 0.2s ease-out;
 }
 
-.slide-enter-from,
-.slide-leave-to {
-  opacity: 0;
-  transform: translateY(-10px);
+@keyframes slideDown {
+  from {
+    height: 0;
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    height: var(--radix-accordion-content-height);
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .highlight {
-  @apply ring-2 ring-yellow-400 ring-offset-2;
   animation: glow 2s ease-out;
 }
 
 @keyframes glow {
   0% {
-    box-shadow: 0 0 0 rgba(250, 204, 21, 0.5);
+    box-shadow: 0 0 0 rgba(var(--primary), 0.2);
     transform: scale(1);
   }
 
   50% {
-    box-shadow: 0 0 20px rgba(250, 204, 21, 0.5);
-    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(var(--primary), 0.3);
+    transform: scale(1.01);
   }
 
   100% {
-    box-shadow: 0 0 0 rgba(250, 204, 21, 0.5);
+    box-shadow: 0 0 0 rgba(var(--primary), 0.2);
     transform: scale(1);
   }
 }
 
-/* Add smooth scrolling to the whole page */
-html {
+:root {
   scroll-behavior: smooth;
-}
-
-/* Add fade-in animation for sections */
-section {
-  animation: fadeIn 0.6s ease-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 </style>

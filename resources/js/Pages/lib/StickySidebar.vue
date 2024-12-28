@@ -1,160 +1,80 @@
 <template>
-    <div class="relative flex flex-col-reverse lg:container lg:mx-auto lg:flex-row lg:gap-8">
+    <div class="relative flex flex-col-reverse lg:flex-row lg:gap-6">
         <!-- Main Content Area -->
-        <div class="w-full lg:w-2/3 contain-layout">
-            <div class="relative rounded-t-3xl p-6 lg:p-8">
-                <!-- Background Decorative Elements -->
-                <div class="absolute inset-0 overflow-hidden pointer-events-none">
-                    <!-- Gradient Orbs -->
-                    <div :class="[
-                        'absolute top-0 left-0 w-32 h-32 rounded-full blur-2xl transform -translate-x-1/2 -translate-y-1/2',
-                        themeStore.getThemeClasses('background').light
-                    ]"></div>
-                    <div :class="[
-                        'absolute bottom-1/4 right-0 w-40 h-40 rounded-full blur-2xl transform translate-x-1/2',
-                        themeStore.getThemeClasses('background').light
-                    ]"></div>
-
-                    <!-- Subtle Grid Pattern -->
-                    <div
-                        class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.03)_1px,transparent_1px)] bg-[size:32px_32px] opacity-20">
-                    </div>
+        <div class="flex-1">
+            <div class="relative rounded-2xl border shadow-sm p-6" :class="[
+                themeStore.isDarkMode
+                    ? 'bg-gray-800/40 border-white/10'
+                    : 'bg-white/60 backdrop-blur-xl border-white/20'
+            ]">
+                <!-- Title Section -->
+                <div class="mb-6">
+                    <h1 class="text-2xl md:text-3xl font-bold" :class="[
+                        themeStore.isDarkMode
+                            ? 'text-white'
+                            : 'bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent'
+                    ]">
+                        {{ modelProps.title }}
+                    </h1>
+                    <p class="mt-3 text-base" :class="[
+                        themeStore.isDarkMode ? 'text-gray-300' : 'text-gray-600'
+                    ]">
+                        <slot name="description" />
+                    </p>
                 </div>
 
-                <!-- Content with Glass Effect -->
-                <div class="relative bg-white/60 backdrop-blur-xl rounded-3xl border border-white/20 shadow-sm p-8">
-                    <!-- Title Section -->
-                    <div class="mb-8">
-                        <h1
-                            class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-                            {{ modelProps.title }}
-                        </h1>
-                        <p class="mt-4 text-gray-600 text-lg">
-                            <slot name="description" />
-                        </p>
-                    </div>
-
-                    <!-- Main Content -->
-                    <div class="space-y-6">
-                        <slot />
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Sticky Sidebar -->
-        <div class="w-full lg:w-1/3 lg:mb-0">
-            <!-- Mobile Navigation Bar -->
-            <div v-show="isSmallScreen"
-                class="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-xl shadow-lg z-50 rounded-b-2xl border-b border-white/20">
-                <div class="flex items-center justify-between px-4 py-3">
-                    <div class="flex items-center gap-3">
-                        <div
-                            class="w-10 h-10 rounded-xl overflow-hidden bg-white/50 p-2 backdrop-blur-sm border border-white/20">
-                            <img :src="modelProps.image" :alt="modelProps.title" class="w-full h-full object-contain" />
-                        </div>
-                        <h3 class="text-base font-semibold text-gray-900 truncate">{{ modelProps.title }}</h3>
-                    </div>
-                    <FavoriteButton :model-id="props.model.id" :model-type="type"
-                        :initial-is-favorited="modelProps.isFavorited" :show-label="false" class="ml-2" />
-                </div>
-
-                <!-- Mobile Navigation Links -->
-                <div class="w-full overflow-x-auto scrollbar-hide">
-                    <div class="flex w-full px-2 py-2 gap-1">
-                        <Link v-for="(link, index) in links" :key="index" :href="link.url"
-                            class="flex flex-col items-center justify-center px-3 py-2 rounded-xl text-sm font-medium transition-all"
-                            :class="[
-                                $page.url === link.url
-                                    ? `bg-${themeStore.currentTheme.button} text-white`
-                                    : 'bg-white/50 text-gray-600 hover:bg-white/80'
-                            ]">
-                        <component :is="getLinkIcon(link.text)" class="w-5 h-5 mb-1" />
-                        <span class="text-[11px] text-center leading-tight">
-                            {{ getShortLabel(link.text) }}
-                        </span>
-                        </Link>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Desktop Sticky Sidebar -->
-            <div
-                class="sticky top-8 bg-white/60 backdrop-blur-xl rounded-3xl border border-white/20 shadow-sm overflow-hidden">
-                <div class="p-6 relative">
-                    <!-- Header -->
-                    <div class="flex items-center gap-4 pb-6 border-b border-gray-200/50">
-                        <div
-                            class="w-16 h-16 rounded-2xl overflow-hidden bg-white/50 p-3 backdrop-blur-sm border border-white/20">
-                            <img :src="modelProps.image" :alt="modelProps.title" class="w-full h-full object-contain" />
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <h3 class="text-lg font-semibold text-gray-900 truncate">
-                                {{ modelProps.title }}
-                            </h3>
-                        </div>
-                        <FavoriteButton :model-id="props.model.id" :model-type="type"
-                            :initial-is-favorited="modelProps.isFavorited" :show-label="true" />
-                    </div>
-
-                    <!-- Navigation Links -->
-                    <nav class="mt-6">
-                        <div class="space-y-1">
-                            <Link v-for="(link, index) in links" :key="index" :href="link.url"
-                                class="group w-full flex items-center gap-3 py-2.5 px-4 text-sm font-medium rounded-xl transition-all duration-300"
-                                :class="[
-                                    $page.url === link.url
-                                        ? `bg-${themeStore.currentTheme.button} text-white`
-                                        : 'text-gray-600 hover:bg-white/80'
-                                ]">
-                            <component :is="getLinkIcon(link.text)" class="w-5 h-5 transition-colors duration-300"
-                                :class="[
-                                    $page.url === link.url
-                                        ? 'text-white'
-                                        : `text-${themeStore.currentTheme.primary}-500 group-hover:text-gray-600`
-                                ]" />
-                            {{ __(`stickybar.${link.text.toLowerCase().replace(" ", "_")}`) }}
-                            </Link>
-                        </div>
-                    </nav>
+                <!-- Main Content -->
+                <div>
+                    <slot />
                 </div>
 
                 <!-- Decorative Background -->
                 <div class="absolute inset-0 -z-10">
-                    <div :class="['absolute inset-0', themeStore.getThemeClasses('base')]"></div>
                     <div :class="[
-                        'absolute top-0 left-0 w-40 h-40 rounded-full blur-2xl transform -translate-x-1/2 -translate-y-1/2',
-                        themeStore.getThemeClasses('background').light
+                        'absolute inset-0',
+                        themeStore.isDarkMode ? 'bg-gray-900/30 backdrop-blur-xl' : '',
+                        themeStore.getThemeClasses('base')
                     ]"></div>
-                    <div :class="[
-                        'absolute bottom-0 right-0 w-40 h-40 rounded-full blur-2xl transform translate-x-1/2 translate-y-1/2',
-                        themeStore.getThemeClasses('background').light
-                    ]"></div>
+                    <GradientCircle position="top-left" />
+                    <GradientCircle position="bottom-right" />
                 </div>
             </div>
         </div>
+
+        <!-- Sidebar Navigation -->
+        <aside class="w-full lg:w-1/4">
+            <!-- Mobile Navigation -->
+            <MobileNavBar v-show="isSmallScreen" :model-props="modelProps" :model-id="props.model.id" :links="links"
+                :type="type" @favorite-toggled="handleFavoriteToggle" />
+
+            <!-- Desktop Sidebar -->
+            <DesktopSidebar v-show="!isSmallScreen" :model-props="modelProps" :model-id="props.model.id" :links="links"
+                :type="type" @favorite-toggled="handleFavoriteToggle" />
+        </aside>
+
+        <!-- Toast Container with fixed positioning -->
+        <Toaster position="left" />
     </div>
 </template>
 
 <script setup>
-import { Link, router } from '@inertiajs/vue3';
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
-import __ from '@/lang';
-import FavoriteButton from '@/Components/helpers/FavoriteButton.vue';
+import { Link } from '@inertiajs/vue3';
 import { useThemeStore } from '@/stores/theme/themeStore';
-import {
-    HomeIcon,
-    BriefcaseIcon,
-    UserIcon,
-    AcademicCapIcon,
-    BuildingOfficeIcon,
-    DocumentTextIcon,
-    BookOpenIcon,
-    ClipboardDocumentListIcon
-} from '@heroicons/vue/24/outline';
+import { useToast } from "@/Components/ui/toast/use-toast";
+import Toaster from "@/Components/ui/toast/Toaster.vue";
+import __ from '@/lang';
+import { useScreenSize } from '@/composables/useScreenSize';
+import { useSidebarLinks } from '@/composables/useSidebarLinks';
+import MobileNavBar from './components/MobileNavBar.vue';
+import DesktopSidebar from './components/DesktopSidebar.vue';
+import GradientCircle from './components/GradientCircle.vue';
+import FavoriteButton from '@/Components/helpers/FavoriteButton.vue';
 
 const themeStore = useThemeStore();
+const toast = useToast();
 
+// Props definition
 const props = defineProps({
     type: {
         type: String,
@@ -173,144 +93,33 @@ const props = defineProps({
     disableStepsLink: Boolean,
 });
 
-// Add null checks to computed properties
-const modelProps = computed(() => {
-    if (!props.model) return {
-        title: '',
-        image: '',
-        salary: null,
-        personality: 'N/A',
-        satisfaction: 'N/A',
-        archetype: null,
-        isFavorited: false
-    };
+// Composables
+const { isSmallScreen } = useScreenSize();
+const { links } = useSidebarLinks(props);
 
-    return {
-        title: props.model.name || '',
-        image: props.model.image || '',
-        salary: props.model.salary,
-        personality: props.model.personality || 'N/A',
-        satisfaction: props.model.satisfaction || 'N/A',
-        archetype: props.model.personality,
-        isFavorited: props.model.is_favorited ?? false
-    };
-});
+// Computed properties
+const modelProps = computed(() => ({
+    title: props.model?.name || '',
+    image: props.model?.image || '',
+    salary: props.model?.salary,
+    personality: props.model?.personality || 'N/A',
+    satisfaction: props.model?.satisfaction || 'N/A',
+    archetype: props.model?.personality,
+    isFavorited: props.model?.is_favorited ?? false
+}));
 
-// Initialize theme with null check
+// Watch for personality changes to update theme
 watch(() => props.model?.personality, (newValue) => {
     if (newValue) {
         themeStore.setArchetype(newValue);
     }
 }, { immediate: true });
 
-watch(() => props.isFavorited, (newValue) => {
-    console.log('isFavorited changed:', newValue);
-});
-
-// Debounced resize handler
-const useDebounce = (fn, delay) => {
-    let timeoutId;
-    return (...args) => {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => fn(...args), delay);
-    };
+// Handle favorite toggle
+const handleFavoriteToggle = (isFavorited) => {
+    // Update local state if needed
+    modelProps.value.isFavorited = isFavorited;
 };
-
-// Screen size handling
-const isSmallScreen = ref(false);
-
-const updateScreenSize = useDebounce(() => {
-    isSmallScreen.value = window.innerWidth < 1024;
-}, 100);
-
-onMounted(() => {
-    updateScreenSize();
-    window.addEventListener("resize", updateScreenSize);
-});
-
-onBeforeUnmount(() => {
-    window.removeEventListener("resize", updateScreenSize);
-});
-
-// Update links computation with better null checking
-const links = computed(() => {
-    if (!props.model?.slug) return [];
-
-    const baseUrl = `/${props.type}/${props.model.slug}`;
-
-    const linkConfigs = {
-        career: [
-            { text: "overview", url: baseUrl },
-            { text: "work_environments", url: `${baseUrl}/workEnvironments` },
-            { text: "personality", url: `${baseUrl}/personality` },
-            { text: "how_to_become", url: `${baseUrl}/how-to-become`, disabled: props.disableStepsLink },
-        ],
-        degree: [
-            { text: "overview", url: baseUrl },
-            { text: "how_to_obtain", url: `${baseUrl}/how-to-obtain` },
-        ],
-        job: [
-            { text: "overview", url: baseUrl },
-            { text: "requirements", url: `${baseUrl}/requirements` },
-            { text: "similar_jobs", url: `${baseUrl}/similar-jobs` },
-        ]
-    };
-
-    return (linkConfigs[props.type] || []).filter(link => !link.disabled);
-});
-
-const getLinkIcon = (text) => {
-    switch (text.toLowerCase()) {
-        case 'overview':
-            return HomeIcon;
-        case 'work_environments':
-            return BuildingOfficeIcon;
-        case 'personality':
-            return UserIcon;
-        case 'how_to_become':
-        case 'how_to_obtain':
-            return AcademicCapIcon;
-        case 'requirements':
-            return ClipboardDocumentListIcon;
-        case 'similar_jobs':
-            return BriefcaseIcon;
-        default:
-            return DocumentTextIcon;
-    }
-};
-
-const getShortLabel = (text) => {
-    // Get the translation first
-    const translated = __(`stickybar.${text.toLowerCase().replace(" ", "_")}`);
-    // Return the first word
-    return translated.split(' ')[0];
-};
-
-const getFirstBoxTitle = computed(() => {
-    if (props.type === "career") return "salary";
-    if (props.type === "degree") return "degree_level";
-    return "job_type";
-});
-
-const getFirstBoxContent = computed(() => {
-    if (props.type === "career") return "N/A";
-    if (props.type === "degree") return props.degreeLevel;
-    return props.jobType;
-});
-
-const getSecondBoxTitle = computed(() => {
-    if (props.type === "career") return "personality";
-    if (props.type === "degree") return "duration";
-    return "workplace";
-});
-
-const getSecondBoxContent = computed(() => {
-    if (props.type === "career") return props.personality;
-    if (props.type === "degree") return props.duration;
-    return props.workplaceType;
-});
-
-const isAnimating = ref(false);
 </script>
 
 <style scoped>
@@ -323,49 +132,12 @@ const isAnimating = ref(false);
     display: none;
 }
 
-.favorite-button {
-    @apply flex items-center mt-2 transition-all duration-300;
-}
-
-/* Modern gradient animation */
-@keyframes gradient-shift {
-    0% {
-        transform: translate(-50%, -50%) rotate(0deg);
-    }
-
-    100% {
-        transform: translate(-50%, -50%) rotate(360deg);
-    }
-}
-
-.bg-gradient-to-b {
-    position: relative;
-}
-
-.bg-gradient-to-b::before {
-    content: '';
-    position: absolute;
-    inset: -50%;
-    background: radial-gradient(circle at center,
-            rgba(245, 158, 11, 0.05) 0%,
-            rgba(168, 85, 247, 0.05) 45%,
-            transparent 70%);
-    animation: gradient-shift 15s linear infinite;
-    pointer-events: none;
-}
-
-/* Add CSS containment for better performance */
-.contain-layout {
-    contain: layout;
-}
-
-/* Use hardware acceleration for animations */
+/* Performance optimizations */
 .sticky {
     transform: translateZ(0);
     will-change: transform;
 }
 
-/* Optimize transitions */
 .transition-all {
     transition-property: transform, opacity;
     transition-duration: 300ms;

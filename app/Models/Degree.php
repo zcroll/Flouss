@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Models\Favorite;
+use Illuminate\Support\Facades\Auth;
+
 class Degree extends Model
 {
     // use HasFactory;
@@ -70,14 +72,13 @@ class Degree extends Model
 
     public function isFavorite(): bool
     {
-        if (!auth()->check()) {
+        if (!Auth::check()) {
             return false;
         }
-        return $this->favorites()->where('user_id', auth()->id())->exists();
+        return $this->favorites()->where('user_id', Auth::id())->exists();
     }
     public function degreeJobsRelation(): HasMany
     {
         return $this->hasMany(DegreeJobsRelation::class);
     }
 }
-

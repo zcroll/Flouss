@@ -1,26 +1,26 @@
 <template>
-    <button 
-        @click="toggleFavorite" 
-        :class="{ 'text-red-500': isFavorited }"
-        class="flex items-center space-x-2 focus:outline-none"
-    >
-        <svg xmlns="http://www.w3.org/2000/svg" 
-             class="h-6 w-6" 
-             :class="{ 'fill-current': isFavorited, 'stroke-current': !isFavorited }"
-             fill="none" 
-             viewBox="0 0 24 24" 
-             stroke="currentColor">
-            <path stroke-linecap="round" 
-                  stroke-linejoin="round" 
-                  stroke-width="2" 
-                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-        </svg>
-    </button>
+    <Button variant="ghost" size="icon" :disabled="isLoading" @click="handleFavoriteClick" :class="[
+        showLabel ? 'px-4 py-2' : 'p-2',
+        localIsFavorited ? 'text-red-500' : 'text-gray-400'
+    ]">
+        <HeartIcon :class="[
+            'w-5 h-5 transition-colors duration-300',
+            localIsFavorited ? 'fill-current' : ''
+        ]" />
+        <span v-if="showLabel" class="ml-2 text-sm font-medium">
+            {{ localIsFavorited ? 'Favorited' : 'Add to Favorites' }}
+        </span>
+    </Button>
 </template>
 
-<script setup>
-import { ref, watch } from 'vue'
-import { router } from '@inertiajs/vue3'
+<script setup lang="ts">
+import { ref, watch } from 'vue';
+import { HeartIcon } from '@heroicons/vue/24/outline';
+import { useFavorites } from '@/composables/useFavorites';
+import { Button } from '@/Components/ui/button';
+import { useToast } from "@/Components/ui/toast/use-toast";
+import { useToastConfig } from "@/Components/ui/toast/toast-config";
+import { useThemeStore } from '@/stores/theme/themeStore';
 
 const props = defineProps({
     modelId: {
@@ -29,8 +29,7 @@ const props = defineProps({
     },
     modelType: {
         type: String,
-        required: true,
-        validator: value => ['career', 'degree'].includes(value)
+        required: true
     },
     initialIsFavorited: {
         type: Boolean,
@@ -40,24 +39,55 @@ const props = defineProps({
         type: Boolean,
         default: true
     }
-})
+});
 
-const isFavorited = ref(props.initialIsFavorited)
+const emit = defineEmits(['favorite-toggled']);
+const themeStore = useThemeStore();
+const { toast } = useToast();
+const { toggleFavorite } = useFavorites();
+const localIsFavorited = ref(props.initialIsFavorited);
+const isLoading = ref(false);
 
-// Watch for changes in initialIsFavorited prop
+const toastConfig = useToastConfig();
+
+const getToastConfig = (type) => ({
+    ...toastConfig,
+    class: `${toastConfig.class} ${type === 'error'
+            ? themeStore.isDarkMode
+                ? `bg-destructive/10 border-${themeStore.currentTheme.border}/20`
+                : 'bg-destructive/20'
+            : themeStore.isDarkMode
+                ? `bg-${themeStore.currentTheme.background.dark}/10 border-${themeStore.currentTheme.border}/20`
+                : `bg-${themeStore.currentTheme.background.light}/20`
+        }`,
+});
+
 watch(() => props.initialIsFavorited, (newValue) => {
-    isFavorited.value = newValue
-})
+    localIsFavorited.value = newValue;
+});
 
-const toggleFavorite = async () => {
+const handleFavoriteClick = async () => {
+    if (isLoading.value) return;
+
+    isLoading.value = true;
+    const newState = !localIsFavorited.value;
+
     try {
-         router.post('/favorites', {
-            favoritable_id: props.modelId,
-            favoritable_type: props.modelType
-        })
-        isFavorited.value = !isFavorited.value
+        const success = await toggleFavorite(props.modelId, props.modelType, newState);
+        if (success) {
+            localIsFavorited.value = newState;
+            emit('favorite-toggled', newState);
+        }
     } catch (error) {
-        console.error('Error toggling favorite:', error)
+        console.error('Error toggling favorite:', error);
+        toast({
+            title: "Error",
+            description: "Failed to toggle favorite status",
+            variant: "destructive",
+            ...getToastConfig('error'),
+        });
+    } finally {
+        isLoading.value = false;
     }
-}
+};
 </script>

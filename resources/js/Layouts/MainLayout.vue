@@ -41,7 +41,6 @@
         <!-- Rest of the header content with dark mode classes -->
         <div class="flex items-center gap-6">
 
-
           <!-- Theme Switch Button -->
           <button @click="themeStore.toggleDarkMode" :class="[
             `hover:bg-${themeStore.currentTheme.button}/10`,
@@ -60,87 +59,17 @@
 
           <div class="flex items-center gap-3">
             <span class="text-base text-gray-700">Hi, {{ $page.props.auth.user.name }}</span>
-            <Sheet v-model:open="isOpen">
-              <SheetTrigger>
-                <div class="relative group cursor-pointer">
-                  <div
-                    :class="[`bg-${themeStore.currentTheme.button}-400/20`, 'absolute inset-0 rounded-full blur-md transition-opacity opacity-0 group-hover:opacity-100']">
-                  </div>
-                  <img :src="$page.props.auth.user.profile_photo_url" :alt="$page.props.auth.user.name" :class="[
-                    `border-${themeStore.currentTheme.border}`,
-                    'w-10 h-10 rounded-full border-2 transition-all duration-300 group-hover:scale-105 relative z-10'
-                  ]" />
-                </div>
-              </SheetTrigger>
 
-              <SheetContent side="right" :class="[
-                'w-[280px] backdrop-blur-2xl rounded-2xl border-none p-0',
-                themeStore.isDarkMode
-                  ? `bg-gray-900/95 ${themeStore.getThemeClasses('background').light}`
-                  : `bg-white/95 ${themeStore.getThemeClasses('background').light}`
-              ]">
-                <div class="p-6">
-                  <div class="flex items-center gap-4 mb-6">
-                    <div class="relative">
-                      <div
-                        :class="[`bg-${themeStore.currentTheme.button}-400/20`, 'absolute inset-0 rounded-full blur-lg']">
-                      </div>
-                      <img :src="$page.props.auth.user.profile_photo_url" :alt="$page.props.auth.user.name" :class="[
-                        `border-${themeStore.currentTheme.border}`,
-                        'w-12 h-12 rounded-full border-2 relative z-10'
-                      ]" />
-                    </div>
-                    <div>
-                      <h3 :class="[
-                        'font-medium',
-                        themeStore.isDarkMode ? 'text-white' : 'text-gray-900'
-                      ]">{{ $page.props.auth.user.name }}</h3>
-                      <p :class="[
-                        'text-sm',
-                        themeStore.isDarkMode ? 'text-gray-400' : 'text-gray-500'
-                      ]">{{ themeStore.currentArchetype }}</p>
-                    </div>
-                  </div>
-
-                  <div class="my-4" :class="[
-                    'border-t',
-                    themeStore.isDarkMode ? 'border-gray-700' : 'border-gray-200'
-                  ]"></div>
-
-                  <div class="space-y-1">
-                    <Link :href="route('profile.show')" :class="[
-                      `hover:bg-${themeStore.currentTheme.button}/10`,
-                      'flex items-center gap-3 w-full px-4 py-3 rounded-xl transition-colors'
-                    ]" @click="isOpen = false">
-                    <UserIcon :class="[
-                      'w-5 h-5',
-                      themeStore.isDarkMode ? 'text-gray-400' : 'text-gray-500'
-                    ]" />
-                    <span :class="[
-                      'text-sm font-medium',
-                      themeStore.isDarkMode ? 'text-gray-200' : 'text-gray-700'
-                    ]">Profile Settings</span>
-                    </Link>
-
-                    <form @submit.prevent="logout" class="mt-4">
-                      <button type="submit" :class="[
-                        'flex items-center gap-3 w-full px-4 py-3 rounded-xl transition-colors',
-                        themeStore.isDarkMode
-                          ? 'text-red-400 hover:bg-red-900/20'
-                          : 'text-red-600 hover:bg-red-50'
-                      ]" @click="isOpen = false">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                          stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                        </svg>
-                        <span class="text-sm font-medium">Sign Out</span>
-                      </button>
-                    </form>
-                  </div>
-                </div>
-              </SheetContent>
-            </Sheet>
+            <Link :href="route('profile.show')" class="relative group cursor-pointer">
+            <div :class="[
+              `bg-${themeStore.currentTheme.button}-400/20`,
+              'absolute inset-0 rounded-full blur-md transition-opacity opacity-0 group-hover:opacity-100'
+            ]"></div>
+            <img :src="$page.props.auth.user.profile_photo_url" :alt="$page.props.auth.user.name" :class="[
+              `border-${themeStore.currentTheme.border}`,
+              'w-10 h-10 rounded-full border-2 transition-all duration-300 group-hover:scale-105 relative z-10'
+            ]" />
+            </Link>
           </div>
         </div>
       </header>
@@ -193,13 +122,11 @@ import { ref, onMounted, provide } from 'vue'
 import { Head, usePage, Link } from '@inertiajs/vue3'
 import { Search, Bell } from 'lucide-vue-next'
 import { UserIcon } from '@heroicons/vue/24/outline'
-import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "@/Components/ui/sheet"
 import Navbar from '@/Components/Navbar.vue'
 import { useThemeStore } from '@/stores/theme/themeStore'
 import { useNavigationStore } from '@/stores/navigation/navigationStore'
 import NotificationDropdown from '@/Components/ui/notification/NotificationDropdown.vue'
 
-const isOpen = ref(false)
 const themeStore = useThemeStore()
 const navigationStore = useNavigationStore()
 const isLayoutInitialized = ref(false)
@@ -210,9 +137,6 @@ provide('isLayoutInitialized', isLayoutInitialized)
 onMounted(async () => {
   // Initialize theme first
   await themeStore.initializeTheme()
-
-  // Then initialize navigation
-  await navigationStore.initializeActiveRoute()
 
   // Mark layout as initialized
   isLayoutInitialized.value = true
