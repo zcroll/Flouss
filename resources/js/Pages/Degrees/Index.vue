@@ -35,31 +35,39 @@
     <DegreeFilters :initial-filters="filters" @update:filters="handleFiltersUpdate" @reset="resetFilters" />
 
     <!-- Degrees Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-      <DegreeCard v-for="(degree, index) in degrees.data" :key="degree.id" :degree="degree"
-        :style="{ animationDelay: `${index * 50}ms` }" />
-    </div>
+    <TransitionGroup
+      name="degree-list" 
+      tag="div"
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+      v-if="degrees.data.length > 0"
+      appear
+    >
+      <DegreeCard 
+        v-for="(degree, index) in degrees.data" 
+        :key="degree.id" 
+        :degree="degree"
+        :style="{ animationDelay: `${index * 100}ms` }"
+        class="degree-card"
+      />
+    </TransitionGroup>
 
     <!-- Empty State -->
     <EmptyState v-if="degrees.data.length === 0" @reset="resetFilters" type="degrees" />
 
-    <!-- Load More -->
-    <div v-if="hasMorePages" class="flex justify-center mt-8">
-      <button @click="loadMore"
-        class="group px-8 py-3 bg-white/60 backdrop-blur-xl text-gray-700 font-medium rounded-full hover:bg-white/80 transition-all duration-300 flex items-center gap-2"
-        :disabled="isLoading">
-        <span>{{ isLoading ? 'Loading...' : 'Load More' }}</span>
-        <ArrowDown class="w-4 h-4 transform group-hover:translate-y-1 transition-transform"
-          :class="{ 'animate-bounce': isLoading }" />
-      </button>
+    <!-- Loading Indicator -->
+    <div v-if="isLoading" class="flex justify-center py-4">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
     </div>
+
+    <!-- Intersection Observer Target -->
+    <div ref="infiniteScrollTrigger" class="h-4 w-full"></div>
 
     <BackToTop />
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { router, usePage } from '@inertiajs/vue3';
 import MainLayout from "@/Layouts/MainLayout.vue";
 import BackToTop from '@/Components/helpers/BackToTop.vue';
@@ -88,7 +96,7 @@ const { isActive } = useActiveLink();
 const degrees = ref(props.degrees);
 const page = ref(1);
 const isLoading = ref(false);
-const hasMorePages = ref(degrees.value.meta.current_page < degrees.value.meta.last_page);
+const infiniteScrollTrigger = ref(null);
 
 const handleFiltersUpdate = (newFilters) => {
   router.visit(window.location.pathname, {
@@ -100,7 +108,6 @@ const handleFiltersUpdate = (newFilters) => {
     onSuccess: () => {
       degrees.value = usePage().props.degrees;
       page.value = 1;
-      hasMorePages.value = degrees.value.meta.current_page < degrees.value.meta.last_page;
     },
   });
 };
@@ -114,46 +121,92 @@ const resetFilters = () => {
   });
 };
 
-const loadMore = () => {
-  if (isLoading.value || !hasMorePages.value) return;
+const loadMoreDegrees = () => {
+  if (isLoading.value) return;
+  if (degrees.value.meta.current_page >= degrees.value.meta.last_page) return;
 
   isLoading.value = true;
   page.value++;
 
-  router.reload({
+  router.visit(window.location.pathname, {
     data: {
       page: page.value,
       ...props.filters,
     },
     preserveState: true,
     preserveScroll: true,
-    replace: true,
     only: ['degrees'],
-    onSuccess: (page) => {
-      degrees.value.data = [...degrees.value.data, ...page.props.degrees.data];
-      hasMorePages.value = page.props.degrees.meta.current_page < page.props.degrees.meta.last_page;
+    onSuccess: (response) => {
+      if (response?.props?.degrees?.data) {
+        degrees.value = {
+          ...response.props.degrees,
+          data: [...degrees.value.data, ...response.props.degrees.data]
+        };
+      }
       isLoading.value = false;
     },
   });
 };
+
+// Intersection Observer setup
+let observer;
+
+onMounted(() => {
+  observer = new IntersectionObserver(
+    (entries) => {
+      if (entries[0].isIntersecting && !isLoading.value) {
+        loadMoreDegrees();
+      }
+    },
+    {
+      rootMargin: '100px',
+      threshold: 0.1
+    }
+  );
+
+  if (infiniteScrollTrigger.value) {
+    observer.observe(infiniteScrollTrigger.value);
+  }
+});
+
+onUnmounted(() => {
+  if (observer) {
+    observer.disconnect();
+  }
+});
 </script>
 
 <style scoped>
-/* Animations */
-.grid>div {
-  animation: fadeInUp 0.5s ease-out forwards;
-  opacity: 0;
+.degree-card {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
+.degree-list-enter-active,
+.degree-list-leave-active {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
+.degree-list-enter-from {
+  opacity: 0;
+  transform: scale(0.9) translateY(20px);
+}
+
+.degree-list-leave-to {
+  opacity: 0;
+  transform: scale(0.9) translateY(-20px);
+}
+
+.degree-list-move {
+  transition: transform 0.5s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .degree-list-enter-active,
+  .degree-list-leave-active,
+  .degree-list-move {
+    transition: none;
   }
 }
 

@@ -1,5 +1,4 @@
 <template>
-
   <Head title="Jobs" />
   <div class="flex-1 flex flex-col space-y-8 container mx-auto px-4 max-w-7xl">
     <!-- Hero Section -->
@@ -33,30 +32,39 @@
     <JobFilters :initial-filters="filters" @update:filters="handleFiltersUpdate" @reset="resetFilters" />
 
     <!-- Jobs Grid -->
-    <div v-if="jobs.data.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-      <JobCard v-for="job in jobs.data" :key="job.id" :job="job" />
-    </div>
+    <TransitionGroup 
+      name="job-list"
+      tag="div"
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+      v-if="jobs.data.length > 0"
+      appear
+    >
+      <JobCard 
+        v-for="(job, index) in jobs.data" 
+        :key="job.id" 
+        :job="job"
+        :style="{ animationDelay: `${index * 100}ms` }"
+        class="job-card"
+      />
+    </TransitionGroup>
 
     <!-- Empty State -->
     <EmptyState v-if="jobs.data.length === 0" @reset="resetFilters" />
 
-    <!-- Load More -->
-    <div v-if="jobs.meta.current_page < jobs.meta.last_page" class="flex justify-center mt-8">
-      <button @click="loadMore"
-        class="group px-8 py-3 bg-white/60 backdrop-blur-xl text-gray-700 font-medium rounded-full hover:bg-white/80 transition-all duration-300 flex items-center gap-2"
-        :disabled="isLoading">
-        <span>{{ isLoading ? 'Loading...' : 'Load More' }}</span>
-        <ArrowDown class="w-4 h-4 transform group-hover:translate-y-1 transition-transform"
-          :class="{ 'animate-bounce': isLoading }" />
-      </button>
+    <!-- Loading Indicator -->
+    <div v-if="isLoading" class="flex justify-center py-4">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
     </div>
+
+    <!-- Intersection Observer Target -->
+    <div ref="infiniteScrollTrigger" class="h-4 w-full"></div>
 
     <BackToTop />
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { router } from '@inertiajs/vue3';
 import MainLayout from "@/Layouts/MainLayout.vue";
 import { Card, CardContent } from "@/Components/ui/card";
@@ -95,6 +103,7 @@ const { isActive } = useActiveLink();
 const jobs = ref(props.jobs);
 const page = ref(1);
 const isLoading = ref(false);
+const infiniteScrollTrigger = ref(null);
 
 const handleFiltersUpdate = (newFilters) => {
   router.visit(window.location.pathname, {
@@ -119,8 +128,8 @@ const resetFilters = () => {
   });
 };
 
-const loadMore = () => {
-  if (isLoading.value) return;
+const loadMoreJobs = () => {
+  if (isLoading.value || jobs.value.meta.current_page >= jobs.value.meta.last_page) return;
 
   isLoading.value = true;
   page.value++;
@@ -144,24 +153,66 @@ const loadMore = () => {
     },
   });
 };
+
+// Intersection Observer setup
+let observer;
+
+onMounted(() => {
+  observer = new IntersectionObserver(
+    (entries) => {
+      if (entries[0].isIntersecting && !isLoading.value) {
+        loadMoreJobs();
+      }
+    },
+    {
+      rootMargin: '100px',
+      threshold: 0.1
+    }
+  );
+
+  if (infiniteScrollTrigger.value) {
+    observer.observe(infiniteScrollTrigger.value);
+  }
+});
+
+onUnmounted(() => {
+  if (observer) {
+    observer.disconnect();
+  }
+});
 </script>
 
 <style scoped>
-/* Animations */
-.grid>div {
-  animation: fadeInUp 0.5s ease-out forwards;
-  opacity: 0;
+.job-card {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
+.job-list-enter-active,
+.job-list-leave-active {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
+.job-list-enter-from {
+  opacity: 0;
+  transform: scale(0.9) translateY(20px);
+}
+
+.job-list-leave-to {
+  opacity: 0;
+  transform: scale(0.9) translateY(-20px);
+}
+
+.job-list-move {
+  transition: transform 0.5s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .job-list-enter-active,
+  .job-list-leave-active,
+  .job-list-move {
+    transition: none;
   }
 }
 </style>
