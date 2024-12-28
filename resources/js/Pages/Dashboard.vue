@@ -12,10 +12,12 @@
           <!-- Glow Effect -->
           <div :class="[
             `bg-${themeStore.currentTheme.primary}-400/20`,
-            'absolute inset-0 rounded-full blur-3xl scale-90 animate-pulse-slow'
+            'absolute inset-0 rounded-full blur-3xl scale-90',
+            { 'animate-pulse-slow': !isAvatarLoading }
           ]"></div>
 
-          <ArchetypeAvatar :archetype="archetype.slug" class="w-full h-full transform scale-110 relative z-10" />
+          <ArchetypeAvatar v-if="archetypeSlug" :key="avatarKey" :archetype="archetypeSlug"
+            class="w-full h-full transform scale-110 relative z-10" @loaded="handleAvatarLoaded" />
         </div>
 
         <!-- Details Panel -->
@@ -113,13 +115,14 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, nextTick, watch, inject } from 'vue'
 import { Head, usePage } from '@inertiajs/vue3'
 import MainLayout from '@/Layouts/MainLayout.vue'
 import ArchetypeAvatar from '@/Components/Result/Archetype_Avatar/ArchetypeAvatar.vue'
 import BottomCards from '@/Components/BottomCards.vue'
 import AIChat from '@/Components/Dashboard/AIChat.vue'
 import { useThemeStore } from '@/stores/theme/themeStore'
+import { useNavigationStore } from '@/stores/navigation/navigationStore'
 
 const props = defineProps({
   hasResult: {
@@ -164,11 +167,68 @@ defineOptions({
 
 const showDetails = ref(false)
 const themeStore = useThemeStore()
+const navigationStore = useNavigationStore()
+const avatarKey = ref(0)
+const isAvatarLoading = ref(true)
+const isLayoutInitialized = inject('isLayoutInitialized')
+const isComponentMounted = ref(false)
+
+// Computed property for archetype slug
+const archetypeSlug = computed(() => props.archetype.slug)
+
+// Handle avatar loaded event
+const handleAvatarLoaded = () => {
+  isAvatarLoading.value = false;
+  showDetails.value = true;
+};
+
+// Initialize component
+const initializeComponent = async () => {
+  if (!isComponentMounted.value || !isLayoutInitialized.value) return;
+
+  console.log('Initializing Dashboard component');
+  isAvatarLoading.value = true;
+
+  try {
+    await nextTick();
+    if (props.archetype.slug) {
+      console.log('Loading avatar for archetype:', props.archetype.slug);
+      avatarKey.value++;
+    }
+  } catch (error) {
+    console.error('Error initializing Dashboard:', error);
+  }
+};
+
+// Watch for layout initialization
+watch([isLayoutInitialized, () => isComponentMounted.value], async ([layoutInit, componentInit]) => {
+  if (layoutInit && componentInit) {
+    await initializeComponent();
+  }
+}, { immediate: true });
+
+// Watch for archetype changes
+watch(() => props.archetype, async (newArchetype) => {
+  if (!isComponentMounted.value || !isLayoutInitialized.value) return;
+
+  isAvatarLoading.value = true;
+  await nextTick();
+  avatarKey.value++;
+}, { deep: true });
+
+onMounted(async () => {
+  isComponentMounted.value = true;
+  if (isLayoutInitialized.value) {
+    await initializeComponent();
+  }
+});
 
 // Debug logging
-console.log('Dashboard Archetype:', props.archetype.slug)
-console.log('Dashboard Theme:', {
-  theme: themeStore.currentTheme
+console.log('Dashboard setup with:', {
+  archetype: archetypeSlug.value,
+  theme: themeStore.currentTheme,
+  layoutInitialized: isLayoutInitialized.value,
+  componentMounted: isComponentMounted.value
 })
 </script>
 

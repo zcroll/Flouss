@@ -100,21 +100,13 @@ Route::middleware([
                 ->name('formations.filter-options');
         });
 
-        Route::get('/etablissements', [FormationFilterController::class, 'getEtablissements'])->name('etablissements.list');
         Route::get('/degrees', [DegreeFilterController::class, 'index'])->name('degrees.index');
         Route::get('/jobs', [JobFilterController::class, 'index'])->name('jobs.index');
 
-        // // Test Routes
-        // Route::get('/holland-codes', [MainTestController::class, 'index'])->name('holland-codes.index');
-        // Route::post('/test/change-stage', [TestStageController::class, 'changeStage'])->name('test.change-stage');
-        // Route::post('/test/store-response', [TestStageController::class, 'storeResponse'])->name('test.store-response');
-
+   
         // Chat routes
         Route::post('/chat', [ApiController::class, 'sendMessage'])->name('chat.send');
 
-        // Welcome back routes
-        // Route::get('/welcome-back/show', [WelcomeBackController::class, 'showWelcomeBack'])->name('welcome-back.show');
-        // Route::post('/welcome-back/set-shown', [WelcomeBackController::class, 'setWelcomeBackShown'])->name('welcome-back.set-shown');
 
         Route::middleware(['auth'])->group(function () {
             // Holland Codes SPA routes

@@ -69,6 +69,7 @@ import { useThemeStore } from '@/stores/theme/themeStore';
 import DegreeCard from '@/Components/Degrees/DegreeCard.vue';
 import DegreeFilters from '@/Components/Degrees/DegreeFilters.vue';
 import EmptyState from '@/Components/Jobs/EmptyState.vue';
+import { useActiveLink } from '@/composables/useActiveLink';
 
 const props = defineProps({
   degrees: Object,
@@ -80,8 +81,9 @@ defineOptions({
   layout: MainLayout,
 });
 
-// Initialize theme store
+// Initialize theme store and active link
 const themeStore = useThemeStore();
+const { isActive } = useActiveLink();
 
 const degrees = ref(props.degrees);
 const page = ref(1);

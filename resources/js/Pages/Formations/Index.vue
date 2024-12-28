@@ -138,6 +138,7 @@ import { LayoutGrid, List, ChevronLeft, ChevronRight } from 'lucide-vue-next';
 import { useThemeStore } from '@/stores/theme/themeStore';
 import FormationCard from '@/Components/Formations/FormationCard.vue';
 import FilterFormation from '@/Components/Formations/FilterFormation.vue';
+import { useActiveLink } from '@/composables/useActiveLink';
 
 defineOptions({
   layout: MainLayout,
@@ -164,8 +165,9 @@ const props = defineProps({
   }
 });
 
-// Theme
+// Theme and active link
 const themeStore = useThemeStore();
+const { isActive } = useActiveLink();
 
 const viewMode = ref('grid');
 

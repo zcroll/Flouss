@@ -189,20 +189,35 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, provide } from 'vue'
 import { Head, usePage, Link } from '@inertiajs/vue3'
 import { Search, Bell } from 'lucide-vue-next'
 import { UserIcon } from '@heroicons/vue/24/outline'
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "@/Components/ui/sheet"
 import Navbar from '@/Components/Navbar.vue'
 import { useThemeStore } from '@/stores/theme/themeStore'
+import { useNavigationStore } from '@/stores/navigation/navigationStore'
 import NotificationDropdown from '@/Components/ui/notification/NotificationDropdown.vue'
 
 const isOpen = ref(false)
 const themeStore = useThemeStore()
+const navigationStore = useNavigationStore()
+const isLayoutInitialized = ref(false)
 
-onMounted(() => {
-  themeStore.initializeTheme()
+// Provide layout initialization state to child components
+provide('isLayoutInitialized', isLayoutInitialized)
+
+onMounted(async () => {
+  // Initialize theme first
+  await themeStore.initializeTheme()
+
+  // Then initialize navigation
+  await navigationStore.initializeActiveRoute()
+
+  // Mark layout as initialized
+  isLayoutInitialized.value = true
+
+  console.log('MainLayout initialized')
 })
 
 defineProps({

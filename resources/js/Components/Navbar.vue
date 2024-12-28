@@ -10,7 +10,7 @@
           ? 'flex flex-col items-center gap-1 py-1 px-3 rounded-xl hover:bg-white/10'
           : 'h-14 w-14 rounded-full flex items-center justify-center',
         { 'delay-100': index > 0 },
-        checkActive(item.route)
+        navigationStore.isRouteActive(item.route)
           ? isMobile
             ? `text-${themeStore.currentTheme.primary}-500 bg-white/10 dark:bg-gray-800/40`
             : [`bg-${themeStore.currentTheme.primary}-500`, 'shadow-lg']
@@ -19,9 +19,9 @@
             : ['bg-white/90 hover:bg-white/100 hover:scale-105 backdrop-blur-xl shadow-md']
       ]">
     <div class="relative z-10">
-      <component :is="getIcon(item.name)" class="nav-icon transition-all duration-300 ease-in-out" :class="[
+      <component :is="item.icon" class="nav-icon transition-all duration-300 ease-in-out" :class="[
         isMobile ? 'h-6 w-6' : 'h-7 w-7',
-        checkActive(item.route)
+        navigationStore.isRouteActive(item.route)
           ? isMobile
             ? `text-${themeStore.currentTheme.primary}-500`
             : 'text-white transform scale-110'
@@ -32,7 +32,7 @@
 
       <!-- Navigation Label -->
       <span class="text-xs font-medium" v-if="isMobile" :class="[
-        checkActive(item.route)
+        navigationStore.isRouteActive(item.route)
           ? `text-${themeStore.currentTheme.primary}-500`
           : 'text-gray-400 group-hover:text-gray-300'
       ]">
@@ -43,7 +43,7 @@
       </span>
     </div>
 
-    <!-- Glass effect overlay (for both mobile and desktop) -->
+    <!-- Glass effect overlay -->
     <div class="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" :class="[
       `bg-${themeStore.currentTheme.primary}-50/10`,
       isMobile ? 'rounded-xl' : 'rounded-full'
@@ -54,7 +54,7 @@
 </template>
 
 <script setup>
-import { Link, usePage } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import {
   HomeIcon,
@@ -64,6 +64,7 @@ import {
   BookOpenIcon
 } from '@heroicons/vue/24/outline';
 import { useThemeStore } from '@/stores/theme/themeStore';
+import { useNavigationStore } from '@/stores/navigation/navigationStore';
 
 defineProps({
   isMobile: {
@@ -73,29 +74,15 @@ defineProps({
 });
 
 const navigationItems = [
-  { name: 'Dashboard', route: 'dashboard' },
-  { name: 'Results', route: 'results' },
-  { name: 'Jobs', route: 'jobs.index' },
-  { name: 'Degrees', route: 'degrees.index' },
-  { name: 'Formations', route: 'formations.index' }
+  { name: 'Dashboard', route: 'dashboard', icon: HomeIcon },
+  { name: 'Results', route: 'results', icon: ClipboardDocumentListIcon },
+  { name: 'Jobs', route: 'jobs.index', icon: BriefcaseIcon },
+  { name: 'Degrees', route: 'degrees.index', icon: AcademicCapIcon },
+  { name: 'Formations', route: 'formations.index', icon: BookOpenIcon }
 ];
 
-const getIcon = (name) => {
-  switch (name) {
-    case 'Results': return ClipboardDocumentListIcon;
-    case 'Jobs': return BriefcaseIcon;
-    case 'Degrees': return AcademicCapIcon;
-    case 'Formations': return BookOpenIcon;
-    default: return HomeIcon;
-  }
-};
-
-const checkActive = (routeName) => {
-  const currentRoute = route().current();
-  return currentRoute.startsWith(routeName);
-};
-
 const themeStore = useThemeStore();
+const navigationStore = useNavigationStore();
 </script>
 
 <style scoped>

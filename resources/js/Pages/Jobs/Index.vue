@@ -66,6 +66,7 @@ import JobFilters from '@/Components/Jobs/JobFilters.vue';
 import EmptyState from '@/Components/Jobs/EmptyState.vue';
 import BackToTop from '@/Components/helpers/BackToTop.vue';
 import { ArrowDown } from 'lucide-vue-next';
+import { useActiveLink } from '@/composables/useActiveLink';
 
 const props = defineProps({
   jobs: {
@@ -90,6 +91,7 @@ defineOptions({
 });
 
 const themeStore = useThemeStore();
+const { isActive } = useActiveLink();
 const jobs = ref(props.jobs);
 const page = ref(1);
 const isLoading = ref(false);
