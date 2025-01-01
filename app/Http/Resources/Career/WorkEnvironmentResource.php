@@ -2,22 +2,21 @@
 
 namespace App\Http\Resources\Career;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class WorkEnvironmentResource extends JsonResource
 {
-    public function toArray(Request $request): array
+    public function toArray($request)
     {
         $locale = app()->getLocale();
-        $nameColumn = $locale === 'fr' ? 'name_fr' : 'name';
-        $descriptionColumn = $locale === 'fr' ? 'description_fr' : 'description';
         
         return [
-            'name' => $this->$nameColumn,
+            'id' => $this->id,
+            'name' => $locale === 'fr' ? $this->name_fr : $this->name,
+            'description' => $locale === 'fr' ? $this->description_fr : $this->description,
             'category' => $this->category,
-            'score' => $this->score,
-            'description' => $this->$descriptionColumn,
+            'score' => (int)$this->score,
+            'skills' => [],
         ];
     }
 } 

@@ -1,18 +1,13 @@
 <template>
     <div class="relative" ref="multiSelectRef">
         <div
-            class="relative w-full cursor-default rounded-xl bg-white py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 sm:text-sm shadow-sm"
-            :style="{
-                borderWidth: '1px',
-                borderColor: isOpen 
-                    ? `rgb(var(--${themeColors?.primary || 'yellow'}-rgb))` 
-                    : `rgb(var(--${themeColors?.primary || 'yellow'}-rgb), 0.2)`,
-                '--tw-ring-color': `rgb(var(--${themeColors?.primary || 'yellow'}-rgb), 0.2)`
-            }"
-            :class="{ 
-                'ring-2': isOpen,
-                [classes?.focus]: true 
-            }"
+            :class="[
+                'relative w-full cursor-default rounded-xl py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 sm:text-sm shadow-sm border backdrop-blur-sm bg-white/30 dark:bg-gray-800/30',
+                `text-${themeStore.currentTheme.text}`,
+                isOpen ? `border-${themeStore.currentTheme.primary}-600` : `border-${themeStore.currentTheme.primary}-200`,
+                isOpen ? `ring-2 ring-${themeStore.currentTheme.primary}-200` : '',
+                classes?.focus
+            ]"
             @click="toggleDropdown"
         >
             <div class="flex flex-wrap gap-1 min-h-[1.5rem]">
@@ -20,22 +15,20 @@
                 <span
                     v-for="item in modelValue"
                     :key="item.value"
-                    class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-sm"
-                    :style="{
-                        backgroundColor: `rgb(var(--${themeColors?.primary || 'yellow'}-rgb), 0.1)`,
-                        color: `rgb(var(--${themeColors?.primary || 'yellow'}-rgb))`
-                    }"
+                    :class="[
+                        'inline-flex items-center gap-1 px-2 py-0.5 rounded text-sm backdrop-blur-sm',
+                        `bg-${themeStore.currentTheme.primary}-50/80`,
+                        `text-${themeStore.currentTheme.text}`
+                    ]"
                 >
                     {{ item.label }}
                     <button
                         type="button"
                         @click.stop="removeItem(item)"
-                        class="group relative rounded-sm p-0.5 transition duration-200"
-                        :style="{
-                            '&:hover': {
-                                backgroundColor: `rgb(var(--${themeColors?.primary || 'yellow'}-rgb), 0.2)`
-                            }
-                        }"
+                        :class="[
+                            'group relative rounded-sm p-0.5 transition duration-200',
+                            `hover:bg-${themeStore.currentTheme.primary}-100/80`
+                        ]"
                     >
                         <XMarkIcon class="h-3 w-3" />
                     </button>
@@ -47,7 +40,10 @@
                     type="text"
                     v-model="search"
                     :placeholder="modelValue.length ? '' : placeholder"
-                    class="appearance-none border-none p-0 focus:ring-0 focus:outline-none text-sm placeholder:text-gray-500 flex-1 min-w-[80px] bg-transparent m-0"
+                    :class="[
+                        'appearance-none border-none p-0 focus:ring-0 focus:outline-none text-sm placeholder:text-gray-500 flex-1 min-w-[80px] m-0 bg-transparent',
+                        `text-${themeStore.currentTheme.text}`
+                    ]"
                     style="padding: 0 !important; border: none !important; --tw-shadow: none !important;"
                     @input="onSearch"
                     @keydown.backspace="handleBackspace"
@@ -62,7 +58,7 @@
             <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                 <ChevronUpDownIcon
                     class="h-5 w-5 transition-transform duration-200"
-                    :class="[classes?.icon, { 'transform rotate-180': isOpen }]"
+                    :class="[`text-${themeStore.currentTheme.text}`, classes?.icon, { 'transform rotate-180': isOpen }]"
                 />
             </span>
         </div>
@@ -70,27 +66,20 @@
         <!-- Options dropdown -->
         <div
             v-show="isOpen"
-            class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-xl bg-white py-1 text-base shadow-lg focus:outline-none sm:text-sm"
-            :style="{
-                borderWidth: '1px',
-                borderColor: `rgb(var(--${themeColors?.primary || 'yellow'}-rgb), 0.2)`
-            }"
+            :class="[
+                'absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-xl py-1 text-base shadow-lg focus:outline-none sm:text-sm border backdrop-blur-sm bg-white/30 dark:bg-gray-800/30',
+                `text-${themeStore.currentTheme.text}`,
+                `border-${themeStore.currentTheme.primary}-200`
+            ]"
         >
             <div
                 v-for="option in filteredOptions"
                 :key="option.value"
-                class="relative cursor-pointer select-none py-2 pl-3 pr-9 transition duration-200"
-                :style="{
-                    backgroundColor: highlightedOption === option 
-                        ? `rgb(var(--${themeColors?.primary || 'yellow'}-rgb))` 
-                        : 'transparent',
-                    color: highlightedOption === option ? 'white' : 'inherit',
-                    '&:hover': {
-                        backgroundColor: highlightedOption !== option 
-                            ? `rgb(var(--${themeColors?.primary || 'yellow'}-rgb), 0.1)` 
-                            : ''
-                    }
-                }"
+                :class="[
+                    'relative cursor-pointer select-none py-2 pl-3 pr-9 transition duration-200',
+                    highlightedOption === option ? `bg-${themeStore.currentTheme.primary}-500/80 text-white` : '',
+                    highlightedOption !== option ? `hover:bg-${themeStore.currentTheme.primary}-50/80` : ''
+                ]"
                 @click="toggleOption(option)"
             >
                 <span class="block truncate" :class="{ 'font-semibold': isSelected(option) }">
@@ -100,12 +89,10 @@
                 <!-- Check mark for selected items -->
                 <span
                     v-if="isSelected(option)"
-                    class="absolute inset-y-0 right-0 flex items-center pr-4"
-                    :style="{
-                        color: highlightedOption === option 
-                            ? 'white' 
-                            : `rgb(var(--${themeColors?.primary || 'yellow'}-rgb))`
-                    }"
+                    :class="[
+                        'absolute inset-y-0 right-0 flex items-center pr-4',
+                        highlightedOption === option ? 'text-white' : `text-${themeStore.currentTheme.text}`
+                    ]"
                 >
                     <CheckIcon class="h-5 w-5" />
                 </span>
@@ -114,7 +101,10 @@
             <!-- No results message -->
             <div
                 v-if="filteredOptions.length === 0"
-                class="relative cursor-default select-none py-2 px-4 text-gray-500"
+                :class="[
+                    'relative cursor-default select-none py-2 px-4',
+                    `text-${themeStore.currentTheme.text}`
+                ]"
             >
                 No results found
             </div>
@@ -126,6 +116,7 @@
 import { ref, computed, watch } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import { XMarkIcon, ChevronUpDownIcon, CheckIcon } from '@heroicons/vue/20/solid';
+import { useThemeStore } from '@/stores/theme/themeStore';
 
 const props = defineProps({
     modelValue: {
@@ -140,10 +131,6 @@ const props = defineProps({
         type: String,
         default: 'Select options'
     },
-    themeColors: {
-        type: Object,
-        default: () => ({ primary: 'yellow' })
-    },
     classes: {
         type: Object,
         default: () => ({})
@@ -151,23 +138,20 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['update:modelValue']);
+const themeStore = useThemeStore();
 
 const isOpen = ref(false);
 const search = ref('');
 const searchInput = ref(null);
 const highlightedOption = ref(null);
-
-// Add ref for the root element
 const multiSelectRef = ref(null);
 
-// Filtered options based on search
 const filteredOptions = computed(() => {
     return props.options.filter(option =>
         option.label.toLowerCase().includes(search.value.toLowerCase())
     );
 });
 
-// Toggle dropdown
 const toggleDropdown = () => {
     isOpen.value = !isOpen.value;
     if (isOpen.value) {
@@ -180,12 +164,10 @@ const closeDropdown = () => {
     search.value = '';
 };
 
-// Check if option is selected
 const isSelected = (option) => {
     return props.modelValue.some(item => item.value === option.value);
 };
 
-// Toggle option selection
 const toggleOption = (option) => {
     const newValue = [...props.modelValue];
     const index = newValue.findIndex(item => item.value === option.value);
@@ -199,13 +181,11 @@ const toggleOption = (option) => {
     emit('update:modelValue', newValue);
 };
 
-// Remove selected item
 const removeItem = (item) => {
     const newValue = props.modelValue.filter(i => i.value !== item.value);
     emit('update:modelValue', newValue);
 };
 
-// Handle backspace key
 const handleBackspace = (event) => {
     if (search.value === '' && props.modelValue.length > 0) {
         const newValue = [...props.modelValue];
@@ -214,26 +194,22 @@ const handleBackspace = (event) => {
     }
 };
 
-// Search functionality
 const onSearch = () => {
     if (!isOpen.value) {
         isOpen.value = true;
     }
 };
 
-// Reset search when dropdown closes
 watch(isOpen, (newValue) => {
     if (!newValue) {
         search.value = '';
     }
 });
 
-// Use onClickOutside composable
 onClickOutside(multiSelectRef, () => {
     closeDropdown();
 });
 
-// Add these new methods for keyboard navigation
 const highlightNext = () => {
     if (!isOpen.value) {
         isOpen.value = true;
@@ -269,7 +245,6 @@ const selectHighlighted = () => {
     }
 };
 
-// Reset highlighted option when filtered options change
 watch(filteredOptions, () => {
     highlightedOption.value = filteredOptions.value[0] || null;
 });

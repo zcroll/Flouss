@@ -66,17 +66,42 @@
           <CardContent class="space-y-4">
             <p class="text-sm text-muted-foreground">{{ environment.description }}</p>
 
-            <div v-if="environment.score" class="space-y-2">
+            <div v-if="environment.score !== null && environment.score !== undefined" class="space-y-3">
               <div class="flex items-center justify-between text-sm">
-                <span class="text-muted-foreground">Match Score</span>
-                <span class="font-medium">{{ environment.score }}%</span>
+                <span class="text-muted-foreground font-medium">Match Score</span>
+                <span 
+                  class="font-semibold" 
+                  :class="`text-${themeStore.currentTheme.primary}-600 dark:text-${themeStore.currentTheme.primary}-400`"
+                >
+                  {{ Math.round(environment.score) }}%
+                </span>
               </div>
-              <Progress :value="environment.score" :class="`bg-${themeStore.currentTheme.button}/20`" />
+              
+              <!-- Progress bar wrapper -->
+              <div class="w-full">
+                <Progress 
+                  :value="environment.score"
+                  size="md"
+                  :show-value="false"
+                />
+              </div>
             </div>
 
             <div class="flex gap-2 flex-wrap mt-4">
-              <Badge v-for="skill in environment.skills" :key="skill" variant="secondary" class="text-xs"
-                :class="`bg-${themeStore.currentTheme.background.light} group-hover:bg-${themeStore.currentTheme.button}/20`">
+              <Badge 
+                v-for="skill in environment.skills" 
+                :key="skill" 
+                variant="secondary" 
+                class="text-xs transition-colors duration-200"
+                :class="`
+                  bg-${themeStore.currentTheme.primary}-50 
+                  text-${themeStore.currentTheme.primary}-700
+                  dark:bg-${themeStore.currentTheme.primary}-950/20
+                  dark:text-${themeStore.currentTheme.primary}-300
+                  group-hover:bg-${themeStore.currentTheme.primary}-100
+                  dark:group-hover:bg-${themeStore.currentTheme.primary}-950/30
+                `"
+              >
                 {{ skill }}
               </Badge>
             </div>

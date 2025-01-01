@@ -26,35 +26,34 @@
       <p class="text-sm text-gray-600 line-clamp-2 mb-3 h-10">{{ degree.description }}</p>
 
       <!-- Key Details -->
-      <div class="grid grid-cols-2 gap-2 mb-3 text-xs">
-        <div class="flex items-center gap-1 text-gray-600">
-          <Clock class="w-3.5 h-3.5" />
-          <span class="truncate">{{ degree.duration }} Years</span>
+      <div class="grid grid-cols-2 gap-2 mb-3">
+        <div class="flex items-center gap-1.5">
+          <Clock class="w-4 h-4 text-gray-400" />
+          <span class="text-sm text-gray-600">{{ degreeDetails.duration }}</span>
         </div>
-        <div class="flex items-center gap-1 text-gray-600">
-          <GraduationCap class="w-3.5 h-3.5" />
-          <span class="truncate">{{ degree.level }}</span>
-        </div>
-      </div>
-
-      <!-- Skills -->
-      <div v-if="degree.skills?.length" class="mb-4">
-        <div class="flex flex-wrap gap-1">
-          <span v-for="skill in degree.skills.slice(0, 3)" :key="skill"
-            class="px-2 py-0.5 text-xs rounded-full bg-white/50 border border-white/20 transition-colors duration-300"
-            :class="themeStore.getThemeClasses('border')">
-            {{ skill }}
-          </span>
-          <span v-if="degree.skills.length > 3" class="px-2 py-0.5 text-xs text-gray-500">
-            +{{ degree.skills.length - 3 }}
-          </span>
+        <div class="flex items-center gap-1.5">
+          <GraduationCap class="w-4 h-4 text-gray-400" />
+          <span class="text-sm text-gray-600">{{ degreeDetails.level }}</span>
         </div>
       </div>
 
       <!-- Action Button -->
       <Link :href="`/degree/${degree.slug}`"
-        class="inline-flex items-center justify-between w-full px-4 py-2 bg-white/60 backdrop-blur-sm font-medium rounded-full border border-white/20 transition-all duration-300 text-sm"
-        :class="[themeClasses.button, themeClasses.text]">
+        class="inline-flex items-center justify-between w-full px-4 py-2 font-medium rounded-full transition-all duration-300 text-sm"
+        :class="[
+          themeStore.isDarkMode
+            ? [
+              'bg-gray-800/60 text-white border-gray-700/20',
+              `hover:bg-${themeStore.currentTheme.primary}-800`
+            ]
+            : [
+              'bg-white/60 text-gray-900 border-white/20 hover:text-white',
+              `hover:bg-${themeStore.currentTheme.primary}-400`
+            ],
+          'backdrop-blur-sm border',
+          themeClasses.button,
+          themeClasses.text
+        ]">
       <span>Learn More</span>
       <ArrowRight class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
       </Link>
@@ -85,24 +84,26 @@ const themeClasses = computed(() => ({
       : `text-${themeStore.currentTheme.primary}-600`
   ],
   button: [
-    'transition-colors duration-200 hover:bg-white/80',
-    themeStore.isDarkMode
-      ? `hover:bg-${themeStore.currentTheme.primary}-600/10`
-      : `hover:bg-${themeStore.currentTheme.primary}-500/10`,
+    'transition-colors duration-200',
   ],
+}));
+
+const degreeDetails = computed(() => ({
+  duration: props.degree.duration,
+  level: props.degree.level
 }));
 </script>
 
 <style scoped>
 .grid>div {
-  animation: fadeInUp 0.5s ease-out forwards;
+  animation: fadeInUp 0.6s ease-out forwards;
   opacity: 0;
 }
 
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(20px);
   }
 
   to {

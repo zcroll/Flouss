@@ -2,7 +2,7 @@
   <nav :class="[
     isMobile
       ? 'flex-row justify-around py-4 px-2 w-full'
-      : 'flex-col items-center gap-5'
+      : 'flex-col items-center gap-5 pt-20'
   ]" class="flex">
     <Link v-for="(item, index) in navigationItems" :key="item.route" :href="route(item.route)"
       class="nav-link group relative transition-all duration-300" :class="[

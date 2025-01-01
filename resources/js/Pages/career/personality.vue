@@ -1,104 +1,159 @@
 <template>
-
   <Head title="Personality Traits" />
-
   <StickySidebar type="career" :model="occupation">
     <template #description>
-      <p :class="textClass">
+      <h1 class="text-2xl font-bold mb-2">Personality Traits</h1>
+      <p class="text-muted-foreground">
         Discover the key personality traits and characteristics that make successful {{ occupation.name }}s.
       </p>
     </template>
 
-    <div class="space-y-8">
-      <Breadcrumbs :items="breadcrumbItems" class="mb-8" />
+    <!-- Main Content -->
+    <div class="max-w-4xl mx-auto space-y-8">
+      <Breadcrumbs :items="breadcrumbItems" />
 
-      <!-- Overview Section -->
-      <section class="space-y-6">
-        <h2 :class="headingClass">
-          {{ __('career.we_surveyed') }} {{ occupation.name.toLowerCase() }}s
-          {{ __('career.to_learn_what_personality_traits') }}
-        </h2>
-      </section>
-
-      <!-- Navigation Card -->
-      <Card class="w-full">
-        <CardHeader>
-          <CardTitle>{{ __('career.in_this_article') }}</CardTitle>
-        </CardHeader>
-        <CardContent :class="`border-${themeStore.currentTheme.border}`">
-          <nav class="space-y-2">
-            <NavigationLink href="#holland-codes" :theme="themeStore.currentTheme">
-              {{ __('career.primary_interests') }}
-            </NavigationLink>
-            <NavigationLink href="#big-five" :theme="themeStore.currentTheme">
-              {{ __('career.broad_personality_traits') }}
-            </NavigationLink>
-          </nav>
-        </CardContent>
-      </Card>
-
-      <!-- Holland Codes Section -->
-      <section id="holland-codes" class="space-y-6">
-        <h2 :class="headingClass">
-          {{ occupation.name }}s {{ __('career.are') }}
-          <em :class="emphasisClass">{{ getTopHollandTraits }}</em>
-        </h2>
-
-        <p :class="descriptionClass">
-          {{ getPersonalityDescription('Holland Codes') }}
-        </p>
-
-        <div class="space-y-4">
-          <PersonalityTrait v-for="trait in hollandCodeTraits" :key="trait.id" :trait="trait"
-            :theme="themeStore.currentTheme" :format-name="formatTraitName" />
+      <!-- Categories Navigation -->
+      <nav class="sticky top-4 z-10 rounded-lg p-4 shadow-sm" :class="[
+        themeStore.isDarkMode 
+          ? 'bg-gray-800/40 backdrop-blur-xl border border-gray-700'
+          : 'bg-white/40 backdrop-blur-xl border border-gray-200'
+      ]">
+        <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+          <Button
+            v-for="category in ['Holland Codes', 'Big Five']"
+            :key="category"
+            variant="ghost"
+            size="sm"
+            :class="[
+              'whitespace-nowrap transition-colors duration-200',
+              selectedCategory === category
+                ? `bg-${themeStore.currentTheme.primary}-100 text-${themeStore.currentTheme.primary}-700 
+                   dark:bg-${themeStore.currentTheme.primary}-900/20 dark:text-${themeStore.currentTheme.primary}-300`
+                : 'hover:bg-muted'
+            ]"
+            @click="selectedCategory = category"
+          >
+            <Icon 
+              :name="category === 'Holland Codes' ? 'puzzle-piece' : 'brain'" 
+              class="w-4 h-4 mr-2" 
+            />
+            {{ category }}
+          </Button>
         </div>
-      </section>
+      </nav>
 
-      <!-- Big Five Section -->
-      <section id="big-five" class="space-y-6">
-        <h2 :class="headingClass">
-          {{ __('career.top_personality_traits_of') }}
-          {{ occupation.name.toLowerCase() }}s
-          {{ __('career.are') }}
-          <em :class="emphasisClass">{{ getTopBigFiveTraits }}</em>
-        </h2>
+      <!-- Personality Traits Grid -->
+      <TransitionGroup 
+        name="trait-list" 
+        tag="div" 
+        class="grid grid-cols-1 md:grid-cols-2 gap-6"
+      >
+        <Card
+          v-for="trait in filteredTraits"
+          :key="trait.id"
+          class="group relative overflow-hidden transition-all duration-300 hover:shadow-lg"
+        >
+          <!-- Category Badge -->
+          <div 
+            class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-medium"
+            :class="`bg-${themeStore.currentTheme.primary}-50 text-${themeStore.currentTheme.primary}-700
+                    dark:bg-${themeStore.currentTheme.primary}-900/20 dark:text-${themeStore.currentTheme.primary}-300`"
+          >
+            {{ trait.trait_type }}
+          </div>
 
-        <p :class="descriptionClass">
-          {{ getPersonalityDescription('Big Five') }}
-        </p>
+          <CardHeader>
+            <CardTitle class="flex items-start gap-3">
+              <div 
+                class="p-2 rounded-lg"
+                :class="`bg-${themeStore.currentTheme.primary}-50 dark:bg-${themeStore.currentTheme.primary}-900/20`"
+              >
+                <Icon 
+                  :name="getTraitIcon(trait)" 
+                  class="w-5 h-5"
+                  :class="`text-${themeStore.currentTheme.primary}-500`"
+                />
+              </div>
+              <div>
+                <h3 class="text-lg font-semibold">
+                  {{ formatTraitName(trait.trait_name) }}
+                </h3>
+              </div>
+            </CardTitle>
+          </CardHeader>
 
-        <div class="space-y-4">
-          <PersonalityTrait v-for="trait in bigFiveTraits" :key="trait.scale_id" :trait="trait"
-            :theme="themeStore.currentTheme" :is-big-five="true" />
-        </div>
-      </section>
+          <CardContent class="space-y-6">
+            <!-- Description -->
+            <p class="text-sm text-muted-foreground leading-relaxed">
+              {{ getTraitDescription(trait) }}
+            </p>
+
+            <!-- Score -->
+            <div class="space-y-2">
+              <div class="flex items-center justify-between text-sm">
+                <span class="text-muted-foreground font-medium">Trait Score</span>
+                <span 
+                  class="font-semibold"
+                  :class="`text-${themeStore.currentTheme.primary}-600 dark:text-${themeStore.currentTheme.primary}-400`"
+                >
+                  {{ formatScore(trait.trait_score) }}%
+                </span>
+              </div>
+              <Progress 
+                :value="formatScore(trait.trait_score)"
+                size="md"
+                class="rounded-full"
+              />
+            </div>
+
+            <!-- Related Traits -->
+            <div class="flex flex-wrap gap-2">
+              <Badge 
+                v-for="relatedTrait in getRelatedTraits(trait)"
+                :key="relatedTrait"
+                variant="secondary"
+                class="text-xs transition-all duration-200"
+                :class="`
+                  bg-${themeStore.currentTheme.primary}-50/50
+                  text-${themeStore.currentTheme.primary}-700
+                  dark:bg-${themeStore.currentTheme.primary}-900/10
+                  dark:text-${themeStore.currentTheme.primary}-300
+                  group-hover:bg-${themeStore.currentTheme.primary}-100
+                  dark:group-hover:bg-${themeStore.currentTheme.primary}-900/20
+                `"
+              >
+                {{ relatedTrait }}
+              </Badge>
+            </div>
+          </CardContent>
+        </Card>
+      </TransitionGroup>
     </div>
 
-    <BackToTop />
+    <ScrollToTop />
   </StickySidebar>
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
+import { Head } from '@inertiajs/vue3';
 import { useThemeStore } from '@/stores/theme/themeStore';
-import StickySidebar from "@/Pages/lib/StickySidebar.vue";
 import MainLayout from "@/Layouts/MainLayout.vue";
-import BackToTop from "@/Components/helpers/BackToTop.vue";
+import StickySidebar from "@/Pages/lib/StickySidebar.vue";
 import Breadcrumbs from '@/Components/helpers/Breadcrumbs.vue';
-import NavigationLink from '@/Components/career/NavigationLink.vue';
-import PersonalityTrait from '@/Components/career/PersonalityTrait.vue';
-import __ from '@/lang';
+import ScrollToTop from "@/Components/helpers/ScrollToTop.vue";
 import {
   Card,
+  CardContent,
   CardHeader,
   CardTitle,
-  CardContent
-} from '@/Components/ui/card';
-import { Button } from '@/Components/ui/button';
+} from "@/Components/ui/card";
+import { Progress } from "@/Components/ui/progress";
+import { Badge } from "@/Components/ui/badge";
+import { Button } from "@/Components/ui/button";
+import { Icon } from "@/Components/ui/icon";
 
 defineOptions({ layout: MainLayout });
-
-const themeStore = useThemeStore();
 
 const props = defineProps({
   occupation: {
@@ -118,17 +173,10 @@ const props = defineProps({
   },
 });
 
-// Computed Styles
-const textClass = computed(() => `text-sm text-${themeStore.currentTheme.primary}-600`);
-const headingClass = computed(() =>
-  `text-2xl font-semibold tracking-tight text-${themeStore.currentTheme.primary}-900 dark:text-${themeStore.currentTheme.primary}-100`
-);
-const emphasisClass = computed(() => `font-normal text-${themeStore.currentTheme.primary}-600`);
-const descriptionClass = computed(() =>
-  `text-${themeStore.currentTheme.primary}-600 dark:text-${themeStore.currentTheme.primary}-300`
-);
+const themeStore = useThemeStore();
+const selectedCategory = ref('Holland Codes');
 
-// Computed Data
+// Computed
 const breadcrumbItems = computed(() => [
   { name: 'Home', route: 'dashboard' },
   { name: 'Jobs', route: 'jobs.index' },
@@ -136,21 +184,9 @@ const breadcrumbItems = computed(() => [
   { name: 'Personality' }
 ]);
 
-const hollandCodeTraits = computed(() =>
-  props.personalityTraits.filter(trait => trait.trait_type === 'Holland Codes')
-);
-
-const bigFiveTraits = computed(() =>
-  props.personalityTraits
-    .filter(trait => trait.trait_type === 'Big Five')
-    .map(trait => ({
-      name: trait.trait_name,
-      short_name: `career.${trait.trait_name.toLowerCase()}`,
-      scale_id: trait.id,
-      definition: `career.${trait.trait_name.toLowerCase()}_definition`,
-      value: trait.trait_score
-    }))
-);
+const filteredTraits = computed(() => {
+  return props.personalityTraits.filter(trait => trait.trait_type === selectedCategory.value);
+});
 
 // Helper Functions
 const formatTraitName = (traitName) => {
@@ -158,28 +194,66 @@ const formatTraitName = (traitName) => {
   return traitName.replace('Interest in ', '').replace(' Jobs', '');
 };
 
-const getPersonalityDescription = (traitType) =>
-  props.personalityDetails.find(d => d.trait_type === traitType)?.description;
+const getTraitIcon = (trait) => {
+  const icons = {
+    'Realistic': 'wrench',
+    'Investigative': 'magnifying-glass',
+    'Artistic': 'paint-brush',
+    'Social': 'users',
+    'Enterprising': 'presentation-chart-bar',
+    'Conventional': 'clipboard-document-list',
+    // Add more icons for Big Five traits
+    'Openness': 'light-bulb',
+    'Conscientiousness': 'check-circle',
+    'Extraversion': 'user-group',
+    'Agreeableness': 'heart',
+    'Neuroticism': 'brain',
+  };
 
-const getTopTraits = (traits, valueKey = 'trait_score', nameTransform = (t) => t.trait_name) => {
-  const top2 = traits.value
-    .sort((a, b) => b[valueKey] - a[valueKey])
-    .slice(0, 2)
-    .map(nameTransform);
-  return `${top2[0]} and ${top2[1]}`;
+  const traitName = formatTraitName(trait.trait_name);
+  return icons[traitName] || 'star';
 };
 
-const getTopHollandTraits = computed(() =>
-  getTopTraits(hollandCodeTraits, 'trait_score', t => formatTraitName(t.trait_name).toLowerCase())
-);
+const getTraitDescription = (trait) => {
+  return props.personalityDetails.find(
+    detail => detail.trait_type === trait.trait_type
+  )?.description || '';
+};
 
-const getTopBigFiveTraits = computed(() =>
-  getTopTraits(bigFiveTraits, 'value', t => t.short_name)
-);
+const getRelatedTraits = (trait) => {
+  // This is a placeholder - implement your logic to get related traits
+  return ['Leadership', 'Problem Solving', 'Communication'].slice(0, 2);
+};
+
+const formatScore = (score) => {
+  // Convert decimal score to percentage and round to nearest integer
+  return Math.round(parseFloat(score) * 100);
+};
 </script>
 
 <style scoped>
-html {
-  scroll-behavior: smooth;
+.trait-list-move,
+.trait-list-enter-active,
+.trait-list-leave-active {
+  transition: all 0.5s ease;
+}
+
+.trait-list-enter-from,
+.trait-list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.trait-list-leave-active {
+  position: absolute;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 </style>

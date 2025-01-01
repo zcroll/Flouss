@@ -1,4 +1,5 @@
 <template>
+  <div class="flex-1 flex flex-col space-y-8 container mx-auto px-6 max-w-8xl">
 
   <Head title="Results" />
 
@@ -85,6 +86,7 @@
     <div class="bg-white/40 backdrop-blur-sm rounded-3xl border border-white/20 shadow-xl p-8">
       <DataShare />
     </div>
+  </div>
   </div>
 </template>
 

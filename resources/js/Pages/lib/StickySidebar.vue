@@ -1,30 +1,35 @@
 <template>
-    <div class="relative flex flex-col-reverse lg:flex-row lg:gap-6">
+    <div class="relative flex flex-col-reverse lg:flex-row lg:gap-10 rounded">
         <!-- Main Content Area -->
-        <div class="flex-1">
-            <div class="relative rounded-2xl border shadow-sm p-6" :class="[
+        <div class="flex-1 rounded">
+            <!-- Add Breadcrumbs component here -->
+            
+            <div class="relative rounded-lg border shadow-sm p-4" :class="[
                 themeStore.isDarkMode
-                    ? 'bg-gray-800/40 border-white/10'
-                    : 'bg-white/60 backdrop-blur-xl border-white/20'
+                ? [`bg-gray-800/40 border-${themeStore.currentTheme.primary}-950`]
+                : [`bg-white/60 backdrop-blur-xl border-${themeStore.currentTheme.primary}-300`]
             ]">
                 <!-- Title Section -->
                 <div class="mb-6">
                     <h1 class="text-2xl md:text-3xl font-bold" :class="[
                         themeStore.isDarkMode
-                            ? 'text-white'
-                            : 'bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent'
-                    ]">
+                        ? `text-${themeStore.currentTheme.hover}`
+                            : `text-${themeStore.currentTheme.button}`
+                        ]">
                         {{ modelProps.title }}
                     </h1>
                     <p class="mt-3 text-base" :class="[
-                        themeStore.isDarkMode ? 'text-gray-300' : 'text-gray-600'
+                        themeStore.isDarkMode 
+                        ? `text-${themeStore.currentTheme.border}`
+                        : `text-${themeStore.currentTheme.button}`
                     ]">
                         <slot name="description" />
                     </p>
                 </div>
-
+                
                 <!-- Main Content -->
                 <div>
+                    <Breadcrumbs :breadcrumbs="breadcrumbs" />
                     <slot />
                 </div>
 
@@ -59,7 +64,7 @@
 
 <script setup>
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 import { useThemeStore } from '@/stores/theme/themeStore';
 import { useToast } from "@/Components/ui/toast/use-toast";
 import Toaster from "@/Components/ui/toast/Toaster.vue";
@@ -70,6 +75,7 @@ import MobileNavBar from './components/MobileNavBar.vue';
 import DesktopSidebar from './components/DesktopSidebar.vue';
 import GradientCircle from './components/GradientCircle.vue';
 import FavoriteButton from '@/Components/helpers/FavoriteButton.vue';
+import Breadcrumbs from '@/Components/helpers/Breadcrumbs.vue';
 
 const themeStore = useThemeStore();
 const toast = useToast();
@@ -120,6 +126,9 @@ const handleFavoriteToggle = (isFavorited) => {
     // Update local state if needed
     modelProps.value.isFavorited = isFavorited;
 };
+
+// Add breadcrumbs computed property
+const breadcrumbs = computed(() => usePage().props.breadcrumbs || []);
 </script>
 
 <style scoped>

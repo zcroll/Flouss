@@ -1,5 +1,4 @@
 <template>
-
   <Head title="Formations" />
   <div class="flex-1 flex flex-col space-y-8 container mx-auto px-4 max-w-7xl">
     <!-- Hero Section -->
@@ -60,81 +59,24 @@
             :style="{ animationDelay: `${index * 50}ms` }" :view-mode="viewMode" />
         </div>
 
-        <!-- Pagination -->
-        <div v-if="formations.links?.length > 3" class="mt-8">
-          <!-- Desktop Pagination -->
-          <nav class="hidden sm:flex items-center justify-center gap-1" aria-label="Pagination">
-            <Link v-for="(link, index) in formations.links" :key="index" :href="link.url || ''"
-              :only="['formations', 'filters']" :data="filters" :class="[
-                'relative inline-flex items-center justify-center min-w-[40px] h-10 text-sm font-medium transition-colors',
-                index === 0 || index === formations.links.length - 1
-                  ? 'px-3 rounded-lg'
-                  : 'px-4 rounded-md',
-                link.active
-                  ? `bg-${themeStore.currentTheme.primary}-500 text-white shadow-sm`
-                  : 'text-gray-700 hover:bg-gray-100',
-                link.url === null
-                  ? 'pointer-events-none text-gray-400 bg-gray-50'
-                  : 'bg-white',
-                'border border-gray-200',
-                !link.active && link.url !== null
-                  ? `hover:border-${themeStore.currentTheme.primary}-500/20 hover:text-${themeStore.currentTheme.primary}-600`
-                  : ''
-              ]" :preserve-scroll="true">
-            <template v-if="index === 0 || index === formations.links.length - 1">
-              <span v-if="index === 0" class="flex items-center gap-1">
-                <ChevronLeft class="w-4 h-4" />
-                <span>{{ __('formations.previous') }}</span>
-              </span>
-              <span v-else class="flex items-center gap-1">
-                <span>{{ __('formations.next') }}</span>
-                <ChevronRight class="w-4 h-4" />
-              </span>
-            </template>
-            <template v-else>
-              <span v-html="link.label"></span>
-            </template>
-            </Link>
-          </nav>
-
-          <!-- Mobile Pagination -->
-          <nav class="sm:hidden flex items-center justify-between px-2" aria-label="Pagination">
-            <Link :href="formations.prev_page_url || ''" :only="['formations', 'filters']" :data="filters" :class="[
-              'flex items-center gap-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors',
-              formations.prev_page_url
-                ? 'text-gray-700 bg-white border border-gray-200 hover:border-primary-500/20 hover:text-primary-600'
-                : 'pointer-events-none text-gray-400 bg-gray-50 border border-gray-200'
-            ]" :preserve-scroll="true">
-            <ChevronLeft class="w-4 h-4" />
-            {{ __('formations.previous') }}
-            </Link>
-
-            <span class="text-sm text-gray-700">
-              {{ __('formations.page_info', { current: formations.current_page, total: formations.last_page }) }}
-            </span>
-
-            <Link :href="formations.next_page_url || ''" :only="['formations', 'filters']" :data="filters" :class="[
-              'flex items-center gap-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors',
-              formations.next_page_url
-                ? 'text-gray-700 bg-white border border-gray-200 hover:border-primary-500/20 hover:text-primary-600'
-                : 'pointer-events-none text-gray-400 bg-gray-50 border border-gray-200'
-            ]" :preserve-scroll="true">
-            {{ __('formations.next') }}
-            <ChevronRight class="w-4 h-4" />
-            </Link>
-          </nav>
+        <!-- Loading Indicator -->
+        <div v-if="isLoading" class="flex justify-center py-4">
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
         </div>
+
+        <!-- Intersection Observer Target -->
+        <div ref="infiniteScrollTrigger" class="h-4 w-full"></div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import MainLayout from "@/Layouts/MainLayout.vue";
 import { Card, CardContent } from "@/Components/ui/card";
-import { LayoutGrid, List, ChevronLeft, ChevronRight } from 'lucide-vue-next';
+import { LayoutGrid, List } from 'lucide-vue-next';
 import { useThemeStore } from '@/stores/theme/themeStore';
 import FormationCard from '@/Components/Formations/FormationCard.vue';
 import FilterFormation from '@/Components/Formations/FilterFormation.vue';
@@ -170,19 +112,78 @@ const themeStore = useThemeStore();
 const { isActive } = useActiveLink();
 
 const viewMode = ref('grid');
+const formations = ref(props.formations);
+const page = ref(1);
+const isLoading = ref(false);
+const infiniteScrollTrigger = ref(null);
 
 // Handle filter updates
 const updateFilters = (newFilters) => {
-  router.get(
-    route('formations.index'),
-    { ...newFilters, page: 1 },
+  router.visit(window.location.pathname, {
+    data: newFilters,
+    preserveState: true,
+    preserveScroll: true,
+    replace: true,
+    only: ['formations'],
+    onSuccess: () => {
+      formations.value = props.formations;
+      page.value = 1;
+    },
+  });
+};
+
+const loadMoreFormations = () => {
+  if (isLoading.value || formations.value.current_page >= formations.value.last_page) return;
+
+  isLoading.value = true;
+  page.value++;
+
+  router.reload({
+    data: {
+      page: page.value,
+      ...props.filters,
+    },
+    preserveState: true,
+    preserveScroll: true,
+    only: ['formations'],
+    onSuccess: (response) => {
+      if (response?.props?.formations?.data) {
+        formations.value = {
+          ...response.props.formations,
+          data: [...formations.value.data, ...response.props.formations.data]
+        };
+      }
+      isLoading.value = false;
+    },
+  });
+};
+
+// Intersection Observer setup
+let observer;
+
+onMounted(() => {
+  observer = new IntersectionObserver(
+    (entries) => {
+      if (entries[0].isIntersecting && !isLoading.value) {
+        loadMoreFormations();
+      }
+    },
     {
-      preserveState: true,
-      preserveScroll: true,
-      only: ['formations', 'filters']
+      rootMargin: '100px',
+      threshold: 0.1
     }
   );
-};
+
+  if (infiniteScrollTrigger.value) {
+    observer.observe(infiniteScrollTrigger.value);
+  }
+});
+
+onUnmounted(() => {
+  if (observer) {
+    observer.disconnect();
+  }
+});
 </script>
 
 <style scoped>

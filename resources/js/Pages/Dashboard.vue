@@ -100,6 +100,93 @@
                   </div>
                 </div>
               </div>
+
+              <!-- Personality Traits Panel -->
+              <div :class="[
+                themeStore.getThemeClasses('border'),
+                'bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-xl md:rounded-2xl p-4 md:p-6 shadow-xl transition-all duration-300 hover:shadow-2xl',
+              ]">
+                <h3 :class="[
+                  'text-base md:text-lg font-semibold mb-4',
+                  themeStore.isDarkMode ? 'text-white' : 'text-gray-800'
+                ]">
+                  Personality Traits
+                </h3>
+                
+                <div class="space-y-4">
+                  <!-- Introverted/Extroverted Scale -->
+                  <div class="trait-scale">
+                    <div class="flex justify-between text-xs md:text-sm mb-1.5">
+                      <span :class="themeStore.isDarkMode ? 'text-gray-400' : 'text-gray-600'">Extraverted</span>
+                      <span class="font-medium" :class="`text-${themeStore.currentTheme.primary}-600 dark:text-${themeStore.currentTheme.primary}-400`">
+                        51% Introverted
+                      </span>
+                      <span :class="themeStore.isDarkMode ? 'text-gray-400' : 'text-gray-600'">Introverted</span>
+                    </div>
+                    <div class="h-2 rounded-full" :class="[
+                      themeStore.isDarkMode ? `bg-${themeStore.currentTheme.primary}-900/30` : `bg-${themeStore.currentTheme.primary}-100/50`
+                    ]">
+                      <div class="h-full rounded-full transition-all duration-500" 
+                           :class="[
+                             themeStore.isDarkMode ? `bg-${themeStore.currentTheme.primary}-400` : `bg-${themeStore.currentTheme.primary}-500`
+                           ]"
+                           :style="{ width: '51%' }"></div>
+                    </div>
+                  </div>
+
+                  <!-- Observant/Intuitive Scale -->
+                  <div class="trait-scale">
+                    <div class="flex justify-between text-xs md:text-sm mb-1.5">
+                      <span :class="themeStore.isDarkMode ? 'text-gray-400' : 'text-gray-600'">Intuitive</span>
+                      <span class="font-medium text-amber-600 dark:text-amber-400">59% Observant</span>
+                      <span :class="themeStore.isDarkMode ? 'text-gray-400' : 'text-gray-600'">Observant</span>
+                    </div>
+                    <div class="h-2 rounded-full bg-amber-100/50 dark:bg-amber-900/30">
+                      <div class="h-full rounded-full transition-all duration-500 bg-amber-500 dark:bg-amber-400"
+                           :style="{ width: '59%' }"></div>
+                    </div>
+                  </div>
+
+                  <!-- Thinking/Feeling Scale -->
+                  <div class="trait-scale">
+                    <div class="flex justify-between text-xs md:text-sm mb-1.5">
+                      <span :class="themeStore.isDarkMode ? 'text-gray-400' : 'text-gray-600'">Thinking</span>
+                      <span class="font-medium text-emerald-600 dark:text-emerald-400">65% Thinking</span>
+                      <span :class="themeStore.isDarkMode ? 'text-gray-400' : 'text-gray-600'">Feeling</span>
+                    </div>
+                    <div class="h-2 rounded-full bg-emerald-100/50 dark:bg-emerald-900/30">
+                      <div class="h-full rounded-full transition-all duration-500 bg-emerald-500 dark:bg-emerald-400"
+                           :style="{ width: '65%' }"></div>
+                    </div>
+                  </div>
+
+                  <!-- Judging/Prospecting Scale -->
+                  <div class="trait-scale">
+                    <div class="flex justify-between text-xs md:text-sm mb-1.5">
+                      <span :class="themeStore.isDarkMode ? 'text-gray-400' : 'text-gray-600'">Judging</span>
+                      <span class="font-medium text-purple-600 dark:text-purple-400">53% Prospecting</span>
+                      <span :class="themeStore.isDarkMode ? 'text-gray-400' : 'text-gray-600'">Prospecting</span>
+                    </div>
+                    <div class="h-2 rounded-full bg-purple-100/50 dark:bg-purple-900/30">
+                      <div class="h-full rounded-full transition-all duration-500 bg-purple-500 dark:bg-purple-400"
+                           :style="{ width: '53%' }"></div>
+                    </div>
+                  </div>
+
+                  <!-- Assertive/Turbulent Scale -->
+                  <div class="trait-scale">
+                    <div class="flex justify-between text-xs md:text-sm mb-1.5">
+                      <span :class="themeStore.isDarkMode ? 'text-gray-400' : 'text-gray-600'">Assertive</span>
+                      <span class="font-medium text-red-600 dark:text-red-400">53% Turbulent</span>
+                      <span :class="themeStore.isDarkMode ? 'text-gray-400' : 'text-gray-600'">Turbulent</span>
+                    </div>
+                    <div class="h-2 rounded-full bg-red-100/50 dark:bg-red-900/30">
+                      <div class="h-full rounded-full transition-all duration-500 bg-red-500 dark:bg-red-400"
+                           :style="{ width: '53%' }"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -369,5 +456,61 @@ console.log('Dashboard setup with:', {
   .custom-scrollbar {
     -webkit-overflow-scrolling: touch;
   }
+}
+
+/* Add these to your existing styles */
+.trait-scale {
+  opacity: 0;
+  transform: translateX(-20px);
+  animation: slideIn 0.5s ease forwards;
+  position: relative;
+  overflow: hidden;
+}
+
+.trait-scale::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
+}
+
+.trait-scale:hover::after {
+  transform: translateX(100%);
+}
+
+.trait-scale:nth-child(1) { animation-delay: 100ms; }
+.trait-scale:nth-child(2) { animation-delay: 200ms; }
+.trait-scale:nth-child(3) { animation-delay: 300ms; }
+.trait-scale:nth-child(4) { animation-delay: 400ms; }
+.trait-scale:nth-child(5) { animation-delay: 500ms; }
+
+@keyframes slideIn {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Enhanced hover effects */
+.trait-scale:hover .h-full {
+  filter: brightness(1.1);
+  transform: scaleY(1.1);
+  transition: all 0.3s ease;
+}
+
+/* Glass effect enhancement */
+.backdrop-blur-sm {
+  backdrop-filter: blur(8px) saturate(180%);
+  -webkit-backdrop-filter: blur(8px) saturate(180%);
 }
 </style>

@@ -31,6 +31,10 @@ class DegreeController extends Controller
             false;
 
         return Inertia::render('degree/Overview', [
+            'breadcrumbs' => [
+                ['title' => 'Degrees', 'url' => route('degrees.index')],
+                ['title' => $this->getLocalizedColumn($degree, 'name'), 'url' => route('degree.index', $degree->slug)],
+            ],
             'degree' => [
                 'id' => $degree->id,
                 'name' => $this->getLocalizedColumn($degree, 'name'),
@@ -69,6 +73,11 @@ class DegreeController extends Controller
             false;
 
         return Inertia::render('degree/Skills', [
+            'breadcrumbs' => [
+                ['title' => 'Degrees', 'url' => route('degrees.index')],
+                ['title' => $this->getLocalizedColumn($degree, 'name'), 'url' => route('degree.index', $degree->slug)],
+                ['title' => 'Skills', 'url' => route('degree.skills', $degree->slug)],
+            ],
             'degree' => [
                 'id' => $degree->id,
                 'name' => $this->getLocalizedColumn($degree, 'name'),
@@ -95,6 +104,11 @@ class DegreeController extends Controller
             false;
 
         return Inertia::render('degree/Jobs', [
+            'breadcrumbs' => [
+                ['title' => 'Degrees', 'url' => route('degrees.index')],
+                ['title' => $this->getLocalizedColumn($degree, 'name'), 'url' => route('degree.index', $degree->slug)],
+                ['title' => 'Jobs', 'url' => route('degree.jobs', $degree->slug)],
+            ],
             'degree' => [
                 'id' => $degree->id,
                 'name' => $this->getLocalizedColumn($degree, 'name'),
@@ -124,6 +138,11 @@ class DegreeController extends Controller
         })->get();
 
         return Inertia::render('degree/HowToObtain', [
+            'breadcrumbs' => [
+                ['title' => 'Degrees', 'url' => route('degrees.index')],
+                ['title' => $this->getLocalizedColumn($degree, 'name'), 'url' => route('degree.index', $degree->slug)],
+                ['title' => 'How to Obtain', 'url' => route('degree.howToObtain', $degree->slug)],
+            ],
             'degree' => [
                 'id' => $degree->id,
                 'name' => $this->getLocalizedColumn($degree, 'name'),

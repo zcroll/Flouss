@@ -13,9 +13,8 @@ use App\Models\JobStep;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
-
-
-
+use Illuminate\Support\Facades\Auth;
+use Diglactic\Breadcrumbs\Breadcrumbs;
 
 class CareerController extends Controller
 {
@@ -33,8 +32,8 @@ class CareerController extends Controller
             ->where('slug', $job)
             ->firstOrFail();
 
-        $isFavorited = auth()->check() ? 
-            $occupation->favorites()->where('user_id', auth()->id())->exists() : 
+        $isFavorited = Auth::check() ? 
+            $occupation->favorites()->where('user_id', Auth::id())->exists() : 
             false;
 
         return Inertia::render('career/OverView', [
@@ -57,6 +56,7 @@ class CareerController extends Controller
                 ];
             }),
             'is_favorited' => $isFavorited,
+            'breadcrumbs' => Breadcrumbs::generate('career', $occupation)
         ]);
     }
 
@@ -66,14 +66,28 @@ class CareerController extends Controller
             ->where('slug', $job)
             ->firstOrFail(); 
 
-        $isFavorited = auth()->check() ? 
-            $occupation->favorites()->where('user_id', auth()->id())->exists() : 
+        $isFavorited = Auth::check() ? 
+            $occupation->favorites()->where('user_id', Auth::id())->exists() : 
             false;
+
+        $workEnvironments = $occupation->workEnvironments
+            ->unique('name')
+            ->map(function ($environment) {
+                return [
+                    'id' => $environment->id,
+                    'name' => $this->getLocalizedColumn($environment, 'name'),
+                    'description' => $this->getLocalizedColumn($environment, 'description'),
+                    'category' => $environment->category,
+                    'score' => (int)$environment->score,
+                    'skills' => [], // Add skills if you have them
+                ];
+            });
 
         return Inertia::render('career/workEnvironments', [
             'occupation' => new JobInfoResource($occupation),
-            'workEnvironments' => WorkEnvironmentResource::collection($occupation->workEnvironments->unique('name')),
+            'workEnvironments' => $workEnvironments,
             'is_favorited' => $isFavorited,
+            'breadcrumbs' => Breadcrumbs::generate('career.workEnvironments', $occupation)
         ]);
     }
 
@@ -81,8 +95,8 @@ class CareerController extends Controller
     {
         $occupation = JobInfo::where('slug', $job)->firstOrFail();
 
-        $isFavorited = auth()->check() ? 
-            $occupation->favorites()->where('user_id', auth()->id())->exists() : 
+        $isFavorited = Auth::check() ? 
+            $occupation->favorites()->where('user_id', Auth::id())->exists() : 
             false;
 
         $personalityTraits = DB::table('personality_traits')->where('job_id', $occupation->id)->get();
@@ -95,7 +109,7 @@ class CareerController extends Controller
                 'trait_type' => $detail->trait_type,
             ];
         });
-        ds([ 'personalityDetails' => $personalityDetails ]);
+        ds([ 'personalityDetails' => $personalityTraits ]);
 
         return Inertia::render('career/personality', [
             'occupation' => [
@@ -107,6 +121,7 @@ class CareerController extends Controller
             ],
             'personalityTraits' => $personalityTraits,
             'personalityDetails' => $personalityDetails,
+            'breadcrumbs' => Breadcrumbs::generate('career.personality', $occupation)
         ]);
     }
 
@@ -118,8 +133,8 @@ class CareerController extends Controller
             'howToBecome',
         ])->where('slug', $job)->firstOrFail();
 
-        $isFavorited = auth()->check() ? 
-            $occupation->favorites()->where('user_id', auth()->id())->exists() : 
+        $isFavorited = Auth::check() ? 
+            $occupation->favorites()->where('user_id', Auth::id())->exists() : 
             false;
 
         $degrees = DegreeJob::where('job_id', $occupation->id)
@@ -161,6 +176,7 @@ class CareerController extends Controller
             ],
             'jobDegrees' => $degrees,
             'disableStepsLink' => $occupation->jobSteps->isEmpty(),
+            'breadcrumbs' => Breadcrumbs::generate('career.how-to-become', $occupation)
         ]);
     }
 
@@ -170,8 +186,8 @@ class CareerController extends Controller
             ->with(['jobInfoDuties', 'workEnvironments'])
             ->firstOrFail();
         
-        $isFavorited = auth()->check() ? 
-            $career->favorites()->where('user_id', auth()->id())->exists() : 
+        $isFavorited = Auth::check() ? 
+            $career->favorites()->where('user_id', Auth::id())->exists() : 
             false;
 
         return Inertia::render('career/Show', [

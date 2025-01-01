@@ -3,38 +3,69 @@
   <Head title="Degrees" />
   <div class="flex-1 flex flex-col space-y-8 container mx-auto px-4 max-w-7xl">
     <!-- Hero Section -->
-   
+    <Card :class="['relative p-8 overflow-hidden']">
+      <CardContent>
+        <div class="relative">
+          <h1 :class="[
+            'text-3xl md:text-4xl font-bold mb-4',
+            themeStore.isDarkMode ? 'text-white' : 'text-gray-900'
+          ]">
+            {{ __('degrees.explore_degrees') }}
+          </h1>
+          <p :class="[
+            'text-lg max-w-2xl',
+            themeStore.isDarkMode ? 'text-gray-300' : 'text-gray-600'
+          ]">
+            {{ __('degrees.discover_programs') }}
+          </p>
+        </div>
+      </CardContent>
+    </Card>
 
-    <!-- Filters -->
-    <DegreeFilters :initial-filters="filters" @update:filters="handleFiltersUpdate" @reset="resetFilters" />
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <!-- Filters Sidebar -->
+      <div class="lg:col-span-1">
+        <DegreeFilters :initial-filters="filters" @update:filters="handleFiltersUpdate" @reset="resetFilters" />
+      </div>
 
-    <!-- Degrees Grid -->
-    <TransitionGroup
-      name="degree-list" 
-      tag="div"
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
-      v-if="degrees.data.length > 0"
-      appear
-    >
-      <DegreeCard 
-        v-for="(degree, index) in degrees.data" 
-        :key="degree.id" 
-        :degree="degree"
-        :style="{ animationDelay: `${index * 10}ms` }"
-        class="degree-card"
-      />
-    </TransitionGroup>
+      <!-- Degrees List -->
+      <div class="lg:col-span-3">
+        <!-- Results Count -->
+        <div class="mb-6">
+          <p :class="[`text-${themeStore.currentTheme.primary}-600`, 'text-sm']">
+            {{ degrees.total }} {{ __('degrees.results_found') }}
+          </p>
+        </div>
 
-    <!-- Empty State -->
-    <EmptyState v-if="degrees.data.length === 0" @reset="resetFilters" type="degrees" />
+        <!-- Degrees Grid -->
+        <TransitionGroup
+          name="degree-list" 
+          tag="div"
+          class="grid grid-cols-1 md:grid-cols-2 gap-4"
+          v-if="degrees.data.length > 0"
+          appear
+        >
+          <DegreeCard 
+            v-for="(degree, index) in degrees.data" 
+            :key="degree.id" 
+            :degree="degree"
+            :style="{ animationDelay: `${index * 50}ms` }"
+            class="degree-card"
+          />
+        </TransitionGroup>
 
-    <!-- Loading Indicator -->
-    <div v-if="isLoading" class="flex justify-center py-4">
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+        <!-- Empty State -->
+        <EmptyState v-if="degrees.data.length === 0" @reset="resetFilters" type="degrees" />
+
+        <!-- Loading Indicator -->
+        <div v-if="isLoading" class="flex justify-center py-4">
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+        </div>
+
+        <!-- Intersection Observer Target -->
+        <div ref="infiniteScrollTrigger" class="h-4 w-full"></div>
+      </div>
     </div>
-
-    <!-- Intersection Observer Target -->
-    <div ref="infiniteScrollTrigger" class="h-4 w-full"></div>
 
     <BackToTop />
   </div>

@@ -1,16 +1,10 @@
 <template>
   <Head title="Jobs" />
+  <div class="flex-1 flex flex-col space-y-8 container mx-auto px-4 max-w-7xl">
     <!-- Hero Section -->
-    <!-- <Card :class="['relative p-8 overflow-hidden']"> -->
-      <!-- Background Pattern -->
-      <!-- <CardContent>
-        <div class="absolute inset-0 opacity-5">
-          <div class="absolute inset-0"
-            style="background-image: url('data:image/svg+xml,...'); background-size: 20px 20px;"></div>
-        </div>
-
-        <!-- Content -->
-        <!-- <div class="relative">
+    <Card :class="['relative p-8 overflow-hidden']">
+      <CardContent>
+        <div class="relative">
           <h1 :class="[
             'text-3xl md:text-4xl font-bold mb-4',
             themeStore.isDarkMode ? 'text-white' : 'text-gray-900'
@@ -24,41 +18,45 @@
             {{ __('jobs.discover_careers') }}
           </p>
         </div>
-      </CardContent> -->
-    <!-- </Card> --> -->
+      </CardContent>
+    </Card>
 
-    <!-- Filters -->
-    <JobFilters :initial-filters="filters" @update:filters="handleFiltersUpdate" @reset="resetFilters" class="mb-4" />
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <!-- Filters Sidebar -->
+      <div class="lg:col-span-1">
+        <JobFilters :initial-filters="filters" @update:filters="handleFiltersUpdate" @reset="resetFilters" />
+      </div>
 
-    <!-- Jobs Grid -->
-    <TransitionGroup 
-      name="job-list"
-      tag="div"
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
-      v-if="jobs.data.length > 0"
-      appear
-    >
-      <JobCard 
-        v-for="(job, index) in jobs.data" 
-        :key="job.id" 
-        :job="job"
-        :style="{ animationDelay: `${index * 10}ms` }"
-        class="job-card"
-      />
-    </TransitionGroup>
+      <!-- Jobs List -->
+      <div class="lg:col-span-3">
+        <!-- Results Count -->
+        <div class="mb-6">
+          <p :class="[`text-${themeStore.currentTheme.primary}-600`, 'text-sm']">
+            {{ jobs.total }} {{ __('jobs.results_found') }}
+          </p>
+        </div>
 
-    <!-- Empty State -->
-    <EmptyState v-if="jobs.data.length === 0" @reset="resetFilters" />
+        <!-- Jobs Grid -->
+        <TransitionGroup name="job-list" tag="div" class="grid grid-cols-1 md:grid-cols-2 gap-4"
+          v-if="jobs.data.length > 0" appear>
+          <JobCard v-for="(job, index) in jobs.data" :key="job.id" :job="job" 
+            :style="{ animationDelay: `${index * 50}ms` }" class="job-card" />
+        </TransitionGroup>
 
-    <!-- Loading Indicator -->
-    <div v-if="isLoading" class="flex justify-center py-4">
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+        <!-- Empty State -->
+        <EmptyState v-if="jobs.data.length === 0" @reset="resetFilters" />
+
+        <!-- Loading Indicator -->
+        <div v-if="isLoading" class="flex justify-center py-4">
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+        </div>
+
+        <!-- Intersection Observer Target -->
+        <div ref="infiniteScrollTrigger" class="h-4 w-full"></div>
+      </div>
     </div>
-
-    <!-- Intersection Observer Target -->
-    <div ref="infiniteScrollTrigger" class="h-4 w-full"></div>
-
-    <BackToTop />
+  </div>
+  <BackToTop />
 </template>
 
 <script setup>
