@@ -48,6 +48,7 @@ import { useTestStageStore } from '@/stores/testStageStore';
 import { useTestProgressStore } from '@/stores/testProgressStore';
 import { useBasicInterestStore } from '@/stores/basicInterestStore';
 import { useDegreeStore } from '@/stores/degreeStore';
+import { usePersonalityStore } from '@/stores/personalityStore';
 
 const props = defineProps({
   title: {
@@ -77,6 +78,7 @@ const testStageStore = useTestStageStore();
 const progressStore = useTestProgressStore();
 const basicInterestStore = useBasicInterestStore();
 const degreeStore = useDegreeStore();
+const personalityStore = usePersonalityStore();
 const loading = ref(false);
 const error = ref(null);
 
@@ -104,6 +106,11 @@ const handleContinue = async () => {
         const currentStageComplete = progressStore.stages[props.currentStage]?.completed;
         if (!currentStageComplete) {
           throw new Error('Please complete the current stage before continuing.');
+        }
+
+        // For personality stage, check if we have the personality report
+        if (props.currentStage === 'personality' && !personalityStore?.progress?.personalityReport) {
+          throw new Error('Please wait for personality analysis to complete before proceeding.');
         }
 
         // Make API call to save results
@@ -141,7 +148,7 @@ const handleContinue = async () => {
       }
     }
 
-    if (props.currentStage === 'degree' && !nextStage) {
+    if (props.currentStage === 'degree' && nextStage === 'personality') {
       if (!degreeStore?.progress?.degreeMatching) {
         throw new Error('Please wait for degree matching to complete before proceeding.');
       }

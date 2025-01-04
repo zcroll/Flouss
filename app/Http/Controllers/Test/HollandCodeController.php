@@ -65,12 +65,12 @@ class HollandCodeController extends BaseTestController
     protected function renderResponse($itemSet, array $progress, bool $isCompleted = false)
     {
         // Debug the locale first
-        ds([
-            'debug_locale' => [
-                'current_locale' => app()->getLocale(),
-                'is_french' => app()->getLocale() === 'fr'
-            ]
-        ]);
+        // ds([
+        //     'debug_locale' => [
+        //         'current_locale' => app()->getLocale(),
+        //         'is_french' => app()->getLocale() === 'fr'
+        //     ]
+        // ]);
 
         // Add static translations for common option texts
         $optionTranslations = [
@@ -83,14 +83,14 @@ class HollandCodeController extends BaseTestController
         ];
 
         // Debug a sample item to verify text fields
-        $sampleItem = $itemSet->items->first();
-        ds([
-            'sample_item_debug' => [
-                'text' => $sampleItem->text,
-                'text_fr' => $sampleItem->text_fr,
-                'current_locale' => app()->getLocale()
-            ]
-        ]);
+        // $sampleItem = $itemSet->items->first();
+        // ds([
+        //     'sample_item_debug' => [
+        //         'text' => $sampleItem->text,
+        //         'text_fr' => $sampleItem->text_fr,
+        //         'current_locale' => app()->getLocale()
+        //     ]
+        // ]);
 
         return Inertia::render('Test/MainTest', [
             'hollandCodes' => [
@@ -140,16 +140,16 @@ class HollandCodeController extends BaseTestController
                         ]
                     ];
 
-                    // Debug the item text localization
-                    ds([
-                        'item_text_debug' => [
-                            'id' => $item->id,
-                            'original_text' => $item->text,
-                            'french_text' => $item->text_fr,
-                            'selected_text' => $itemText,
-                            'locale' => app()->getLocale()
-                        ]
-                    ]);
+                    // // Debug the item text localization
+                    // ds([
+                    //     'item_text_debug' => [
+                    //         'id' => $item->id,
+                    //         'original_text' => $item->text,
+                    //         'french_text' => $item->text_fr,
+                    //         'selected_text' => $itemText,
+                    //         'locale' => app()->getLocale()
+                    //     ]
+                    // ]);
 
                     return $mappedItem;
                 }),
@@ -179,14 +179,14 @@ class HollandCodeController extends BaseTestController
                     ];
 
                     // Debug the mapped option set
-                    ds([
-                        'mapped_option_set_debug' => [
-                            'id' => $mappedOptionSet['id'],
-                            'name' => $mappedOptionSet['name'],
-                            'first_option' => $mappedOptionSet['options']->first(),
-                            'locale' => app()->getLocale()
-                        ]
-                    ]);
+                    // ds([
+                    //     'mapped_option_set_debug' => [
+                    //         'id' => $mappedOptionSet['id'],
+                    //         'name' => $mappedOptionSet['name'],
+                    //         'first_option' => $mappedOptionSet['options']->first(),
+                    //         'locale' => app()->getLocale()
+                    //     ]
+                    // ]);
 
                     return $mappedOptionSet;
                 })

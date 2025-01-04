@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { useHollandCodeStore } from './hollandCodeStore';
 import { useBasicInterestStore } from './basicInterestStore';
 import { useDegreeStore } from './degreeStore';
+import { usePersonalityStore } from './personalityStore';
 import { useTestProgressStore } from './testProgressStore';
 import { router } from '@inertiajs/vue3';
 import axios from 'axios';
@@ -9,7 +10,7 @@ import axios from 'axios';
 export const useTestStageStore = defineStore('testStage', {
     state: () => ({
         currentStage: null,
-        stages: ['holland_codes', 'basic_interests', 'degree'],
+        stages: ['holland_codes', 'basic_interests', 'degree', 'personality'],
         stageProgress: {
             holland_codes: {
                 percentage: 0,
@@ -20,6 +21,10 @@ export const useTestStageStore = defineStore('testStage', {
                 completed: false
             },
             degree: {
+                percentage: 0,
+                completed: false
+            },
+            personality: {
                 percentage: 0,
                 completed: false
             }
@@ -42,9 +47,16 @@ export const useTestStageStore = defineStore('testStage', {
             'degree': {
                 name: 'Degree Assessment',
                 description: 'Find your ideal degree path',
+                nextStage: 'personality',
+                nextStageName: 'Personality Assessment',
+                route: 'degree-assessment.index'
+            },
+            'personality': {
+                name: 'Personality Assessment',
+                description: 'Understand your personality traits and characteristics',
                 nextStage: null,
                 nextStageName: null,
-                route: 'degree-assessment.index'
+                route: 'personality.index'
             }
         },
         loading: false,
@@ -218,6 +230,8 @@ export const useTestStageStore = defineStore('testStage', {
                     return useHollandCodeStore();
                 case 'degree':
                     return useDegreeStore();
+                case 'personality':
+                    return usePersonalityStore();
                 default:
                     return null;
             }

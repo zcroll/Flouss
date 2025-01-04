@@ -12,7 +12,8 @@ class TestStageController extends Controller
     private $stages = [
         'holland_codes',
         'basic_interests',
-        'degree'
+        'degree',
+        'personality'
     ];
 
     public function changeStage(Request $request)
@@ -94,6 +95,9 @@ class TestStageController extends Controller
                 ]),
                 'degree' => Session::get('degree_progress', [
                     'completed' => false
+                ]),
+                'personality' => Session::get('personality_progress', [
+                    'completed' => false
                 ])
             ];
 
@@ -168,6 +172,12 @@ class TestStageController extends Controller
                 'responses' => [],
                 'completed' => false,
                 'progress_percentage' => 0
+            ]),
+            'personality' => Session::get('personality_progress', [
+                'current_index' => 0,
+                'responses' => [],
+                'completed' => false,
+                'progress_percentage' => 0
             ])
         ];
 
@@ -213,7 +223,8 @@ class TestStageController extends Controller
         $keyMap = [
             'holland_codes' => 'holland_codes_progress',
             'basic_interests' => 'basic_interest_progress',
-            'degree' => 'degree_progress'
+            'degree' => 'degree_progress',
+            'personality' => 'personality_progress'
         ];
 
         return $keyMap[$stage] ?? null;
@@ -224,7 +235,8 @@ class TestStageController extends Controller
         $controllerMap = [
             'holland_codes' => app(HollandCodeController::class),
             'basic_interests' => app(BasicInterestController::class),
-            'degree' => app(DegreeTestStageController::class)
+            'degree' => app(DegreeTestStageController::class),
+            'personality' => app(PersonalityController::class)
         ];
 
         return $controllerMap[$stage] ?? null;
@@ -289,6 +301,25 @@ class TestStageController extends Controller
                     'progress' => $progress
                 ];
                 break;
+
+            case 'personality':
+                $progress = Session::get('personality_progress', [
+                    'current_index' => 0,
+                    'responses' => [],
+                    'completed' => false,
+                    'progress_percentage' => 0,
+                    'personalityReport' => null
+                ]);
+
+                \Log::info('TestStageController: Personality progress', [
+                    'progress' => $progress,
+                    'session_id' => Session::getId()
+                ]);
+
+                $stageData = [
+                    'progress' => $progress
+                ];
+                break;
         }
 
         return $stageData;
@@ -310,6 +341,12 @@ class TestStageController extends Controller
                 'progress_percentage' => 0
             ]),
             'degree' => Session::get('degree_progress', [
+                'current_index' => 0,
+                'responses' => [],
+                'completed' => false,
+                'progress_percentage' => 0
+            ]),
+            'personality' => Session::get('personality_progress', [
                 'current_index' => 0,
                 'responses' => [],
                 'completed' => false,
@@ -361,6 +398,9 @@ class TestStageController extends Controller
                     'completed' => false
                 ]),
                 'degree' => Session::get('degree_progress', [
+                    'completed' => false
+                ]),
+                'personality' => Session::get('personality_progress', [
                     'completed' => false
                 ])
             ];

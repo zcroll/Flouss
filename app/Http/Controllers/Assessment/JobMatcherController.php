@@ -8,18 +8,14 @@ use Symfony\Component\Process\Process;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 
-
 class JobMatcherController extends Controller
 {
-    use ArchetypeFinder ;
+    use ArchetypeFinder;
 
-
-    public function matchJobs(Request $request)
+    private function prepareUserPreferences($request)
     {
-
-
-
-         $interest_scores = [
+        // Get interest scores from request or use defaults
+        $interest_scores = $request->input('interest_scores', [
             "Finance" => 5,
             "Athletics" => 2,
             "Flying" => 4,
@@ -46,72 +42,147 @@ class JobMatcherController extends Controller
             "Military" => 3,
             "Information technology" => 1,
             "Music" => 2
+        ]);
+
+        // Get skill scores from request or use defaults
+        $skill_scores = $request->input('skill_scores', [
+            486 => 5,  // Mathematical skills
+            492 => 4,  // Helping people
+            837 => 4,  // Installing equipment
+            1308 => 5, // Analytical thinking
+            1329 => 4, // Learning new things
+            1378 => 4, // Active listening
+            1513 => 5, // Science
+            1557 => 5, // Critical thinking
+            1650 => 4, // Scientific communication
+            1687 => 4  // Persuading
+        ]);
+
+        // Get must-have scores from request or use defaults
+        $must_have_scores = $request->input('must_have_scores', [
+            221 => 4,  // Making decisions independently
+            314 => 3,  // Keeping busy
+            320 => 3,  // Job prestige
+            351 => 4,  // Good working conditions
+            373 => 3,  // Work alone
+            493 => 5,  // Helping people
+            610 => 4,  // Steady employment
+            613 => 4,  // Opportunities for advancement
+            872 => 5,  // Ethical alignment
+            890 => 4,  // Try own ideas
+            973 => 5,  // Fair treatment
+            1194 => 4, // Variety
+            1290 => 5, // Making use of abilities
+            1327 => 4, // Planning own work
+            1367 => 3, // Authority to direct
+            1451 => 4, // Achievement
+            1611 => 5, // Easy co-workers
+            1667 => 5, // Manager support
+            1730 => 4, // Earn money
+            1742 => 4  // Recognition
+        ]);
+
+        // Get can't stand scores from request or use defaults
+        $cant_stand_scores = $request->input('cant_stand_scores', [
+            101 => 5, // Repetitive tasks
+            102 => 3, // High-pressure deadlines
+            103 => 2, // Frequent travel
+            104 => 3, // Irregular hours
+            105 => 4, // Physical labor
+            106 => 4, // High risk environment
+            107 => 2, // Isolation
+            108 => 3, // Constant public interaction
+            109 => 4, // Rigid hierarchy
+            110 => 3  // Frequent relocation
+        ]);
+
+        return [
+            'interest_scores' => $interest_scores,
+            'skill_scores' => $skill_scores,
+            'must_have_scores' => $must_have_scores,
+            'cant_stand_scores' => $cant_stand_scores
         ];
+    }
 
-        $score = [
-            'Realistic' => round(mt_rand(0, 100) / 100, 2),
-            'Investigative' => round(mt_rand(0, 100) / 100, 2),
-            'Artistic' => round(mt_rand(0, 100) / 100, 2),
-            'Social' => round(mt_rand(0, 100) / 100, 2),
-            'Enterprising' => round(mt_rand(0, 100) / 100, 2),
-            'Conventional' => round(mt_rand(0, 100) / 100, 2)
-        ];
+    public function matchJobs(Request $request)
+    {
+        try {
+            // Prepare user preferences
+            $preferences = $this->prepareUserPreferences($request);
 
+            // Get Python script path
+            $pythonPath = 'python3';
+            $scriptPath = base_path('app/python/JobMatch.py');
 
+            // Create and run process
+            $process = new Process([
+                $pythonPath,
+                $scriptPath,
+                json_encode($preferences)
+            ]);
 
-         $jobs = $this->getArchetypeAndTopScores($score);
-         ds($jobs);
+            $process->run();
 
+            // Check for process failure
+            if (!$process->isSuccessful()) {
+                Log::error('Python script execution failed', [
+                    'error' => $process->getErrorOutput(),
+                    'command' => $process->getCommandLine(),
+                    'working_directory' => $process->getWorkingDirectory(),
+                ]);
+                throw new ProcessFailedException($process);
+            }
 
+            // Get and decode output
+            $output = $process->getOutput();
+            Log::info('Python script output', ['output' => $output]);
 
-        //  $pythonPath = '/home/u723210868/myenv/bin/python3.11';
-        //  $scriptPath = '/home/u723210868/domains/gennz.site/app/python/test.py';
+            $decodedOutput = json_decode($output, true);
 
-         $pythonPath = 'python3';
-         $scriptPath = base_path('app/python/test.py');
-       // Pass interest_scores to the Python script
-       $process = new Process([
-           $pythonPath,
-           $scriptPath,
-           json_encode($interest_scores),
-       ]);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new \Exception('Failed to decode Python script output');
+            }
 
-       try {
-           $process->run();
+            // Check for error in Python response
+            if (isset($decodedOutput['error'])) {
+                throw new \Exception($decodedOutput['error']);
+            }
 
-           if (!$process->isSuccessful()) {
-               Log::error('Python script execution failed', [
-                   'error' => $process->getErrorOutput(),
-                   'command' => $process->getCommandLine(),
-                   'working_directory' => $process->getWorkingDirectory(),
-               ]);
-               throw new ProcessFailedException($process);
-           }
+            // Process job matches
+            $jobMatches = $decodedOutput['job_matches'];
+            
+            // Calculate archetype scores if needed
+            $score = [
+                'Realistic' => round(mt_rand(0, 100) / 100, 2),
+                'Investigative' => round(mt_rand(0, 100) / 100, 2),
+                'Artistic' => round(mt_rand(0, 100) / 100, 2),
+                'Social' => round(mt_rand(0, 100) / 100, 2),
+                'Enterprising' => round(mt_rand(0, 100) / 100, 2),
+                'Conventional' => round(mt_rand(0, 100) / 100, 2)
+            ];
 
-           $output = $process->getOutput();
-           Log::info('Python script output', ['output' => $output]);
+            $archetype = $this->getArchetypeAndTopScores($score);
 
-           $decodedOutput = json_decode($output, true);
+            // Return response
+            return response()->json([
+                'status' => 'success',
+                'data' => [
+                    'job_matches' => $jobMatches,
+                    'total_matches' => $decodedOutput['total_matches'],
+                    'archetype' => $archetype
+                ]
+            ]);
 
-           if (json_last_error() !== JSON_ERROR_NONE) {
-               throw new \Exception('Failed to decode Python script output');
-           }
+        } catch (\Exception $e) {
+            Log::error('Job matching failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
 
-           return response()->json([
-               'status' => 'success',
-               'data' => $decodedOutput
-           ]);
-
-       } catch (\Exception $e) {
-           Log::error('Job matching failed', [
-               'error' => $e->getMessage(),
-               'trace' => $e->getTraceAsString()
-           ]);
-
-           return response()->json([
-               'status' => 'error',
-               'message' => 'Failed to process job matching'
-           ], 500);
-       }
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to process job matching: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

@@ -59,12 +59,16 @@ const props = defineProps({
         typeof value === 'object' &&
         'hollandCodes' in value &&
         'basicInterest' in value &&
+        'degree' in value &&
+        'personality' in value &&
         'completed' in value
       );
     },
     default: () => ({
       hollandCodes: 0,
       basicInterest: 0,
+      degree: 0,
+      personality: 0,
       completed: false
     })
   },
@@ -107,6 +111,7 @@ watch(() => props.progress, (newProgress) => {
       hollandCodes: 'holland_codes',
       basicInterest: 'basic_interests',
       degree: 'degree',
+      personality: 'personality'
     };
 
     const stage = stageMap[key];
@@ -120,7 +125,8 @@ watch(() => props.progress, (newProgress) => {
           current_index: value.currentIndex,
           progress_percentage: value.percentage,
           ...(stage === 'basic_interests' && value.jobMatching ? { jobMatching: value.jobMatching } : {}),
-          ...(stage === 'degree' && value.degreeMatching ? { degreeMatching: value.degreeMatching } : {})
+          ...(stage === 'degree' && value.degreeMatching ? { degreeMatching: value.degreeMatching } : {}),
+          ...(stage === 'personality' && value.personalityReport ? { personalityReport: value.personalityReport } : {})
         });
       } else {
         testProgressStore.updateStageProgress(stage, value);

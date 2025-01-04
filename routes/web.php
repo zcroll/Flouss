@@ -133,6 +133,13 @@ Route::middleware([
                 Route::post('/', [DegreeTestStageController::class, 'storeResponse'])->name('degree-assessment.store');
                 Route::post('/go-back', [DegreeTestStageController::class, 'goBack'])->name('degree-assessment.go-back');
             });
+
+            // Add Personality Assessment SPA routes
+            Route::prefix('personality')->middleware(['check.result'])->group(function () {
+                Route::get('/', [PersonalityController::class, 'index'])->name('personality.index');
+                Route::post('/', [PersonalityController::class, 'storeResponse'])->name('personality.store');
+                Route::post('/go-back', [PersonalityController::class, 'goBack'])->name('personality.go-back');
+            });
         });
 
         // Test Stage Management Routes

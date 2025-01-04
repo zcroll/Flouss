@@ -1,95 +1,130 @@
 <template>
-  <div id="tutorial-screen" class="w-full min-h-screen bg-zinc-950 text-zinc-50 flex items-center justify-center" aria-atomic="true" aria-live="assertive" tabindex="0">
-    <div class="container mx-auto px-6 py-10 max-w-4xl text-center">
-      <div class="space-y-8">
-        <h4
-          class="text-xl font-light tracking-tight text-zinc-400 mb-6"
-          aria-hidden="true"
-        >
-          {{ __('test.step_x_of_y', { step: currentStep + 1, total: tutorialSteps.length }) }}
-        </h4>
+  <main 
+    id="tutorial-screen" 
+    class="w-full min-h-screen bg-background text-foreground flex items-center justify-center"
+    role="main"
+  >
+    <div class="container mx-auto px-6 py-10 max-w-4xl">
+      <Card className="bg-transparent border-none shadow-none">
+        <CardHeader className="space-y-8 text-center">
+          <p class="text-xl font-light tracking-tight text-muted-foreground">
+            {{ __('test.step_x_of_y', { step: currentStep + 1, total: tutorialSteps.length }) }}
+          </p>
 
-        <h3
-          class="text-4xl md:text-5xl font-light tracking-tight mb-6"
-          aria-hidden="true"
-        >
-          {{ tutorialSteps[currentStep].title }}
-        </h3>
+          <CardTitle className="text-4xl md:text-5xl font-light tracking-tight">
+            {{ tutorialSteps[currentStep].title }}
+          </CardTitle>
 
-        <h5
-          class="text-xl font-light tracking-tight text-zinc-300 max-w-2xl mx-auto mb-8 tracking-wide"
-          aria-hidden="true"
-        >
-          <template v-if="currentStep === 0">
-            {{ __('test.tutorial.welcome.content') }}
-            <span class="text-sm font-semibold text-white block mt-2">{{ __('test.tutorial.welcome.remember') }}</span>
-          </template>
-          <template v-else>
-            {{ tutorialSteps[currentStep].content }}
-          </template>
-        </h5>
-        <div v-if="tutorialSteps[currentStep].example" class="mt-12 bg-zinc-900/50 rounded-xl p-8 mx-auto">
-          <div class="text-sm font-medium text-zinc-400 mb-6 text-center">{{ __('test.example') }}:</div>
-          <div v-if="currentStep === 1" class="text-zinc-200 max-w-4xl mx-auto">
-            <div class="space-y-3">
+          <CardDescription className="text-xl font-light tracking-tight max-w-2xl mx-auto">
+            <template v-if="currentStep === 0">
+              {{ __('test.tutorial.welcome.content') }}
+              <span class="text-sm font-semibold text-foreground block mt-2">
+                {{ __('test.tutorial.welcome.remember') }}
+              </span>
+            </template>
+            <template v-else>
+              {{ tutorialSteps[currentStep].content }}
+            </template>
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent>
+          <div 
+            v-if="tutorialSteps[currentStep].example" 
+            class="mt-12 bg-card/50 rounded-xl p-8 mx-auto"
+          >
+            <p class="text-sm font-medium text-muted-foreground mb-6 text-center">
+              {{ __('test.example') }}:
+            </p>
+
+            <!-- Holland Codes Example -->
+            <div v-if="currentStep === 1" class="text-card-foreground">
               <div class="flex flex-wrap items-center justify-center gap-2 text-base max-w-2xl mx-auto">
                 <HoverCard v-for="(item, index) in hollandCodes" :key="index">
-                  <HoverCardTrigger>
-                    <div class="border border-zinc-700 p-2 rounded-lg group hover:border-zinc-500 transition-colors duration-200 cursor-pointer">
-                      <div class="flex items-center gap-0">
-                        <span :class="item.color" class="font-mono font-semibold tracking-[0.1em] text-xs sm:text-sm">{{ item.letter }}</span>
-                        <span class="font-medium tracking-wide text-white text-xs sm:text-sm">{{ item.rest }}</span>
-                      </div>
-                    </div>
+                  <HoverCardTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      class="border-border hover:border-border/80 transition-colors duration-200"
+                    >
+                      <span :class="item.color" class="font-mono font-semibold tracking-[0.1em]">
+                        {{ item.letter }}
+                      </span>
+                      <span class="font-medium tracking-wide">{{ item.rest }}</span>
+                    </Button>
                   </HoverCardTrigger>
-                  <HoverCardContent class="w-48 sm:w-64 bg-zinc-950 border border-zinc-950 p-3 rounded-lg shadow-lg">
-                    <div class="space-y-1.5">
-                      <h4 class="text-xs sm:text-sm font-semibold text-white">{{ item.title }}</h4>
-                      <p class="text-xs text-zinc-400">{{ item.traits }}</p>
+                  <HoverCardContent class="w-64">
+                    <div class="space-y-2">
+                      <h4 class="text-sm font-semibold">{{ item.title }}</h4>
+                      <p class="text-sm text-muted-foreground">{{ item.traits }}</p>
                     </div>
                   </HoverCardContent>
                 </HoverCard>
               </div>
             </div>
-          </div>
-          <div v-if="currentStep === 2" class="space-y-4">
-            <div class="text-lg">{{ __('test.example_question') }}</div>
-            <div class="flex justify-between text-zinc-400">
-              <span>{{ __('test.hate_it') }}</span>
-              <span>{{ __('test.dislike_it') }}</span>
-              <span>{{ __('test.neutral') }}</span>
-              <span>{{ __('test.like_it') }}</span>
-              <span>{{ __('test.love_it') }}</span>
+
+            <!-- Rating Example -->
+            <div v-if="currentStep === 2" class="space-y-4">
+              <h3 class="text-lg font-medium">{{ __('test.example_question') }}</h3>
+              <div class="flex justify-between text-muted-foreground text-sm">
+                <span>{{ __('test.hate_it') }}</span>
+                <span>{{ __('test.dislike_it') }}</span>
+                <span>{{ __('test.neutral') }}</span>
+                <span>{{ __('test.like_it') }}</span>
+                <span>{{ __('test.love_it') }}</span>
+              </div>
             </div>
           </div>
-        </div>
+        </CardContent>
 
-        <div class="flex justify-center gap-4 mt-16">
-          <div class="flex" :class="{ 'justify-between w-full': currentStep > 0, 'justify-center': currentStep === 0 }">
-            <button
+        <CardFooter className="flex justify-center gap-4 mt-8">
+          <div 
+            class="flex" 
+            :class="{ 
+              'justify-between w-full': currentStep > 0, 
+              'justify-center': currentStep === 0 
+            }"
+          >
+            <Button
               v-if="currentStep > 0"
+              variant="secondary"
               @click="handlePrevious"
-              class="px-8 py-3 rounded-lg font-light text-lg transition-colors bg-zinc-300 text-zinc-900 hover:bg-zinc-950 hover:text-zinc-50"
             >
               {{ __('test.back') }}
-            </button>
+            </Button>
 
-            <button
+            <Button
               @click="handleNext"
-              class="px-8 py-3 rounded-lg font-light text-lg transition-colors bg-[#C35B8A] text-white hover:bg-[#B04B7A]"
+              variant="default"
+              class="bg-primary hover:bg-primary/90"
             >
-              {{ currentStep === tutorialSteps.length - 1 ? __('test.start_assessment') : __('test.next') }}
-            </button>
+              {{ currentStep === tutorialSteps.length - 1 
+                ? __('test.start_assessment') 
+                : __('test.next') 
+              }}
+            </Button>
           </div>
-        </div>
-      </div>
+        </CardFooter>
+      </Card>
     </div>
-  </div>
+  </main>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/Components/ui/hover-card';
+import { 
+  HoverCard, 
+  HoverCardContent, 
+  HoverCardTrigger 
+} from '@/Components/ui/hover-card';
+import { 
+  Card, 
+  CardHeader, 
+  CardTitle, 
+  CardDescription,
+  CardContent,
+  CardFooter
+} from '@/Components/ui/card';
+import { Button } from '@/Components/ui/button';
 import __ from '@/lang';
 
 const currentStep = ref(0);

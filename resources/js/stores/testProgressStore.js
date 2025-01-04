@@ -40,7 +40,7 @@ export const useTestProgressStore = defineStore('testProgress', {
         name: 'Your degree matches',
         time: '~ 3 mins',
         totalQuestions: 7,
-        nextStage: null,
+        nextStage: 'personality',
         storeKey: 'degreeStore',
         dataKey: 'progress',
         progressFields: {
@@ -49,6 +49,21 @@ export const useTestProgressStore = defineStore('testProgress', {
           percentage: 'progress_percentage',
           completed: 'completed',
           specialData: 'degreeMatching'
+        }
+      },
+      personality: {
+        name: 'Your personality traits',
+        time: '~ 5 mins',
+        totalQuestions: 9,
+        nextStage: null,
+        storeKey: 'personalityStore',
+        dataKey: 'progress',
+        progressFields: {
+          currentIndex: 'current_index',
+          validResponses: 'validResponses',
+          percentage: 'progress_percentage',
+          completed: 'completed',
+          specialData: 'personalityReport'
         }
       }
     },
@@ -78,6 +93,15 @@ export const useTestProgressStore = defineStore('testProgress', {
         percentage: 0,
         canTransition: false,
         degreeMatching: null,
+        debug: []
+      },
+      personality: {
+        completed: false,
+        currentIndex: 0,
+        validResponses: 0,
+        percentage: 0,
+        canTransition: false,
+        personalityReport: null,
         debug: []
       }
     }
@@ -267,6 +291,7 @@ export const useTestProgressStore = defineStore('testProgress', {
     archetypeDiscovery: (state) => state.stages.holland_codes?.archetypeDiscovery || null,
     jobMatching: (state) => state.stages.basic_interests?.jobMatching || null,
     degreeMatching: (state) => state.stages.degree?.degreeMatching || null,
+    personalityReport: (state) => state.stages.personality?.personalityReport || null,
     
     shouldShowNextStage: (state) => {
       const currentStage = state.stages[state.currentStage];

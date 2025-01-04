@@ -118,6 +118,7 @@ import TestQuestion from "@/Components/Test/TestQuestion.vue";
 import {useHollandCodeStore} from "@/stores/hollandCodeStore";
 import {useTestStageStore} from "@/stores/testStageStore";
 import {useBasicInterestStore} from "@/stores/basicInterestStore";
+import {usePersonalityStore} from "@/stores/personalityStore";
 import Discovery from "@/Components/Test/Discovery.vue";
 import BackButton from "@/Components/Test/BackButton.vue";
 import MatchResult from "@/Components/Test/MatchResult.vue";
@@ -130,6 +131,7 @@ const testStageStore = useTestStageStore();
 const basicInterestStore = useBasicInterestStore();
 const progressStore = useTestProgressStore();
 const degreeStore = useDegreeStore();
+const personalityStore = usePersonalityStore();
 
 const form = useForm({
     itemId: null,
@@ -147,6 +149,8 @@ const currentStore = computed(() => {
             return hollandCodeStore;
         case 'degree':
             return degreeStore;
+        case 'personality':
+            return personalityStore;
         default:
             return null;
     }
@@ -160,6 +164,8 @@ const currentTestData = computed(() => {
             return hollandCodeStore.data;
         case 'degree':
             return degreeStore.data;
+        case 'personality':
+            return personalityStore.data;
         default:
             return null;
     }
@@ -203,6 +209,8 @@ onMounted(async () => {
             await hollandCodeStore?.fetchHollandCodes();
         } else if (testStageStore?.currentStage === 'degree') {
             await degreeStore?.fetchData();
+        } else if (testStageStore?.currentStage === 'personality') {
+            await personalityStore?.fetchData();
         }
     } catch (error) {
         console.error('Error initializing test:', error);
@@ -219,6 +227,8 @@ const retryFetch = async () => {
             await hollandCodeStore.fetchHollandCodes();
         } else if (testStageStore.currentStage === 'degree') {
             await degreeStore.fetchData();
+        } else if (testStageStore.currentStage === 'personality') {
+            await personalityStore.fetchData();
         }
     } catch (error) {
         console.error('Error retrying fetch:', error);
