@@ -89,24 +89,14 @@
 </template>
 
 <script setup>
-import { defineComponent, ref, computed } from 'vue'
-import { Link } from '@inertiajs/vue3'
-import StickySidebar from '@/Pages/lib/StickySidebar.vue'
-import Formation from '@/Components/helpers/Formation.vue'
 import BackToTop from "@/Components/helpers/BackToTop.vue"
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/Components/ui/sheet"
-import { Badge } from "@/Components/ui/badge"
-import { Button } from "@/Components/ui/button"
-import { FunnelIcon } from '@heroicons/vue/24/outline'
 import Breadcrumbs from '@/Components/helpers/Breadcrumbs.vue'
+import Formation from '@/Components/helpers/Formation.vue'
+import { Badge } from "@/Components/ui/badge"
 import MainLayout from "@/Layouts/MainLayout.vue"
-import { useThemeStore } from '@/stores/theme/themeStore';
+import StickySidebar from '@/Pages/lib/StickySidebar.vue'
+import { useThemeStore } from '@/stores/theme/themeStore'
+import { computed, ref } from 'vue'
 
 defineOptions({ layout: MainLayout })
 
