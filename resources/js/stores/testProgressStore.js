@@ -54,7 +54,7 @@ export const useTestProgressStore = defineStore('testProgress', {
       personality: {
         name: 'Your personality traits',
         time: '~ 5 mins',
-        totalQuestions: 9,
+        totalQuestions: 20,
         nextStage: null,
         storeKey: 'personalityStore',
         dataKey: 'progress',

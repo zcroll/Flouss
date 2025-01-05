@@ -37,7 +37,7 @@
         completed: isComplete && canProceed
       }" :test-stage="testStageStore?.currentStage"/>
 
-            <div class="assessment Roadmap__inner">
+            <div class="assessment Roadmap__inner" >
                 <template v-if="showTutorial">
                     <MainTestTutorial
                         @continue="handleTutorialComplete"
@@ -64,17 +64,20 @@
                             {{ currentTestData?.lead_in_text }}
                         </section>
 
-                        <div class="Assessment__scroll-container">
-                            <div v-if="!isComplete && currentItem?.id">
-                                <div class="Assessment__Item--forward-appear-done Assessment__Item--forward-enter-done">
-                                    <TestQuestion :key="`question-${currentItem.id}-${testStageStore.currentStage}`"
-                                                  :current-item="currentItem" :current-item-index="currentItemIndex"
-                                                  :test-stage="testStageStore.currentStage" :test-data="currentTestData"
-                                                  :form="form"
-                                                  :store="currentStore" @submit="submitAnswer" @go-back="goBack"
-                                                  @skip="skipQuestion"
-                                                  ref="questionRef"/>
-                                </div>
+                        <div class="Assessment__scroll-container" ref="formRef">
+                            <div v-if="!isComplete && currentItem?.id" :key="`question-${currentItem.id}`">
+                                <TestQuestion 
+                                    :current-item="currentItem" 
+                                    :current-item-index="currentItemIndex"
+                                    :test-stage="testStageStore.currentStage" 
+                                    :test-data="currentTestData"
+                                    :form="form"
+                                    :store="currentStore" 
+                                    @submit="() => animateTransition('next', submitAnswer)" 
+                                    @go-back="() => animateTransition('back', goBack)"
+                                    @skip="() => animateTransition('next', skipQuestion)"
+                                    ref="questionRef"
+                                />
                             </div>
 
                             <Discovery
@@ -125,7 +128,7 @@ import MatchResult from "@/Components/Test/MatchResult.vue";
 import {useTestProgressStore} from '@/stores/testProgressStore';
 import {useDegreeStore} from '@/stores/degreeStore';
 import MainTestTutorial from "@/Components/Test/MainTestTutorial.vue";
-
+import anime from 'animejs/lib/anime.es.js';
 const hollandCodeStore = useHollandCodeStore();
 const testStageStore = useTestStageStore();
 const basicInterestStore = useBasicInterestStore();
@@ -140,6 +143,8 @@ const form = useForm({
     testStage: null,
     type: 'answered'
 });
+
+const formRef = ref(null);
 
 const currentStore = computed(() => {
     switch (testStageStore.currentStage) {
@@ -178,7 +183,6 @@ const isComplete = computed(() => {
     if (!testStageStore?.currentStage) return false;
 
     if (testStageStore.currentStage === 'holland_codes') {
-
         return hollandCodeStore?.isTestComplete ?? false;
     }
     return currentStore.value?.isComplete ?? false;
@@ -234,11 +238,44 @@ const retryFetch = async () => {
         console.error('Error retrying fetch:', error);
     }
 };
+
 const showTutorial = computed(() => {
     return testStageStore.currentStage === 'holland_codes' &&
            hollandCodeStore?.currentItemIndex === 0 &&
            !hollandCodeStore?.responses['tutorial'];
 });
+
+const animateTransition = (direction, callback) => {
+  const animations = {
+    next: {
+      start: { translateY: [0, '-100%'], scale: [1, 0.98], opacity: [1, 0] },
+      end: { translateY: ['100%', 0], scale: [0.98, 1], opacity: [0, 1] }
+    },
+    back: {
+      start: { translateY: [0, '100%'], scale: [1, 0.98], opacity: [1, 0] }, 
+      end: { translateY: ['-100%', 0], scale: [0.98, 1], opacity: [0, 1] }
+    }
+  };
+
+  const timing = {
+    duration: 400,
+    easing: 'cubicBezier(.4,0,.2,1)'
+  };
+
+  anime({
+    targets: formRef.value,
+    ...animations[direction].start,
+    ...timing,
+    complete: () => {
+      callback();
+      anime({
+        targets: formRef.value,
+        ...animations[direction].end,
+        ...timing
+      });
+    }
+  });
+};
 
 const submitAnswer = async () => {
     const store = currentStore.value;
