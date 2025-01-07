@@ -3,7 +3,6 @@ import { router } from '@inertiajs/vue3';
 
 export const useTestProgressStore = defineStore('testProgress', {
   state: () => ({
-    debug: true,
     currentStage: 'holland_codes',
     stageConfig: {
       holland_codes: {
@@ -74,8 +73,7 @@ export const useTestProgressStore = defineStore('testProgress', {
         validResponses: 0,
         percentage: 0,
         canTransition: false,
-        archetypeDiscovery: null,
-        debug: []
+        archetypeDiscovery: null
       },
       basic_interests: {
         completed: false,
@@ -83,8 +81,7 @@ export const useTestProgressStore = defineStore('testProgress', {
         validResponses: 0,
         percentage: 0,
         canTransition: false,
-        jobMatching: null,
-        debug: []
+        jobMatching: null
       },
       degree: {
         completed: false,
@@ -92,8 +89,7 @@ export const useTestProgressStore = defineStore('testProgress', {
         validResponses: 0,
         percentage: 0,
         canTransition: false,
-        degreeMatching: null,
-        debug: []
+        degreeMatching: null
       },
       personality: {
         completed: false,
@@ -101,41 +97,18 @@ export const useTestProgressStore = defineStore('testProgress', {
         validResponses: 0,
         percentage: 0,
         canTransition: false,
-        personalityReport: null,
-        debug: []
+        personalityReport: null
       }
     }
   }),
 
   actions: {
-    logDebug(stage, action, data) {
-      if (!this.debug) return;
-      
-      const timestamp = new Date().toISOString();
-      const debugEntry = { timestamp, action, data };
-      
-      if (this.stages[stage]) {
-        this.stages[stage].debug.push(debugEntry);
-        console.log(`[${stage}][${action}]`, data);
-      }
-    },
-
     markStageComplete(stage) {
       if (!this.stages[stage]) return;
-
-      this.logDebug(stage, 'markComplete:before', {
-        stage,
-        currentState: { ...this.stages[stage] }
-      });
 
       this.stages[stage].completed = true;
       this.stages[stage].canTransition = true;
       this.stages[stage].percentage = 100;
-
-      this.logDebug(stage, 'markComplete:after', {
-        stage,
-        newState: { ...this.stages[stage] }
-      });
     },
 
     updateStageProgress(stage, progressData) {
@@ -143,12 +116,6 @@ export const useTestProgressStore = defineStore('testProgress', {
 
       const stageData = this.stages[stage];
       const stageConfig = this.stageConfig[stage];
-
-      this.logDebug(stage, 'updateProgress:start', {
-        stage,
-        progressData,
-        currentState: { ...stageData }
-      });
 
       if (typeof progressData === 'object') {
         // Map fields according to stage configuration
@@ -187,11 +154,6 @@ export const useTestProgressStore = defineStore('testProgress', {
           this.markStageComplete(stage);
         }
       }
-
-      this.logDebug(stage, 'updateProgress:end', {
-        stage,
-        newState: { ...stageData }
-      });
     },
 
     setCurrentStage(stage) {
@@ -211,20 +173,6 @@ export const useTestProgressStore = defineStore('testProgress', {
       const sequence = this.getStageSequence();
       const currentIndex = sequence.indexOf(stage);
       return currentIndex > 0 ? sequence[currentIndex - 1] : null;
-    },
-
-    // Debug helper
-    dumpState() {
-      return {
-        currentStage: this.currentStage,
-        stages: Object.entries(this.stages).reduce((acc, [key, value]) => {
-          acc[key] = {
-            ...value,
-            debug: value.debug?.length || 0
-          };
-          return acc;
-        }, {})
-      };
     },
 
     // Add a method to calculate progress based on responses

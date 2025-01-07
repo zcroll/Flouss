@@ -1,0 +1,356 @@
+Journey__milestone Journey__milestoneJourney__milestone Journey__milestoneJourney__milestone Journey__milestoneiJourney__milestone Journey__milestone
+
+.Journey {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    background-color: black
+}
+
+.Journey--maximized {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 20px 0;
+    height: 100%;
+    width: 100%
+}
+
+.Journey--minimized {
+    position: absolute;
+    width: 100%
+}
+
+.Journey__head {
+    margin: 0 0 40px;
+    color: white;
+    font-size: 24px
+}
+
+.Journey__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    grid-auto-rows: 1fr
+}
+
+.Journey__milestone,
+.Journey__milestone--complete,
+.Journey__milestone--in-progress,
+.Journey__milestone--not-started {
+    display: flex;
+    height: 100%;
+    flex: 1;
+    min-height: 100px
+}
+
+.Journey__milestone:last-child,
+.Journey__milestone--complete:last-child,
+.Journey__milestone--in-progress:last-child,
+.Journey__milestone--not-started:last-child {
+    margin-bottom: 5%
+}
+
+.Journey__milestone:nth-child(2),
+.Journey__milestone--complete:nth-child(2),
+.Journey__milestone--in-progress:nth-child(2),
+.Journey__milestone--not-started:nth-child(2) {
+    flex: 1
+}
+
+.Journey__milestone__map {
+    position: relative;
+    width: 20px
+}
+
+.Journey__milestone__map__marker {
+    position: absolute;
+    left: 50%;
+    margin-top: -2.5px;
+    margin-left: -7.5px;
+    z-index: 1;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: black;
+    border: 1px solid white;
+    transition: transform 620ms cubic-bezier(0.175, 0.885, 0.32, 2.125), background-color 380ms cubic-bezier(0.445, 0.05, 0.55, 0.95)
+}
+
+.Journey__milestone__map__marker__icon {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    font-size: 8px;
+    opacity: 0;
+    transform: scale(0);
+    transition: transform 320ms cubic-bezier(0.445, 0.05, 0.55, 0.95), opacity 320ms cubic-bezier(0.445, 0.05, 0.55, 0.95)
+}
+
+.Journey__milestone__map__trail {
+    width: 1px;
+    height: calc(100% - 15px);
+    margin: -2.5px auto 0;
+    overflow: hidden;
+    background-color: white
+}
+
+.Journey--maximized .Journey__milestone__map__trail {
+    transform: translate3d(0, -100%, 0)
+}
+
+.Journey__milestone__map__trail__progress {
+    width: 100%;
+    height: 100%;
+    transition: transform 380ms cubic-bezier(0.445, 0.05, 0.55, 0.95), background-color 380ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
+    transform-origin: top center;
+    transform: translateY(-100%);
+    background-color: #86429a;
+    border-radius: 1.5px
+}
+
+.Journey__milestone__name {
+    margin: 0 0 0;
+    color: white;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    transition: color 380ms cubic-bezier(0.445, 0.05, 0.55, 0.95)
+}
+
+.Journey__milestone__body {
+    width: 100%;
+    margin: -2px 0 0 15px;
+    overflow-y: hidden;
+    color: white
+}
+
+.Journey__milestone__time {
+    position: relative;
+    display: inline-block;
+    width: auto;
+    margin-top: -13px;
+    border-radius: 6.5px;
+    transition: transform 240ms cubic-bezier(0.445, 0.05, 0.55, 0.95), box-shadow 240ms cubic-bezier(0.445, 0.05, 0.55, 0.95), background-color 240ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
+    cursor: default
+}
+
+.Journey__milestone__time__text {
+    width: 100%;
+    transition: color 380ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
+    color: white;
+    font-weight: normal;
+    font-size: 10px;
+    line-height: 12px;
+    text-transform: uppercase
+}
+
+.Journey__milestone__description {
+    margin-top: 8px;
+    margin-bottom: 0px;
+    font-size: 16px;
+    line-height: 19px
+}
+
+.Journey__milestone--complete .Journey__milestone__map__marker,
+.Journey__milestone--in-progress .Journey__milestone__map__marker {
+    transform: scale(1.333);
+    margin-top: 0
+}
+
+.Journey__milestone--in-progress .Journey__milestone__name {
+    color: white
+}
+
+.Journey__milestone--in-progress .Journey__milestone__map__marker {
+    background-color: #c35b8a
+}
+
+.Journey__milestone--in-progress .Journey__milestone__map__marker,
+.Journey__milestone--complete .Journey__milestone__map__marker {
+    background-color: white
+}
+
+.Journey__milestone--complete .Journey__milestone__map__marker__icon {
+    opacity: 1;
+    transform: scale(1)
+}
+
+.Journey__milestone--complete .Journey__milestone__map__trail__progress {
+    background-color: #c35b8a
+}
+
+.Journey--minimized {
+    display: flex;
+    opacity: 0
+}
+
+@media screen and (max-width: 1023px) {
+    .minimized .Journey {
+        padding: 0
+    }
+
+    .Journey__toggle {
+        color: white;
+        height: 15px;
+        width: 18px;
+        font-size: 18px
+    }
+
+    .Journey--maximized {
+        padding-top: 45px;
+        overflow-y: auto
+    }
+
+    .Journey--maximized .Journey__toggle {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 40px;
+        margin: 0;
+        background-color: black;
+        transform: rotate(180deg)
+    }
+
+    .Journey--maximized .Journey__body {
+        display: block
+    }
+
+    .Journey--maximized .Journey__milestone,
+    .Journey--maximized .Journey__milestone--complete,
+    .Journey--maximized .Journey__milestone--in-progress,
+    .Journey--maximized .Journey__milestone--not-started,
+    .Journey--maximized .Journey__milestone--complete,
+    .Journey--maximized .Journey__milestone--in-progress,
+    .Journey--maximized .Journey__milestone--not-started {
+        height: 200px
+    }
+
+    .Journey--minimized {
+        position: relative;
+        width: 100%;
+        height: 50px;
+        padding: 6px 12px;
+        justify-content: space-between;
+        cursor: pointer
+    }
+
+    .Journey--minimized .Journey__head {
+        margin: 0;
+        color: #a3a3a3;
+        font-size: 10px;
+        line-height: 16px;
+        text-transform: uppercase
+    }
+
+    .Journey--minimized .Journey__next-name {
+        color: white;
+        font-size: 13px;
+        font-weight: bold;
+        line-height: 16px
+    }
+
+    .Journey--minimized .Journey__right {
+        display: flex;
+        align-items: center;
+        height: 28px
+    }
+
+    .Journey--minimized .Journey__milestone__time {
+        transform: translateX(12px) translateY(4px)
+    }
+
+    .Journey--minimized .Journey__toggle {
+        margin-left: 35px
+    }
+
+    .Journey--minimized .Journey__progress {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        display: flex;
+        height: 4px;
+        overflow: hidden
+    }
+
+    .Journey--minimized .Journey__milestone,
+    .Journey--minimized .Journey__milestone--complete,
+    .Journey--minimized .Journey__milestone--in-progress,
+    .Journey--minimized .Journey__milestone--not-started {
+        position: relative;
+        width: 100%
+    }
+
+    .Journey--minimized .Journey__milestone__trail {
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        background-color: #606060
+    }
+
+    .Journey--minimized .Journey__milestone__trail__progress {
+        height: 100%;
+        width: 100%;
+        background-color: #86429a;
+        border-radius: 2px;
+        transform: translateX(-100%);
+        transition: transform 380ms cubic-bezier(0.445, 0.05, 0.55, 0.95), background-color 380ms cubic-bezier(0.445, 0.05, 0.55, 0.95)
+    }
+
+    .Journey--minimized .Journey__milestone__marker {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 8px;
+        background-color: rgba(255, 255, 255, 0.8)
+    }
+
+    .Journey--minimized .Journey__milestone--complete .Journey__milestone__trail__progress {
+        background-color: #c35b8a
+    }
+
+    .Journey--maximized,
+    .Journey--minimized {
+        transition: opacity 320ms linear
+    }
+
+    .Journey--maximized {
+        opacity: 1
+    }
+
+    .Journey--minimized {
+        opacity: 0
+    }
+
+    .minimized .Journey .Journey--maximized {
+        opacity: 0
+    }
+
+    .minimized .Journey .Journey--minimized {
+        opacity: 1
+    }
+}
+
+@media screen and (min-width: 1024px) {
+
+    .Journey__toggle,
+    .Journey--minimized {
+        display: none
+    }
+}

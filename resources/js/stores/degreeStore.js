@@ -7,10 +7,17 @@ export const useDegreeStore = createBaseTestStore('degree', {
     fetchRoute: route('degree-assessment.index'),
     category: 'degree',
     testStage: 'degree',
+    sessionKey: 'degree_progress',
     
     state: {
         progress: {
-            degreeMatching: null
+            degreeMatching: null,
+            progress_percentage: 0,
+            completed: false,
+            current_index: 0,
+            validResponses: 0,
+            responses: {},
+            totalQuestions: 0
         }
     },
     

@@ -120,19 +120,19 @@ onMounted(() => {
   }
 });
 
+const emit = defineEmits(['submit', 'go-back', 'skip']);
+
 const submitAnswer = async () => {
   if (props.store.loading) return;
-  await props.store.submitAnswer(props.form);
-  props.form.answer = null;
+  emit('submit');
 };
 
 const handleGoBack = () => {
-  props.store.goBack();
+  emit('go-back');
 };
 
 const handleSkip = () => {
-  props.form.type = 'skipped';
-  submitAnswer();
+  emit('skip');
 };
 
 const handleProceed = () => {
@@ -142,8 +142,6 @@ const handleProceed = () => {
 const closeJobMatches = () => {
   showJobMatches.value = false;
 };
-
-const emit = defineEmits(['proceed']);
 
 defineExpose({ formRef });
 </script>

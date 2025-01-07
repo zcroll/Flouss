@@ -144,9 +144,14 @@ Route::middleware([
 
         // Test Stage Management Routes
         Route::prefix('test-stage')->group(function () {
-            Route::get('/current', [TestStageController::class, 'getCurrentStage']);
-            Route::post('/change', [TestStageController::class, 'changeStage']);
+            Route::get('/current', [TestStageController::class, 'getCurrentStage'])->name('test-stage.current');
+            Route::post('/change', [TestStageController::class, 'changeStage'])->name('test-stage.change');
         });
+
+        // User-facing route for test progression
+        Route::post('/test/next-stage', [TestStageController::class, 'changeStage'])
+            ->name('test.next-stage')
+            ->middleware(['auth']);
 
         Route::post('/test/save-results', [App\Http\Controllers\Test\TestStageController::class, 'saveResults'])
             ->name('test.save-results')

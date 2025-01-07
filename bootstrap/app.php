@@ -25,7 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\SetLanguage::class,
             \App\Http\Middleware\HandleInertiaRequests::class,
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
-            \App\Http\Middleware\TrackPageVisits::class,
+            // \App\Http\Middleware\TrackPageVisits::class,
         ]);
 
         $middleware->alias([

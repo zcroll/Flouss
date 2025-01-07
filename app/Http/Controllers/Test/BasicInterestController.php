@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Test;
 use App\Http\Controllers\Controller;
 use App\Models\ItemSet;
 use App\Models\JobInfo;
+use App\Models\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
@@ -19,8 +21,6 @@ class BasicInterestController extends BaseTestController
 
     protected function handleNearCompletion(array $progress): array
     {
-
-        ds($progress);
         $formattedResponses = [];
         foreach ($progress['responses'] as $itemId => $answer) {
             if ($answer > 0) {
@@ -34,7 +34,10 @@ class BasicInterestController extends BaseTestController
             
             if (isset($pythonJobResults['job_matches'])) {
                 $jobIds = array_column($pythonJobResults['job_matches'], 'job_id');
-                $jobs = JobInfo::whereIn('id', $jobIds)->get();
+                $cacheKey = "job_matches_" . implode('_', $jobIds);
+                $jobs = cache()->remember($cacheKey, now()->addHours(24), function () use ($jobIds) {
+                    return JobInfo::whereIn('id', $jobIds)->get();
+                });
                 $progress['jobMatching'] = $jobs->take(5);
                 $resultUser = Session::get('result_user', []);
                 $resultUser['jobs'] = $jobs;
@@ -134,7 +137,7 @@ class BasicInterestController extends BaseTestController
 
     protected function handleError(\Exception $e, Request $request)
     {
-        \Log::error('Basic Interest Error:', [
+        Log::error('Basic Interest Error:', [
             'message' => $e->getMessage(),
             'trace' => $e->getTraceAsString()
         ]);
@@ -150,7 +153,7 @@ class BasicInterestController extends BaseTestController
 
     protected function formatResponse($progress)
     {
-        $items = \App\Models\Item::whereIn('id', array_keys($progress))->pluck('text', 'id');
+        $items = Item::whereIn('id', array_keys($progress))->pluck('text', 'id');
         
         $formattedResponses = [];
         foreach ($progress as $itemId => $response) {
@@ -177,14 +180,14 @@ class BasicInterestController extends BaseTestController
             $process->run();
 
             if (!$process->isSuccessful()) {
-                \Log::error('Python script failed', ['error' => $process->getErrorOutput()]);
+                Log::error('Python script failed', ['error' => $process->getErrorOutput()]);
                 throw new ProcessFailedException($process);
             }
 
             return json_decode($process->getOutput(), true);
 
         } catch (\Exception $e) {
-            \Log::error('Job matching failed', ['error' => $e->getMessage()]);
+            Log::error('Job matching failed', ['error' => $e->getMessage()]);
             return ['error' => 'Failed to process job matching'];
         }
     }

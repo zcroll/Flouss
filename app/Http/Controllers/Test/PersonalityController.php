@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\ItemSet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-use Inertia\Inertia;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class PersonalityController extends BaseTestController
 {
@@ -24,18 +26,9 @@ class PersonalityController extends BaseTestController
         ]
     ];
 
-    protected function getCurrentItemSet()
+    protected function getCurrentItemSet(): string
     {
-        $progress = Session::get(self::SESSION_KEY, [
-            'current_index' => 0,
-            'responses' => [],
-            'completed' => false,
-            'progress_percentage' => 0,
-            'validResponses' => 0,
-            'cant_stands_completed' => false,
-            'cant_stands_responses' => [],
-            'skills_preferences_responses' => []
-        ]);
+        $progress = Session::get(self::SESSION_KEY, $this->getInitialProgress());
         
         // If cant_stands is not completed, use it
         if (!isset($progress['cant_stands_completed']) || !$progress['cant_stands_completed']) {
@@ -46,34 +39,26 @@ class PersonalityController extends BaseTestController
         return $this->itemSets['skills_preferences']['title'];
     }
 
-    public function index()
+    public function index(): Response
     {
-        // Session::forget(self::SESSION_KEY);
         if (!request()->header('X-Inertia')) {
             return $this->renderInitialResponse();
         }
 
         try {
-            $progress = Session::get(self::SESSION_KEY, [
-                'current_index' => 0,
-                'responses' => [],
-                'completed' => false,
-                'progress_percentage' => 0,
-                'validResponses' => 0,
-                'cant_stands_completed' => false,
-                'cant_stands_responses' => [],
-                'skills_preferences_responses' => []
-            ]);
-
+            $progress = Session::get(self::SESSION_KEY, $this->getInitialProgress());
             $currentItemSetTitle = $this->getCurrentItemSet();
 
-            $personalityAssessment = ItemSet::with([
-                'items:id,text,text_fr,help_text,option_set_id,is_completed,image_url,image_colour,itemset_id',
-                'items.optionSet:id,name,help_text,type',
-                'items.optionSet.options:id,text,text_fr,help_text,value,reverse_coded_value,option_set_id'
-            ])
-            ->where('title', $currentItemSetTitle)
-            ->first();
+            $cacheKey = "personality_assessment_{$currentItemSetTitle}";
+            $personalityAssessment = Cache::remember($cacheKey, now()->addHours(24), function () use ($currentItemSetTitle) {
+                return ItemSet::with([
+                    'items:id,text,text_fr,help_text,option_set_id,is_completed,image_url,image_colour,itemset_id',
+                    'items.optionSet:id,name,help_text,type',
+                    'items.optionSet.options:id,text,text_fr,help_text,value,reverse_coded_value,option_set_id'
+                ])
+                ->where('title', $currentItemSetTitle)
+                ->first();
+            });
 
             if (!$personalityAssessment) {
                 throw new \Exception('Personality Assessment not found');
@@ -101,8 +86,14 @@ class PersonalityController extends BaseTestController
 
             // Calculate overall completion
             $cantStandsCompleted = $progress['cant_stands_completed'];
+            $skillsPreferencesTotal = Cache::remember('skills_preferences_total', now()->addHours(24), function () {
+                return ItemSet::where('title', $this->itemSets['skills_preferences']['title'])
+                    ->first()
+                    ->items
+                    ->count();
+            });
+
             $skillsPreferencesResponses = count(array_filter($progress['skills_preferences_responses'], fn($v) => $v > 0));
-            $skillsPreferencesTotal = ItemSet::where('title', $this->itemSets['skills_preferences']['title'])->first()->items->count();
             $skillsPreferencesCompleted = $skillsPreferencesResponses >= $skillsPreferencesTotal;
 
             $progress['completed'] = $cantStandsCompleted && $skillsPreferencesCompleted;
@@ -120,6 +111,20 @@ class PersonalityController extends BaseTestController
         } catch (\Exception $e) {
             return $this->handleError($e, request());
         }
+    }
+
+    protected function getInitialProgress(): array
+    {
+        return [
+            'current_index' => 0,
+            'responses' => [],
+            'completed' => false,
+            'progress_percentage' => 0,
+            'validResponses' => 0,
+            'cant_stands_completed' => false,
+            'cant_stands_responses' => [],
+            'skills_preferences_responses' => []
+        ];
     }
 
     protected function handleNearCompletion(array $progress): array
@@ -144,7 +149,7 @@ class PersonalityController extends BaseTestController
         }
     }
 
-    public function storeResponse(Request $request)
+    public function storeResponse(Request $request): Response
     {
         try {
             $validated = $request->validate([
@@ -153,17 +158,7 @@ class PersonalityController extends BaseTestController
                 'type' => 'required|string|in:answered,skipped'
             ]);
 
-            $progress = Session::get(self::SESSION_KEY, [
-                'current_index' => 0,
-                'responses' => [],
-                'completed' => false,
-                'progress_percentage' => 0,
-                'validResponses' => 0,
-                'cant_stands_completed' => false,
-                'cant_stands_responses' => [],
-                'skills_preferences_responses' => []
-            ]);
-
+            $progress = Session::get(self::SESSION_KEY, $this->getInitialProgress());
             $currentItemSetTitle = $this->getCurrentItemSet();
             
             // Store response in the appropriate set
@@ -180,7 +175,11 @@ class PersonalityController extends BaseTestController
                 ? $progress['cant_stands_responses'] 
                 : $progress['skills_preferences_responses'];
 
-            $personalityAssessment = ItemSet::where('title', $currentItemSetTitle)->first();
+            $cacheKey = "personality_assessment_{$currentItemSetTitle}";
+            $personalityAssessment = Cache::remember($cacheKey, now()->addHours(24), function () use ($currentItemSetTitle) {
+                return ItemSet::where('title', $currentItemSetTitle)->first();
+            });
+
             $totalQuestions = $personalityAssessment->items->count();
 
             $validResponses = count(array_filter($progress['responses'], fn($v) => $v > 0));
@@ -202,8 +201,14 @@ class PersonalityController extends BaseTestController
 
             // Check overall completion
             $cantStandsCompleted = $progress['cant_stands_completed'];
+            $skillsPreferencesTotal = Cache::remember('skills_preferences_total', now()->addHours(24), function () {
+                return ItemSet::where('title', $this->itemSets['skills_preferences']['title'])
+                    ->first()
+                    ->items
+                    ->count();
+            });
+
             $skillsPreferencesResponses = count(array_filter($progress['skills_preferences_responses'], fn($v) => $v > 0));
-            $skillsPreferencesTotal = ItemSet::where('title', $this->itemSets['skills_preferences']['title'])->first()->items->count();
             $skillsPreferencesCompleted = $skillsPreferencesResponses >= $skillsPreferencesTotal;
 
             $progress['completed'] = $cantStandsCompleted && $skillsPreferencesCompleted;
@@ -214,21 +219,19 @@ class PersonalityController extends BaseTestController
 
             Session::put(self::SESSION_KEY, $progress);
 
-            if ($request->wantsJson()) {
-                return response()->json(['progress' => $progress]);
-            }
-
-            return back()->with('progress', $progress);
+            return Inertia::render('Test/MainTest', [
+                'progress' => $progress
+            ]);
 
         } catch (\Exception $e) {
             return $this->handleError($e, $request);
         }
     }
 
-    public function goBack(Request $request)
+    public function goBack(Request $request): Response
     {
         try {
-            $progress = Session::get(self::SESSION_KEY);
+            $progress = Session::get(self::SESSION_KEY, $this->getInitialProgress());
             $currentItemSetTitle = $this->getCurrentItemSet();
 
             if ($progress['current_index'] > 0) {
@@ -249,10 +252,13 @@ class PersonalityController extends BaseTestController
                     $progress['responses'] = $progress['skills_preferences_responses'];
                 }
 
-                $totalQuestions = ItemSet::where('title', $currentItemSetTitle)
-                    ->first()
-                    ->items()
-                    ->count();
+                $cacheKey = "personality_assessment_{$currentItemSetTitle}_count";
+                $totalQuestions = Cache::remember($cacheKey, now()->addHours(24), function () use ($currentItemSetTitle) {
+                    return ItemSet::where('title', $currentItemSetTitle)
+                        ->first()
+                        ->items()
+                        ->count();
+                });
 
                 $validResponses = count(array_filter($progress['responses'], fn($v) => $v > 0));
                 
@@ -269,8 +275,14 @@ class PersonalityController extends BaseTestController
 
                 // Check overall completion
                 $cantStandsCompleted = $progress['cant_stands_completed'];
+                $skillsPreferencesTotal = Cache::remember('skills_preferences_total', now()->addHours(24), function () {
+                    return ItemSet::where('title', $this->itemSets['skills_preferences']['title'])
+                        ->first()
+                        ->items
+                        ->count();
+                });
+
                 $skillsPreferencesResponses = count(array_filter($progress['skills_preferences_responses'], fn($v) => $v > 0));
-                $skillsPreferencesTotal = ItemSet::where('title', $this->itemSets['skills_preferences']['title'])->first()->items->count();
                 $skillsPreferencesCompleted = $skillsPreferencesResponses >= $skillsPreferencesTotal;
 
                 $progress['completed'] = $cantStandsCompleted && $skillsPreferencesCompleted;
@@ -278,18 +290,16 @@ class PersonalityController extends BaseTestController
 
             Session::put(self::SESSION_KEY, $progress);
 
-            if ($request->wantsJson()) {
-                return response()->json(['progress' => $progress]);
-            }
-
-            return back()->with('progress', $progress);
+            return Inertia::render('Test/MainTest', [
+                'progress' => $progress
+            ]);
 
         } catch (\Exception $e) {
             return $this->handleError($e, $request);
         }
     }
 
-    protected function renderResponse($itemSet, array $progress, bool $isCompleted = false)
+    protected function renderResponse($itemSet, array $progress, bool $isCompleted = false): Response
     {
         return Inertia::render('Test/MainTest', [
             'personality' => [
@@ -349,7 +359,7 @@ class PersonalityController extends BaseTestController
         ]);
     }
 
-    protected function renderInitialResponse()
+    protected function renderInitialResponse(): Response
     {
         return Inertia::render('Test/MainTest', [
             'personality' => null,
@@ -358,7 +368,7 @@ class PersonalityController extends BaseTestController
         ]);
     }
 
-    protected function renderError(string $message)
+    protected function renderError(string $message): Response
     {
         return Inertia::render('Test/MainTest', [
             'error' => $message,
@@ -366,18 +376,12 @@ class PersonalityController extends BaseTestController
         ]);
     }
 
-    protected function handleError(\Exception $e, Request $request)
+    protected function handleError(\Exception $e, Request $request): Response
     {
         Log::error('Personality Test: Error', [
             'message' => $e->getMessage(),
             'trace' => $e->getTraceAsString()
         ]);
-
-        if ($request->wantsJson()) {
-            return response()->json([
-                'error' => 'Failed to process request: ' . $e->getMessage()
-            ], 500);
-        }
 
         return $this->renderError($e->getMessage());
     }

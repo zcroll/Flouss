@@ -1,9 +1,13 @@
 <template>
+    <!-- <link rel="stylesheet" href="https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/global.fc24fef1e7c4.css"> -->
+        
+    
+    
   <div :class="`Journey__milestone Journey__milestone--${status}`">
     <div class="Journey__milestone__map">
       <MilestoneProgress 
         :status="status" 
-        :progress="progress + '%'" 
+        :progress="progress >= 100 ? '100%' : progress + '%'" 
       />
     </div>
     <div class="Journey__milestone__body">
@@ -52,14 +56,14 @@ export default {
     milestoneData() {
       return {
         status: this.status,
-        progress: this.progress + '%'
+        progress: this.progress >= 100 ? '100%' : this.progress + '%'
       };
     }
   }
 };
 </script>
-
 <style scoped>
+@import 'https://d5lqosquewn6c.cloudfront.net/static/compiled/styles/deprecated/pages/assessments.ba16abcb0f5b.css';
 .Journey__milestone__map {
   position: relative;
   width: 24px;
@@ -70,3 +74,4 @@ export default {
   transition: transform 0.5s ease-in-out;
 }
 </style>
+

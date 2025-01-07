@@ -24,7 +24,7 @@
             </template>
           </div>
         </div>
-        <div class="Journey--minimized">
+        <div class="Journey--minimized" @click="toggleMinimized">
           <div>
             <div class="Journey__head">Up Next</div>
             <div class="Journey__next-name">{{ nextMilestoneName }}</div>
@@ -60,7 +60,6 @@ const props = defineProps({
         'hollandCodes' in value &&
         'basicInterest' in value &&
         'degree' in value &&
-        'personality' in value &&
         'completed' in value
       );
     },
@@ -162,5 +161,9 @@ onMounted(() => {
 
 .minimized .Journey__toggle svg {
   transform: rotate(180deg);
+}
+
+.Journey--minimized {
+  cursor: pointer;
 }
 </style>

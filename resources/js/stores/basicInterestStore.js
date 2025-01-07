@@ -7,10 +7,17 @@ export const useBasicInterestStore = createBaseTestStore('basicInterest', {
     fetchRoute: route('basic-interests.index'),
     category: 'basic_interests',
     testStage: 'basic_interests',
+    sessionKey: 'basic_interest_progress',
     
     state: {
         progress: {
-            jobMatching: null
+            jobMatching: null,
+            progress_percentage: 0,
+            completed: false,
+            current_index: 0,
+            validResponses: 0,
+            responses: {},
+            totalQuestions: 0
         }
     },
     

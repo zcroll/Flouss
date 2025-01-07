@@ -42,7 +42,6 @@
 
 <script setup>
 import { ref } from 'vue';
-import axios from 'axios';
 import { router } from '@inertiajs/vue3';
 import { useTestStageStore } from '@/stores/testStageStore';
 import { useTestProgressStore } from '@/stores/testProgressStore';
@@ -91,10 +90,8 @@ const handleContinue = async () => {
   try {
     const nextStage = testStageStore.getNextStage();
     
-    // If there's no next stage, we're at the final step
     if (!nextStage) {
       try {
-        // Debug stage completion status
         const stageStatus = testStageStore.stages.map(stage => ({
           stage,
           completed: testStageStore.isStageComplete(stage),
@@ -102,28 +99,22 @@ const handleContinue = async () => {
         }));
         console.log('Stage completion status:', stageStatus);
 
-        // Check current stage completion
         const currentStageComplete = progressStore.stages[props.currentStage]?.completed;
         if (!currentStageComplete) {
           throw new Error('Please complete the current stage before continuing.');
         }
 
-        // For personality stage, check if we have the personality report
-        if (props.currentStage === 'personality' && !personalityStore?.progress?.personalityReport) {
-          throw new Error('Please wait for personality analysis to complete before proceeding.');
-        }
-
-        // Make API call to save results
-        const response = await axios.post(route('test.save-results'));
-        
-        console.log('Save results response:', response);
-        if (response.data.success) {
-          testStageStore.clearError();
-          // Always navigate to results page on success
-          router.visit(route('results'));
-        } else {
-          throw new Error(response.data.message || 'Failed to save results');
-        }
+        router.post(route('test.results'), {}, {
+          preserveState: true,
+          preserveScroll: true,
+          onSuccess: () => {
+            testStageStore.clearError();
+            router.visit(route('results'));
+          },
+          onError: (errors) => {
+            throw new Error(errors.message || 'Failed to save results');
+          }
+        });
         
         return;
       } catch (err) {
@@ -154,11 +145,20 @@ const handleContinue = async () => {
       }
     }
 
-    const success = await testStageStore.changeStage(nextStage);
-    if (!success) {
-      throw new Error(testStageStore.error || 'Failed to change stage');
-    }
-    emit('continue');
+    router.post(route('test.next-stage'), {
+      fromStage: props.currentStage,
+      toStage: nextStage
+    }, {
+      preserveState: true,
+      preserveScroll: true,
+      onSuccess: () => {
+        testStageStore.clearError();
+        emit('continue');
+      },
+      onError: (errors) => {
+        throw new Error(errors.message || 'Failed to change stage');
+      }
+    });
   } catch (err) {
     error.value = err.message || 'Failed to proceed to next stage';
     console.error('Stage transition error:', err);

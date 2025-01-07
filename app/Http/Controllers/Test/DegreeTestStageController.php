@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Test;
 use App\Http\Controllers\Controller;
 use App\Models\ItemSet;
 use App\Models\DegreeMatch;
+use App\Models\Degree;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
-use App\Models\Degree;
+
 class DegreeTestStageController extends BaseTestController
 {
     protected const SESSION_KEY = 'degree_progress';
@@ -26,7 +29,7 @@ class DegreeTestStageController extends BaseTestController
             }
             return $progress;
         } catch (\Exception $e) {
-            \Log::error('DegreeTestStage: Error in handleNearCompletion', [
+            Log::error('DegreeTestStage: Error in handleNearCompletion', [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
@@ -123,16 +126,10 @@ class DegreeTestStageController extends BaseTestController
 
     protected function handleError(\Exception $e, Request $request)
     {
-        \Log::error('DegreeTestStage: Error', [
+        Log::error('DegreeTestStage: Error', [
             'message' => $e->getMessage(),
             'trace' => $e->getTraceAsString()
         ]);
-
-        if ($request->wantsJson()) {
-            return response()->json([
-                'error' => 'Failed to process request: ' . $e->getMessage()
-            ], 500);
-        }
 
         return $this->renderError($e->getMessage());
     }
@@ -152,20 +149,22 @@ class DegreeTestStageController extends BaseTestController
                 'validResponses' => 0
             ]);
 
-            $degreeAssessment = ItemSet::with([
-                'items:id,text,text_fr,help_text,option_set_id,is_completed,career_id,degree_id,image_url,image_colour,itemset_id',
-                'items.optionSet:id,name,help_text,type',
-                'items.optionSet.options:id,text,text_fr,help_text,value,reverse_coded_value,option_set_id'
-            ])
-            ->where('title', $this->itemSetTitle)
-            ->first();
+            $cacheKey = "degree_assessment_{$this->itemSetTitle}";
+            $degreeAssessment = Cache::remember($cacheKey, now()->addHours(24), function () {
+                return ItemSet::with([
+                    'items:id,text,text_fr,help_text,option_set_id,is_completed,career_id,degree_id,image_url,image_colour,itemset_id',
+                    'items.optionSet:id,name,help_text,type',
+                    'items.optionSet.options:id,text,text_fr,help_text,value,reverse_coded_value,option_set_id'
+                ])
+                ->where('title', $this->itemSetTitle)
+                ->first();
+            });
 
             if (!$degreeAssessment) {
                 throw new \Exception('Degree Assessment not found');
             }
 
             $totalQuestions = $degreeAssessment->items->count();
-            ds(['totalQuestions' => $totalQuestions]);
             $validResponses = count(array_filter($progress['responses'], fn($v) => $v > 0));
             $isCompleted = $validResponses >= $totalQuestions;
 
@@ -203,16 +202,16 @@ class DegreeTestStageController extends BaseTestController
                 'progress_percentage' => 0,
                 'validResponses' => 0
             ]);
-            $items = $this->calculateDegreeMatches();
-            ds($items);
-
 
             $progress['responses'][$validated['itemId']] = 
                 $validated['type'] === 'skipped' ? 0 : $validated['answer'];
 
-            $degreeAssessment = ItemSet::where('title', $this->itemSetTitle)->first();
-            $totalQuestions = $degreeAssessment->items->count();
+            $cacheKey = "degree_assessment_{$this->itemSetTitle}";
+            $degreeAssessment = Cache::remember($cacheKey, now()->addHours(24), function () {
+                return ItemSet::where('title', $this->itemSetTitle)->first();
+            });
 
+            $totalQuestions = $degreeAssessment->items->count();
             $progress['current_index']++;
 
             $validResponses = count(array_filter($progress['responses'], fn($v) => $v > 0));
@@ -235,24 +234,22 @@ class DegreeTestStageController extends BaseTestController
 
             Session::put(self::SESSION_KEY, $progress);
 
-            if ($request->wantsJson()) {
-                return response()->json(['progress' => $progress]);
-            }
-
-            return back()->with([
+            return Inertia::render('Test/MainTest', [
+                'degree' => [
+                    'id' => $degreeAssessment->id,
+                    'items' => $degreeAssessment->items
+                ],
                 'progress' => $progress,
                 'testStage' => $this->testStage
             ]);
 
         } catch (\Exception $e) {
-            \Log::error('DegreeTestStage: Error storing response', [
+            Log::error('DegreeTestStage: Error storing response', [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
             
-            return response()->json([
-                'error' => 'Failed to store response: ' . $e->getMessage()
-            ], 500);
+            return $this->renderError($e->getMessage());
         }
     }
 
@@ -275,10 +272,13 @@ class DegreeTestStageController extends BaseTestController
                     unset($progress['responses'][$lastItemId]);
                 }
 
-                $totalQuestions = ItemSet::where('title', $this->itemSetTitle)
-                    ->first()
-                    ->items()
-                    ->count();
+                $cacheKey = "degree_assessment_{$this->itemSetTitle}";
+                $totalQuestions = Cache::remember($cacheKey . '_count', now()->addHours(24), function () {
+                    return ItemSet::where('title', $this->itemSetTitle)
+                        ->first()
+                        ->items()
+                        ->count();
+                });
 
                 $validResponses = count(array_filter($progress['responses'], fn($v) => $v > 0));
                 $progress['validResponses'] = $validResponses;
@@ -290,24 +290,18 @@ class DegreeTestStageController extends BaseTestController
 
             Session::put(self::SESSION_KEY, $progress);
 
-            if ($request->wantsJson()) {
-                return response()->json(['progress' => $progress]);
-            }
-
-            return back()->with([
+            return Inertia::render('Test/MainTest', [
                 'progress' => $progress,
                 'testStage' => $this->testStage
             ]);
 
         } catch (\Exception $e) {
-            \Log::error('DegreeTestStage: Error going back', [
+            Log::error('DegreeTestStage: Error going back', [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
             
-            return response()->json([
-                'error' => 'Failed to go back: ' . $e->getMessage()
-            ], 500);
+            return $this->renderError($e->getMessage());
         }
     }
 
@@ -319,28 +313,29 @@ class DegreeTestStageController extends BaseTestController
             // Extract job IDs from job matches
             $jobIds = collect($jobMatches)->pluck('id')->toArray();
 
-            // Get degrees related to these jobs through DegreeJobsRelation
-            $degrees = Degree::whereHas('degreeJobsRelation', function($query) use ($jobIds) {
-                $query->whereIn('job_id', $jobIds);
-            })
-            ->select('id', 'name', 'slug', 'degree_level', 'salary', 'image')
-            ->get()
-            ->map(function($degree) {
-                return [        
-                    'id' => $degree->id,
-                    'name' => $degree->name,
-                    'slug' => $degree->slug,
-                    'degree_level' => $degree->degree_level,
-                    'salary' => $degree->salary,
-                    'image' => $degree->image
-                ];
-            })
-            ->toArray();
-
-            return $degrees;
+            $cacheKey = "degree_matches_" . implode('_', $jobIds);
+            return Cache::remember($cacheKey, now()->addHours(24), function () use ($jobIds) {
+                // Get degrees related to these jobs through DegreeJobsRelation
+                return Degree::whereHas('degreeJobsRelation', function($query) use ($jobIds) {
+                    $query->whereIn('job_id', $jobIds);
+                })
+                ->select('id', 'name', 'slug', 'degree_level', 'salary', 'image')
+                ->get()
+                ->map(function($degree) {
+                    return [        
+                        'id' => $degree->id,
+                        'name' => $degree->name,
+                        'slug' => $degree->slug,
+                        'degree_level' => $degree->degree_level,
+                        'salary' => $degree->salary,
+                        'image' => $degree->image
+                    ];
+                })
+                ->toArray();
+            });
 
         } catch (\Exception $e) {
-            \Log::error('DegreeTestStage: Error calculating matches', [
+            Log::error('DegreeTestStage: Error calculating matches', [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);

@@ -22,7 +22,7 @@ class TestStageController extends Controller
 
         try {
             $validated = $request->validate([
-                'fromStage' => 'required|string',
+                'fromStage' => 'required|string',   
                 'toStage' => 'required|string'
             ]);
 
@@ -33,23 +33,25 @@ class TestStageController extends Controller
             ]);
 
             if (!$fromStageProgress['completed']) {
-                return response()->json([
+                return Inertia::render('Test/MainTest', [
                     'error' => 'Previous stage not completed',
                     'currentStage' => $validated['fromStage'],
                     'progress' => $fromStageProgress
-                ], 400);
+                ]);
             }
 
             // Store the current stage in session
             Session::put('current_test_stage', $validated['toStage']);
 
-            // Get stage-specific data for the new stage
-            $stageData = $this->getStageData($validated['toStage']);
+            // Get the controller for the new stage and immediately fetch its data
+            $controller = $this->getStageController($validated['toStage']);
+            if ($controller) {
+                return $controller->index();
+            }
 
-            return response()->json([
-                'success' => true,
-                'currentStage' => $validated['toStage'],
-                'stageData' => $stageData
+            return Inertia::render('Test/MainTest', [
+                'error' => 'Failed to load stage data',
+                'currentStage' => $validated['toStage']
             ]);
 
         } catch (\Exception $e) {
@@ -58,10 +60,10 @@ class TestStageController extends Controller
                 'trace' => $e->getTraceAsString()
             ]);
 
-            return response()->json([
-                'error' => 'Failed to change stage',
-                'message' => $e->getMessage()
-            ], 500);
+            return Inertia::render('Test/MainTest', [
+                'error' => 'Failed to change stage: ' . $e->getMessage(),
+                'currentStage' => $validated['fromStage']
+            ]);
         }
     }
 

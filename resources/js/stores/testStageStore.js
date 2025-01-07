@@ -6,6 +6,7 @@ import { usePersonalityStore } from './personalityStore';
 import { useTestProgressStore } from './testProgressStore';
 import { router } from '@inertiajs/vue3';
 import axios from 'axios';
+import { computed } from 'vue';
 
 export const useTestStageStore = defineStore('testStage', {
     state: () => ({
@@ -150,36 +151,35 @@ export const useTestStageStore = defineStore('testStage', {
         },
 
         async fetchCurrentStage() {
+            if (this.loading) return;
+            
             try {
                 this.loading = true;
                 const response = await axios.get('/test-stage/current');
-
-                this.currentStage = response.data.currentStage;
-
-                // Update progress for all stages
-                const progressStore = useTestProgressStore();
-                const progress = response.data.progress;
-
-                Object.entries(progress).forEach(([stage, stageProgress]) => {
-                    progressStore.updateStageProgress(stage, {
-                        currentIndex: stageProgress.current_index,
-                        validResponses: stageProgress.responses?.length ?? 0,
-                        percentage: stageProgress.progress_percentage,
-                        completed: stageProgress.completed
+                
+                if (this.currentStage !== response.data.currentStage) {
+                    this.currentStage = response.data.currentStage;
+                    
+                    // Update progress efficiently
+                    const progressStore = useTestProgressStore();
+                    Object.entries(response.data.progress).forEach(([stage, stageProgress]) => {
+                        progressStore.updateStageProgress(stage, {
+                            currentIndex: stageProgress.current_index,
+                            validResponses: stageProgress.responses?.length ?? 0,
+                            percentage: stageProgress.progress_percentage,
+                            completed: stageProgress.completed
+                        });
                     });
-                });
 
-                // Fetch data based on current stage
-                if (this.currentStage === 'basic_interests') {
-                    const basicInterestStore = useBasicInterestStore();
-                    await basicInterestStore.fetchData();
-                } else if (this.currentStage === 'degree') {
-                    const degreeStore = useDegreeStore();
-                    await degreeStore.fetchData();
+                    // Only fetch data if needed
+                    if (['basic_interests', 'degree'].includes(this.currentStage)) {
+                        await this.fetchStageData(this.currentStage);
+                    }
                 }
             } catch (error) {
                 this.error = 'Failed to fetch current stage';
                 console.error('Error fetching current stage:', error);
+                throw error;
             } finally {
                 this.loading = false;
             }
@@ -190,24 +190,29 @@ export const useTestStageStore = defineStore('testStage', {
                 this.loading = true;
                 this.error = null;
 
-                const response = await axios.post('/test-stage/change', {
+                await router.post('/test-stage/change', {
                     fromStage: this.currentStage,
                     toStage: newStage
+                }, {
+                    preserveState: true,
+                    preserveScroll: true,
+                    onSuccess: (page) => {
+                        this.currentStage = newStage;
+                        
+                        // Data will be available in page.props
+                        const store = this.getStageStore();
+                        if (store) {
+                            store.initialize(page.props);
+                        }
+                    },
+                    onError: (errors) => {
+                        this.error = errors.message || 'Failed to change stage';
+                    }
                 });
-
-                if (response.data.error) {
-                    this.error = response.data.error;
-                    return false;
-                }
-
-                this.currentStage = response.data.currentStage;
-
-                // Fetch data for the new stage
-                await this.fetchStageData(newStage);
 
                 return true;
             } catch (error) {
-                this.error = error.response?.data?.message || 'Failed to change stage';
+                this.error = error.message || 'Failed to change stage';
                 console.error('Error changing stage:', error);
                 return false;
             } finally {
@@ -216,25 +221,21 @@ export const useTestStageStore = defineStore('testStage', {
         },
 
         async fetchStageData(stage) {
-            const store = this.getStageStore();
+            const store = this.getStageStore;
             if (store?.fetchData) {
                 await store.fetchData();
             }
         },
 
         getStageStore() {
-            switch (this.currentStage) {
-                case 'basic_interests':
-                    return useBasicInterestStore();
-                case 'holland_codes':
-                    return useHollandCodeStore();
-                case 'degree':
-                    return useDegreeStore();
-                case 'personality':
-                    return usePersonalityStore();
-                default:
-                    return null;
-            }
+            const stores = {
+                basic_interests: useBasicInterestStore,
+                holland_codes: useHollandCodeStore,
+                degree: useDegreeStore,
+                personality: usePersonalityStore
+            };
+            
+            return stores[this.currentStage]?.() ?? null;
         },
 
         clearError() {
@@ -249,15 +250,9 @@ export const useTestStageStore = defineStore('testStage', {
         currentStageDescription: (state) => state.stageInfo[state.currentStage]?.description || '',
         hasNextStage: (state) => !!state.stageInfo[state.currentStage]?.nextStage,
         nextStage: (state) => state.stageInfo[state.currentStage]?.nextStage || null,
-        stageProgress: (state) => (stage) => {
-            return state.stageProgress[stage]?.percentage || 0;
-        },
-        isStageComplete: (state) => (stage) => {
-            return state.stageProgress[stage]?.completed || false;
-        },
-        canProceedToNextStage: (state) => {
-            const currentStage = state.currentStage;
-            return state.stageProgress[currentStage]?.completed || false;
-        }
+        stageProgress: (state) => (stage) => state.stageProgress[stage]?.percentage ?? 0,
+        isStageComplete: (state) => (stage) => state.stageProgress[stage]?.completed ?? false,
+        canProceedToNextStage: (state) => state.stageProgress[state.currentStage]?.completed ?? false,
+        currentStageInfo: (state) => state.stageInfo[state.currentStage] ?? {}
     }
 });

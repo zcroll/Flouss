@@ -54,6 +54,7 @@
     "node-ray": "^2.1.2",
     "php-parser": "^3.2.1",
     "pinia": "^2.1.0",
+    "pinia-plugin-persistedstate": "^4.2.0",
     "radix-vue": "^1.9.11",
     "shadcn-ui": "^0.9.3",
     "svg-radar-chart": "^1.1.0",

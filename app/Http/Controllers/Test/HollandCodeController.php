@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use App\Traits\ArchetypeFinder;
+use Illuminate\Support\Facades\Log;
 
 class HollandCodeController extends BaseTestController
 {
@@ -59,6 +60,7 @@ class HollandCodeController extends BaseTestController
             }
         }
 
+        Session::put($this->sessionKey, $progress);
         return $progress;
     }
 
@@ -216,7 +218,7 @@ class HollandCodeController extends BaseTestController
 
     protected function handleError(\Exception $e, Request $request)
     {
-        \Log::error('Holland Codes Error:', [
+        Log::error('Holland Codes Error:', [
             'message' => $e->getMessage(),
             'trace' => $e->getTraceAsString()
         ]);
@@ -252,7 +254,7 @@ class HollandCodeController extends BaseTestController
             
             $trait = QuestionTrait::where('question_id', $itemId)->first();
             if (!$trait) {
-                \Log::warning("No trait found for question ID: {$itemId}");
+                Log::warning("No trait found for question ID: {$itemId}");
                 continue;
             }
             
@@ -288,7 +290,7 @@ class HollandCodeController extends BaseTestController
         }
         
         if (empty($normalizedScores)) {
-            \Log::error('No valid scores calculated in formatResponsesWithTraits');
+            Log::error('No valid scores calculated in formatResponsesWithTraits');
             return [[], []];
         }
         

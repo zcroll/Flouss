@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use App\Models\ItemSet;
+use Illuminate\Support\Facades\Log;
 
 abstract class BaseTestController extends Controller
 {
@@ -50,7 +51,7 @@ abstract class BaseTestController extends Controller
 
             return $this->renderResponse($itemSet, $progress, $isCompleted);
         } catch (\Exception $e) {
-            \Log::error("{$this->testStage}: Error in index", [
+            Log::error("{$this->testStage}: Error in index", [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
@@ -85,10 +86,6 @@ abstract class BaseTestController extends Controller
 
             Session::put($this->sessionKey, $progress);
 
-            if ($request->wantsJson()) {
-                return response()->json(['progress' => $progress]);
-            }
-
             return $this->renderResponse($itemSet, $progress);
         } catch (\Exception $e) {
             return $this->handleError($e, $request);
@@ -118,14 +115,7 @@ abstract class BaseTestController extends Controller
 
             Session::put($this->sessionKey, $progress);
 
-            if ($request->wantsJson()) {
-                return response()->json(['progress' => $progress]);
-            }
-
-            return back()->with([
-                'progress' => $progress,
-                'testStage' => $this->testStage
-            ]);
+            return $this->renderResponse($itemSet, $progress);
         } catch (\Exception $e) {
             return $this->handleError($e, $request);
         }
@@ -133,13 +123,17 @@ abstract class BaseTestController extends Controller
 
     protected function getItemSet()
     {
-        return ItemSet::with([
-            'items:id,text,text_fr,help_text,option_set_id,is_completed,career_id,degree_id,image_url,image_colour,itemset_id',
-            'items.optionSet:id,name,help_text,type',
-            'items.optionSet.options:id,text,text_fr,help_text,value,reverse_coded_value,option_set_id'
-        ])
-        ->where('title', $this->itemSetTitle)
-        ->first();
+        $cacheKey = "itemset_{$this->itemSetTitle}";
+        
+        return cache()->remember($cacheKey, now()->addHours(24), function () {
+            return ItemSet::with([
+                'items:id,text,text_fr,help_text,option_set_id,is_completed,career_id,degree_id,image_url,image_colour,itemset_id',
+                'items.optionSet:id,name,help_text,type',
+                'items.optionSet.options:id,text,text_fr,help_text,value,reverse_coded_value,option_set_id'
+            ])
+            ->where('title', $this->itemSetTitle)
+            ->first();
+        });
     }
 
     protected function validateRequest(Request $request)

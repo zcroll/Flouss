@@ -20,22 +20,29 @@
 
         <div class="assessment-with-progress">
             <SidebarMainTest :progress="{
-        hollandCodes: Number(hollandCodeStore?.progress?.progress_percentage ?? 0),
-        basicInterest: {
-          currentIndex: basicInterestStore?.progress?.current_index ?? 0,
-          validResponses: basicInterestStore?.validResponsesCount ?? 0,
-          percentage: basicInterestStore?.progressPercentage ?? 0,
-          completed: basicInterestStore?.isComplete ?? false
-        },
-        degree: {
-          currentIndex: degreeStore?.progress?.current_index ?? 0,
-          validResponses: degreeStore?.validResponsesCount ?? 0,
-          percentage: degreeStore?.progressPercentage ?? 0,
-          completed: degreeStore?.isComplete ?? false,
-          degreeMatching: degreeStore?.progress?.degreeMatching
-        },
-        completed: isComplete && canProceed
-      }" :test-stage="testStageStore?.currentStage"/>
+                hollandCodes: Number(hollandCodeStore?.progress?.progress_percentage ?? 0),
+                basicInterest: {
+                    currentIndex: basicInterestStore?.progress?.current_index ?? 0,
+                    validResponses: basicInterestStore?.validResponsesCount ?? 0,
+                    percentage: basicInterestStore?.progressPercentage ?? 0,
+                    completed: basicInterestStore?.isComplete ?? false
+                },
+                degree: {
+                    currentIndex: degreeStore?.progress?.current_index ?? 0,
+                    validResponses: degreeStore?.validResponsesCount ?? 0,
+                    percentage: degreeStore?.progressPercentage ?? 0,
+                    completed: degreeStore?.isComplete ?? false,
+                    degreeMatching: degreeStore?.progress?.degreeMatching
+                },
+                personality: {
+                    currentIndex: personalityStore?.progress?.current_index ?? 0,
+                    validResponses: personalityStore?.validResponsesCount ?? 0,
+                    percentage: personalityStore?.progressPercentage ?? 0,
+                    completed: personalityStore?.isComplete ?? false,
+                    personalityReport: personalityStore?.progress?.personalityReport
+                },
+                completed: isComplete && canProceed
+            }" :test-stage="testStageStore?.currentStage"/>
 
             <div class="assessment Roadmap__inner" >
                 <template v-if="showTutorial">
@@ -65,7 +72,11 @@
                         </section>
 
                         <div class="Assessment__scroll-container" ref="formRef">
-                            <div v-if="!isComplete && currentItem?.id" :key="`question-${currentItem.id}`">
+                            <div 
+                                v-if="!isComplete && currentItem?.id" 
+                                :key="`question-${currentItem.id}`"
+                                class="Assessment__question-container"
+                            >
                                 <TestQuestion 
                                     :current-item="currentItem" 
                                     :current-item-index="currentItemIndex"
@@ -73,9 +84,9 @@
                                     :test-data="currentTestData"
                                     :form="form"
                                     :store="currentStore" 
-                                    @submit="() => animateTransition('next', submitAnswer)" 
-                                    @go-back="() => animateTransition('back', goBack)"
-                                    @skip="() => animateTransition('next', skipQuestion)"
+                                    @submit="handleSubmit"
+                                    @go-back="handleGoBack"
+                                    @skip="handleSkip"
                                     ref="questionRef"
                                 />
                             </div>
@@ -113,20 +124,20 @@
 </template>
 
 <script setup>
-import {ref, computed, watch, onMounted} from "vue";
-import {useForm, router} from "@inertiajs/vue3";
+import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue';
+import { useForm, router } from '@inertiajs/vue3';
 import NextStep from "@/Components/Test/NextStep.vue";
 import SidebarMainTest from "./SidebarMainTest.vue";
 import TestQuestion from "@/Components/Test/TestQuestion.vue";
-import {useHollandCodeStore} from "@/stores/hollandCodeStore";
-import {useTestStageStore} from "@/stores/testStageStore";
-import {useBasicInterestStore} from "@/stores/basicInterestStore";
-import {usePersonalityStore} from "@/stores/personalityStore";
+import { useHollandCodeStore } from "@/stores/hollandCodeStore";
+import { useTestStageStore } from "@/stores/testStageStore";
+import { useBasicInterestStore } from "@/stores/basicInterestStore";
+import { usePersonalityStore } from "@/stores/personalityStore";
 import Discovery from "@/Components/Test/Discovery.vue";
 import BackButton from "@/Components/Test/BackButton.vue";
 import MatchResult from "@/Components/Test/MatchResult.vue";
-import {useTestProgressStore} from '@/stores/testProgressStore';
-import {useDegreeStore} from '@/stores/degreeStore';
+import { useTestProgressStore } from '@/stores/testProgressStore';
+import { useDegreeStore } from '@/stores/degreeStore';
 import MainTestTutorial from "@/Components/Test/MainTestTutorial.vue";
 import anime from 'animejs/lib/anime.es.js';
 const hollandCodeStore = useHollandCodeStore();
@@ -145,20 +156,21 @@ const form = useForm({
 });
 
 const formRef = ref(null);
+const currentAnimation = ref(null);
+const isAnimating = ref(false);
+
+const canAnimate = computed(() => 
+  formRef.value && 
+  !isAnimating.value && 
+  !currentStore.value?.loading
+);
+
+const currentItem = computed(() => 
+  currentStore.value?.currentItem
+);
 
 const currentStore = computed(() => {
-    switch (testStageStore.currentStage) {
-        case 'basic_interests':
-            return basicInterestStore;
-        case 'holland_codes':
-            return hollandCodeStore;
-        case 'degree':
-            return degreeStore;
-        case 'personality':
-            return personalityStore;
-        default:
-            return null;
-    }
+    return testStageStore.getStageStore();
 });
 
 const currentTestData = computed(() => {
@@ -176,7 +188,6 @@ const currentTestData = computed(() => {
     }
 });
 
-const currentItem = computed(() => currentStore.value?.currentItem ?? null);
 const currentItemIndex = computed(() => currentStore.value?.currentItemIndex ?? 0);
 
 const isComplete = computed(() => {
@@ -246,13 +257,15 @@ const showTutorial = computed(() => {
 });
 
 const animateTransition = (direction, callback) => {
+  if (!canAnimate.value) return;
+  
   const animations = {
     next: {
       start: { translateY: [0, '-100%'], scale: [1, 0.98], opacity: [1, 0] },
       end: { translateY: ['100%', 0], scale: [0.98, 1], opacity: [0, 1] }
     },
     back: {
-      start: { translateY: [0, '100%'], scale: [1, 0.98], opacity: [1, 0] }, 
+      start: { translateY: [0, '100%'], scale: [1, 0.98], opacity: [1, 0] },
       end: { translateY: ['-100%', 0], scale: [0.98, 1], opacity: [0, 1] }
     }
   };
@@ -262,43 +275,81 @@ const animateTransition = (direction, callback) => {
     easing: 'cubicBezier(.4,0,.2,1)'
   };
 
-  anime({
-    targets: formRef.value,
-    ...animations[direction].start,
-    ...timing,
-    complete: () => {
-      callback();
-      anime({
+  // Start the process
+  const processTransition = async () => {
+    try {
+      isAnimating.value = true;
+
+      // First, update the data
+      await callback();
+      
+      // Then start exit animation
+      await anime({
+        targets: formRef.value,
+        ...animations[direction].start,
+        ...timing
+      }).finished;
+
+      // Wait for store to update and DOM to reflect changes
+      await nextTick();
+
+      // Finally, animate in the new content
+      await anime({
         targets: formRef.value,
         ...animations[direction].end,
         ...timing
-      });
+      }).finished;
+
+    } catch (error) {
+      console.error('Transition error:', error);
+    } finally {
+      isAnimating.value = false;
     }
+  };
+
+  processTransition();
+};
+
+const handleSubmit = () => {
+  if (!canAnimate.value) return;
+
+  animateTransition('next', async () => {
+    const store = currentStore.value;
+    if (!store || !form.answer || !form.itemId) return;
+
+    // Submit the answer first
+    await store.submitAnswer({
+      itemId: currentItem.value.id,
+      answer: form.answer,
+      type: 'answered'
+    });
+
+    // Clear form after successful submission
+    form.answer = null;
   });
 };
 
-const submitAnswer = async () => {
+const handleGoBack = () => {
+  if (!canAnimate.value) return;
+
+  animateTransition('back', async () => {
     const store = currentStore.value;
-    if (!store || form.processing || !form.answer || !form.itemId) return;
+    if (!store) return;
 
-    try {
-        form.testStage = testStageStore?.currentStage;
-        await store.submitAnswer(form);
-    } catch (err) {
-        console.error('Error submitting answer:', err);
-    } finally {
-        form.answer = null;
-    }
+    // Go back first
+    await store.goBack();
+    
+    // Update form with previous question's answer
+    form.answer = store.responses[store.currentItem?.id] || null;
+  });
 };
 
-const goBack = () => {
-    if (!currentStore.value || form.processing) return;
-    currentStore.value.goBack();
-};
-
-const skipQuestion = () => {
-    if (!currentStore.value || form.processing) return;
-    currentStore.value.skipQuestion();
+const handleSkip = () => {
+    if (!currentStore.value || form.processing || isAnimating.value) return;
+    
+    animateTransition('next', () => {
+        currentStore.value.skipQuestion();
+    });
 };
 
 const handleDiscoveryClose = () => {
@@ -353,8 +404,32 @@ const handleTutorialComplete = () => {
     if (!hollandCodeStore) return;
     hollandCodeStore.responses['tutorial'] = true;
 };
+
+// Watchers
+watch(() => currentItem.value, (newItem) => {
+  if (newItem) {
+    form.itemId = newItem.id;
+  }
+}, { immediate: true });
+
+// Cleanup
+onBeforeUnmount(() => {
+  if (currentAnimation.value) {
+    currentAnimation.value.pause();
+  }
+});
+
+// Watch for store updates
+watch(() => currentStore.value?.currentItem, (newItem) => {
+  if (newItem) {
+    form.itemId = newItem.id;
+    form.answer = currentStore.value?.responses[newItem.id] || null;
+  }
+}, { immediate: true });
 </script>
 
 <style>
 @import '/public/css/assessment.css';
+
+
 </style>
