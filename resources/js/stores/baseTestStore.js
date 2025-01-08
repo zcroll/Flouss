@@ -67,48 +67,36 @@ export const createBaseTestStore = (storeName, options = {}) => {
             setProgress(progress) {
                 if (!progress) return;
                 
-                const updatedProgress = {
-                    ...this.progress,
-                    ...progress,
-                    totalQuestions: this.data?.items?.length || this.progress.totalQuestions
-                };
-
-                // Calculate valid responses
-                const validResponses = progress.responses ? 
-                    Object.values(progress.responses).filter(v => v !== null && v > 0).length : 
-                    this.progress.validResponses;
-
-                // Update progress percentage
-                const progressPercentage = updatedProgress.totalQuestions > 0 ? 
-                    Math.min(Math.round((validResponses / updatedProgress.totalQuestions) * 100), 100) : 
-                    0;
-
-                // Update completion status
+                const totalQuestions = this.data?.items?.length || this.progress.totalQuestions;
+                const validResponses = Object.values(progress.responses || {}).filter(v => v !== null && v > 0).length;
+                const progressPercentage = Math.min(Math.round((validResponses / totalQuestions) * 100), 100);
                 const isCompleted = progress.completed || progressPercentage >= 100;
 
-                // Merge all updates
-                this.progress = {
-                    ...updatedProgress,
-                    validResponses,
-                    progress_percentage: progressPercentage,
-                    completed: isCompleted
-                };
-                
-                if (progress.responses) {
-                    this.responses = Object.fromEntries(
-                        Object.entries(progress.responses).map(([key, value]) => [
-                            key,
-                            value !== null ? Number(value) : null
-                        ])
-                    );
-                }
+                // Batch updates using $patch
+                this.$patch((state) => {
+                    state.progress = {
+                        ...state.progress,
+                        ...progress,
+                        totalQuestions,
+                        validResponses,
+                        progress_percentage: progressPercentage,
+                        completed: isCompleted
+                    };
 
-                this.currentItemIndex = Math.min(
-                    progress.current_index || 0,
-                    this.progress.totalQuestions - 1
-                );
-                
-                this.setCurrentItem();
+                    if (progress.responses) {
+                        state.responses = Object.fromEntries(
+                            Object.entries(progress.responses).map(([key, value]) => [
+                                key,
+                                value !== null ? Number(value) : null
+                            ])
+                        );
+                    }
+
+                    state.currentItemIndex = Math.min(
+                        progress.current_index || 0,
+                        totalQuestions - 1
+                    );
+                });
 
                 // Sync with test progress store
                 const testProgressStore = useTestProgressStore();
@@ -118,16 +106,19 @@ export const createBaseTestStore = (storeName, options = {}) => {
                     percentage: progressPercentage,
                     completed: isCompleted,
                     responses: this.responses,
-                    totalQuestions: this.progress.totalQuestions,
-                    ...this.progress
+                    totalQuestions,
+                    ...progress
                 });
 
-                // If completed, mark stage complete in both stores
+                // Mark stage complete if needed
                 if (isCompleted) {
                     const testStageStore = useTestStageStore();
                     testStageStore.markStageComplete(options.testStage);
                     testProgressStore.markStageComplete(options.testStage);
                 }
+
+                // Set current item after all updates
+                this.setCurrentItem();
 
                 // Save to session storage if configured
                 if (this.sessionKey) {

@@ -1,9 +1,10 @@
 import { defineStore } from 'pinia';
 import { router } from '@inertiajs/vue3';
+import { TEST_STAGE_STATUSES, TEST_STAGES, TEST_STAGE_SEQUENCE } from '../constants/testStageStatuses';
 
 export const useTestProgressStore = defineStore('testProgress', {
   state: () => ({
-    currentStage: 'holland_codes',
+    currentStage: TEST_STAGES.HOLLAND_CODES,
     stageConfig: {
       holland_codes: {
         name: 'Your personality archetype',
@@ -162,7 +163,7 @@ export const useTestProgressStore = defineStore('testProgress', {
     },
 
     getStageSequence() {
-      return ['holland_codes', 'basic_interests', 'degree', 'personality'];
+      return TEST_STAGE_SEQUENCE;
     },
 
     getNextStage(currentStage) {
@@ -267,28 +268,24 @@ export const useTestProgressStore = defineStore('testProgress', {
     currentStageProgress: (state) => state.stages[state.currentStage]?.percentage || 0,
     
     stageStatus: (state) => (stage) => {
-      if (!state.isStageVisible(stage)) return 'locked';
+      if (!state.isStageVisible(stage)) return TEST_STAGE_STATUSES.LOCKED;
       
       const stageData = state.stages[stage];
-      if (!stageData) return 'not-started';
+      if (!stageData) return TEST_STAGE_STATUSES.NOT_STARTED;
       
-      if (stageData.completed) return 'complete';
-      if (stage === state.currentStage) return 'in-progress';
+      if (stageData.completed) return TEST_STAGE_STATUSES.COMPLETE;
+      if (stage === state.currentStage) return TEST_STAGE_STATUSES.IN_PROGRESS;
       
-      const sequence = state.getStageSequence();
+      const sequence = TEST_STAGE_SEQUENCE;
       const stageIndex = sequence.indexOf(stage);
       const currentIndex = sequence.indexOf(state.currentStage);
       
-      // Previous incomplete stages
-      if (stageIndex < currentIndex) return 'incomplete';
-      
-      // Next stage is upcoming if current stage is complete
+      if (stageIndex < currentIndex) return TEST_STAGE_STATUSES.INCOMPLETE;
       if (stageIndex === currentIndex + 1 && state.stages[state.currentStage]?.completed) {
-        return 'upcoming';
+          return TEST_STAGE_STATUSES.UPCOMING;
       }
       
-      // Future stages are locked until their time comes
-      return 'locked';
+      return TEST_STAGE_STATUSES.LOCKED;
     },
 
     // Add getters for special data

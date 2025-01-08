@@ -256,77 +256,68 @@ const showTutorial = computed(() => {
            !hollandCodeStore?.responses['tutorial'];
 });
 
-const animateTransition = (direction, callback) => {
-  if (!canAnimate.value) return;
-  
-  const animations = {
+const animations = {
     next: {
-      start: { translateY: [0, '-100%'], scale: [1, 0.98], opacity: [1, 0] },
-      end: { translateY: ['100%', 0], scale: [0.98, 1], opacity: [0, 1] }
+        start: { translateY: [0, '-100%'], scale: [1, 0.98], opacity: [1, 0] },
+        end: { translateY: ['100%', 0], scale: [0.98, 1], opacity: [0, 1] }
     },
     back: {
-      start: { translateY: [0, '100%'], scale: [1, 0.98], opacity: [1, 0] },
-      end: { translateY: ['-100%', 0], scale: [0.98, 1], opacity: [0, 1] }
+        start: { translateY: [0, '100%'], scale: [1, 0.98], opacity: [1, 0] },
+        end: { translateY: ['-100%', 0], scale: [0.98, 1], opacity: [0, 1] }
     }
-  };
+};
 
-  const timing = {
+const timing = {
     duration: 400,
     easing: 'cubicBezier(.4,0,.2,1)'
-  };
+};
 
-  // Start the process
-  const processTransition = async () => {
+const isTransitioning = ref(false);
+
+const handleTransition = async (direction, callback) => {
+    if (!canAnimate.value || isTransitioning.value) return;
+    
     try {
-      isAnimating.value = true;
-
-      // First, update the data
-      await callback();
-      
-      // Then start exit animation
-      await anime({
-        targets: formRef.value,
-        ...animations[direction].start,
-        ...timing
-      }).finished;
-
-      // Wait for store to update and DOM to reflect changes
-      await nextTick();
-
-      // Finally, animate in the new content
-      await anime({
-        targets: formRef.value,
-        ...animations[direction].end,
-        ...timing
-      }).finished;
-
+        isTransitioning.value = true;
+        
+        await anime({
+            targets: formRef.value,
+            ...animations[direction].start,
+            ...timing
+        }).finished;
+        
+        await callback();
+        
+        await nextTick();
+        
+        await anime({
+            targets: formRef.value,
+            ...animations[direction].end,
+            ...timing
+        }).finished;
+        
     } catch (error) {
-      console.error('Transition error:', error);
+        console.error('Transition error:', error);
     } finally {
-      isAnimating.value = false;
+        isTransitioning.value = false;
     }
-  };
-
-  processTransition();
 };
 
 const handleSubmit = () => {
-  if (!canAnimate.value) return;
-
-  animateTransition('next', async () => {
-    const store = currentStore.value;
-    if (!store || !form.answer || !form.itemId) return;
-
-    // Submit the answer first
-    await store.submitAnswer({
-      itemId: currentItem.value.id,
-      answer: form.answer,
-      type: 'answered'
+    if (!canAnimate.value || isTransitioning.value) return;
+    
+    handleTransition('next', async () => {
+        const store = currentStore.value;
+        if (!store || !form.answer || !form.itemId) return;
+        
+        await store.submitAnswer({
+            itemId: currentItem.value.id,
+            answer: form.answer,
+            type: 'answered'
+        });
+        
+        form.answer = null;
     });
-
-    // Clear form after successful submission
-    form.answer = null;
-  });
 };
 
 const handleGoBack = () => {
