@@ -152,7 +152,7 @@ export const useThemeStore = defineStore('theme', () => {
     'Mastermind': 'purple-theme',
     'Maverick': 'purple-theme',
     'Visionary': 'purple-theme',
-    'Creator': 'green-theme',
+    'Creator': 'blue-theme',
 
     // Amber theme archetypes - Energy/Creation
     'Builder': 'amber-theme',

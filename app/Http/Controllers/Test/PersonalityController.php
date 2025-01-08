@@ -45,10 +45,12 @@ class PersonalityController extends BaseTestController
             return $this->renderInitialResponse();
         }
 
+    
+
         try {
             $progress = Session::get(self::SESSION_KEY, $this->getInitialProgress());
             $currentItemSetTitle = $this->getCurrentItemSet();
-
+ds(['progress logic '=>$progress]);
             $cacheKey = "personality_assessment_{$currentItemSetTitle}";
             $personalityAssessment = Cache::remember($cacheKey, now()->addHours(24), function () use ($currentItemSetTitle) {
                 return ItemSet::with([
