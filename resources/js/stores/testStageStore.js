@@ -110,41 +110,64 @@ export const useTestStageStore = defineStore('testStage', {
 
         canTransitionTo(stage) {
             const progressStore = useTestProgressStore();
-            const currentStageInfo = this.stageInfo[this.currentStage];
+            const sequence = progressStore.getStageSequence();
+            const currentIndex = sequence.indexOf(this.currentStage);
+            const targetIndex = sequence.indexOf(stage);
 
-            // Check if this is the next stage in sequence
-            if (currentStageInfo.nextStage !== stage) {
-                return false;
-            }
+            // Can't transition to current stage
+            if (stage === this.currentStage) return false;
 
-            // Check if current stage is complete and can transition
-            const currentProgress = progressStore.stages[this.currentStage];
-            if (!currentProgress?.completed || !currentProgress?.canTransition) {
-                return false;
+            // Can't transition to unknown stage
+            if (targetIndex === -1) return false;
+
+            // Can only transition to the next stage in sequence
+            if (targetIndex !== currentIndex + 1) return false;
+
+            // Check if current stage is complete
+            const currentStageProgress = progressStore.stages[this.currentStage];
+            if (!currentStageProgress?.completed) return false;
+
+            // Check if all previous stages are complete
+            for (let i = 0; i < targetIndex; i++) {
+                if (!progressStore.stages[sequence[i]]?.completed) {
+                    return false;
+                }
             }
 
             return true;
         },
 
         validateStageTransition(fromStage, toStage) {
+            const progressStore = useTestProgressStore();
+            const sequence = progressStore.getStageSequence();
+            const fromIndex = sequence.indexOf(fromStage);
+            const toIndex = sequence.indexOf(toStage);
+
             // Check if stages exist
-            if (!this.stageInfo[fromStage] || !this.stageInfo[toStage]) {
+            if (fromIndex === -1 || toIndex === -1) {
                 throw new Error(`Invalid stage transition: Unknown stage (${fromStage} -> ${toStage})`);
             }
 
-            // Check if it's the next stage in sequence
+            // Check if it's a valid transition
             if (!this.canTransitionTo(toStage)) {
-                const progressStore = useTestProgressStore();
                 const currentProgress = progressStore.stages[fromStage];
 
-                let errorMessage = 'Invalid stage transition: Not ready for next stage';
                 if (!currentProgress?.completed) {
-                    errorMessage = 'Cannot transition: Current stage not complete';
-                } else if (!currentProgress?.canTransition) {
-                    errorMessage = 'Cannot transition: Stage transition not allowed';
+                    throw new Error('Cannot transition: Current stage not complete');
                 }
 
-                throw new Error(errorMessage);
+                if (toIndex !== fromIndex + 1) {
+                    throw new Error('Invalid stage transition: Can only move to next stage in sequence');
+                }
+
+                // Check if all previous stages are complete
+                for (let i = 0; i < toIndex; i++) {
+                    if (!progressStore.stages[sequence[i]]?.completed) {
+                        throw new Error(`Cannot transition: Stage ${sequence[i]} not complete`);
+                    }
+                }
+
+                throw new Error('Invalid stage transition: Not ready for next stage');
             }
 
             return true;

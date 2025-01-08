@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia';
 import { router, useForm } from '@inertiajs/vue3';
+import { useTestProgressStore } from '../stores/testProgressStore';
+import { useTestStageStore } from '../stores/testStageStore';
 
 export const createBaseTestStore = (storeName, options = {}) => {
     return defineStore(storeName, {
@@ -71,25 +73,65 @@ export const createBaseTestStore = (storeName, options = {}) => {
                     totalQuestions: this.data?.items?.length || this.progress.totalQuestions
                 };
 
-                // Only update if values actually changed
-                if (JSON.stringify(this.progress) !== JSON.stringify(updatedProgress)) {
-                    this.progress = updatedProgress;
-                    
-                    if (progress.responses) {
-                        this.responses = Object.fromEntries(
-                            Object.entries(progress.responses).map(([key, value]) => [
-                                key,
-                                value !== null ? Number(value) : null
-                            ])
-                        );
-                    }
+                // Calculate valid responses
+                const validResponses = progress.responses ? 
+                    Object.values(progress.responses).filter(v => v !== null && v > 0).length : 
+                    this.progress.validResponses;
 
-                    this.currentItemIndex = Math.min(
-                        progress.current_index || 0,
-                        this.progress.totalQuestions - 1
+                // Update progress percentage
+                const progressPercentage = updatedProgress.totalQuestions > 0 ? 
+                    Math.min(Math.round((validResponses / updatedProgress.totalQuestions) * 100), 100) : 
+                    0;
+
+                // Update completion status
+                const isCompleted = progress.completed || progressPercentage >= 100;
+
+                // Merge all updates
+                this.progress = {
+                    ...updatedProgress,
+                    validResponses,
+                    progress_percentage: progressPercentage,
+                    completed: isCompleted
+                };
+                
+                if (progress.responses) {
+                    this.responses = Object.fromEntries(
+                        Object.entries(progress.responses).map(([key, value]) => [
+                            key,
+                            value !== null ? Number(value) : null
+                        ])
                     );
-                    
-                    this.setCurrentItem();
+                }
+
+                this.currentItemIndex = Math.min(
+                    progress.current_index || 0,
+                    this.progress.totalQuestions - 1
+                );
+                
+                this.setCurrentItem();
+
+                // Sync with test progress store
+                const testProgressStore = useTestProgressStore();
+                testProgressStore.updateStageProgress(options.testStage, {
+                    currentIndex: this.currentItemIndex,
+                    validResponses,
+                    percentage: progressPercentage,
+                    completed: isCompleted,
+                    responses: this.responses,
+                    totalQuestions: this.progress.totalQuestions,
+                    ...this.progress
+                });
+
+                // If completed, mark stage complete in both stores
+                if (isCompleted) {
+                    const testStageStore = useTestStageStore();
+                    testStageStore.markStageComplete(options.testStage);
+                    testProgressStore.markStageComplete(options.testStage);
+                }
+
+                // Save to session storage if configured
+                if (this.sessionKey) {
+                    sessionStorage.setItem(this.sessionKey, JSON.stringify(this.progress));
                 }
             },
 

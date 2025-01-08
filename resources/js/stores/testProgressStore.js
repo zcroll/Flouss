@@ -162,7 +162,7 @@ export const useTestProgressStore = defineStore('testProgress', {
     },
 
     getStageSequence() {
-      return Object.keys(this.stageConfig);
+      return ['holland_codes', 'basic_interests', 'degree', 'personality'];
     },
 
     getNextStage(currentStage) {
@@ -188,12 +188,42 @@ export const useTestProgressStore = defineStore('testProgress', {
       if (totalQuestions === 0) return 0;
       
       return Math.min(Math.round((validResponses / totalQuestions) * 100), 100);
+    },
+
+    // Check if a stage should be visible based on sequence
+    isStageVisible(stage) {
+      const sequence = this.getStageSequence();
+      const stageIndex = sequence.indexOf(stage);
+      const currentIndex = sequence.indexOf(this.currentStage);
+
+      // First stage is always visible
+      if (stageIndex === 0) return true;
+
+      // Current stage is always visible
+      if (stage === this.currentStage) return true;
+
+      // Previous stages are always visible
+      if (stageIndex < currentIndex) return true;
+
+      // Next stage is visible only if current stage is complete
+      if (stageIndex === currentIndex + 1) {
+        return this.stages[this.currentStage]?.completed || false;
+      }
+
+      // Future stages are visible only if all previous stages are complete
+      for (let i = 0; i < stageIndex; i++) {
+        if (!this.stages[sequence[i]]?.completed) {
+          return false;
+        }
+      }
+
+      return true;
     }
   },
 
   getters: {
     getStageInfo: (state) => (stage) => state.stageConfig[stage] || null,
-    stageSequence: (state) => Object.keys(state.stageConfig),
+    stageSequence: (state) => state.getStageSequence(),
     currentStageName: (state) => state.stageConfig[state.currentStage]?.name || '',
     nextStageName: (state) => {
       const nextStage = state.stageConfig[state.currentStage]?.nextStage;
@@ -202,10 +232,24 @@ export const useTestProgressStore = defineStore('testProgress', {
     isStageComplete: (state) => (stage) => {
       const stageData = state.stages[stage];
       if (!stageData) return false;
-
       return stageData.completed || stageData.percentage >= 100;
     },
-    canTransitionFromStage: (state) => (stage) => state.stages[stage]?.canTransition || false,
+    canTransitionFromStage: (state) => (stage) => {
+      const stageData = state.stages[stage];
+      if (!stageData?.completed) return false;
+
+      // Check if all previous stages are complete
+      const sequence = state.getStageSequence();
+      const stageIndex = sequence.indexOf(stage);
+      
+      for (let i = 0; i < stageIndex; i++) {
+        if (!state.stages[sequence[i]]?.completed) {
+          return false;
+        }
+      }
+
+      return true;
+    },
     stageProgress: (state) => (stage) => {
       const stageData = state.stages[stage];
       if (!stageData) return 0;
@@ -223,19 +267,31 @@ export const useTestProgressStore = defineStore('testProgress', {
     currentStageProgress: (state) => state.stages[state.currentStage]?.percentage || 0,
     
     stageStatus: (state) => (stage) => {
+      if (!state.isStageVisible(stage)) return 'locked';
+      
       const stageData = state.stages[stage];
       if (!stageData) return 'not-started';
       
       if (stageData.completed) return 'complete';
       if (stage === state.currentStage) return 'in-progress';
       
-      const prevStage = state.getPreviousStage(stage);
-      if (prevStage && state.stages[prevStage]?.completed) return 'upcoming';
+      const sequence = state.getStageSequence();
+      const stageIndex = sequence.indexOf(stage);
+      const currentIndex = sequence.indexOf(state.currentStage);
       
-      return 'not-started';
+      // Previous incomplete stages
+      if (stageIndex < currentIndex) return 'incomplete';
+      
+      // Next stage is upcoming if current stage is complete
+      if (stageIndex === currentIndex + 1 && state.stages[state.currentStage]?.completed) {
+        return 'upcoming';
+      }
+      
+      // Future stages are locked until their time comes
+      return 'locked';
     },
 
-    // Special data getters
+    // Add getters for special data
     archetypeDiscovery: (state) => state.stages.holland_codes?.archetypeDiscovery || null,
     jobMatching: (state) => state.stages.basic_interests?.jobMatching || null,
     degreeMatching: (state) => state.stages.degree?.degreeMatching || null,
@@ -243,12 +299,19 @@ export const useTestProgressStore = defineStore('testProgress', {
     
     shouldShowNextStage: (state) => {
       const currentStage = state.stages[state.currentStage];
-      return currentStage?.completed && currentStage?.canTransition;
-    },
+      if (!currentStage?.completed) return false;
 
-    // Add a getter for valid responses count
-    validResponsesCount: (state) => (stage) => {
-      return state.stages[stage]?.validResponses || 0;
+      const sequence = state.getStageSequence();
+      const currentIndex = sequence.indexOf(state.currentStage);
+      
+      // Check if all previous stages are complete
+      for (let i = 0; i < currentIndex; i++) {
+        if (!state.stages[sequence[i]]?.completed) {
+          return false;
+        }
+      }
+
+      return true;
     }
   }
 }); 
