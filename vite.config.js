@@ -6,26 +6,36 @@ import path from 'path';
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js'],
+            input: ['resources/js/app.js'],
             refresh: true,
+            publicDirectory: 'public', // Add public directory config
         }),
         vue({
             template: {
                 transformAssetUrls: {
                     base: null,
                     includeAbsolute: false,
-                }
-            }
+                },
+            },
         }),
     ],
     resolve: {
         alias: {
-            '@': path.resolve(__dirname, './resources/js')
-        }
+            '@': path.resolve(__dirname, './resources/js'),
+        },
     },
-    optimizeDeps: {
-        exclude: [
-            'chunk-WYNMOUL2'
-        ]
+    build: {
+        // Configure build output
+        outDir: 'public/build',
+        assetsDir: '',
+        manifest: true,
+        rollupOptions: {
+            output: {
+                // Ensure proper caching with hash in filenames
+                entryFileNames: `assets/[name].[hash].js`,
+                chunkFileNames: `assets/[name].[hash].js`,
+                assetFileNames: `assets/[name].[hash].[ext]`
+            }
+        }
     }
 });

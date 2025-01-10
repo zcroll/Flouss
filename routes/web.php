@@ -140,6 +140,10 @@ Route::middleware([
                 Route::post('/', [PersonalityController::class, 'storeResponse'])->name('personality.store');
                 Route::post('/go-back', [PersonalityController::class, 'goBack'])->name('personality.go-back');
             });
+
+            // Test Results Routes
+            Route::post('/test/results', [App\Http\Controllers\Test\ResultTest::class, 'checkAllTestsCompleted'])
+                ->name('test.results');
         });
 
         // Test Stage Management Routes
@@ -156,6 +160,10 @@ Route::middleware([
         Route::post('/test/save-results', [App\Http\Controllers\Test\TestStageController::class, 'saveResults'])
             ->name('test.save-results')
             ->middleware(['auth']);
+
+        // Test Results Routes
+        Route::post('/test/results', [App\Http\Controllers\Test\ResultTest::class, 'checkAllTestsCompleted'])
+            ->name('test.results');
     });
 });
 

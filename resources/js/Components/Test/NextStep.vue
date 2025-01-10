@@ -107,19 +107,28 @@ const handleContinue = async () => {
         router.post(route('test.results'), {}, {
           preserveState: true,
           preserveScroll: true,
-          onSuccess: () => {
-            testStageStore.clearError();
-            router.visit(route('results'));
+          onSuccess: (response) => {
+            if (response.success) {
+              testStageStore.clearError();
+              window.location.href = route('results');
+            } else {
+              error.value = response.message || 'Failed to save results';
+              loading.value = false;
+            }
           },
           onError: (errors) => {
-            throw new Error(errors.message || 'Failed to save results');
+            error.value = errors.message || 'Failed to save results';
+            loading.value = false;
+            console.error('Save results error:', errors);
           }
         });
         
         return;
       } catch (err) {
         console.error('Save results error:', err);
-        throw new Error(err.response?.data?.message || err.message || 'Failed to save your results. Please try again.');
+        error.value = err.response?.data?.message || err.message || 'Failed to save your results. Please try again.';
+        loading.value = false;
+        return;
       }
     }
 

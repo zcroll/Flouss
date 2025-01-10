@@ -73,7 +73,7 @@ import { ref } from 'vue'
 import { Head } from '@inertiajs/vue3'
 import MainLayout from '@/Layouts/MainLayout.vue'
 import ArchetypeAvatar from '@/Components/Result/Archetype_Avatar/ArchetypeAvatar.vue'
-import BottomCards from '@/Components/BottomCards.vue'
+import BottomCards from '@/Components/Dashboard/BottomCards.vue'
 
 defineOptions({
     layout: MainLayout,

@@ -15,7 +15,7 @@ class JobMatcherController extends Controller
 
     private function prepareUserPreferences($request)
     {
-        ds(Session('holland_codes_progress'));
+        ds(Session('result_user'));
         // Get interest scores from request or use defaults
         $interest_scores = $request->input('interest_scores', [
             "Finance" => 5,

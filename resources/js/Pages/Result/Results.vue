@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-1 flex flex-col space-y-8 container mx-auto px-6 max-w-8xl">
+  <div class="flex-1 flex flex-col container mx-auto max-w-8xl">
 
   <Head title="Results" />
 
@@ -7,23 +7,24 @@
     <!-- Hero Section with Archetype -->
     <Deferred :data="['Archetype', 'archetypeDiscovery']">
       <template #fallback>
-        <div class="w-full h-[600px] rounded-3xl animate-pulse" :class="themeStore.getThemeClasses('background').light">
+        <div class="w-full h-screen rounded-3xl animate-pulse" :class="themeStore.getThemeClasses('background').light">
         </div>
       </template>
 
       <!-- Archetype Section -->
-      <div class="min-h-[600px] relative flex items-center justify-center">
-        <div class="absolute inset-0 flex items-center justify-center">
-          <div class="w-full h-full rounded-3xl border" :class="[
-            themeStore.getThemeClasses('background', 'light'),
-            `border-${themeStore.currentTheme.border.secondary}/20`,
-            'shadow-lg shadow-black/5 backdrop-blur-sm'
-          ]">
-            <Folder :archetype="Archetype" :archetype-jobs="ArchetypeJobs" :archetype-discovery="archetypeDiscovery"
-              :user-id="userId" :top-traits="topTraits" />
-          </div>
-        </div>
-      </div>
+          <Folder 
+            :archetype="Archetype" 
+            :archetype-jobs="ArchetypeJobs" 
+            :archetype-discovery="archetypeDiscovery"
+            :user-id="userId" 
+            :top-traits="topTraits" 
+            class="w-full h-[450.438px]"
+          />
+   
+       
+          
+
+      
     </Deferred>
 
     <!-- Careers Section -->
@@ -214,7 +215,39 @@ onMounted(() => {
 }
 
 /* Add any additional styles needed */
-.min-h-[600px] {
-  min-height: 600px;
+.min-h-[100px] {
+  min-height: 100px;
+}
+
+.result-folder {
+  height: 422.438px;
+  width: 100%;
+}
+
+.min-h-[60px] {
+  min-height: 60px;
+}
+
+/* Add smooth transitions */
+.result-folder :deep(.avatar-transition) {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Add any additional styling specific to the results page */
+
+/* Remove hover transitions since we're not using them anymore */
+.min-h-[100px] {
+  min-height: 100px;
+}
+
+/* Add smooth loading transition */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

@@ -12,6 +12,33 @@ export const useThemeStore = defineStore('theme', () => {
 
   // Theme configurations with reactive dark mode
   const themeConfig = computed(() => ({
+    // Basic theme - Default neutral
+    'basic-theme': {
+      primary: 'gray',
+      accent: 'slate',
+      base: isDarkMode.value ? {
+        from: 'dark:from-gray-900',
+        via: 'dark:via-gray-800',
+        to: 'dark:to-gray-700'
+      } : {
+        from: 'from-gray-100',
+        via: 'via-white',
+        to: 'to-gray-50'
+      },
+      button: isDarkMode.value ? 'gray-700' : 'gray-500',
+      hover: isDarkMode.value ? 'gray-800' : 'gray-600',
+      border: isDarkMode.value ? 'gray-900' : 'gray-200',
+      ring: isDarkMode.value ? 'gray-800' : 'gray-100',
+      background: isDarkMode.value ? {
+        light: 'dark:bg-gray-800',
+        medium: 'dark:bg-gray-900',
+        dark: 'dark:bg-gray-950'
+      } : {
+        light: 'bg-gray-50',
+        medium: 'bg-gray-100',
+        dark: 'bg-gray-500'
+      }
+    },
     'blue-theme': {
       primary: 'blue',
       accent: 'sky',
@@ -152,7 +179,7 @@ export const useThemeStore = defineStore('theme', () => {
     'Mastermind': 'purple-theme',
     'Maverick': 'purple-theme',
     'Visionary': 'purple-theme',
-    'Creator': 'blue-theme',
+    'Creator': 'amber-theme',
 
     // Amber theme archetypes - Energy/Creation
     'Builder': 'amber-theme',
@@ -164,8 +191,11 @@ export const useThemeStore = defineStore('theme', () => {
 
   // Getters
   const currentTheme = computed(() => {
-    // Get theme based on current archetype, fallback to blue-theme
-    const themeKey = archetypeThemeMap[currentArchetype.value] || 'blue-theme'
+    // Get theme based on current archetype, fallback to basic-theme if no archetype
+    if (!currentArchetype.value) {
+      return themeConfig.value['basic-theme']
+    }
+    const themeKey = archetypeThemeMap[currentArchetype.value] || 'basic-theme'
     return themeConfig.value[themeKey]
   })
 
@@ -194,6 +224,11 @@ export const useThemeStore = defineStore('theme', () => {
   // Add available themes array
   const availableThemes = [
     {
+      id: 'basic-theme',
+      name: 'Basic Theme',
+      icon: 'M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313-12.454z' // Default icon path
+    },
+    {
       id: 'blue-theme',
       name: 'Modern Blue',
       icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' // Home icon path
@@ -216,7 +251,7 @@ export const useThemeStore = defineStore('theme', () => {
   ]
 
   // Add current theme ID ref
-  const currentThemeId = ref('blue-theme')
+  const currentThemeId = ref('basic-theme')
 
   // Add computed for current theme object
   const currentThemeObject = computed(() => {
@@ -238,10 +273,10 @@ export const useThemeStore = defineStore('theme', () => {
     console.log('User archetype from Inertia:', userArchetype)
 
     // Set current archetype from user data
-    currentArchetype.value = userArchetype || 'Creator'
+    currentArchetype.value = userArchetype || null
 
     // Set theme ID based on archetype
-    const themeId = archetypeThemeMap[currentArchetype.value] || 'blue-theme'
+    const themeId = userArchetype ? (archetypeThemeMap[userArchetype] || 'basic-theme') : 'basic-theme'
     console.log('Selected theme based on archetype:', {
       archetype: currentArchetype.value,
       mappedTheme: themeId,
