@@ -241,6 +241,10 @@ const props = defineProps({
   initialMessages: {
     type: Array,
     default: () => []
+  },
+  isMobile: {
+    type: Boolean,
+    default: false
   }
 });
 

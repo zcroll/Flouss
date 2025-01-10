@@ -1,22 +1,34 @@
 <template>
   <Head title="Dashboard" />
 
-  <div class="flex-1 flex items-center justify-center relative" :class="{ 'md:mt-[-10rem]': true }">
-    <div class="absolute inset-0 flex items-center justify-center">
-      <div class="relative flex md:flex-row flex-col items-center md:gap-12 gap-6 px-4 md:px-0">
+  <div class="flex-1 flex items-center justify-center relative" 
+       :class="{ 
+         'md:mt-[-2rem]': !isMobile,
+         'mt-0': isMobile,
+         'px-4': isMobile
+       }">
+    <div class="relative w-full flex items-center justify-center min-h-[60vh]">
+      <div class="relative flex md:flex-row flex-col items-center md:gap-12 gap-6 w-full md:w-auto">
         <!-- Avatar/Mystery Box Container -->
         <GlowContainer 
           :theme="themeStore.currentTheme"
           :should-pulse="hasResult ? !isAvatarLoading : true"
-          @show-details="showDetails = true"
-          @hide-details="showDetails = false"
+          @show-details="handleShowDetails"
+          @hide-details="handleHideDetails"
+          :class="[
+            'w-full md:w-auto',
+            isMobile ? 'max-w-[280px] mx-auto mt-24' : 'mt-[-4rem]'
+          ]"
         >
-          <template v-if="hasResult">
+          <template v-if="!hasResult">
             <ArchetypeAvatar 
               v-if="archetypeSlug" 
               :key="avatarKey" 
               :archetype="archetypeSlug"
-              class="w-full h-full transform scale-110 relative z-10" 
+              :class="[
+                'w-full h-full transform relative z-10',
+                isMobile ? 'scale-125' : 'scale-110'
+              ]"
               @loaded="handleAvatarLoaded" 
             />
           </template>
@@ -29,8 +41,14 @@
         </GlowContainer>
 
         <!-- Details Panel -->
-        <DetailPanel :show-details="showDetails">
-          <template v-if="hasResult">
+        <DetailPanel 
+          :show-details="shouldShowDetails"
+          :class="[
+            isMobile ? 'w-full max-w-[340px] mx-auto mt-4' : 'w-[340px] mt-[-4rem]',
+            'z-20'
+          ]"
+        >
+          <template v-if="!hasResult">
             <ArchetypePanel 
               :archetype="archetype"
               :top-traits="topTraits"
@@ -52,22 +70,32 @@
   </div>
 
   <!-- Bottom section -->
-  <div v-if="hasResult" class="relative mt-8 md:mt-0">
+  <div v-if="hasResult" 
+       class="relative px-4 md:px-0"
+       :class="{ 
+         'pb-20': isMobile,
+         'mt-8': isMobile,
+         'md:mt-[-4rem]': !isMobile
+       }"
+  >
     <BottomCards 
       :favorite-jobs="favoriteJobs" 
       :favorite-degrees="favoriteDegrees" 
-      :archetype="archetype.slug" 
+      :archetype="archetype.slug"
+      :is-mobile="isMobile"
+      class="relative z-10 max-w-5xl mx-auto md:translate-y-0"
     />
     <AIChat 
       :predefined-questions="predefinedQuestions" 
-      :initial-messages="chatHistory" 
-      class="z-50" 
+      :initial-messages="chatHistory"
+      :is-mobile="isMobile"
+      class="z-30" 
     />
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch, nextTick, inject } from 'vue'
+import { ref, computed, onMounted, watch, nextTick, inject, onUnmounted } from 'vue'
 import { Head } from '@inertiajs/vue3'
 import { useThemeStore } from '@/stores/theme/themeStore'
 import { useNavigationStore } from '@/stores/navigation/navigationStore'
@@ -132,11 +160,47 @@ const isLayoutInitialized = inject('isLayoutInitialized')
 // Computed
 const archetypeSlug = computed(() => props.hasResult ? props.archetype?.slug : null)
 
-// Methods
+// Add mobile detection
+const isMobile = ref(false)
+
+// Add computed property for controlling details visibility
+const shouldShowDetails = computed(() => {
+  if (isMobile.value && props.hasResult) {
+    return true // Always show on mobile if there's a result
+  }
+  return showDetails.value
+})
+
+// Update the show/hide detail handlers
+const handleShowDetails = () => {
+  if (!isMobile.value || !props.hasResult) {
+    showDetails.value = true
+  }
+}
+
+const handleHideDetails = () => {
+  if (!isMobile.value || !props.hasResult) {
+    showDetails.value = false
+  }
+}
+
+// Update avatar loaded handler
 const handleAvatarLoaded = () => {
   if (!props.hasResult) return
   isAvatarLoading.value = false
-  showDetails.value = true
+  if (!isMobile.value) {
+    showDetails.value = true
+  }
+}
+
+// Update checkMobile function
+const checkMobile = () => {
+  isMobile.value = window.innerWidth < 768
+}
+
+// Add resize handler
+const handleResize = () => {
+  checkMobile()
 }
 
 // Initialization
@@ -150,14 +214,31 @@ const initializeComponent = async () => {
       avatarKey.value++
     }
   }
+  
+  // Update mobile-specific initialization
+  if (isMobile.value) {
+    if (props.hasResult) {
+      showDetails.value = true // Always show details on mobile with result
+    } else {
+      showDetails.value = false
+    }
+  }
 }
 
 // Lifecycle
 onMounted(() => {
   isComponentMounted.value = true
+  checkMobile() // Check initial mobile state
+  window.addEventListener('resize', handleResize)
+  
   if (isLayoutInitialized.value) {
     initializeComponent()
   }
+})
+
+// Clean up event listeners
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
 })
 
 // Watchers
@@ -178,4 +259,43 @@ if (props.hasResult) {
     avatarKey.value++
   }, { deep: true })
 }
+
+// Update mobile watcher
+watch(isMobile, (newValue) => {
+  if (newValue) {
+    // Show details on mobile only if there's a result
+    showDetails.value = props.hasResult
+  }
+})
 </script>
+
+<style scoped>
+/* Add mobile-specific styles */
+@media (max-width: 768px) {
+  /* Optimize transitions for mobile */
+  .transition-all {
+    transition-duration: 200ms;
+  }
+
+  /* Improve touch targets */
+  .cursor-pointer {
+    @apply active:scale-95;
+  }
+
+  /* Add viewport-based positioning */
+  .mt-[45vh] {
+    margin-top: 45vh;
+  }
+
+  .mt-[10vh] {
+    margin-top: 10vh;
+  }
+}
+
+/* Add desktop-specific styles */
+@media (min-width: 769px) {
+  .min-h-[60vh] {
+    min-height: 60vh;
+  }
+}
+</style>
