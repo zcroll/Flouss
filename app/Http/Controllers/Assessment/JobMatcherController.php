@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Assessment;
 
 use App\Http\Controllers\Controller;
 use App\Traits\ArchetypeFinder;
+use Illuminate\Contracts\Session\Session;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Illuminate\Support\Facades\Log;
@@ -14,6 +15,7 @@ class JobMatcherController extends Controller
 
     private function prepareUserPreferences($request)
     {
+        ds(Session('holland_codes_progress'));
         // Get interest scores from request or use defaults
         $interest_scores = $request->input('interest_scores', [
             "Finance" => 5,
@@ -148,10 +150,18 @@ class JobMatcherController extends Controller
                 throw new \Exception($decodedOutput['error']);
             }
 
-            // Process job matches
-            $jobMatches = $decodedOutput['job_matches'];
-            
-            // Calculate archetype scores if needed
+            // Get job matches with IDs
+            $jobMatches = array_map(function($job) {
+                return [
+                    'id' => $job['job_id'],
+                    'title' => $job['job_title'],
+                    'fields' => $job['primary_fields'],
+                    'education' => $job['education_level'],
+                    'match_score' => $job['match_score'] * 100 . '%'
+                ];
+            }, $decodedOutput['job_matches']);
+
+            // Calculate archetype scores
             $score = [
                 'Realistic' => round(mt_rand(0, 100) / 100, 2),
                 'Investigative' => round(mt_rand(0, 100) / 100, 2),
@@ -163,13 +173,19 @@ class JobMatcherController extends Controller
 
             $archetype = $this->getArchetypeAndTopScores($score);
 
-            // Return response
+            // Return simplified response
             return response()->json([
                 'status' => 'success',
                 'data' => [
-                    'job_matches' => $jobMatches,
-                    'total_matches' => $decodedOutput['total_matches'],
-                    'archetype' => $archetype
+                    'jobs' => $jobMatches,
+                    'total_matches' => count($jobMatches),
+                    'personality' => [
+                        'archetype' => $archetype['archetypes'],
+                        'dominant_traits' => [
+                            $archetype['topTraits']['first_trait'],
+                            $archetype['topTraits']['second_trait']
+                        ]
+                    ]
                 ]
             ]);
 

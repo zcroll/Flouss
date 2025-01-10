@@ -20,6 +20,10 @@ class PersonalityController extends BaseTestController
             'title' => 'Can\'t stands',
             'completed' => false
         ],
+        'must_haves' => [
+            'title' => 'Must haves',
+            'completed' => false
+        ],
         'skills_preferences' => [
             'title' => 'Skills preferences',
             'completed' => false
@@ -30,13 +34,26 @@ class PersonalityController extends BaseTestController
     {
         $progress = Session::get(self::SESSION_KEY, $this->getInitialProgress());
         
-        // If cant_stands is not completed, use it
+        // Check sequence: cant_stands -> must_haves -> skills_preferences
         if (!isset($progress['cant_stands_completed']) || !$progress['cant_stands_completed']) {
             return $this->itemSets['cant_stands']['title'];
         }
         
-        // If cant_stands is completed, move to skills_preferences
+        if (!isset($progress['must_haves_completed']) || !$progress['must_haves_completed']) {
+            return $this->itemSets['must_haves']['title'];
+        }
+        
         return $this->itemSets['skills_preferences']['title'];
+    }
+
+    protected function calculateTotalProgress(array $progress): int
+    {
+        $cantStandsResponses = count(array_filter($progress['cant_stands_responses'] ?? [], fn($v) => $v > 0));
+        $mustHavesResponses = count(array_filter($progress['must_haves_responses'] ?? [], fn($v) => $v > 0));
+        $skillsResponses = count(array_filter($progress['skills_preferences_responses'] ?? [], fn($v) => $v > 0));
+        
+        // Calculate percentage based on total of 37 questions
+        return min(round((($cantStandsResponses + $mustHavesResponses + $skillsResponses) / 37) * 100), 100);
     }
 
     public function index(): Response
@@ -44,13 +61,12 @@ class PersonalityController extends BaseTestController
         if (!request()->header('X-Inertia')) {
             return $this->renderInitialResponse();
         }
-
-    
+    // Session::forget(self::SESSION_KEY);
 
         try {
             $progress = Session::get(self::SESSION_KEY, $this->getInitialProgress());
             $currentItemSetTitle = $this->getCurrentItemSet();
-ds(['progress logic '=>$progress]);
+
             $cacheKey = "personality_assessment_{$currentItemSetTitle}";
             $personalityAssessment = Cache::remember($cacheKey, now()->addHours(24), function () use ($currentItemSetTitle) {
                 return ItemSet::with([
@@ -66,19 +82,26 @@ ds(['progress logic '=>$progress]);
                 throw new \Exception('Personality Assessment not found');
             }
 
-            $totalQuestions = $personalityAssessment->items->count();
-            $currentSetResponses = $currentItemSetTitle === $this->itemSets['cant_stands']['title'] 
-                ? $progress['cant_stands_responses'] 
-                : $progress['skills_preferences_responses'];
+            $totalQuestionsForSet = $personalityAssessment->items->count();
+            $currentSetResponses = match($currentItemSetTitle) {
+                $this->itemSets['cant_stands']['title'] => $progress['cant_stands_responses'],
+                $this->itemSets['must_haves']['title'] => $progress['must_haves_responses'],
+                default => $progress['skills_preferences_responses']
+            };
 
             $validResponses = count(array_filter($currentSetResponses, fn($v) => $v > 0));
-            $isCompleted = $validResponses >= $totalQuestions;
+            $isCompleted = $validResponses >= $totalQuestionsForSet;
 
             // Update progress for current item set
             if ($isCompleted) {
                 if ($currentItemSetTitle === $this->itemSets['cant_stands']['title']) {
                     $progress['cant_stands_completed'] = true;
-                    // Reset for next set if first set is completed
+                    if (!$progress['completed']) {
+                        $progress['current_index'] = 0;
+                        $progress['responses'] = [];
+                    }
+                } elseif ($currentItemSetTitle === $this->itemSets['must_haves']['title']) {
+                    $progress['must_haves_completed'] = true;
                     if (!$progress['completed']) {
                         $progress['current_index'] = 0;
                         $progress['responses'] = [];
@@ -88,23 +111,15 @@ ds(['progress logic '=>$progress]);
 
             // Calculate overall completion
             $cantStandsCompleted = $progress['cant_stands_completed'];
-            $skillsPreferencesTotal = Cache::remember('skills_preferences_total', now()->addHours(24), function () {
-                return ItemSet::where('title', $this->itemSets['skills_preferences']['title'])
-                    ->first()
-                    ->items
-                    ->count();
-            });
-
+            $mustHavesCompleted = $progress['must_haves_completed'];
             $skillsPreferencesResponses = count(array_filter($progress['skills_preferences_responses'], fn($v) => $v > 0));
-            $skillsPreferencesCompleted = $skillsPreferencesResponses >= $skillsPreferencesTotal;
+            $skillsPreferencesCompleted = $skillsPreferencesResponses >= $totalQuestionsForSet;
 
-            $progress['completed'] = $cantStandsCompleted && $skillsPreferencesCompleted;
+            $progress['completed'] = $cantStandsCompleted && $mustHavesCompleted && $skillsPreferencesCompleted;
             $progress['validResponses'] = $validResponses;
             $progress['responses'] = $currentSetResponses;
-            $progress['totalQuestions'] = $totalQuestions;
-            $progress['progress_percentage'] = $totalQuestions > 0 
-                ? min(round(($validResponses / $totalQuestions) * 100), 100)
-                : 0;
+            $progress['totalQuestions'] = 37; // Set total questions to 37
+            $progress['progress_percentage'] = $this->calculateTotalProgress($progress);
 
             Session::put(self::SESSION_KEY, $progress);
 
@@ -123,22 +138,56 @@ ds(['progress logic '=>$progress]);
             'completed' => false,
             'progress_percentage' => 0,
             'validResponses' => 0,
+            'totalQuestions' => 37, // Set total questions to 37
             'cant_stands_completed' => false,
             'cant_stands_responses' => [],
+            'must_haves_completed' => false,
+            'must_haves_responses' => [],
+            'skills_preferences_completed' => false,
             'skills_preferences_responses' => []
         ];
+    }
+
+    protected function formatResponses(array $progress): array
+    {
+        $formattedResponses = [
+            'must_haves' => [],
+            'skills_preferences' => [],
+            'cant_stands' => []
+        ];
+
+        // Format Must Haves responses
+        foreach ($progress['must_haves_responses'] ?? [] as $itemId => $value) {
+            if ($value > 0) {
+                $formattedResponses['must_haves'][$itemId] = $value;  // Example: 486 => 5  // Mathematical skills
+            }
+        }
+
+        // Format Skills Preferences responses
+        foreach ($progress['skills_preferences_responses'] ?? [] as $itemId => $value) {
+            if ($value > 0) {
+                $formattedResponses['skills_preferences'][$itemId] = $value;  // Example: 1308 => 5 // Analytical thinking
+            }
+        }
+
+        // Format Can't Stands responses
+        foreach ($progress['cant_stands_responses'] ?? [] as $itemId => $value) {
+            if ($value > 0) {
+                $formattedResponses['cant_stands'][$itemId] = $value;  // Example: 492 => 4  // Helping people
+            }
+        }
+
+        return $formattedResponses;
     }
 
     protected function handleNearCompletion(array $progress): array
     {
         try {
-            if ($progress['progress_percentage'] > 90) {
+            if ($progress['progress_percentage'] > 80) {
                 $resultUser = Session::get('result_user', []);
-                $resultUser['personality'] = [
-                    'cant_stands' => $progress['cant_stands_responses'],
-                    'skills_preferences' => $progress['skills_preferences_responses'],
-                    'completed' => $progress['completed']
-                ];
+                $resultUser['personality'] = $this->formatResponses($progress);
+                ds($resultUser['personality']);
+                $resultUser['personality']['completed'] = $progress['completed'];
                 Session::put('result_user', $resultUser);
             }
             return $progress;
@@ -162,10 +211,15 @@ ds(['progress logic '=>$progress]);
 
             $progress = Session::get(self::SESSION_KEY, $this->getInitialProgress());
             $currentItemSetTitle = $this->getCurrentItemSet();
+            ds(['progress logic'=>$progress]);
+
             
             // Store response in the appropriate set
             if ($currentItemSetTitle === $this->itemSets['cant_stands']['title']) {
                 $progress['cant_stands_responses'][$validated['itemId']] = 
+                    $validated['type'] === 'skipped' ? 0 : $validated['answer'];
+            } elseif ($currentItemSetTitle === $this->itemSets['must_haves']['title']) {
+                $progress['must_haves_responses'][$validated['itemId']] = 
                     $validated['type'] === 'skipped' ? 0 : $validated['answer'];
             } else {
                 $progress['skills_preferences_responses'][$validated['itemId']] = 
@@ -175,7 +229,9 @@ ds(['progress logic '=>$progress]);
             $progress['current_index']++;
             $progress['responses'] = $currentItemSetTitle === $this->itemSets['cant_stands']['title'] 
                 ? $progress['cant_stands_responses'] 
-                : $progress['skills_preferences_responses'];
+                : ($currentItemSetTitle === $this->itemSets['must_haves']['title'] 
+                    ? $progress['must_haves_responses'] 
+                    : $progress['skills_preferences_responses']);
 
             $cacheKey = "personality_assessment_{$currentItemSetTitle}";
             $personalityAssessment = Cache::remember($cacheKey, now()->addHours(24), function () use ($currentItemSetTitle) {
@@ -198,11 +254,17 @@ ds(['progress logic '=>$progress]);
                     // Reset for next set
                     $progress['current_index'] = 0;
                     $progress['responses'] = [];
+                } elseif ($currentItemSetTitle === $this->itemSets['must_haves']['title']) {
+                    $progress['must_haves_completed'] = true;
+                    // Reset for next set
+                    $progress['current_index'] = 0;
+                    $progress['responses'] = [];
                 }
             }
 
             // Check overall completion
             $cantStandsCompleted = $progress['cant_stands_completed'];
+            $mustHavesCompleted = $progress['must_haves_completed'];
             $skillsPreferencesTotal = Cache::remember('skills_preferences_total', now()->addHours(24), function () {
                 return ItemSet::where('title', $this->itemSets['skills_preferences']['title'])
                     ->first()
@@ -213,7 +275,7 @@ ds(['progress logic '=>$progress]);
             $skillsPreferencesResponses = count(array_filter($progress['skills_preferences_responses'], fn($v) => $v > 0));
             $skillsPreferencesCompleted = $skillsPreferencesResponses >= $skillsPreferencesTotal;
 
-            $progress['completed'] = $cantStandsCompleted && $skillsPreferencesCompleted;
+            $progress['completed'] = $cantStandsCompleted && $mustHavesCompleted && $skillsPreferencesCompleted;
 
             if ($progress['progress_percentage'] > 90) {
                 $progress = $this->handleNearCompletion($progress);
@@ -246,6 +308,12 @@ ds(['progress logic '=>$progress]);
                         unset($progress['cant_stands_responses'][$lastItemId]);
                     }
                     $progress['responses'] = $progress['cant_stands_responses'];
+                } elseif ($currentItemSetTitle === $this->itemSets['must_haves']['title']) {
+                    if (!empty($progress['must_haves_responses'])) {
+                        $lastItemId = array_key_last($progress['must_haves_responses']);
+                        unset($progress['must_haves_responses'][$lastItemId]);
+                    }
+                    $progress['responses'] = $progress['must_haves_responses'];
                 } else {
                     if (!empty($progress['skills_preferences_responses'])) {
                         $lastItemId = array_key_last($progress['skills_preferences_responses']);
@@ -273,10 +341,13 @@ ds(['progress logic '=>$progress]);
                 // Update completion status
                 if ($currentItemSetTitle === $this->itemSets['cant_stands']['title']) {
                     $progress['cant_stands_completed'] = $validResponses >= $totalQuestions;
+                } elseif ($currentItemSetTitle === $this->itemSets['must_haves']['title']) {
+                    $progress['must_haves_completed'] = $validResponses >= $totalQuestions;
                 }
 
                 // Check overall completion
                 $cantStandsCompleted = $progress['cant_stands_completed'];
+                $mustHavesCompleted = $progress['must_haves_completed'];
                 $skillsPreferencesTotal = Cache::remember('skills_preferences_total', now()->addHours(24), function () {
                     return ItemSet::where('title', $this->itemSets['skills_preferences']['title'])
                         ->first()
@@ -287,7 +358,7 @@ ds(['progress logic '=>$progress]);
                 $skillsPreferencesResponses = count(array_filter($progress['skills_preferences_responses'], fn($v) => $v > 0));
                 $skillsPreferencesCompleted = $skillsPreferencesResponses >= $skillsPreferencesTotal;
 
-                $progress['completed'] = $cantStandsCompleted && $skillsPreferencesCompleted;
+                $progress['completed'] = $cantStandsCompleted && $mustHavesCompleted && $skillsPreferencesCompleted;
             }
 
             Session::put(self::SESSION_KEY, $progress);

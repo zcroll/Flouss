@@ -54,7 +54,7 @@ export const useTestProgressStore = defineStore('testProgress', {
       personality: {
         name: 'Your personality traits',
         time: '~ 5 mins',
-        totalQuestions: 20,
+        totalQuestions: 37,
         nextStage: null,
         storeKey: 'personalityStore',
         dataKey: 'progress',
@@ -116,10 +116,29 @@ export const useTestProgressStore = defineStore('testProgress', {
       if (!this.stages[stage]) return;
 
       const stageData = this.stages[stage];
-      const stageConfig = this.stageConfig[stage];
 
       if (typeof progressData === 'object') {
-        // Map fields according to stage configuration
+        // For personality test, handle combined progress
+        if (stage === 'personality') {
+          // Use the progress data directly from the personality store
+          stageData.completed = progressData.completed || false;
+          stageData.currentIndex = progressData.currentIndex || 0;
+          stageData.validResponses = progressData.validResponses || 0;
+          stageData.percentage = progressData.percentage || 0;
+          stageData.personalityReport = progressData.personalityReport || null;
+          stageData.canTransition = progressData.completed || false;
+
+          // Store additional personality-specific data
+          stageData.cant_stands_completed = progressData.cant_stands_completed || false;
+          stageData.must_haves_completed = progressData.must_haves_completed || false;
+          stageData.skills_preferences_completed = progressData.skills_preferences_completed || false;
+
+          // No need to recalculate, just use the values passed from personalityStore
+          return;
+        }
+
+        // Handle other stages as before
+        const stageConfig = this.stageConfig[stage];
         const fields = stageConfig.progressFields;
         
         // Update standard progress fields with fallbacks

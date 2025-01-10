@@ -19,9 +19,12 @@ export const usePersonalityStore = createBaseTestStore('personality', {
             current_index: 0,
             validResponses: 0,
             responses: {},
-            totalQuestions: 20,
+            totalQuestions: 37,
             cant_stands_completed: false,
             cant_stands_responses: {},
+            must_haves_completed: false,
+            must_haves_responses: {},
+            skills_preferences_completed: false,
             skills_preferences_responses: {}
         }
     },
@@ -35,19 +38,22 @@ export const usePersonalityStore = createBaseTestStore('personality', {
         setProgress(progress) {
             if (!progress) return;
 
-            // Calculate the actual progress percentage based on valid responses for current set
-            const currentSetResponses = progress.cant_stands_completed 
-                ? progress.skills_preferences_responses 
-                : progress.cant_stands_responses;
+            // Calculate total progress based on all three sets
+            const cantStandsResponses = Object.values(progress.cant_stands_responses || {})
+                .filter(v => v > 0).length;
+            const mustHavesResponses = Object.values(progress.must_haves_responses || {})
+                .filter(v => v > 0).length;
+            const skillsResponses = Object.values(progress.skills_preferences_responses || {})
+                .filter(v => v > 0).length;
             
-            const validResponsesCount = Object.values(currentSetResponses || {}).filter(v => v > 0).length;
-            const totalQuestions = this.progress.totalQuestions || 20;
-            const percentage = Math.round((validResponsesCount / totalQuestions) * 100);
+            const totalResponses = cantStandsResponses + mustHavesResponses + skillsResponses;
+            const percentage = Math.round((totalResponses / 37) * 100); // Use total of 37
 
             // Check if we need to transition to the next set
-            const shouldTransition = !progress.completed && 
-                progress.cant_stands_completed && 
-                !this.progress.cant_stands_completed;
+            const shouldTransition = !progress.completed && (
+                (progress.cant_stands_completed && !this.progress.cant_stands_completed) ||
+                (progress.must_haves_completed && !this.progress.must_haves_completed)
+            );
 
             // Update our local progress state
             this.$patch((state) => {
@@ -55,14 +61,21 @@ export const usePersonalityStore = createBaseTestStore('personality', {
                     ...state.progress,
                     ...progress,
                     progress_percentage: percentage,
-                    validResponses: validResponsesCount,
-                    responses: currentSetResponses || {},
+                    validResponses: totalResponses,
+                    responses: progress.cant_stands_completed 
+                        ? (progress.must_haves_completed 
+                            ? progress.skills_preferences_responses 
+                            : progress.must_haves_responses)
+                        : progress.cant_stands_responses,
                     current_index: progress.current_index || 0,
                     completed: progress.completed || false,
                     cant_stands_completed: progress.cant_stands_completed || false,
                     cant_stands_responses: progress.cant_stands_responses || {},
+                    must_haves_completed: progress.must_haves_completed || false,
+                    must_haves_responses: progress.must_haves_responses || {},
+                    skills_preferences_completed: progress.skills_preferences_completed || false,
                     skills_preferences_responses: progress.skills_preferences_responses || {},
-                    totalQuestions
+                    totalQuestions: 37
                 };
 
                 // Reset current index if transitioning
@@ -74,7 +87,7 @@ export const usePersonalityStore = createBaseTestStore('personality', {
                 // Update current item index
                 state.currentItemIndex = Math.min(
                     state.progress.current_index || 0,
-                    totalQuestions - 1
+                    state.progress.totalQuestions - 1
                 );
             });
 
@@ -82,31 +95,33 @@ export const usePersonalityStore = createBaseTestStore('personality', {
             const testStageStore = useTestStageStore();
             const testProgressStore = useTestProgressStore();
 
-            // Calculate overall progress
-            const cantStandsResponses = Object.values(progress.cant_stands_responses || {}).filter(v => v > 0).length;
-            const skillsResponses = Object.values(progress.skills_preferences_responses || {}).filter(v => v > 0).length;
-            const totalProgress = Math.round(((cantStandsResponses + skillsResponses) / (totalQuestions * 2)) * 100);
-
             // Update testStageStore
             testStageStore.$patch((state) => {
                 if (!state.stageProgress.personality) {
                     state.stageProgress.personality = {};
                 }
-                state.stageProgress.personality.percentage = totalProgress;
+                state.stageProgress.personality.percentage = percentage;
                 state.stageProgress.personality.completed = progress.completed || false;
             });
 
             // Update testProgressStore
             testProgressStore.updateStageProgress('personality', {
                 currentIndex: progress.current_index || 0,
-                validResponses: validResponsesCount,
-                percentage: totalProgress,
+                validResponses: totalResponses,
+                percentage: percentage,
                 completed: progress.completed || false,
                 personalityReport: progress.personalityReport || null,
-                responses: currentSetResponses || {},
-                totalQuestions,
+                responses: progress.cant_stands_completed 
+                    ? (progress.must_haves_completed 
+                        ? progress.skills_preferences_responses 
+                        : progress.must_haves_responses)
+                    : progress.cant_stands_responses,
+                totalQuestions: 37,
                 cant_stands_completed: progress.cant_stands_completed || false,
                 cant_stands_responses: progress.cant_stands_responses || {},
+                must_haves_completed: progress.must_haves_completed || false,
+                must_haves_responses: progress.must_haves_responses || {},
+                skills_preferences_completed: progress.skills_preferences_completed || false,
                 skills_preferences_responses: progress.skills_preferences_responses || {}
             });
 
@@ -175,7 +190,7 @@ export const usePersonalityStore = createBaseTestStore('personality', {
         isTestComplete: (state) => state.progress.completed,
         currentProgress: (state) => state.progress.progress_percentage || 0,
         validResponses: (state) => state.progress.validResponses || 0,
-        totalQuestions: (state) => state.progress.totalQuestions || 20,
+        totalQuestions: (state) => state.progress.totalQuestions || 37,
         cantStandsCompleted: (state) => state.progress.cant_stands_completed || false,
         cantStandsResponses: (state) => state.progress.cant_stands_responses || {},
         skillsPreferencesResponses: (state) => state.progress.skills_preferences_responses || {},
@@ -185,7 +200,7 @@ export const usePersonalityStore = createBaseTestStore('personality', {
         overallProgress: (state) => {
             const cantStandsResponses = Object.values(state.progress.cant_stands_responses || {}).filter(v => v > 0).length;
             const skillsResponses = Object.values(state.progress.skills_preferences_responses || {}).filter(v => v > 0).length;
-            const totalQuestions = state.progress.totalQuestions || 20;
+            const totalQuestions = state.progress.totalQuestions || 37;
             return Math.round(((cantStandsResponses + skillsResponses) / (totalQuestions * 2)) * 100);
         }
     }
